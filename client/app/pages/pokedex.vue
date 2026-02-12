@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Search } from 'lucide-vue-next'
-import { getSpriteUrl, getStaticSpriteUrl } from '~/utils/showdown'
+import { Search, Sparkles, EyeOff } from 'lucide-vue-next'
+import { getSpriteUrl, getStaticSpriteUrl, getShinySpriteUrl, getStaticShinySpriteUrl, getPokeApiSpriteUrl } from '~/utils/showdown'
 import { useLocale } from '~/composables/useLocale'
+import { useInventoryStore } from '~/stores/useInventoryStore'
 import { POKEDEX, GEN_NAMES, getAllGens } from '~/data/pokedex'
 import type { PokedexEntry } from '~/data/pokedex'
 
@@ -10,11 +11,21 @@ definePageMeta({
 })
 
 const { t } = useLocale()
+const inventory = useInventoryStore()
 
 const search = ref('')
 const selectedGen = ref<number | null>(null)
+const showShiny = ref(false)
+const hideOwned = ref(false)
 
 const allGens = getAllGens()
+
+const ownedNormalSlugs = computed(() => new Set(
+  inventory.collection.filter((p) => !p.isShiny).map((p) => p.slug)
+))
+const ownedShinySlugs = computed(() => new Set(
+  inventory.collection.filter((p) => p.isShiny).map((p) => p.slug)
+))
 
 const filtered = computed((): PokedexEntry[] => {
   let list = POKEDEX
@@ -31,11 +42,16 @@ const filtered = computed((): PokedexEntry[] => {
         p.slug.includes(q)
     )
   }
+  if (hideOwned.value) {
+    const owned = showShiny.value ? ownedShinySlugs.value : ownedNormalSlugs.value
+    list = list.filter((p) => !owned.has(p.slug))
+  }
   return list
 })
 
 const aniErrors = reactive<Set<string>>(new Set())
 const staticErrors = reactive<Set<string>>(new Set())
+const pokeApiErrors = reactive<Set<string>>(new Set())
 
 function onAniError(slug: string) {
   aniErrors.add(slug)
@@ -44,6 +60,33 @@ function onAniError(slug: string) {
 function onStaticError(slug: string) {
   staticErrors.add(slug)
 }
+
+function onPokeApiError(slug: string) {
+  pokeApiErrors.add(slug)
+}
+
+function getAniUrl(slug: string): string {
+  return showShiny.value ? getShinySpriteUrl(slug) : getSpriteUrl(slug)
+}
+
+function getStaticUrl(slug: string): string {
+  return showShiny.value ? getStaticShinySpriteUrl(slug) : getStaticSpriteUrl(slug)
+}
+
+function getApiUrl(id: number): string {
+  return getPokeApiSpriteUrl(id, showShiny.value)
+}
+
+function isOwned(slug: string): boolean {
+  const owned = showShiny.value ? ownedShinySlugs.value : ownedNormalSlugs.value
+  return owned.has(slug)
+}
+
+watch(showShiny, () => {
+  aniErrors.clear()
+  staticErrors.clear()
+  pokeApiErrors.clear()
+})
 </script>
 
 <template>
@@ -66,9 +109,35 @@ function onStaticError(slug: string) {
         />
       </div>
 
-      <!-- Gen filter -->
+      <!-- Shiny toggle -->
       <button
-        class="rounded-lg border px-3 py-2 text-xs font-medium transition-colors"
+        class="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors"
+        :class="showShiny
+          ? 'border-yellow-500 bg-yellow-500/20 text-yellow-400'
+          : 'border-slate-700 bg-slate-800 text-slate-400 hover:text-white'"
+        @click="showShiny = !showShiny"
+      >
+        <Sparkles class="h-3.5 w-3.5" />
+        Shiny
+      </button>
+
+      <!-- Hide owned toggle -->
+      <button
+        class="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors"
+        :class="hideOwned
+          ? 'border-purple-500 bg-purple-500/20 text-purple-400'
+          : 'border-slate-700 bg-slate-800 text-slate-400 hover:text-white'"
+        @click="hideOwned = !hideOwned"
+      >
+        <EyeOff class="h-3.5 w-3.5" />
+        {{ t('Masquer possédés', 'Hide owned') }}
+      </button>
+    </div>
+
+    <!-- Gen filter -->
+    <div class="flex flex-wrap items-center gap-1.5">
+      <button
+        class="rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors"
         :class="selectedGen === null
           ? 'border-blue-500 bg-blue-500/20 text-blue-400'
           : 'border-slate-700 bg-slate-800 text-slate-400 hover:text-white'"
@@ -79,7 +148,7 @@ function onStaticError(slug: string) {
       <button
         v-for="gen in allGens"
         :key="gen"
-        class="rounded-lg border px-3 py-2 text-xs font-medium transition-colors"
+        class="rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors"
         :class="selectedGen === gen
           ? 'border-blue-500 bg-blue-500/20 text-blue-400'
           : 'border-slate-700 bg-slate-800 text-slate-400 hover:text-white'"
@@ -100,10 +169,16 @@ function onStaticError(slug: string) {
         <!-- Dex number -->
         <span class="absolute left-0.5 top-0.5 text-[8px] font-mono text-slate-600">#{{ String(p.id).padStart(4, '0') }}</span>
 
-        <!-- Sprite: animated GIF → static PNG → ? -->
+        <!-- Owned indicator -->
+        <span
+          v-if="isOwned(p.slug)"
+          class="absolute right-0.5 top-0.5 text-[8px] text-green-500"
+        >&#x2714;</span>
+
+        <!-- Sprite: animated GIF → static PNG → PokeAPI → ? -->
         <img
           v-if="!aniErrors.has(p.slug)"
-          :src="getSpriteUrl(p.slug)"
+          :src="getAniUrl(p.slug)"
           :alt="t(p.nameFr, p.nameEn)"
           class="h-12 w-12 object-contain"
           style="image-rendering: pixelated;"
@@ -112,11 +187,19 @@ function onStaticError(slug: string) {
         />
         <img
           v-else-if="!staticErrors.has(p.slug)"
-          :src="getStaticSpriteUrl(p.slug)"
+          :src="getStaticUrl(p.slug)"
           :alt="t(p.nameFr, p.nameEn)"
           class="h-12 w-12 object-contain"
           loading="lazy"
           @error="onStaticError(p.slug)"
+        />
+        <img
+          v-else-if="p.id <= 1025 && !pokeApiErrors.has(p.slug)"
+          :src="getApiUrl(p.id)"
+          :alt="t(p.nameFr, p.nameEn)"
+          class="h-12 w-12 object-contain"
+          loading="lazy"
+          @error="onPokeApiError(p.slug)"
         />
         <div
           v-else

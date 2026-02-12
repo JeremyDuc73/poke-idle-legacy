@@ -36,6 +36,15 @@ export function getShinySpriteUrl(slug: string): string {
   return `${SHOWDOWN_BASE}/ani-shiny/${slug}.gif`
 }
 
+export function getStaticShinySpriteUrl(slug: string): string {
+  return `${SHOWDOWN_BASE}/dex-shiny/${slug}.png`
+}
+
+export function getPokeApiSpriteUrl(id: number, shiny = false): string {
+  const path = shiny ? 'shiny/' : ''
+  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${path}${id}.png`
+}
+
 export function getTrainerSpriteUrl(slug: string): string {
   return `${SHOWDOWN_BASE}/trainers/${slug}.png`
 }
