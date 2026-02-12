@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --pk-red: #dc2626;
+  --pk-blue: #2563eb;
+  --pk-yellow: #eab308;
+  --pk-dark: #1a1a2e;
+  --pk-darker: #0f0f1e;
+  --pk-card: #16213e;
+  --pk-border: #1e3a5f;
+}
+
+body {
+  background-color: var(--pk-darker);
+  color: #e2e8f0;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.font-pixel {
+  font-family: 'Press Start 2P', monospace;
+}
+
+/* Pokemon-style HP bar */
+.pk-hp-bar {
+  background: linear-gradient(90deg, #22c55e 0%, #eab308 60%, #ef4444 100%);
+  border-radius: 9999px;
+  transition: width 0.2s ease;
+}
+
+/* Pokemon card glow */
+.pk-card {
+  background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+  border: 1px solid #1e3a5f;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.08);
+}
+
+.pk-card-boss {
+  background: linear-gradient(135deg, #2a1525 0%, #1a1a2e 100%);
+  border: 1px solid #7f1d1d;
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.15);
+}
+
+/* Pokeball shake animation */
+@keyframes pokeball-shake {
+  0%, 100% { transform: rotate(-12deg) scale(1); }
+  25% { transform: rotate(12deg) scale(1.05); }
+  50% { transform: rotate(-8deg) scale(1); }
+  75% { transform: rotate(8deg) scale(1.02); }
+}
+
+.animate-pokeball-shake {
+  animation: pokeball-shake 0.4s ease-in-out infinite;
+}
+
+/* Enemy hit flash */
+@keyframes hit-flash {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(2) saturate(0); }
+}
+
+.animate-hit {
+  animation: hit-flash 0.15s ease-in-out;
+}
+
+/* Subtle pulse glow */
+@keyframes pk-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(37, 99, 235, 0.1); }
+  50% { box-shadow: 0 0 25px rgba(37, 99, 235, 0.25); }
+}
+
+.pk-glow {
+  animation: pk-glow 3s ease-in-out infinite;
+}
+
+/* XP bar shine effect */
+@keyframes xp-shine {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.pk-xp-bar {
+  background: linear-gradient(90deg, #2563eb, #06b6d4, #2563eb);
+  background-size: 200% 100%;
+  animation: xp-shine 3s linear infinite;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--pk-darker);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--pk-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}

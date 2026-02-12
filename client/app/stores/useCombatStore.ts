@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 
 interface Enemy {
-  name: string
+  nameFr: string
+  nameEn: string
   slug: string
   spriteUrl: string
   maxHp: number

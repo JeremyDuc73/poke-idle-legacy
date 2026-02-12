@@ -15,6 +15,7 @@ const GENERATION_NAMES: Record<number, string> = {
 const STAGES_PER_ZONE = 10
 
 function xpForLevel(level: number): number {
+  if (level <= 1) return 0
   return Math.floor(50 * Math.pow(level, 1.8))
 }
 

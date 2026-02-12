@@ -44,21 +44,34 @@ const navItems = computed(() => [
 </script>
 
 <template>
-  <div class="flex h-screen bg-gray-900 text-white">
+  <div class="flex h-screen text-white" style="background: linear-gradient(180deg, #0f0f1e 0%, #1a1a2e 100%)">
     <!-- Sidebar -->
-    <aside class="flex w-20 flex-col items-center gap-2 border-r border-gray-700 bg-gray-800 py-4 lg:w-56">
-      <div class="mb-6 flex items-center gap-2 px-2">
-        <img src="/favicon.ico" alt="logo" class="h-8 w-8" />
-        <span class="hidden text-lg font-bold text-yellow-400 lg:inline">Poke-Idle</span>
+    <aside class="flex w-20 flex-col items-center gap-1 border-r border-[#1e3a5f] py-4 lg:w-56" style="background: linear-gradient(180deg, #16213e 0%, #0f0f1e 100%)">
+      <!-- Logo -->
+      <div class="mb-4 flex flex-col items-center gap-1 px-2">
+        <span class="text-2xl">🔴</span>
+        <span class="hidden font-pixel text-[10px] leading-tight text-yellow-400 lg:inline">POKE-IDLE</span>
+        <span class="hidden font-pixel text-[7px] text-red-400 lg:inline">LEGACY</span>
       </div>
 
-      <nav class="flex w-full flex-1 flex-col gap-1 px-2">
+      <!-- Trainer Level -->
+      <div class="mb-2 flex w-full flex-col items-center gap-1 px-3">
+        <div class="flex w-full items-center justify-between text-[9px]">
+          <span class="text-blue-300">Lv.{{ player.level }}</span>
+          <span class="text-gray-500">{{ player.xp }}/{{ player.xpToNextLevel }}</span>
+        </div>
+        <div class="h-1.5 w-full overflow-hidden rounded-full bg-[#0f0f1e]">
+          <div class="pk-xp-bar h-full rounded-full transition-all duration-500" :style="{ width: `${player.xpPercent}%` }" />
+        </div>
+      </div>
+
+      <nav class="flex w-full flex-1 flex-col gap-0.5 px-2">
         <NuxtLink
           v-for="item in navItems"
           :key="item.to"
           :to="item.to"
-          class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
-          active-class="!bg-indigo-600 !text-white"
+          class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-400 transition-all hover:bg-[#1e3a5f]/50 hover:text-white"
+          active-class="!bg-red-600/90 !text-white shadow-lg shadow-red-600/20"
         >
           <component :is="item.icon" class="h-5 w-5 shrink-0" />
           <span class="hidden lg:inline">{{ item.label }}</span>
@@ -67,39 +80,39 @@ const navItems = computed(() => [
 
       <!-- Region + Badges -->
       <div class="mt-auto flex w-full flex-col gap-2 px-2 pb-2">
-        <div class="text-center">
-          <p class="text-[10px] uppercase tracking-widest text-gray-500">{{ t('Région', 'Region') }}</p>
-          <p class="text-xs font-bold text-indigo-400">{{ player.regionName }}</p>
+        <div class="rounded-lg bg-[#0f0f1e]/60 p-2 text-center">
+          <p class="text-[8px] font-bold uppercase tracking-[0.2em] text-gray-600">{{ t('Région', 'Region') }}</p>
+          <p class="font-pixel text-[9px] text-blue-400">{{ player.regionName }}</p>
         </div>
-        <div v-if="player.badges > 0" class="flex items-center justify-center gap-1 text-xs text-yellow-500">
-          <Trophy class="h-3 w-3" />
-          <span>{{ player.badges }} {{ t('badges', 'badges') }}</span>
+        <div v-if="player.badges > 0" class="flex items-center justify-center gap-1.5 rounded-lg bg-yellow-500/10 px-2 py-1.5 text-xs font-bold text-yellow-400">
+          <Trophy class="h-3.5 w-3.5" />
+          <span>{{ player.badges }}</span>
         </div>
         <!-- Locale Toggle -->
         <button
-          class="flex items-center justify-center gap-1.5 rounded-md px-2 py-1 text-[10px] text-gray-400 transition-colors hover:bg-gray-700 hover:text-white"
+          class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[10px] text-gray-500 transition-colors hover:bg-[#1e3a5f]/40 hover:text-white"
           @click="toggleLocale"
         >
           <Globe class="h-3 w-3" />
-          <span class="hidden lg:inline">{{ locale === 'fr' ? 'Français' : 'English' }}</span>
+          <span class="hidden lg:inline">{{ locale === 'fr' ? 'FR' : 'EN' }}</span>
           <span class="lg:hidden">{{ locale.toUpperCase() }}</span>
         </button>
         <!-- Auth -->
         <NuxtLink
           v-if="!auth.isAuthenticated"
           to="/login"
-          class="flex items-center justify-center gap-1.5 rounded-md bg-indigo-600/20 px-2 py-1.5 text-[10px] font-medium text-indigo-400 transition-colors hover:bg-indigo-600/30"
+          class="flex items-center justify-center gap-1.5 rounded-lg bg-blue-600/20 px-2 py-1.5 text-[10px] font-medium text-blue-400 transition-colors hover:bg-blue-600/30"
         >
           <LogIn class="h-3 w-3" />
           <span class="hidden lg:inline">{{ t('Connexion', 'Sign in') }}</span>
         </NuxtLink>
         <button
           v-else
-          class="flex items-center justify-center gap-1.5 rounded-md px-2 py-1 text-[10px] text-gray-400 transition-colors hover:bg-gray-700 hover:text-red-400"
+          class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[10px] text-gray-500 transition-colors hover:bg-red-500/10 hover:text-red-400"
           @click="auth.logout()"
         >
           <LogOut class="h-3 w-3" />
-          <span class="hidden lg:inline">{{ t('Déconnexion', 'Logout') }}</span>
+          <span class="hidden lg:inline">{{ t('Déco', 'Logout') }}</span>
         </button>
       </div>
     </aside>
@@ -107,20 +120,19 @@ const navItems = computed(() => [
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto">
       <!-- Top Bar -->
-      <header class="sticky top-0 z-10 flex items-center justify-between border-b border-gray-700 bg-gray-800/80 px-6 py-3 backdrop-blur">
+      <header class="sticky top-0 z-10 flex items-center justify-between border-b border-[#1e3a5f] px-6 py-2.5 backdrop-blur-md" style="background: rgba(22, 33, 62, 0.85)">
         <div class="flex items-center gap-3">
-          <h1 class="text-lg font-semibold">Poke-Idle Legacy</h1>
-          <span class="rounded-md bg-blue-500/20 px-2 py-0.5 text-xs font-medium text-blue-400">
-            Lv.{{ player.level }}
-          </span>
+          <h1 class="font-pixel text-xs text-red-400">POKE-IDLE</h1>
         </div>
-        <div class="flex items-center gap-4 text-sm">
-          <span class="flex items-center gap-1 text-yellow-400">
-            <span class="font-bold">🪙</span> {{ player.formattedGold }}
-          </span>
-          <span class="flex items-center gap-1 text-purple-400">
-            <span class="font-bold">💎</span> {{ player.formattedGems }}
-          </span>
+        <div class="flex items-center gap-5 text-sm">
+          <div class="flex items-center gap-1.5 rounded-lg bg-yellow-500/10 px-3 py-1.5">
+            <span class="text-base">🪙</span>
+            <span class="font-bold text-yellow-400">{{ player.formattedGold }}</span>
+          </div>
+          <div class="flex items-center gap-1.5 rounded-lg bg-purple-500/10 px-3 py-1.5">
+            <span class="text-base">💎</span>
+            <span class="font-bold text-purple-400">{{ player.formattedGems }}</span>
+          </div>
         </div>
       </header>
 

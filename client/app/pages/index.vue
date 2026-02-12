@@ -58,7 +58,8 @@ function spawnWild(difficulty: number) {
   const poke = randomWild()
   const hp = Math.round(poke.baseHp * (1 + difficulty * 0.5))
   combat.setEnemy({
-    name: t(`${poke.nameFr} sauvage`, `Wild ${poke.nameEn}`),
+    nameFr: `${poke.nameFr} sauvage`,
+    nameEn: `Wild ${poke.nameEn}`,
     slug: poke.slug,
     spriteUrl: getSpriteUrl(poke.slug),
     maxHp: hp,
@@ -74,7 +75,8 @@ function spawnWild(difficulty: number) {
 function spawnBoss(boss: BossTrainer, difficulty: number) {
   const totalHp = boss.team.reduce((sum, p) => sum + Math.round(50 * p.level * (1 + difficulty * 0.1)), 0)
   combat.setEnemy({
-    name: t(`Boss : ${boss.nameFr}`, `Boss: ${boss.nameEn}`),
+    nameFr: `Boss : ${boss.nameFr}`,
+    nameEn: `Boss: ${boss.nameEn}`,
     slug: boss.slug,
     spriteUrl: getTrainerSpriteUrl(boss.slug),
     maxHp: totalHp,
@@ -156,15 +158,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-8">
+  <div class="flex flex-col items-center gap-6 select-none">
     <!-- Stage Info -->
     <div class="text-center">
-      <div class="flex items-center justify-center gap-2 text-sm text-gray-400">
-        <MapPin class="h-3.5 w-3.5" />
+      <div class="flex items-center justify-center gap-2 text-xs text-gray-500">
+        <MapPin class="h-3 w-3" />
         <span>{{ zoneName }}</span>
       </div>
-      <p class="text-lg font-bold text-yellow-400">{{ player.stageLabel }}</p>
-      <p v-if="player.isBossStage" class="mt-1 text-xs font-bold uppercase tracking-wider text-red-400">
+      <p class="font-pixel mt-1 text-[11px] text-yellow-400">{{ player.stageLabel }}</p>
+      <p v-if="player.isBossStage" class="mt-1.5 inline-block rounded-full bg-red-600/20 px-3 py-0.5 text-[10px] font-bold uppercase tracking-widest text-red-400">
         {{ t('Combat de Boss', 'Boss Fight') }}
       </p>
     </div>
@@ -172,108 +174,110 @@ onUnmounted(() => {
     <!-- Boss Timer -->
     <div
       v-if="combat.isBossFight && combat.bossTimeRemaining !== null"
-      class="flex items-center gap-2 rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-2 text-red-400"
+      class="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-5 py-2"
     >
-      <Timer class="h-5 w-5" />
-      <span class="font-mono text-lg font-bold">{{ combat.bossTimeRemaining }}s</span>
+      <Timer class="h-5 w-5 text-red-400" />
+      <span class="font-pixel text-sm text-red-400">{{ combat.bossTimeRemaining }}s</span>
     </div>
 
     <!-- Enemy Display -->
     <div
       v-if="combat.enemy"
-      class="flex w-full max-w-md flex-col items-center gap-4 rounded-2xl border p-8 shadow-xl"
-      :class="combat.isBossFight
-        ? 'border-red-500/50 bg-gray-800 ring-1 ring-red-500/20'
-        : 'border-gray-700 bg-gray-800'"
+      class="pk-card flex w-full max-w-md flex-col items-center gap-4 p-8"
+      :class="{ 'pk-card-boss': combat.isBossFight }"
     >
-      <p class="text-lg font-semibold">
-        {{ combat.enemy.name }}
-        <span class="text-gray-400">Lv.{{ combat.enemy.level }}</span>
-      </p>
+      <!-- Enemy Name Tag -->
+      <div class="flex items-center gap-2">
+        <span class="font-pixel text-[10px]" :class="combat.isBossFight ? 'text-red-400' : 'text-blue-300'">
+          {{ t(combat.enemy.nameFr, combat.enemy.nameEn) }}
+        </span>
+        <span class="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-gray-500">Lv.{{ combat.enemy.level }}</span>
+      </div>
 
       <!-- Boss Team Preview -->
-      <div v-if="combat.isBossFight && currentZone?.boss" class="flex gap-1">
+      <div v-if="combat.isBossFight && currentZone?.boss" class="flex gap-1.5">
         <img
           v-for="(p, i) in currentZone.boss.team"
           :key="i"
           :src="getSpriteUrl(p.slug)"
           :alt="t(p.nameFr, p.nameEn)"
-          class="h-8 w-8 object-contain opacity-60"
+          class="h-8 w-8 rounded-lg bg-white/5 object-contain p-0.5 opacity-70"
           :title="t(p.nameFr, p.nameEn)"
         />
       </div>
 
       <!-- Enemy Sprite (clickable) -->
       <button
-        class="group relative transition-transform active:scale-95"
+        class="group relative cursor-pointer rounded-full p-4 transition-transform active:scale-90"
         @click="handleClick($event)"
       >
+        <div class="absolute inset-0 rounded-full opacity-30"
+          :style="{ background: combat.isBossFight
+            ? 'radial-gradient(circle, rgba(239,68,68,0.3) 0%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%)' }"
+        />
         <img
           :src="combat.enemy.spriteUrl"
-          :alt="combat.enemy.name"
-          class="h-40 w-40 object-contain drop-shadow-lg transition-transform group-hover:scale-105"
-          :class="{ 'drop-shadow-[0_0_12px_rgba(239,68,68,0.5)]': combat.isBossFight }"
+          :alt="t(combat.enemy.nameFr, combat.enemy.nameEn)"
+          class="relative h-36 w-36 object-contain transition-transform group-hover:scale-110"
+          style="image-rendering: pixelated;"
         />
-        <div class="pointer-events-none absolute inset-0 rounded-full bg-white/10 opacity-0 transition-opacity group-active:opacity-100" />
       </button>
 
-      <!-- HP Bar -->
-      <div class="w-full">
-        <div class="mb-1 flex justify-between text-xs text-gray-400">
-          <span>HP</span>
-          <span>{{ Math.ceil(combat.enemy.currentHp) }} / {{ combat.enemy.maxHp }}</span>
+      <!-- HP Bar (Pokemon style) -->
+      <div class="w-full rounded-xl bg-[#0f0f1e] p-3">
+        <div class="mb-1.5 flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase tracking-widest" :class="combat.isBossFight ? 'text-red-400' : 'text-green-400'">HP</span>
+          <span class="font-pixel text-[9px] text-gray-400">{{ Math.ceil(combat.enemy.currentHp) }} / {{ combat.enemy.maxHp }}</span>
         </div>
-        <div class="h-4 w-full overflow-hidden rounded-full bg-gray-700">
+        <div class="h-3 w-full overflow-hidden rounded-full bg-[#1a1a2e] ring-1 ring-white/5">
           <div
             class="h-full rounded-full transition-all duration-150"
-            :class="combat.isBossFight
-              ? 'bg-gradient-to-r from-red-600 to-orange-500'
-              : 'bg-gradient-to-r from-red-500 to-green-500'"
+            :class="combat.enemyHpPercent > 50
+              ? 'bg-gradient-to-r from-green-500 to-green-400'
+              : combat.enemyHpPercent > 20
+                ? 'bg-gradient-to-r from-yellow-500 to-yellow-400'
+                : 'bg-gradient-to-r from-red-600 to-red-400'"
             :style="{ width: `${combat.enemyHpPercent}%` }"
           />
         </div>
       </div>
 
       <!-- Rewards Preview -->
-      <div class="flex gap-4 text-xs text-gray-500">
-        <span>+{{ combat.enemy.goldReward }} {{ t('or', 'gold') }}</span>
-        <span>+{{ combat.enemy.xpReward }} xp</span>
+      <div class="flex gap-4 text-[10px]">
+        <span class="flex items-center gap-1 text-yellow-500">🪙 +{{ combat.enemy.goldReward }}</span>
+        <span class="flex items-center gap-1 text-blue-400">✦ +{{ combat.enemy.xpReward }} xp</span>
       </div>
     </div>
 
     <!-- Waiting for enemy -->
-    <div v-else class="flex flex-col items-center gap-4 py-12 text-gray-500">
-      <Swords class="h-12 w-12 animate-pulse" />
-      <p>{{ t('Recherche d\'un ennemi...', 'Searching for enemy...') }}</p>
+    <div v-else class="pk-card flex flex-col items-center gap-4 px-12 py-16 text-gray-600">
+      <div class="animate-pokeball-shake text-4xl">🔴</div>
+      <p class="font-pixel text-[9px]">{{ t('Recherche...', 'Searching...') }}</p>
     </div>
 
-    <!-- Player Level & XP -->
-    <div class="w-full max-w-xs">
-      <div class="mb-1 flex justify-between text-xs text-gray-400">
-        <span>{{ t('Niveau', 'Level') }} {{ player.level }}</span>
-        <span>{{ player.xp }} / {{ player.xpToNextLevel }} XP</span>
+    <!-- Stats Row -->
+    <div class="flex gap-3">
+      <div class="flex items-center gap-2 rounded-xl bg-[#16213e] px-4 py-2.5 ring-1 ring-[#1e3a5f]">
+        <Swords class="h-4 w-4 text-orange-400" />
+        <div class="text-center">
+          <p class="text-sm font-bold text-white">{{ combat.clickDamage }}</p>
+          <p class="text-[8px] uppercase tracking-wider text-gray-500">{{ t('Click', 'Click') }}</p>
+        </div>
       </div>
-      <div class="h-2 w-full overflow-hidden rounded-full bg-gray-700">
-        <div
-          class="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all duration-300"
-          :style="{ width: `${player.xpPercent}%` }"
-        />
+      <div class="flex items-center gap-2 rounded-xl bg-[#16213e] px-4 py-2.5 ring-1 ring-[#1e3a5f]">
+        <Zap class="h-4 w-4 text-cyan-400" />
+        <div class="text-center">
+          <p class="text-sm font-bold text-white">{{ combat.teamDps }}</p>
+          <p class="text-[8px] uppercase tracking-wider text-gray-500">DPS</p>
+        </div>
       </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="flex gap-6 text-center text-sm text-gray-400">
-      <div>
-        <p class="text-xl font-bold text-white">{{ combat.clickDamage }}</p>
-        <p class="flex items-center gap-1"><Swords class="h-3 w-3" /> {{ t('Click', 'Click') }}</p>
-      </div>
-      <div>
-        <p class="text-xl font-bold text-white">{{ combat.teamDps }}</p>
-        <p class="flex items-center gap-1"><Zap class="h-3 w-3" /> DPS</p>
-      </div>
-      <div>
-        <p class="text-xl font-bold text-white">{{ combat.totalKills }}</p>
-        <p class="flex items-center gap-1"><Skull class="h-3 w-3" /> Kills</p>
+      <div class="flex items-center gap-2 rounded-xl bg-[#16213e] px-4 py-2.5 ring-1 ring-[#1e3a5f]">
+        <Skull class="h-4 w-4 text-red-400" />
+        <div class="text-center">
+          <p class="text-sm font-bold text-white">{{ combat.totalKills }}</p>
+          <p class="text-[8px] uppercase tracking-wider text-gray-500">Kills</p>
+        </div>
       </div>
     </div>
 
