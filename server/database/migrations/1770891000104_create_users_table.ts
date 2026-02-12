@@ -15,6 +15,10 @@ export default class extends BaseSchema {
       table.integer('current_zone').unsigned().notNullable().defaultTo(1)
       table.integer('current_stage').unsigned().notNullable().defaultTo(1)
       table.integer('click_damage').unsigned().notNullable().defaultTo(1)
+      table.integer('xp').unsigned().notNullable().defaultTo(0)
+      table.integer('level').unsigned().notNullable().defaultTo(1)
+      table.integer('badges').unsigned().notNullable().defaultTo(0)
+      table.timestamp('last_login_at').nullable()
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

@@ -2,9 +2,15 @@
 import { Swords, Backpack, User, Star, ShoppingBag, Globe, Trophy } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useLocale } from '~/composables/useLocale'
+import { useAfkReward } from '~/composables/useAfkReward'
 
 const player = usePlayerStore()
 const { locale, setLocale, t } = useLocale()
+const { showPopup, afkResult, checkAfkRewards, dismissPopup } = useAfkReward()
+
+onMounted(() => {
+  checkAfkRewards()
+})
 
 function toggleLocale() {
   setLocale(locale.value === 'fr' ? 'en' : 'fr')
@@ -88,5 +94,15 @@ const navItems = computed(() => [
         <slot />
       </div>
     </main>
+
+    <!-- AFK Reward Popup -->
+    <AfkRewardPopup
+      v-if="afkResult"
+      :show="showPopup"
+      :hours-away="afkResult.hoursAway"
+      :gold-earned="afkResult.goldEarned"
+      :enemies-defeated="afkResult.enemiesDefeated"
+      @dismiss="dismissPopup"
+    />
   </div>
 </template>

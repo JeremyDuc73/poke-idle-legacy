@@ -42,6 +42,18 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare clickDamage: number
 
+  @column()
+  declare xp: number
+
+  @column()
+  declare level: number
+
+  @column()
+  declare badges: number
+
+  @column.dateTime()
+  declare lastLoginAt: DateTime | null
+
   @hasMany(() => UserPokemon)
   declare pokemons: HasMany<typeof UserPokemon>
 

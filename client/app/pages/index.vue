@@ -3,6 +3,7 @@ import { Swords, Zap, Timer, Skull, MapPin } from 'lucide-vue-next'
 import { getSpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
 import { useCombatStore } from '~/stores/useCombatStore'
 import { usePlayerStore } from '~/stores/usePlayerStore'
+import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
 import { getZone } from '~/data/zones'
 import type { WildPokemon, BossTrainer } from '~/data/zones'
@@ -13,7 +14,12 @@ definePageMeta({
 
 const combat = useCombatStore()
 const player = usePlayerStore()
+const inventory = useInventoryStore()
 const { t } = useLocale()
+
+watch(() => inventory.teamDps, (dps) => {
+  combat.teamDps = dps
+}, { immediate: true })
 
 const currentZone = computed(() => getZone(player.currentGeneration, player.currentZone))
 const zoneName = computed(() => {
