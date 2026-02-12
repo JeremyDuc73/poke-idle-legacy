@@ -5,13 +5,16 @@
 @tailwind utilities;
 
 :root {
-  --pk-red: #dc2626;
-  --pk-blue: #2563eb;
-  --pk-yellow: #eab308;
-  --pk-dark: #1a1a2e;
-  --pk-darker: #0f0f1e;
-  --pk-card: #16213e;
-  --pk-border: #1e3a5f;
+  --pk-red: #ee1515;
+  --pk-dark-red: #b91c1c;
+  --pk-blue: #3b4cca;
+  --pk-light-blue: #60a5fa;
+  --pk-yellow: #ffcc00;
+  --pk-gold: #fbbf24;
+  --pk-dark: #1e293b;
+  --pk-darker: #0f172a;
+  --pk-card: #1e293b;
+  --pk-border: #334155;
 }
 
 body {
@@ -33,16 +36,16 @@ body {
 
 /* Pokemon card glow */
 .pk-card {
-  background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
-  border: 1px solid #1e3a5f;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 2px solid #334155;
   border-radius: 1rem;
-  box-shadow: 0 0 20px rgba(37, 99, 235, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(59, 76, 202, 0.08);
 }
 
 .pk-card-boss {
-  background: linear-gradient(135deg, #2a1525 0%, #1a1a2e 100%);
-  border: 1px solid #7f1d1d;
-  box-shadow: 0 0 30px rgba(239, 68, 68, 0.15);
+  background: linear-gradient(135deg, #2d1520 0%, #1a0a10 100%);
+  border: 2px solid #991b1b;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3), 0 0 25px rgba(238, 21, 21, 0.15);
 }
 
 /* Pokeball shake animation */

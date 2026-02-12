@@ -122,17 +122,28 @@ function checkEnemyDeath() {
   if (combat.isEnemyDead && combat.enemy) {
     const goldReward = combat.enemy.goldReward
     const xpReward = combat.enemy.xpReward
+    const wasBoss = combat.enemy.isBoss
     player.addGold(goldReward)
     player.addXp(xpReward)
 
-    const wasBoss = combat.enemy.isBoss
+    // Give XP to team pokemon
+    const team = inventory.team
+    if (team.length > 0) {
+      const xpPerPokemon = Math.max(1, Math.floor(xpReward / team.length))
+      for (const poke of team) {
+        inventory.addPokemonXp(poke.id, xpPerPokemon)
+      }
+    }
+
     combat.killEnemy()
 
     if (wasBoss) {
       player.advanceStage()
+    } else {
+      player.addStageKill()
     }
 
-    setTimeout(() => spawnEnemy(), 500)
+    setTimeout(() => spawnEnemy(), 400)
   }
 }
 
@@ -160,7 +171,7 @@ onUnmounted(() => {
 <template>
   <div class="flex flex-col items-center gap-6 select-none">
     <!-- Stage Info -->
-    <div class="text-center">
+    <div class="w-full max-w-md text-center">
       <div class="flex items-center justify-center gap-2 text-xs text-gray-500">
         <MapPin class="h-3 w-3" />
         <span>{{ zoneName }}</span>
@@ -169,6 +180,19 @@ onUnmounted(() => {
       <p v-if="player.isBossStage" class="mt-1.5 inline-block rounded-full bg-red-600/20 px-3 py-0.5 text-[10px] font-bold uppercase tracking-widest text-red-400">
         {{ t('Combat de Boss', 'Boss Fight') }}
       </p>
+      <!-- Stage Kill Progress -->
+      <div v-if="!player.isBossStage" class="mt-2">
+        <div class="mb-1 flex items-center justify-between text-[9px] text-gray-500">
+          <span>{{ t('Progression', 'Progress') }}</span>
+          <span>{{ player.stageKills }} / {{ player.killsPerStage }}</span>
+        </div>
+        <div class="h-1.5 w-full overflow-hidden rounded-full bg-[#1a1a2e] ring-1 ring-white/5">
+          <div
+            class="h-full rounded-full bg-gradient-to-r from-yellow-500 to-yellow-300 transition-all duration-300"
+            :style="{ width: `${player.stageKillsPercent}%` }"
+          />
+        </div>
+      </div>
     </div>
 
     <!-- Boss Timer -->

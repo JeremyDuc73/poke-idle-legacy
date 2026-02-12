@@ -1,0 +1,274 @@
+export type EvoMethod = 'level' | 'stone' | 'trade'
+
+export interface Evolution {
+  fromSlug: string
+  toSlug: string
+  toNameFr: string
+  toNameEn: string
+  method: EvoMethod
+  levelRequired?: number
+  itemRequired?: string
+}
+
+export interface EvoItem {
+  id: string
+  nameFr: string
+  nameEn: string
+  descFr: string
+  descEn: string
+  icon: string
+  applicableTo: string[]
+}
+
+// Gen 1 evolution chains
+export const EVOLUTIONS: Evolution[] = [
+  // Starters
+  { fromSlug: 'bulbasaur', toSlug: 'ivysaur', toNameFr: 'Herbizarre', toNameEn: 'Ivysaur', method: 'level', levelRequired: 16 },
+  { fromSlug: 'ivysaur', toSlug: 'venusaur', toNameFr: 'Florizarre', toNameEn: 'Venusaur', method: 'level', levelRequired: 32 },
+  { fromSlug: 'charmander', toSlug: 'charmeleon', toNameFr: 'Reptincel', toNameEn: 'Charmeleon', method: 'level', levelRequired: 16 },
+  { fromSlug: 'charmeleon', toSlug: 'charizard', toNameFr: 'Dracaufeu', toNameEn: 'Charizard', method: 'level', levelRequired: 36 },
+  { fromSlug: 'squirtle', toSlug: 'wartortle', toNameFr: 'Carabaffe', toNameEn: 'Wartortle', method: 'level', levelRequired: 16 },
+  { fromSlug: 'wartortle', toSlug: 'blastoise', toNameFr: 'Tortank', toNameEn: 'Blastoise', method: 'level', levelRequired: 36 },
+
+  // Bugs
+  { fromSlug: 'caterpie', toSlug: 'metapod', toNameFr: 'Chrysacier', toNameEn: 'Metapod', method: 'level', levelRequired: 7 },
+  { fromSlug: 'metapod', toSlug: 'butterfree', toNameFr: 'Papilusion', toNameEn: 'Butterfree', method: 'level', levelRequired: 10 },
+  { fromSlug: 'weedle', toSlug: 'kakuna', toNameFr: 'Coconfort', toNameEn: 'Kakuna', method: 'level', levelRequired: 7 },
+  { fromSlug: 'kakuna', toSlug: 'beedrill', toNameFr: 'Dardargnan', toNameEn: 'Beedrill', method: 'level', levelRequired: 10 },
+
+  // Birds
+  { fromSlug: 'pidgey', toSlug: 'pidgeotto', toNameFr: 'Roucoups', toNameEn: 'Pidgeotto', method: 'level', levelRequired: 18 },
+  { fromSlug: 'pidgeotto', toSlug: 'pidgeot', toNameFr: 'Roucarnage', toNameEn: 'Pidgeot', method: 'level', levelRequired: 36 },
+  { fromSlug: 'spearow', toSlug: 'fearow', toNameFr: 'Rapasdepic', toNameEn: 'Fearow', method: 'level', levelRequired: 20 },
+
+  // Rattata
+  { fromSlug: 'rattata', toSlug: 'raticate', toNameFr: 'Rattatac', toNameEn: 'Raticate', method: 'level', levelRequired: 20 },
+
+  // Ekans
+  { fromSlug: 'ekans', toSlug: 'arbok', toNameFr: 'Arbok', toNameEn: 'Arbok', method: 'level', levelRequired: 22 },
+
+  // Pikachu
+  { fromSlug: 'pikachu', toSlug: 'raichu', toNameFr: 'Raichu', toNameEn: 'Raichu', method: 'stone', itemRequired: 'thunder-stone' },
+
+  // Sandshrew
+  { fromSlug: 'sandshrew', toSlug: 'sandslash', toNameFr: 'Sablaireau', toNameEn: 'Sandslash', method: 'level', levelRequired: 22 },
+
+  // Nidoran
+  { fromSlug: 'nidoran-f', toSlug: 'nidorina', toNameFr: 'Nidorina', toNameEn: 'Nidorina', method: 'level', levelRequired: 16 },
+  { fromSlug: 'nidorina', toSlug: 'nidoqueen', toNameFr: 'Nidoqueen', toNameEn: 'Nidoqueen', method: 'stone', itemRequired: 'moon-stone' },
+  { fromSlug: 'nidoran-m', toSlug: 'nidorino', toNameFr: 'Nidorino', toNameEn: 'Nidorino', method: 'level', levelRequired: 16 },
+  { fromSlug: 'nidorino', toSlug: 'nidoking', toNameFr: 'Nidoking', toNameEn: 'Nidoking', method: 'stone', itemRequired: 'moon-stone' },
+
+  // Vulpix
+  { fromSlug: 'vulpix', toSlug: 'ninetales', toNameFr: 'Feunard', toNameEn: 'Ninetales', method: 'stone', itemRequired: 'fire-stone' },
+
+  // Jigglypuff
+  { fromSlug: 'jigglypuff', toSlug: 'wigglytuff', toNameFr: 'Grodoudou', toNameEn: 'Wigglytuff', method: 'stone', itemRequired: 'moon-stone' },
+
+  // Zubat
+  { fromSlug: 'zubat', toSlug: 'golbat', toNameFr: 'Nosféralto', toNameEn: 'Golbat', method: 'level', levelRequired: 22 },
+
+  // Oddish
+  { fromSlug: 'oddish', toSlug: 'gloom', toNameFr: 'Ortide', toNameEn: 'Gloom', method: 'level', levelRequired: 21 },
+  { fromSlug: 'gloom', toSlug: 'vileplume', toNameFr: 'Rafflesia', toNameEn: 'Vileplume', method: 'stone', itemRequired: 'leaf-stone' },
+
+  // Paras
+  { fromSlug: 'paras', toSlug: 'parasect', toNameFr: 'Parasect', toNameEn: 'Parasect', method: 'level', levelRequired: 24 },
+
+  // Venonat
+  { fromSlug: 'venonat', toSlug: 'venomoth', toNameFr: 'Aéromite', toNameEn: 'Venomoth', method: 'level', levelRequired: 31 },
+
+  // Diglett
+  { fromSlug: 'diglett', toSlug: 'dugtrio', toNameFr: 'Triopikeur', toNameEn: 'Dugtrio', method: 'level', levelRequired: 26 },
+
+  // Meowth
+  { fromSlug: 'meowth', toSlug: 'persian', toNameFr: 'Persian', toNameEn: 'Persian', method: 'level', levelRequired: 28 },
+
+  // Psyduck
+  { fromSlug: 'psyduck', toSlug: 'golduck', toNameFr: 'Akwakwak', toNameEn: 'Golduck', method: 'level', levelRequired: 33 },
+
+  // Mankey
+  { fromSlug: 'mankey', toSlug: 'primeape', toNameFr: 'Colossinge', toNameEn: 'Primeape', method: 'level', levelRequired: 28 },
+
+  // Growlithe
+  { fromSlug: 'growlithe', toSlug: 'arcanine', toNameFr: 'Arcanin', toNameEn: 'Arcanine', method: 'stone', itemRequired: 'fire-stone' },
+
+  // Poliwag
+  { fromSlug: 'poliwag', toSlug: 'poliwhirl', toNameFr: 'Têtarte', toNameEn: 'Poliwhirl', method: 'level', levelRequired: 25 },
+  { fromSlug: 'poliwhirl', toSlug: 'poliwrath', toNameFr: 'Tartard', toNameEn: 'Poliwrath', method: 'stone', itemRequired: 'water-stone' },
+
+  // Abra
+  { fromSlug: 'abra', toSlug: 'kadabra', toNameFr: 'Kadabra', toNameEn: 'Kadabra', method: 'level', levelRequired: 16 },
+  { fromSlug: 'kadabra', toSlug: 'alakazam', toNameFr: 'Alakazam', toNameEn: 'Alakazam', method: 'trade' },
+
+  // Machop
+  { fromSlug: 'machop', toSlug: 'machoke', toNameFr: 'Machopeur', toNameEn: 'Machoke', method: 'level', levelRequired: 28 },
+  { fromSlug: 'machoke', toSlug: 'machamp', toNameFr: 'Mackogneur', toNameEn: 'Machamp', method: 'trade' },
+
+  // Bellsprout
+  { fromSlug: 'bellsprout', toSlug: 'weepinbell', toNameFr: 'Boustiflor', toNameEn: 'Weepinbell', method: 'level', levelRequired: 21 },
+  { fromSlug: 'weepinbell', toSlug: 'victreebel', toNameFr: 'Empiflor', toNameEn: 'Victreebel', method: 'stone', itemRequired: 'leaf-stone' },
+
+  // Tentacool
+  { fromSlug: 'tentacool', toSlug: 'tentacruel', toNameFr: 'Tentacruel', toNameEn: 'Tentacruel', method: 'level', levelRequired: 30 },
+
+  // Geodude
+  { fromSlug: 'geodude', toSlug: 'graveler', toNameFr: 'Gravalanch', toNameEn: 'Graveler', method: 'level', levelRequired: 25 },
+  { fromSlug: 'graveler', toSlug: 'golem', toNameFr: 'Grolem', toNameEn: 'Golem', method: 'trade' },
+
+  // Ponyta
+  { fromSlug: 'ponyta', toSlug: 'rapidash', toNameFr: 'Galopa', toNameEn: 'Rapidash', method: 'level', levelRequired: 40 },
+
+  // Slowpoke
+  { fromSlug: 'slowpoke', toSlug: 'slowbro', toNameFr: 'Flagadoss', toNameEn: 'Slowbro', method: 'level', levelRequired: 37 },
+
+  // Magnemite
+  { fromSlug: 'magnemite', toSlug: 'magneton', toNameFr: 'Magnéton', toNameEn: 'Magneton', method: 'level', levelRequired: 30 },
+
+  // Doduo
+  { fromSlug: 'doduo', toSlug: 'dodrio', toNameFr: 'Dodrio', toNameEn: 'Dodrio', method: 'level', levelRequired: 31 },
+
+  // Seel
+  { fromSlug: 'seel', toSlug: 'dewgong', toNameFr: 'Lamantine', toNameEn: 'Dewgong', method: 'level', levelRequired: 34 },
+
+  // Grimer
+  { fromSlug: 'grimer', toSlug: 'muk', toNameFr: 'Grotadmorv', toNameEn: 'Muk', method: 'level', levelRequired: 38 },
+
+  // Shellder
+  { fromSlug: 'shellder', toSlug: 'cloyster', toNameFr: 'Crustabri', toNameEn: 'Cloyster', method: 'stone', itemRequired: 'water-stone' },
+
+  // Gastly
+  { fromSlug: 'gastly', toSlug: 'haunter', toNameFr: 'Spectrum', toNameEn: 'Haunter', method: 'level', levelRequired: 25 },
+  { fromSlug: 'haunter', toSlug: 'gengar', toNameFr: 'Ectoplasma', toNameEn: 'Gengar', method: 'trade' },
+
+  // Drowzee
+  { fromSlug: 'drowzee', toSlug: 'hypno', toNameFr: 'Hypnomade', toNameEn: 'Hypno', method: 'level', levelRequired: 26 },
+
+  // Krabby
+  { fromSlug: 'krabby', toSlug: 'kingler', toNameFr: 'Krabboss', toNameEn: 'Kingler', method: 'level', levelRequired: 28 },
+
+  // Voltorb
+  { fromSlug: 'voltorb', toSlug: 'electrode', toNameFr: 'Électrode', toNameEn: 'Electrode', method: 'level', levelRequired: 30 },
+
+  // Exeggcute
+  { fromSlug: 'exeggcute', toSlug: 'exeggutor', toNameFr: 'Noadkoko', toNameEn: 'Exeggutor', method: 'stone', itemRequired: 'leaf-stone' },
+
+  // Cubone
+  { fromSlug: 'cubone', toSlug: 'marowak', toNameFr: 'Ossatueur', toNameEn: 'Marowak', method: 'level', levelRequired: 28 },
+
+  // Koffing
+  { fromSlug: 'koffing', toSlug: 'weezing', toNameFr: 'Smogogo', toNameEn: 'Weezing', method: 'level', levelRequired: 35 },
+
+  // Rhyhorn
+  { fromSlug: 'rhyhorn', toSlug: 'rhydon', toNameFr: 'Rhinoféros', toNameEn: 'Rhydon', method: 'level', levelRequired: 42 },
+
+  // Horsea
+  { fromSlug: 'horsea', toSlug: 'seadra', toNameFr: 'Hypocéan', toNameEn: 'Seadra', method: 'level', levelRequired: 32 },
+
+  // Goldeen
+  { fromSlug: 'goldeen', toSlug: 'seaking', toNameFr: 'Poissoroy', toNameEn: 'Seaking', method: 'level', levelRequired: 33 },
+
+  // Staryu
+  { fromSlug: 'staryu', toSlug: 'starmie', toNameFr: 'Staross', toNameEn: 'Starmie', method: 'stone', itemRequired: 'water-stone' },
+
+  // Magikarp
+  { fromSlug: 'magikarp', toSlug: 'gyarados', toNameFr: 'Léviator', toNameEn: 'Gyarados', method: 'level', levelRequired: 20 },
+
+  // Eevee
+  { fromSlug: 'eevee', toSlug: 'vaporeon', toNameFr: 'Aquali', toNameEn: 'Vaporeon', method: 'stone', itemRequired: 'water-stone' },
+  { fromSlug: 'eevee', toSlug: 'jolteon', toNameFr: 'Voltali', toNameEn: 'Jolteon', method: 'stone', itemRequired: 'thunder-stone' },
+  { fromSlug: 'eevee', toSlug: 'flareon', toNameFr: 'Pyroli', toNameEn: 'Flareon', method: 'stone', itemRequired: 'fire-stone' },
+
+  // Omanyte
+  { fromSlug: 'omanyte', toSlug: 'omastar', toNameFr: 'Amonistar', toNameEn: 'Omastar', method: 'level', levelRequired: 40 },
+
+  // Kabuto
+  { fromSlug: 'kabuto', toSlug: 'kabutops', toNameFr: 'Kabutops', toNameEn: 'Kabutops', method: 'level', levelRequired: 40 },
+
+  // Dratini
+  { fromSlug: 'dratini', toSlug: 'dragonair', toNameFr: 'Draco', toNameEn: 'Dragonair', method: 'level', levelRequired: 30 },
+  { fromSlug: 'dragonair', toSlug: 'dragonite', toNameFr: 'Dracolosse', toNameEn: 'Dragonite', method: 'level', levelRequired: 55 },
+
+  // Porygon
+  { fromSlug: 'porygon', toSlug: 'porygon2', toNameFr: 'Porygon2', toNameEn: 'Porygon2', method: 'trade' },
+
+  // Clefairy
+  { fromSlug: 'clefairy', toSlug: 'clefable', toNameFr: 'Mélodelfe', toNameEn: 'Clefable', method: 'stone', itemRequired: 'moon-stone' },
+]
+
+// Evolution items available for Gen 1
+export const EVO_ITEMS: EvoItem[] = [
+  {
+    id: 'fire-stone',
+    nameFr: 'Pierre Feu',
+    nameEn: 'Fire Stone',
+    descFr: 'Fait évoluer certains Pokémon de type Feu',
+    descEn: 'Evolves certain Fire-type Pokémon',
+    icon: '🔥',
+    applicableTo: ['vulpix', 'growlithe', 'eevee'],
+  },
+  {
+    id: 'water-stone',
+    nameFr: 'Pierre Eau',
+    nameEn: 'Water Stone',
+    descFr: 'Fait évoluer certains Pokémon de type Eau',
+    descEn: 'Evolves certain Water-type Pokémon',
+    icon: '💧',
+    applicableTo: ['poliwhirl', 'shellder', 'staryu', 'eevee'],
+  },
+  {
+    id: 'thunder-stone',
+    nameFr: 'Pierre Foudre',
+    nameEn: 'Thunder Stone',
+    descFr: 'Fait évoluer certains Pokémon de type Électrik',
+    descEn: 'Evolves certain Electric-type Pokémon',
+    icon: '⚡',
+    applicableTo: ['pikachu', 'eevee'],
+  },
+  {
+    id: 'leaf-stone',
+    nameFr: 'Pierre Plante',
+    nameEn: 'Leaf Stone',
+    descFr: 'Fait évoluer certains Pokémon de type Plante',
+    descEn: 'Evolves certain Grass-type Pokémon',
+    icon: '🍃',
+    applicableTo: ['gloom', 'weepinbell', 'exeggcute'],
+  },
+  {
+    id: 'moon-stone',
+    nameFr: 'Pierre Lune',
+    nameEn: 'Moon Stone',
+    descFr: 'Fait évoluer certains Pokémon mystérieux',
+    descEn: 'Evolves certain mysterious Pokémon',
+    icon: '🌙',
+    applicableTo: ['nidorina', 'nidorino', 'clefairy', 'jigglypuff'],
+  },
+  {
+    id: 'link-cable',
+    nameFr: 'Câble Link',
+    nameEn: 'Link Cable',
+    descFr: 'Simule un échange pour faire évoluer un Pokémon',
+    descEn: 'Simulates a trade to evolve a Pokémon',
+    icon: '🔗',
+    applicableTo: ['kadabra', 'machoke', 'graveler', 'haunter', 'porygon'],
+  },
+]
+
+export function getEvolutionsFor(slug: string): Evolution[] {
+  return EVOLUTIONS.filter((e) => e.fromSlug === slug)
+}
+
+export function canEvolveByLevel(slug: string, level: number): Evolution | null {
+  return EVOLUTIONS.find((e) => e.fromSlug === slug && e.method === 'level' && level >= (e.levelRequired ?? 999)) ?? null
+}
+
+export function canEvolveByItem(slug: string, itemId: string): Evolution | null {
+  return EVOLUTIONS.find(
+    (e) => e.fromSlug === slug && (e.method === 'stone' || e.method === 'trade') && e.itemRequired === itemId
+  ) ?? null
+}
+
+export function pokemonXpForLevel(level: number): number {
+  if (level <= 1) return 0
+  return Math.floor(20 * Math.pow(level, 1.6))
+}

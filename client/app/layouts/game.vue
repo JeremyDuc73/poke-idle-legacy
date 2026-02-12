@@ -44,23 +44,23 @@ const navItems = computed(() => [
 </script>
 
 <template>
-  <div class="flex h-screen text-white" style="background: linear-gradient(180deg, #0f0f1e 0%, #1a1a2e 100%)">
+  <div class="flex h-screen text-white" style="background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%)">
     <!-- Sidebar -->
-    <aside class="flex w-20 flex-col items-center gap-1 border-r border-[#1e3a5f] py-4 lg:w-56" style="background: linear-gradient(180deg, #16213e 0%, #0f0f1e 100%)">
+    <aside class="flex w-20 flex-col items-center gap-1 py-4 lg:w-56" style="background: linear-gradient(180deg, #dc2626 0%, #991b1b 4%, #1e293b 4%, #0f172a 100%)">
       <!-- Logo -->
-      <div class="mb-4 flex flex-col items-center gap-1 px-2">
+      <div class="mb-3 flex flex-col items-center gap-1 px-2">
         <span class="text-2xl">🔴</span>
-        <span class="hidden font-pixel text-[10px] leading-tight text-yellow-400 lg:inline">POKE-IDLE</span>
-        <span class="hidden font-pixel text-[7px] text-red-400 lg:inline">LEGACY</span>
+        <span class="hidden font-pixel text-[10px] leading-tight lg:inline" style="color: #ffcc00">POKE-IDLE</span>
+        <span class="hidden font-pixel text-[7px] lg:inline" style="color: #ee1515">LEGACY</span>
       </div>
 
       <!-- Trainer Level -->
       <div class="mb-2 flex w-full flex-col items-center gap-1 px-3">
         <div class="flex w-full items-center justify-between text-[9px]">
-          <span class="text-blue-300">Lv.{{ player.level }}</span>
+          <span style="color: #60a5fa">Lv.{{ player.level }}</span>
           <span class="text-gray-500">{{ player.xp }}/{{ player.xpToNextLevel }}</span>
         </div>
-        <div class="h-1.5 w-full overflow-hidden rounded-full bg-[#0f0f1e]">
+        <div class="h-1.5 w-full overflow-hidden rounded-full bg-[#0f172a]">
           <div class="pk-xp-bar h-full rounded-full transition-all duration-500" :style="{ width: `${player.xpPercent}%` }" />
         </div>
       </div>
@@ -70,8 +70,9 @@ const navItems = computed(() => [
           v-for="item in navItems"
           :key="item.to"
           :to="item.to"
-          class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-400 transition-all hover:bg-[#1e3a5f]/50 hover:text-white"
-          active-class="!bg-red-600/90 !text-white shadow-lg shadow-red-600/20"
+          class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-400 transition-all hover:bg-slate-700/50 hover:text-white"
+          active-class="!text-white shadow-lg" style="--tw-shadow-color: rgba(238,21,21,0.2)"
+          :class="{ '!bg-[#ee1515]': $route.path === item.to }"
         >
           <component :is="item.icon" class="h-5 w-5 shrink-0" />
           <span class="hidden lg:inline">{{ item.label }}</span>
@@ -80,17 +81,17 @@ const navItems = computed(() => [
 
       <!-- Region + Badges -->
       <div class="mt-auto flex w-full flex-col gap-2 px-2 pb-2">
-        <div class="rounded-lg bg-[#0f0f1e]/60 p-2 text-center">
-          <p class="text-[8px] font-bold uppercase tracking-[0.2em] text-gray-600">{{ t('Région', 'Region') }}</p>
-          <p class="font-pixel text-[9px] text-blue-400">{{ player.regionName }}</p>
+        <div class="rounded-lg bg-[#0f172a]/60 p-2 text-center">
+          <p class="text-[8px] font-bold uppercase tracking-[0.2em] text-slate-600">{{ t('Région', 'Region') }}</p>
+          <p class="font-pixel text-[9px]" style="color: #3b4cca">{{ player.regionName }}</p>
         </div>
-        <div v-if="player.badges > 0" class="flex items-center justify-center gap-1.5 rounded-lg bg-yellow-500/10 px-2 py-1.5 text-xs font-bold text-yellow-400">
+        <div v-if="player.badges > 0" class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold" style="background: rgba(255,204,0,0.1); color: #ffcc00">
           <Trophy class="h-3.5 w-3.5" />
           <span>{{ player.badges }}</span>
         </div>
         <!-- Locale Toggle -->
         <button
-          class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[10px] text-gray-500 transition-colors hover:bg-[#1e3a5f]/40 hover:text-white"
+          class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[10px] text-slate-500 transition-colors hover:bg-slate-700/40 hover:text-white"
           @click="toggleLocale"
         >
           <Globe class="h-3 w-3" />
@@ -101,14 +102,14 @@ const navItems = computed(() => [
         <NuxtLink
           v-if="!auth.isAuthenticated"
           to="/login"
-          class="flex items-center justify-center gap-1.5 rounded-lg bg-blue-600/20 px-2 py-1.5 text-[10px] font-medium text-blue-400 transition-colors hover:bg-blue-600/30"
+          class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[10px] font-medium transition-colors hover:opacity-80" style="background: rgba(59,76,202,0.2); color: #3b4cca"
         >
           <LogIn class="h-3 w-3" />
           <span class="hidden lg:inline">{{ t('Connexion', 'Sign in') }}</span>
         </NuxtLink>
         <button
           v-else
-          class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[10px] text-gray-500 transition-colors hover:bg-red-500/10 hover:text-red-400"
+          class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[10px] text-slate-500 transition-colors hover:bg-red-500/10 hover:text-red-400"
           @click="auth.logout()"
         >
           <LogOut class="h-3 w-3" />
@@ -118,18 +119,18 @@ const navItems = computed(() => [
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto">
+    <main class="flex-1 overflow-y-auto border-l border-slate-700/50">
       <!-- Top Bar -->
-      <header class="sticky top-0 z-10 flex items-center justify-between border-b border-[#1e3a5f] px-6 py-2.5 backdrop-blur-md" style="background: rgba(22, 33, 62, 0.85)">
+      <header class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-700/50 px-6 py-2.5 backdrop-blur-md" style="background: rgba(15, 23, 42, 0.9)">
         <div class="flex items-center gap-3">
-          <h1 class="font-pixel text-xs text-red-400">POKE-IDLE</h1>
+          <h1 class="font-pixel text-xs" style="color: #ee1515">POKE-IDLE</h1>
         </div>
-        <div class="flex items-center gap-5 text-sm">
-          <div class="flex items-center gap-1.5 rounded-lg bg-yellow-500/10 px-3 py-1.5">
+        <div class="flex items-center gap-4 text-sm">
+          <div class="flex items-center gap-1.5 rounded-lg px-3 py-1.5" style="background: rgba(255,204,0,0.08)">
             <span class="text-base">🪙</span>
-            <span class="font-bold text-yellow-400">{{ player.formattedGold }}</span>
+            <span class="font-bold" style="color: #ffcc00">{{ player.formattedGold }}</span>
           </div>
-          <div class="flex items-center gap-1.5 rounded-lg bg-purple-500/10 px-3 py-1.5">
+          <div class="flex items-center gap-1.5 rounded-lg px-3 py-1.5" style="background: rgba(168,85,247,0.08)">
             <span class="text-base">💎</span>
             <span class="font-bold text-purple-400">{{ player.formattedGems }}</span>
           </div>

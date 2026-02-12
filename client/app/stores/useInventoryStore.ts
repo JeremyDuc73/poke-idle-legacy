@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import { canEvolveByLevel, canEvolveByItem, pokemonXpForLevel } from '~/data/evolutions'
+import type { Evolution } from '~/data/evolutions'
 
 export interface OwnedPokemon {
   id: number
@@ -79,6 +81,35 @@ export const useInventoryStore = defineStore('inventory', {
     removeFromTeam(pokemonId: number) {
       const pokemon = this.collection.find((p) => p.id === pokemonId)
       if (pokemon) pokemon.teamSlot = null
+    },
+
+    addPokemonXp(pokemonId: number, amount: number) {
+      const pokemon = this.collection.find((p) => p.id === pokemonId)
+      if (!pokemon) return
+      pokemon.xp += amount
+      while (pokemon.xp >= pokemonXpForLevel(pokemon.level + 1)) {
+        pokemon.level++
+        // Check auto-evolution by level
+        const evo = canEvolveByLevel(pokemon.slug, pokemon.level)
+        if (evo) {
+          this.applyEvolution(pokemon, evo)
+        }
+      }
+    },
+
+    evolveWithItem(pokemonId: number, itemId: string): boolean {
+      const pokemon = this.collection.find((p) => p.id === pokemonId)
+      if (!pokemon) return false
+      const evo = canEvolveByItem(pokemon.slug, itemId)
+      if (!evo) return false
+      this.applyEvolution(pokemon, evo)
+      return true
+    },
+
+    applyEvolution(pokemon: OwnedPokemon, evo: Evolution) {
+      pokemon.slug = evo.toSlug
+      pokemon.nameFr = evo.toNameFr
+      pokemon.nameEn = evo.toNameEn
     },
   },
 })

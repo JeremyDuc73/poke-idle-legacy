@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { Coins, Gem, Zap, Swords, ShieldPlus, Sparkles } from 'lucide-vue-next'
+import { Coins, Gem, Zap, Swords, ShieldPlus, Sparkles, FlaskConical } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useCombatStore } from '~/stores/useCombatStore'
+import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
+import { EVO_ITEMS, getEvolutionsFor } from '~/data/evolutions'
 
 definePageMeta({
   layout: 'game',
@@ -10,13 +12,48 @@ definePageMeta({
 
 const player = usePlayerStore()
 const combat = useCombatStore()
+const inventory = useInventoryStore()
 const { t } = useLocale()
 
 const purchaseFlash = ref<string | null>(null)
+const evoMessage = ref<string | null>(null)
 
 function flash(id: string) {
   purchaseFlash.value = id
   setTimeout(() => (purchaseFlash.value = null), 600)
+}
+
+// Evolution items cost
+const EVO_ITEM_COST = 1500
+
+function buyEvoItem(itemId: string) {
+  if (!player.spendGold(EVO_ITEM_COST)) return
+
+  // Find first Pokemon in collection that can use this item
+  const candidates = inventory.collection.filter((p) => {
+    const evos = getEvolutionsFor(p.slug)
+    return evos.some((e) => (e.method === 'stone' || e.method === 'trade') && e.itemRequired === itemId)
+  })
+
+  if (candidates.length === 0) {
+    player.addGold(EVO_ITEM_COST) // Refund
+    evoMessage.value = t('Aucun Pokémon compatible !', 'No compatible Pokémon!')
+    setTimeout(() => (evoMessage.value = null), 2000)
+    return
+  }
+
+  const target = candidates[0]
+  const success = inventory.evolveWithItem(target.id, itemId)
+  if (success) {
+    flash(`evo-${itemId}`)
+    evoMessage.value = t(
+      `${target.nameFr} a évolué !`,
+      `${target.nameEn} evolved!`
+    )
+    setTimeout(() => (evoMessage.value = null), 3000)
+  } else {
+    player.addGold(EVO_ITEM_COST) // Refund
+  }
 }
 
 function buyGems(amount: number, goldCost: number) {
@@ -163,6 +200,46 @@ const shopItems = computed<ShopItem[]>(() => [
           <div class="flex items-center gap-1 text-sm font-bold" :class="item.currency === 'gold' ? 'text-yellow-400' : 'text-purple-400'">
             <span>{{ item.currency === 'gold' ? '🪙' : '💎' }}</span>
             {{ item.cost.toLocaleString() }}
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Evolution Items -->
+    <section>
+      <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-400">
+        <FlaskConical class="h-4 w-4 text-green-400" />
+        {{ t('Objets d\'évolution', 'Evolution Items') }}
+      </h3>
+      <!-- Evo message -->
+      <div v-if="evoMessage" class="mb-3 rounded-lg bg-green-500/10 px-4 py-2 text-center text-sm font-bold text-green-400">
+        {{ evoMessage }}
+      </div>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <button
+          v-for="item in EVO_ITEMS"
+          :key="item.id"
+          class="flex flex-col gap-2 rounded-xl border border-gray-700 bg-gray-800 p-4 text-left transition-all hover:border-green-500/30 active:scale-[0.98] disabled:opacity-40"
+          :class="{ 'ring-2 ring-green-500/50': purchaseFlash === `evo-${item.id}` }"
+          :disabled="player.gold < EVO_ITEM_COST"
+          @click="buyEvoItem(item.id)"
+        >
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-700 text-xl">
+              {{ item.icon }}
+            </div>
+            <div>
+              <p class="font-bold text-white">{{ t(item.nameFr, item.nameEn) }}</p>
+              <p class="text-xs text-gray-500">{{ t(item.descFr, item.descEn) }}</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] text-gray-600">
+              {{ item.applicableTo.length }} {{ t('Pokémon compatibles', 'compatible Pokémon') }}
+            </span>
+            <span class="flex items-center gap-1 text-sm font-bold text-yellow-400">
+              🪙 {{ EVO_ITEM_COST.toLocaleString() }}
+            </span>
           </div>
         </button>
       </div>

@@ -13,6 +13,7 @@ const GENERATION_NAMES: Record<number, string> = {
 }
 
 const STAGES_PER_ZONE = 10
+const KILLS_PER_STAGE = 10
 
 function xpForLevel(level: number): number {
   if (level <= 1) return 0
@@ -28,6 +29,7 @@ interface PlayerState {
   currentGeneration: number
   currentZone: number
   currentStage: number
+  stageKills: number
   clickDamage: number
   badges: number
   isLoggedIn: boolean
@@ -43,6 +45,7 @@ export const usePlayerStore = defineStore('player', {
     currentGeneration: 1,
     currentZone: 1,
     currentStage: 1,
+    stageKills: 0,
     clickDamage: 1,
     badges: 0,
     isLoggedIn: false,
@@ -64,6 +67,10 @@ export const usePlayerStore = defineStore('player', {
     stageLabel: (state): string => {
       const region = GENERATION_NAMES[state.currentGeneration] ?? '???'
       return `${region} - Zone ${state.currentZone} - Stage ${state.currentStage}/${STAGES_PER_ZONE}`
+    },
+    killsPerStage: (): number => KILLS_PER_STAGE,
+    stageKillsPercent: (state): number => {
+      return Math.min(100, (state.stageKills / KILLS_PER_STAGE) * 100)
     },
     xpToNextLevel: (state): number => {
       return xpForLevel(state.level + 1)
@@ -106,6 +113,16 @@ export const usePlayerStore = defineStore('player', {
       }
     },
 
+    addStageKill(): boolean {
+      this.stageKills++
+      if (this.stageKills >= KILLS_PER_STAGE) {
+        this.stageKills = 0
+        this.advanceStage()
+        return true
+      }
+      return false
+    },
+
     advanceStage() {
       if (this.currentStage < STAGES_PER_ZONE) {
         this.currentStage++
@@ -114,6 +131,7 @@ export const usePlayerStore = defineStore('player', {
         this.currentZone++
         this.badges++
       }
+      this.stageKills = 0
     },
 
     retreatStage() {
