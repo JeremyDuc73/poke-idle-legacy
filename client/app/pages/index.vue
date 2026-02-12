@@ -21,6 +21,10 @@ watch(() => inventory.teamDps, (dps) => {
   combat.teamDps = dps
 }, { immediate: true })
 
+watch(() => player.clickDamage, (dmg) => {
+  combat.clickDamage = dmg
+}, { immediate: true })
+
 const currentZone = computed(() => getZone(player.currentGeneration, player.currentZone))
 const zoneName = computed(() => {
   const z = currentZone.value
