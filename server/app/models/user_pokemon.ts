@@ -5,6 +5,8 @@ import User from '#models/user'
 import Species from '#models/species'
 
 export default class UserPokemon extends BaseModel {
+  static table = 'user_pokemons'
+
   @column({ isPrimary: true })
   declare id: number
 
