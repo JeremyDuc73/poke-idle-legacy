@@ -26,6 +26,9 @@ export default class UserPokemon extends BaseModel {
   @column()
   declare stars: number
 
+  @column()
+  declare teamSlot: number | null
+
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 

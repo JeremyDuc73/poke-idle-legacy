@@ -2,46 +2,70 @@ import { defineStore } from 'pinia'
 
 interface Enemy {
   name: string
-  sprite: string
+  slug: string
+  spriteUrl: string
   maxHp: number
   currentHp: number
   level: number
   goldReward: number
+  xpReward: number
+  isBoss: boolean
+  bossTimerSeconds: number | null
 }
 
 interface CombatState {
   enemy: Enemy | null
   clickDamage: number
-  autoDamage: number
+  teamDps: number
   isFighting: boolean
   totalClicks: number
   totalKills: number
+  bossTimeRemaining: number | null
+  autoAttackInterval: ReturnType<typeof setInterval> | null
+  bossTimerInterval: ReturnType<typeof setInterval> | null
 }
 
 export const useCombatStore = defineStore('combat', {
   state: (): CombatState => ({
     enemy: null,
     clickDamage: 1,
-    autoDamage: 0,
+    teamDps: 0,
     isFighting: false,
     totalClicks: 0,
     totalKills: 0,
+    bossTimeRemaining: null,
+    autoAttackInterval: null,
+    bossTimerInterval: null,
   }),
 
   getters: {
     enemyHpPercent: (state): number => {
       if (!state.enemy) return 0
-      return (state.enemy.currentHp / state.enemy.maxHp) * 100
+      return Math.max(0, (state.enemy.currentHp / state.enemy.maxHp) * 100)
     },
     isEnemyDead: (state): boolean => {
       return state.enemy !== null && state.enemy.currentHp <= 0
+    },
+    isBossFight: (state): boolean => {
+      return state.enemy?.isBoss ?? false
+    },
+    bossTimedOut: (state): boolean => {
+      return state.bossTimeRemaining !== null && state.bossTimeRemaining <= 0
     },
   },
 
   actions: {
     setEnemy(enemy: Enemy) {
+      this.clearTimers()
       this.enemy = enemy
       this.isFighting = true
+
+      this.startAutoAttack()
+
+      if (enemy.isBoss && enemy.bossTimerSeconds) {
+        this.bossTimeRemaining = enemy.bossTimerSeconds
+        this.startBossTimer()
+      }
     },
 
     clickAttack() {
@@ -51,25 +75,60 @@ export const useCombatStore = defineStore('combat', {
     },
 
     autoAttackTick() {
-      if (!this.enemy || this.enemy.currentHp <= 0 || this.autoDamage <= 0) return
-      this.enemy.currentHp = Math.max(0, this.enemy.currentHp - this.autoDamage)
+      if (!this.enemy || this.enemy.currentHp <= 0 || this.teamDps <= 0) return
+      this.enemy.currentHp = Math.max(0, this.enemy.currentHp - this.teamDps)
+    },
+
+    startAutoAttack() {
+      this.autoAttackInterval = setInterval(() => {
+        this.autoAttackTick()
+      }, 1000)
+    },
+
+    startBossTimer() {
+      this.bossTimerInterval = setInterval(() => {
+        if (this.bossTimeRemaining !== null) {
+          this.bossTimeRemaining--
+        }
+      }, 1000)
+    },
+
+    clearTimers() {
+      if (this.autoAttackInterval) {
+        clearInterval(this.autoAttackInterval)
+        this.autoAttackInterval = null
+      }
+      if (this.bossTimerInterval) {
+        clearInterval(this.bossTimerInterval)
+        this.bossTimerInterval = null
+      }
     },
 
     killEnemy() {
+      this.clearTimers()
       this.totalKills++
       this.enemy = null
       this.isFighting = false
+      this.bossTimeRemaining = null
+    },
+
+    bossFailed() {
+      this.clearTimers()
+      this.enemy = null
+      this.isFighting = false
+      this.bossTimeRemaining = null
     },
 
     upgradeClickDamage(amount: number) {
       this.clickDamage += amount
     },
 
-    upgradeAutoDamage(amount: number) {
-      this.autoDamage += amount
+    upgradeTeamDps(amount: number) {
+      this.teamDps += amount
     },
 
     reset() {
+      this.clearTimers()
       this.$reset()
     },
   },

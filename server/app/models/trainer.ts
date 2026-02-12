@@ -1,5 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, computed } from '@adonisjs/lucid/orm'
+
+interface TrainerTeamMember {
+  speciesId: number
+  level: number
+}
 
 export default class Trainer extends BaseModel {
   @column({ isPrimary: true })
@@ -9,10 +14,30 @@ export default class Trainer extends BaseModel {
   declare name: string
 
   @column()
-  declare spritePath: string | null
+  declare slug: string
 
   @column()
-  declare teamJson: Record<string, unknown>[]
+  declare generation: number
+
+  @column()
+  declare zone: number
+
+  @column()
+  declare stageNumber: number
+
+  @column()
+  declare isBoss: boolean
+
+  @column()
+  declare bossTimerSeconds: number | null
+
+  @column()
+  declare teamJson: TrainerTeamMember[]
+
+  @computed()
+  get spriteUrl(): string {
+    return `https://play.pokemonshowdown.com/sprites/trainers/${this.slug}.png`
+  }
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

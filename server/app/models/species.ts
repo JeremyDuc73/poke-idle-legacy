@@ -3,6 +3,12 @@ import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import UserPokemon from '#models/user_pokemon'
 
+export interface EvolutionStage {
+  pokedexId: number
+  name: string
+  condition: string | null
+}
+
 export default class Species extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
@@ -17,6 +23,9 @@ export default class Species extends BaseModel {
   declare nameEn: string
 
   @column()
+  declare slug: string
+
+  @column()
   declare type1: string
 
   @column()
@@ -29,10 +38,13 @@ export default class Species extends BaseModel {
   declare baseStats: Record<string, number>
 
   @column()
-  declare spriteRegular: string | null
+  declare evolutionFamily: EvolutionStage[] | null
 
   @column()
-  declare spriteShiny: string | null
+  declare spriteRegular: string
+
+  @column()
+  declare spriteShiny: string
 
   @hasMany(() => UserPokemon)
   declare userPokemons: HasMany<typeof UserPokemon>

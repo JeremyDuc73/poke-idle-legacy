@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Swords, Backpack, User, Star, ShoppingBag } from 'lucide-vue-next'
+import { usePlayerStore } from '~/stores/usePlayerStore'
+
+const player = usePlayerStore()
 
 const navItems = [
   { label: 'Combat', icon: Swords, to: '/' },
@@ -31,6 +34,12 @@ const navItems = [
           <span class="hidden lg:inline">{{ item.label }}</span>
         </NuxtLink>
       </nav>
+
+      <!-- Region Badge -->
+      <div class="mt-auto px-2 pb-2 text-center">
+        <p class="text-[10px] uppercase tracking-widest text-gray-500">Region</p>
+        <p class="text-xs font-bold text-indigo-400">{{ player.regionName }}</p>
+      </div>
     </aside>
 
     <!-- Main Content -->
@@ -40,10 +49,10 @@ const navItems = [
         <h1 class="text-lg font-semibold">Poke-Idle Legacy</h1>
         <div class="flex items-center gap-4 text-sm">
           <span class="flex items-center gap-1 text-yellow-400">
-            <span class="font-bold">🪙</span> 0
+            <span class="font-bold">🪙</span> {{ player.formattedGold }}
           </span>
           <span class="flex items-center gap-1 text-purple-400">
-            <span class="font-bold">💎</span> 0
+            <span class="font-bold">💎</span> {{ player.formattedGems }}
           </span>
         </div>
       </header>

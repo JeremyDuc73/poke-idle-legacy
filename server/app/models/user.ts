@@ -31,7 +31,16 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare gems: number
 
   @column()
+  declare currentGeneration: number
+
+  @column()
+  declare currentZone: number
+
+  @column()
   declare currentStage: number
+
+  @column()
+  declare clickDamage: number
 
   @hasMany(() => UserPokemon)
   declare pokemons: HasMany<typeof UserPokemon>

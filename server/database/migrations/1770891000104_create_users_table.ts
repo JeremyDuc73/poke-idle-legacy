@@ -11,7 +11,10 @@ export default class extends BaseSchema {
       table.string('password').notNullable()
       table.integer('gold').unsigned().notNullable().defaultTo(0)
       table.integer('gems').unsigned().notNullable().defaultTo(0)
+      table.integer('current_generation').unsigned().notNullable().defaultTo(1)
+      table.integer('current_zone').unsigned().notNullable().defaultTo(1)
       table.integer('current_stage').unsigned().notNullable().defaultTo(1)
+      table.integer('click_damage').unsigned().notNullable().defaultTo(1)
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
