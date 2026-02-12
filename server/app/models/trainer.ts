@@ -31,7 +31,11 @@ export default class Trainer extends BaseModel {
   @column()
   declare bossTimerSeconds: number | null
 
-  @column()
+  @column({
+    prepare: (value: TrainerTeamMember[]) => JSON.stringify(value),
+    consume: (value: string | TrainerTeamMember[]) =>
+      typeof value === 'string' ? JSON.parse(value) : value,
+  })
   declare teamJson: TrainerTeamMember[]
 
   @computed()

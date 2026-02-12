@@ -34,10 +34,18 @@ export default class Species extends BaseModel {
   @column()
   declare generation: number
 
-  @column()
+  @column({
+    prepare: (value: Record<string, number>) => JSON.stringify(value),
+    consume: (value: string | Record<string, number>) =>
+      typeof value === 'string' ? JSON.parse(value) : value,
+  })
   declare baseStats: Record<string, number>
 
-  @column()
+  @column({
+    prepare: (value: EvolutionStage[] | null) => (value ? JSON.stringify(value) : null),
+    consume: (value: string | EvolutionStage[] | null) =>
+      typeof value === 'string' ? JSON.parse(value) : value,
+  })
   declare evolutionFamily: EvolutionStage[] | null
 
   @column()

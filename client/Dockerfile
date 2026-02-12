@@ -1,9 +1,14 @@
-# ---- Build Stage ----
-FROM node:20-alpine AS builder
+# ---- Dev Stage (no build, just deps) ----
+FROM node:20-alpine AS dev
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+EXPOSE 3000
+CMD ["npx", "nuxt", "dev", "--host", "0.0.0.0"]
+
+# ---- Build Stage ----
+FROM dev AS builder
 RUN npx nuxt build
 
 # ---- Production Stage ----

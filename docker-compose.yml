@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -21,7 +21,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-      target: builder
+      target: dev
     container_name: poke-idle-server
     restart: unless-stopped
     command: node ace serve --hmr
@@ -32,9 +32,12 @@ services:
       - ./server:/app
       - server_node_modules:/app/node_modules
     environment:
+      TZ: UTC
       NODE_ENV: development
       HOST: 0.0.0.0
       PORT: 3333
+      LOG_LEVEL: info
+      APP_KEY: local-dev-key-poke-idle-legacy-32ch
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USER: postgres
@@ -49,7 +52,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-      target: builder
+      target: dev
     container_name: poke-idle-client
     restart: unless-stopped
     command: npx nuxt dev --host 0.0.0.0
