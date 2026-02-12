@@ -19,6 +19,8 @@ interface InventoryState {
   nextId: number
 }
 
+export const MAX_STARS = 5
+
 export const useInventoryStore = defineStore('inventory', {
   state: (): InventoryState => ({
     collection: [],
@@ -38,11 +40,25 @@ export const useInventoryStore = defineStore('inventory', {
     },
     collectionCount: (state): number => state.collection.length,
     uniqueSlugs: (state): Set<string> => new Set(state.collection.map((p) => p.slug)),
+    maxedSlugs: (state): Set<string> => {
+      return new Set(
+        state.collection.filter((p) => p.stars >= MAX_STARS).map((p) => p.slug)
+      )
+    },
+    ownedSlugStars: (state): Map<string, number> => {
+      const map = new Map<string, number>()
+      for (const p of state.collection) {
+        const current = map.get(p.slug) ?? 0
+        if (p.stars > current) map.set(p.slug, p.stars)
+      }
+      return map
+    },
   },
 
   actions: {
     addPokemon(pokemon: Omit<OwnedPokemon, 'id' | 'level' | 'xp' | 'teamSlot'>): {
       isNew: boolean
+      isMaxed: boolean
       pokemon: OwnedPokemon
     } {
       const existing = this.collection.find(
@@ -50,8 +66,11 @@ export const useInventoryStore = defineStore('inventory', {
       )
 
       if (existing) {
-        existing.stars = Math.min(existing.stars + 1, 5)
-        return { isNew: false, pokemon: existing }
+        if (existing.stars >= MAX_STARS) {
+          return { isNew: false, isMaxed: true, pokemon: existing }
+        }
+        existing.stars = Math.min(existing.stars + 1, MAX_STARS)
+        return { isNew: false, isMaxed: existing.stars >= MAX_STARS, pokemon: existing }
       }
 
       const newPokemon: OwnedPokemon = {
@@ -62,7 +81,7 @@ export const useInventoryStore = defineStore('inventory', {
         teamSlot: this.team.length < 6 ? this.team.length + 1 : null,
       }
       this.collection.push(newPokemon)
-      return { isNew: true, pokemon: newPokemon }
+      return { isNew: true, isMaxed: false, pokemon: newPokemon }
     },
 
     setTeamSlot(pokemonId: number, slot: number | null) {

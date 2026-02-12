@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Swords, Zap, Timer, Skull, MapPin } from 'lucide-vue-next'
-import { getSpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
+import { getSpriteUrl, getShinySpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
 import { useCombatStore } from '~/stores/useCombatStore'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
 import { getZone } from '~/data/zones'
+import { pokemonXpForLevel } from '~/data/evolutions'
 import type { WildPokemon, BossTrainer } from '~/data/zones'
 
 definePageMeta({
@@ -159,6 +160,14 @@ watch(() => combat.enemy?.currentHp, () => {
   checkEnemyDeath()
 })
 
+function pokemonXpPercent(poke: { level: number; xp: number }): number {
+  const current = pokemonXpForLevel(poke.level)
+  const next = pokemonXpForLevel(poke.level + 1)
+  const range = next - current
+  if (range <= 0) return 0
+  return Math.min(100, Math.max(0, ((poke.xp - current) / range) * 100))
+}
+
 onMounted(() => {
   spawnEnemy()
 })
@@ -169,24 +178,24 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-6 select-none">
+  <div class="flex flex-col items-center gap-5 select-none">
     <!-- Stage Info -->
     <div class="w-full max-w-md text-center">
-      <div class="flex items-center justify-center gap-2 text-xs text-gray-500">
-        <MapPin class="h-3 w-3" />
+      <div class="flex items-center justify-center gap-2 text-sm text-slate-400">
+        <MapPin class="h-3.5 w-3.5" />
         <span>{{ zoneName }}</span>
       </div>
-      <p class="font-pixel mt-1 text-[11px] text-yellow-400">{{ player.stageLabel }}</p>
-      <p v-if="player.isBossStage" class="mt-1.5 inline-block rounded-full bg-red-600/20 px-3 py-0.5 text-[10px] font-bold uppercase tracking-widest text-red-400">
+      <p class="font-pixel mt-1 text-xs text-yellow-400">{{ player.stageLabel }}</p>
+      <p v-if="player.isBossStage" class="mt-1.5 inline-block rounded-full bg-red-600/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-red-400">
         {{ t('Combat de Boss', 'Boss Fight') }}
       </p>
       <!-- Stage Kill Progress -->
       <div v-if="!player.isBossStage" class="mt-2">
-        <div class="mb-1 flex items-center justify-between text-[9px] text-gray-500">
+        <div class="mb-1 flex items-center justify-between text-xs text-slate-500">
           <span>{{ t('Progression', 'Progress') }}</span>
-          <span>{{ player.stageKills }} / {{ player.killsPerStage }}</span>
+          <span class="font-bold">{{ player.stageKills ?? 0 }} / {{ player.killsPerStage }}</span>
         </div>
-        <div class="h-1.5 w-full overflow-hidden rounded-full bg-[#1a1a2e] ring-1 ring-white/5">
+        <div class="h-2 w-full overflow-hidden rounded-full bg-[#1a1a2e] ring-1 ring-white/5">
           <div
             class="h-full rounded-full bg-gradient-to-r from-yellow-500 to-yellow-300 transition-all duration-300"
             :style="{ width: `${player.stageKillsPercent}%` }"
@@ -201,21 +210,21 @@ onUnmounted(() => {
       class="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-5 py-2"
     >
       <Timer class="h-5 w-5 text-red-400" />
-      <span class="font-pixel text-sm text-red-400">{{ combat.bossTimeRemaining }}s</span>
+      <span class="font-pixel text-base text-red-400">{{ combat.bossTimeRemaining }}s</span>
     </div>
 
     <!-- Enemy Display -->
     <div
       v-if="combat.enemy"
-      class="pk-card flex w-full max-w-md flex-col items-center gap-4 p-8"
+      class="pk-card flex w-full max-w-md flex-col items-center gap-4 p-6"
       :class="{ 'pk-card-boss': combat.isBossFight }"
     >
       <!-- Enemy Name Tag -->
       <div class="flex items-center gap-2">
-        <span class="font-pixel text-[10px]" :class="combat.isBossFight ? 'text-red-400' : 'text-blue-300'">
+        <span class="font-pixel text-xs" :class="combat.isBossFight ? 'text-red-400' : 'text-blue-300'">
           {{ t(combat.enemy.nameFr, combat.enemy.nameEn) }}
         </span>
-        <span class="rounded-md bg-white/5 px-1.5 py-0.5 text-[10px] text-gray-500">Lv.{{ combat.enemy.level }}</span>
+        <span class="rounded-md bg-white/10 px-2 py-0.5 text-xs font-medium text-slate-400">Lv.{{ combat.enemy.level }}</span>
       </div>
 
       <!-- Boss Team Preview -->
@@ -225,7 +234,7 @@ onUnmounted(() => {
           :key="i"
           :src="getSpriteUrl(p.slug)"
           :alt="t(p.nameFr, p.nameEn)"
-          class="h-8 w-8 rounded-lg bg-white/5 object-contain p-0.5 opacity-70"
+          class="h-9 w-9 rounded-lg bg-white/5 object-contain p-0.5 opacity-70"
           :title="t(p.nameFr, p.nameEn)"
         />
       </div>
@@ -238,7 +247,7 @@ onUnmounted(() => {
         <div class="absolute inset-0 rounded-full opacity-30"
           :style="{ background: combat.isBossFight
             ? 'radial-gradient(circle, rgba(239,68,68,0.3) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%)' }"
+            : 'radial-gradient(circle, rgba(59,76,202,0.25) 0%, transparent 70%)' }"
         />
         <img
           :src="combat.enemy.spriteUrl"
@@ -248,13 +257,13 @@ onUnmounted(() => {
         />
       </button>
 
-      <!-- HP Bar (Pokemon style) -->
-      <div class="w-full rounded-xl bg-[#0f0f1e] p-3">
+      <!-- HP Bar -->
+      <div class="w-full rounded-xl bg-[#0f172a] p-3">
         <div class="mb-1.5 flex items-center justify-between">
-          <span class="text-[10px] font-bold uppercase tracking-widest" :class="combat.isBossFight ? 'text-red-400' : 'text-green-400'">HP</span>
-          <span class="font-pixel text-[9px] text-gray-400">{{ Math.ceil(combat.enemy.currentHp) }} / {{ combat.enemy.maxHp }}</span>
+          <span class="text-xs font-bold uppercase tracking-widest" :class="combat.isBossFight ? 'text-red-400' : 'text-green-400'">HP</span>
+          <span class="text-xs text-slate-400">{{ Math.ceil(combat.enemy.currentHp) }} / {{ combat.enemy.maxHp }}</span>
         </div>
-        <div class="h-3 w-full overflow-hidden rounded-full bg-[#1a1a2e] ring-1 ring-white/5">
+        <div class="h-3.5 w-full overflow-hidden rounded-full bg-[#1e293b] ring-1 ring-white/5">
           <div
             class="h-full rounded-full transition-all duration-150"
             :class="combat.enemyHpPercent > 50
@@ -268,39 +277,69 @@ onUnmounted(() => {
       </div>
 
       <!-- Rewards Preview -->
-      <div class="flex gap-4 text-[10px]">
-        <span class="flex items-center gap-1 text-yellow-500">🪙 +{{ combat.enemy.goldReward }}</span>
-        <span class="flex items-center gap-1 text-blue-400">✦ +{{ combat.enemy.xpReward }} xp</span>
+      <div class="flex gap-5 text-xs">
+        <span class="flex items-center gap-1 font-medium text-yellow-500">🪙 +{{ combat.enemy.goldReward }}</span>
+        <span class="flex items-center gap-1 font-medium text-blue-400">✦ +{{ combat.enemy.xpReward }} xp</span>
       </div>
     </div>
 
     <!-- Waiting for enemy -->
-    <div v-else class="pk-card flex flex-col items-center gap-4 px-12 py-16 text-gray-600">
-      <div class="animate-pokeball-shake text-4xl">🔴</div>
-      <p class="font-pixel text-[9px]">{{ t('Recherche...', 'Searching...') }}</p>
+    <div v-else class="pk-card flex flex-col items-center gap-4 px-12 py-16 text-slate-500">
+      <div class="animate-pokeball-shake text-5xl">🔴</div>
+      <p class="font-pixel text-xs">{{ t('Recherche...', 'Searching...') }}</p>
     </div>
 
     <!-- Stats Row -->
     <div class="flex gap-3">
-      <div class="flex items-center gap-2 rounded-xl bg-[#16213e] px-4 py-2.5 ring-1 ring-[#1e3a5f]">
+      <div class="flex items-center gap-2 rounded-xl bg-[#1e293b] px-4 py-2.5 ring-1 ring-slate-700">
         <Swords class="h-4 w-4 text-orange-400" />
         <div class="text-center">
           <p class="text-sm font-bold text-white">{{ combat.clickDamage }}</p>
-          <p class="text-[8px] uppercase tracking-wider text-gray-500">{{ t('Click', 'Click') }}</p>
+          <p class="text-[10px] uppercase tracking-wider text-slate-500">{{ t('Click', 'Click') }}</p>
         </div>
       </div>
-      <div class="flex items-center gap-2 rounded-xl bg-[#16213e] px-4 py-2.5 ring-1 ring-[#1e3a5f]">
+      <div class="flex items-center gap-2 rounded-xl bg-[#1e293b] px-4 py-2.5 ring-1 ring-slate-700">
         <Zap class="h-4 w-4 text-cyan-400" />
         <div class="text-center">
           <p class="text-sm font-bold text-white">{{ combat.teamDps }}</p>
-          <p class="text-[8px] uppercase tracking-wider text-gray-500">DPS</p>
+          <p class="text-[10px] uppercase tracking-wider text-slate-500">DPS</p>
         </div>
       </div>
-      <div class="flex items-center gap-2 rounded-xl bg-[#16213e] px-4 py-2.5 ring-1 ring-[#1e3a5f]">
+      <div class="flex items-center gap-2 rounded-xl bg-[#1e293b] px-4 py-2.5 ring-1 ring-slate-700">
         <Skull class="h-4 w-4 text-red-400" />
         <div class="text-center">
           <p class="text-sm font-bold text-white">{{ combat.totalKills }}</p>
-          <p class="text-[8px] uppercase tracking-wider text-gray-500">Kills</p>
+          <p class="text-[10px] uppercase tracking-wider text-slate-500">Kills</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Visualization -->
+    <div v-if="inventory.team.length > 0" class="w-full max-w-lg">
+      <h3 class="mb-2 text-center text-xs font-bold uppercase tracking-widest text-slate-500">
+        {{ t('Mon équipe', 'My Team') }}
+      </h3>
+      <div class="grid gap-2" :class="inventory.team.length <= 3 ? 'grid-cols-3' : 'grid-cols-3 sm:grid-cols-6'">
+        <div
+          v-for="poke in inventory.team"
+          :key="poke.id"
+          class="flex flex-col items-center gap-1 rounded-xl bg-[#1e293b] p-2 ring-1 ring-slate-700"
+        >
+          <img
+            :src="poke.isShiny ? getShinySpriteUrl(poke.slug) : getSpriteUrl(poke.slug)"
+            :alt="t(poke.nameFr, poke.nameEn)"
+            class="h-10 w-10 object-contain"
+            style="image-rendering: pixelated;"
+          />
+          <p class="max-w-full truncate text-[10px] font-medium text-slate-300">{{ t(poke.nameFr, poke.nameEn) }}</p>
+          <p class="text-[10px] text-slate-500">Lv.{{ poke.level }}</p>
+          <!-- XP Bar -->
+          <div class="h-1.5 w-full overflow-hidden rounded-full bg-[#0f172a]">
+            <div
+              class="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-400 transition-all duration-300"
+              :style="{ width: `${pokemonXpPercent(poke)}%` }"
+            />
+          </div>
         </div>
       </div>
     </div>

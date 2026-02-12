@@ -2,10 +2,10 @@
 import { Star, Sparkles, Coins } from 'lucide-vue-next'
 import { getSpriteUrl, getShinySpriteUrl } from '~/utils/showdown'
 import { usePlayerStore } from '~/stores/usePlayerStore'
-import { useInventoryStore } from '~/stores/useInventoryStore'
+import { useInventoryStore, MAX_STARS } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
 import { BANNERS, RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, pullFromBanner } from '~/data/gacha'
-import type { Rarity } from '~/data/gacha'
+import type { Banner, Rarity } from '~/data/gacha'
 
 definePageMeta({
   layout: 'game',
@@ -17,6 +17,19 @@ const { t } = useLocale()
 
 const activeBanner = computed(() => BANNERS[0]!)
 
+// Filter banner pool: exclude maxed-out Pokemon from pulls
+const availablePool = computed(() => {
+  const maxed = inventory.maxedSlugs
+  return activeBanner.value.pool.filter((p) => !maxed.has(p.slug))
+})
+
+const filteredBanner = computed((): Banner => ({
+  ...activeBanner.value,
+  pool: availablePool.value,
+}))
+
+const allMaxed = computed(() => availablePool.value.length === 0)
+
 const isPulling = ref(false)
 const showResult = ref(false)
 const pullResult = ref<{
@@ -26,6 +39,7 @@ const pullResult = ref<{
   rarity: Rarity
   isShiny: boolean
   isNew: boolean
+  isMaxed: boolean
   stars: number
 } | null>(null)
 
@@ -36,13 +50,14 @@ function rarityLabel(r: Rarity): string {
 }
 
 async function doPull(currency: 'gold' | 'gems') {
-  const banner = activeBanner.value
-  if (!banner) return
+  if (allMaxed.value) return
+  const banner = filteredBanner.value
+  if (!banner || banner.pool.length === 0) return
 
   if (currency === 'gold') {
-    if (!player.spendGold(banner.costGold)) return
+    if (!player.spendGold(activeBanner.value.costGold)) return
   } else {
-    if (!player.spendGems(banner.costGems)) return
+    if (!player.spendGems(activeBanner.value.costGems)) return
   }
 
   isPulling.value = true
@@ -57,7 +72,7 @@ async function doPull(currency: 'gold' | 'gems') {
   animPhase.value = 'flash'
   await sleep(600)
 
-  const { isNew, pokemon: owned } = inventory.addPokemon({
+  const { isNew, isMaxed, pokemon: owned } = inventory.addPokemon({
     slug: pokemon.slug,
     nameFr: pokemon.nameFr,
     nameEn: pokemon.nameEn,
@@ -72,6 +87,7 @@ async function doPull(currency: 'gold' | 'gems') {
     rarity: pokemon.rarity,
     isShiny,
     isNew,
+    isMaxed,
     stars: owned.stars,
   }
 
@@ -152,7 +168,10 @@ function dismiss() {
           <Star
             v-for="s in pullResult.stars"
             :key="s"
-            class="h-4 w-4 fill-yellow-400 text-yellow-400"
+            class="h-4 w-4"
+            :class="pullResult.stars >= MAX_STARS
+              ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]'
+              : 'fill-yellow-400 text-yellow-400'"
           />
         </div>
 
@@ -169,8 +188,11 @@ function dismiss() {
         <p v-if="pullResult.isNew" class="text-sm font-bold text-green-400">
           {{ t('✨ Nouveau !', '✨ New!') }}
         </p>
-        <p v-else class="text-sm text-gray-500">
-          {{ t('Doublon → étoile +1', 'Duplicate → star +1') }}
+        <p v-else-if="pullResult.isMaxed" class="text-sm font-bold text-amber-400">
+          {{ t('⭐ MAX ! Retiré du tirage', '⭐ MAX! Removed from pool') }}
+        </p>
+        <p v-else class="text-sm text-slate-400">
+          {{ t('Doublon → ★', 'Duplicate → ★') }}{{ pullResult.stars }}
         </p>
 
         <button
@@ -183,54 +205,85 @@ function dismiss() {
     </div>
 
     <!-- Pull Buttons -->
-    <div v-if="!isPulling && !showResult" class="flex gap-4">
-      <button
-        class="flex items-center gap-2 rounded-xl bg-yellow-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-yellow-500 active:scale-95 disabled:opacity-40"
-        :disabled="player.gold < activeBanner.costGold"
-        @click="doPull('gold')"
-      >
-        <Coins class="h-5 w-5" />
-        {{ t('Invoquer', 'Summon') }} ({{ activeBanner.costGold }} {{ t('or', 'gold') }})
-      </button>
-      <button
-        class="flex items-center gap-2 rounded-xl bg-purple-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-purple-500 active:scale-95 disabled:opacity-40"
-        :disabled="player.gems < activeBanner.costGems"
-        @click="doPull('gems')"
-      >
-        <Sparkles class="h-5 w-5" />
-        {{ t('Invoquer', 'Summon') }} ({{ activeBanner.costGems }} {{ t('gemme', 'gem') }})
-      </button>
+    <div v-if="!isPulling && !showResult" class="flex flex-col items-center gap-3">
+      <div v-if="allMaxed" class="rounded-xl bg-green-500/10 px-6 py-3 text-center text-sm font-bold text-green-400">
+        {{ t('Tous les Pokémon sont au max !', 'All Pokémon are maxed out!') }} 🎉
+      </div>
+      <div v-else class="flex gap-4">
+        <button
+          class="flex items-center gap-2 rounded-xl bg-yellow-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-yellow-500 active:scale-95 disabled:opacity-40"
+          :disabled="player.gold < activeBanner.costGold"
+          @click="doPull('gold')"
+        >
+          <Coins class="h-5 w-5" />
+          {{ t('Invoquer', 'Summon') }} ({{ activeBanner.costGold }} {{ t('or', 'gold') }})
+        </button>
+        <button
+          class="flex items-center gap-2 rounded-xl bg-purple-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-purple-500 active:scale-95 disabled:opacity-40"
+          :disabled="player.gems < activeBanner.costGems"
+          @click="doPull('gems')"
+        >
+          <Sparkles class="h-5 w-5" />
+          {{ t('Invoquer', 'Summon') }} ({{ activeBanner.costGems }} {{ t('gemme', 'gem') }})
+        </button>
+      </div>
+      <p class="text-xs text-slate-500">
+        {{ availablePool.length }} / {{ activeBanner.pool.length }} {{ t('disponibles', 'available') }}
+      </p>
     </div>
 
     <!-- Pool Preview -->
     <div class="w-full max-w-2xl">
-      <h3 class="mb-3 text-sm font-semibold text-gray-400">
-        {{ t('Pokémon disponibles', 'Available Pokémon') }} ({{ activeBanner.pool.length }})
+      <h3 class="mb-3 text-sm font-semibold text-slate-400">
+        {{ t('Pokémon disponibles', 'Available Pokémon') }}
       </h3>
       <div class="grid grid-cols-6 gap-2 sm:grid-cols-8 md:grid-cols-10">
         <div
           v-for="p in activeBanner.pool"
           :key="p.slug"
-          class="group relative flex flex-col items-center rounded-lg border border-gray-700 bg-gray-800 p-1 transition-colors hover:border-gray-500"
+          class="group relative flex flex-col items-center rounded-lg border p-1.5 transition-colors"
+          :class="inventory.maxedSlugs.has(p.slug)
+            ? 'border-yellow-600/30 bg-yellow-900/10 opacity-40'
+            : inventory.uniqueSlugs.has(p.slug)
+              ? 'border-slate-600 bg-slate-800/80'
+              : 'border-slate-700 bg-slate-800 hover:border-slate-500'"
         >
           <img
             :src="getSpriteUrl(p.slug)"
             :alt="t(p.nameFr, p.nameEn)"
             class="h-10 w-10 object-contain"
+            :class="{ grayscale: inventory.maxedSlugs.has(p.slug) }"
           />
-          <div
+          <!-- Star indicators for owned -->
+          <div v-if="inventory.ownedSlugStars.has(p.slug)" class="flex items-center justify-center gap-px">
+            <Star
+              v-for="s in (inventory.ownedSlugStars.get(p.slug) ?? 0)"
+              :key="s"
+              class="h-2 w-2"
+              :class="(inventory.ownedSlugStars.get(p.slug) ?? 0) >= MAX_STARS
+                ? 'fill-amber-400 text-amber-400'
+                : 'fill-yellow-400 text-yellow-400'"
+            />
+          </div>
+          <div v-else
             class="h-1 w-full rounded-full"
             :style="{ backgroundColor: RARITY_COLORS[p.rarity] }"
           />
-          <div class="pointer-events-none absolute -top-8 left-1/2 z-10 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-[10px] text-white shadow-lg group-hover:block">
+          <!-- MAX badge -->
+          <div v-if="inventory.maxedSlugs.has(p.slug)" class="absolute -right-1 -top-1 rounded-full bg-amber-500 px-1 py-px text-[7px] font-bold text-black">
+            MAX
+          </div>
+          <!-- Tooltip -->
+          <div class="pointer-events-none absolute -top-9 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-2 py-1 text-[10px] text-white shadow-lg group-hover:block">
             {{ t(p.nameFr, p.nameEn) }}
+            <span v-if="inventory.ownedSlugStars.has(p.slug)" class="text-yellow-400"> ★{{ inventory.ownedSlugStars.get(p.slug) }}</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Collection count -->
-    <p class="text-xs text-gray-500">
+    <p class="text-xs text-slate-500">
       {{ t('Collection', 'Collection') }}: {{ inventory.collectionCount }} {{ t('Pokémon', 'Pokémon') }}
     </p>
   </div>

@@ -70,7 +70,7 @@ export const usePlayerStore = defineStore('player', {
     },
     killsPerStage: (): number => KILLS_PER_STAGE,
     stageKillsPercent: (state): number => {
-      return Math.min(100, (state.stageKills / KILLS_PER_STAGE) * 100)
+      return Math.min(100, ((state.stageKills ?? 0) / KILLS_PER_STAGE) * 100)
     },
     xpToNextLevel: (state): number => {
       return xpForLevel(state.level + 1)
@@ -114,7 +114,7 @@ export const usePlayerStore = defineStore('player', {
     },
 
     addStageKill(): boolean {
-      this.stageKills++
+      this.stageKills = (this.stageKills ?? 0) + 1
       if (this.stageKills >= KILLS_PER_STAGE) {
         this.stageKills = 0
         this.advanceStage()
@@ -138,6 +138,7 @@ export const usePlayerStore = defineStore('player', {
       if (this.currentStage > 1) {
         this.currentStage--
       }
+      this.stageKills = 0
     },
 
     setPlayer(data: Partial<PlayerState>) {
