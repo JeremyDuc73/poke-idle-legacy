@@ -1,0 +1,22 @@
+{
+  "name": "poke-idle-legacy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Pokemon Idle Clicker RPG with Gacha mechanics",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && node ace serve --watch",
+    "dev:client": "cd client && npx nuxt dev",
+    "build:server": "cd server && node ace build",
+    "build:client": "cd client && npx nuxt build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:build": "docker compose build",
+    "docker:logs": "docker compose logs -f",
+    "db:migrate": "cd server && node ace migration:run",
+    "db:seed": "cd server && node ace seed:pokedex"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
