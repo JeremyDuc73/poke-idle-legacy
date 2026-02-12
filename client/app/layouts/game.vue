@@ -1,15 +1,30 @@
 <script setup lang="ts">
-import { Swords, Backpack, User, Star, ShoppingBag, Globe, Trophy } from 'lucide-vue-next'
+import { Swords, Backpack, User, Star, ShoppingBag, Globe, Trophy, LogOut, LogIn } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
+import { useAuthStore } from '~/stores/useAuthStore'
 import { useLocale } from '~/composables/useLocale'
 import { useAfkReward } from '~/composables/useAfkReward'
 
 const player = usePlayerStore()
+const auth = useAuthStore()
 const { locale, setLocale, t } = useLocale()
 const { showPopup, afkResult, checkAfkRewards, dismissPopup } = useAfkReward()
 
-onMounted(() => {
+let autoSaveInterval: ReturnType<typeof setInterval> | null = null
+
+onMounted(async () => {
+  await auth.checkAuth()
   checkAfkRewards()
+
+  autoSaveInterval = setInterval(() => {
+    if (auth.isAuthenticated) {
+      auth.saveGameState()
+    }
+  }, 30_000)
+})
+
+onUnmounted(() => {
+  if (autoSaveInterval) clearInterval(autoSaveInterval)
 })
 
 function toggleLocale() {
@@ -65,6 +80,23 @@ const navItems = computed(() => [
           <Globe class="h-3 w-3" />
           <span class="hidden lg:inline">{{ locale === 'fr' ? 'Français' : 'English' }}</span>
           <span class="lg:hidden">{{ locale.toUpperCase() }}</span>
+        </button>
+        <!-- Auth -->
+        <NuxtLink
+          v-if="!auth.isAuthenticated"
+          to="/login"
+          class="flex items-center justify-center gap-1.5 rounded-md bg-indigo-600/20 px-2 py-1.5 text-[10px] font-medium text-indigo-400 transition-colors hover:bg-indigo-600/30"
+        >
+          <LogIn class="h-3 w-3" />
+          <span class="hidden lg:inline">{{ t('Connexion', 'Sign in') }}</span>
+        </NuxtLink>
+        <button
+          v-else
+          class="flex items-center justify-center gap-1.5 rounded-md px-2 py-1 text-[10px] text-gray-400 transition-colors hover:bg-gray-700 hover:text-red-400"
+          @click="auth.logout()"
+        >
+          <LogOut class="h-3 w-3" />
+          <span class="hidden lg:inline">{{ t('Déconnexion', 'Logout') }}</span>
         </button>
       </div>
     </aside>

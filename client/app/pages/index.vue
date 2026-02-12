@@ -87,12 +87,32 @@ function spawnBoss(boss: BossTrainer, difficulty: number) {
   })
 }
 
-function handleClick() {
+interface DmgFloat {
+  id: number
+  damage: number
+  x: number
+  y: number
+}
+const floatingDamages = ref<DmgFloat[]>([])
+let dmgId = 0
+
+function spawnDamageNumber(damage: number, event?: MouseEvent) {
+  const x = event ? event.clientX + (Math.random() - 0.5) * 40 : 300
+  const y = event ? event.clientY - 20 : 200
+  const id = dmgId++
+  floatingDamages.value.push({ id, damage, x, y })
+  setTimeout(() => {
+    floatingDamages.value = floatingDamages.value.filter((d) => d.id !== id)
+  }, 900)
+}
+
+function handleClick(event?: MouseEvent) {
   if (!combat.enemy) {
     spawnEnemy()
     return
   }
   combat.clickAttack()
+  spawnDamageNumber(combat.clickDamage, event)
   checkEnemyDeath()
 }
 
@@ -186,7 +206,7 @@ onUnmounted(() => {
       <!-- Enemy Sprite (clickable) -->
       <button
         class="group relative transition-transform active:scale-95"
-        @click="handleClick"
+        @click="handleClick($event)"
       >
         <img
           :src="combat.enemy.spriteUrl"
@@ -256,5 +276,14 @@ onUnmounted(() => {
         <p class="flex items-center gap-1"><Skull class="h-3 w-3" /> Kills</p>
       </div>
     </div>
+
+    <!-- Floating Damage Numbers -->
+    <FloatingDamage
+      v-for="d in floatingDamages"
+      :key="d.id"
+      :damage="d.damage"
+      :x="d.x"
+      :y="d.y"
+    />
   </div>
 </template>
