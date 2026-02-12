@@ -14,14 +14,21 @@ const GENERATION_NAMES: Record<number, string> = {
 
 const STAGES_PER_ZONE = 10
 
+function xpForLevel(level: number): number {
+  return Math.floor(50 * Math.pow(level, 1.8))
+}
+
 interface PlayerState {
   username: string
   gold: number
   gems: number
+  xp: number
+  level: number
   currentGeneration: number
   currentZone: number
   currentStage: number
   clickDamage: number
+  badges: number
   isLoggedIn: boolean
 }
 
@@ -30,10 +37,13 @@ export const usePlayerStore = defineStore('player', {
     username: '',
     gold: 0,
     gems: 0,
+    xp: 0,
+    level: 1,
     currentGeneration: 1,
     currentZone: 1,
     currentStage: 1,
     clickDamage: 1,
+    badges: 0,
     isLoggedIn: false,
   }),
 
@@ -53,6 +63,16 @@ export const usePlayerStore = defineStore('player', {
     stageLabel: (state): string => {
       const region = GENERATION_NAMES[state.currentGeneration] ?? '???'
       return `${region} - Zone ${state.currentZone} - Stage ${state.currentStage}/${STAGES_PER_ZONE}`
+    },
+    xpToNextLevel: (state): number => {
+      return xpForLevel(state.level + 1)
+    },
+    xpPercent(state): number {
+      const needed = xpForLevel(state.level + 1)
+      const prevNeeded = xpForLevel(state.level)
+      const progress = state.xp - prevNeeded
+      const range = needed - prevNeeded
+      return range > 0 ? Math.min(100, Math.max(0, (progress / range) * 100)) : 0
     },
   },
 
@@ -77,12 +97,21 @@ export const usePlayerStore = defineStore('player', {
       return true
     },
 
+    addXp(amount: number) {
+      this.xp += amount
+      while (this.xp >= xpForLevel(this.level + 1)) {
+        this.level++
+        this.clickDamage = Math.floor(1 + this.level * 0.5 + this.badges * 2)
+      }
+    },
+
     advanceStage() {
       if (this.currentStage < STAGES_PER_ZONE) {
         this.currentStage++
       } else {
         this.currentStage = 1
         this.currentZone++
+        this.badges++
       }
     },
 

@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import { Swords, Backpack, User, Star, ShoppingBag } from 'lucide-vue-next'
+import { Swords, Backpack, User, Star, ShoppingBag, Globe, Trophy } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
+import { useLocale } from '~/composables/useLocale'
 
 const player = usePlayerStore()
+const { locale, setLocale, t } = useLocale()
 
-const navItems = [
-  { label: 'Combat', icon: Swords, to: '/' },
-  { label: 'Inventory', icon: Backpack, to: '/inventory' },
-  { label: 'Gacha', icon: Star, to: '/gacha' },
-  { label: 'Shop', icon: ShoppingBag, to: '/shop' },
-  { label: 'Profile', icon: User, to: '/profile' },
-]
+function toggleLocale() {
+  setLocale(locale.value === 'fr' ? 'en' : 'fr')
+}
+
+const navItems = computed(() => [
+  { label: t('Combat', 'Combat'), icon: Swords, to: '/' },
+  { label: t('Inventaire', 'Inventory'), icon: Backpack, to: '/inventory' },
+  { label: t('Invocation', 'Gacha'), icon: Star, to: '/gacha' },
+  { label: t('Boutique', 'Shop'), icon: ShoppingBag, to: '/shop' },
+  { label: t('Profil', 'Profile'), icon: User, to: '/profile' },
+])
 </script>
 
 <template>
@@ -35,10 +41,25 @@ const navItems = [
         </NuxtLink>
       </nav>
 
-      <!-- Region Badge -->
-      <div class="mt-auto px-2 pb-2 text-center">
-        <p class="text-[10px] uppercase tracking-widest text-gray-500">Region</p>
-        <p class="text-xs font-bold text-indigo-400">{{ player.regionName }}</p>
+      <!-- Region + Badges -->
+      <div class="mt-auto flex w-full flex-col gap-2 px-2 pb-2">
+        <div class="text-center">
+          <p class="text-[10px] uppercase tracking-widest text-gray-500">{{ t('Région', 'Region') }}</p>
+          <p class="text-xs font-bold text-indigo-400">{{ player.regionName }}</p>
+        </div>
+        <div v-if="player.badges > 0" class="flex items-center justify-center gap-1 text-xs text-yellow-500">
+          <Trophy class="h-3 w-3" />
+          <span>{{ player.badges }} {{ t('badges', 'badges') }}</span>
+        </div>
+        <!-- Locale Toggle -->
+        <button
+          class="flex items-center justify-center gap-1.5 rounded-md px-2 py-1 text-[10px] text-gray-400 transition-colors hover:bg-gray-700 hover:text-white"
+          @click="toggleLocale"
+        >
+          <Globe class="h-3 w-3" />
+          <span class="hidden lg:inline">{{ locale === 'fr' ? 'Français' : 'English' }}</span>
+          <span class="lg:hidden">{{ locale.toUpperCase() }}</span>
+        </button>
       </div>
     </aside>
 
@@ -46,7 +67,12 @@ const navItems = [
     <main class="flex-1 overflow-y-auto">
       <!-- Top Bar -->
       <header class="sticky top-0 z-10 flex items-center justify-between border-b border-gray-700 bg-gray-800/80 px-6 py-3 backdrop-blur">
-        <h1 class="text-lg font-semibold">Poke-Idle Legacy</h1>
+        <div class="flex items-center gap-3">
+          <h1 class="text-lg font-semibold">Poke-Idle Legacy</h1>
+          <span class="rounded-md bg-blue-500/20 px-2 py-0.5 text-xs font-medium text-blue-400">
+            Lv.{{ player.level }}
+          </span>
+        </div>
         <div class="flex items-center gap-4 text-sm">
           <span class="flex items-center gap-1 text-yellow-400">
             <span class="font-bold">🪙</span> {{ player.formattedGold }}
