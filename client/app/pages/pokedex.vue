@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Search } from 'lucide-vue-next'
-import { getSpriteUrl } from '~/utils/showdown'
+import { getSpriteUrl, getStaticSpriteUrl } from '~/utils/showdown'
 import { useLocale } from '~/composables/useLocale'
 import { POKEDEX, GEN_NAMES, getAllGens } from '~/data/pokedex'
 import type { PokedexEntry } from '~/data/pokedex'
@@ -34,10 +34,15 @@ const filtered = computed((): PokedexEntry[] => {
   return list
 })
 
-const spriteErrors = reactive<Set<string>>(new Set())
+const aniErrors = reactive<Set<string>>(new Set())
+const staticErrors = reactive<Set<string>>(new Set())
 
-function onSpriteError(slug: string) {
-  spriteErrors.add(slug)
+function onAniError(slug: string) {
+  aniErrors.add(slug)
+}
+
+function onStaticError(slug: string) {
+  staticErrors.add(slug)
 }
 </script>
 
@@ -95,15 +100,23 @@ function onSpriteError(slug: string) {
         <!-- Dex number -->
         <span class="absolute left-0.5 top-0.5 text-[8px] font-mono text-slate-600">#{{ String(p.id).padStart(4, '0') }}</span>
 
-        <!-- Sprite -->
+        <!-- Sprite: animated GIF → static PNG → ? -->
         <img
-          v-if="!spriteErrors.has(p.slug)"
+          v-if="!aniErrors.has(p.slug)"
           :src="getSpriteUrl(p.slug)"
           :alt="t(p.nameFr, p.nameEn)"
           class="h-12 w-12 object-contain"
           style="image-rendering: pixelated;"
           loading="lazy"
-          @error="onSpriteError(p.slug)"
+          @error="onAniError(p.slug)"
+        />
+        <img
+          v-else-if="!staticErrors.has(p.slug)"
+          :src="getStaticSpriteUrl(p.slug)"
+          :alt="t(p.nameFr, p.nameEn)"
+          class="h-12 w-12 object-contain"
+          loading="lazy"
+          @error="onStaticError(p.slug)"
         />
         <div
           v-else
@@ -123,7 +136,7 @@ function onSpriteError(slug: string) {
           <span class="text-slate-500">({{ p.nameEn }})</span>
           <br />
           <span class="text-slate-400">Gen {{ p.gen }} — {{ t(GEN_NAMES[p.gen]?.fr ?? '', GEN_NAMES[p.gen]?.en ?? '') }}</span>
-          <span v-if="spriteErrors.has(p.slug)" class="ml-1 text-red-400">⚠ sprite manquant</span>
+          <span v-if="staticErrors.has(p.slug)" class="ml-1 text-red-400">⚠ sprite manquant</span>
         </div>
       </div>
     </div>

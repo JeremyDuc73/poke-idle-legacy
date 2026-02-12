@@ -28,6 +28,10 @@ export function getSpriteUrl(slug: string): string {
   return `${SHOWDOWN_BASE}/ani/${slug}.gif`
 }
 
+export function getStaticSpriteUrl(slug: string): string {
+  return `${SHOWDOWN_BASE}/dex/${slug}.png`
+}
+
 export function getShinySpriteUrl(slug: string): string {
   return `${SHOWDOWN_BASE}/ani-shiny/${slug}.gif`
 }
