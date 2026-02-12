@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useApi } from '~/composables/useApi'
+import { useSpeciesCache } from '~/composables/useSpeciesCache'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 
@@ -159,6 +160,8 @@ export const useAuthStore = defineStore('auth', {
       try {
         const api = useApi()
         const player = usePlayerStore()
+        const inventory = useInventoryStore()
+        const { getSpeciesId } = useSpeciesCache()
 
         await api.post('/game/save', {
           gold: player.gold,
@@ -171,6 +174,21 @@ export const useAuthStore = defineStore('auth', {
           clickDamage: player.clickDamage,
           badges: player.badges,
         })
+
+        const pokemons = inventory.collection
+          .map((p) => ({
+            speciesId: getSpeciesId(p.slug),
+            level: p.level,
+            xp: p.xp,
+            stars: p.stars,
+            isShiny: p.isShiny,
+            teamSlot: p.teamSlot,
+          }))
+          .filter((p) => p.speciesId !== null)
+
+        if (pokemons.length > 0) {
+          await api.post('/game/save-pokemons', { pokemons })
+        }
       } catch (e) {
         console.error('Failed to save game state:', e)
       }

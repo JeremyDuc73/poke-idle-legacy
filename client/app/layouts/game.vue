@@ -4,15 +4,18 @@ import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useLocale } from '~/composables/useLocale'
 import { useAfkReward } from '~/composables/useAfkReward'
+import { useSpeciesCache } from '~/composables/useSpeciesCache'
 
 const player = usePlayerStore()
 const auth = useAuthStore()
 const { locale, setLocale, t } = useLocale()
 const { showPopup, afkResult, checkAfkRewards, dismissPopup } = useAfkReward()
+const { loadSpecies } = useSpeciesCache()
 
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null
 
 onMounted(async () => {
+  loadSpecies()
   await auth.checkAuth()
   checkAfkRewards()
 
