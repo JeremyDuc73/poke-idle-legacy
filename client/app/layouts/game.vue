@@ -44,16 +44,24 @@ function toggleLocale() {
   setLocale(locale.value === 'fr' ? 'en' : 'fr')
 }
 
-const navItems = computed(() => [
+const publicNavItems = computed(() => [
   { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide' },
+  { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex' },
+])
+
+const authNavItems = computed(() => [
   { label: t('Combat', 'Combat'), icon: Swords, to: '/' },
   { label: t('Inventaire', 'Inventory'), icon: Backpack, to: '/inventory' },
   { label: t('Invocation', 'Gacha'), icon: Star, to: '/gacha' },
-  { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex' },
   { label: t('Pension', 'Daycare'), icon: Egg, to: '/daycare' },
   { label: t('Badges', 'Badges'), icon: Award, to: '/badges' },
   { label: t('Boutique', 'Shop'), icon: ShoppingBag, to: '/shop' },
   { label: t('Profil', 'Profile'), icon: User, to: '/profile' },
+])
+
+const navItems = computed(() => [
+  ...publicNavItems.value,
+  ...(auth.isAuthenticated ? authNavItems.value : []),
 ])
 </script>
 
@@ -69,7 +77,7 @@ const navItems = computed(() => [
       </div>
 
       <!-- Trainer Level -->
-      <div class="mb-2 flex w-full flex-col items-center gap-1 px-3">
+      <div v-if="auth.isAuthenticated" class="mb-2 flex w-full flex-col items-center gap-1 px-3">
         <div class="flex w-full items-center justify-between text-xs">
           <span class="font-bold" style="color: #60a5fa">Lv.{{ player.level }}</span>
           <span class="text-gray-500 text-[10px]">{{ player.xp }}/{{ player.xpToNextLevel }}</span>
@@ -95,14 +103,16 @@ const navItems = computed(() => [
 
       <!-- Region + Badges -->
       <div class="mt-auto flex w-full flex-col gap-2 px-2 pb-2">
-        <div class="rounded-lg bg-[#0f172a]/60 p-2 text-center">
-          <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">{{ t('Région', 'Region') }}</p>
-          <p class="font-pixel text-xs" style="color: #3b4cca">{{ player.regionName }}</p>
-        </div>
-        <div v-if="player.badges > 0" class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold" style="background: rgba(255,204,0,0.1); color: #ffcc00">
-          <Trophy class="h-3.5 w-3.5" />
-          <span>{{ player.badges }}</span>
-        </div>
+        <template v-if="auth.isAuthenticated">
+          <div class="rounded-lg bg-[#0f172a]/60 p-2 text-center">
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">{{ t('Région', 'Region') }}</p>
+            <p class="font-pixel text-xs" style="color: #3b4cca">{{ player.regionName }}</p>
+          </div>
+          <div v-if="player.badges > 0" class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold" style="background: rgba(255,204,0,0.1); color: #ffcc00">
+            <Trophy class="h-3.5 w-3.5" />
+            <span>{{ player.badges }}</span>
+          </div>
+        </template>
         <!-- Locale Toggle -->
         <button
           class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[10px] text-slate-500 transition-colors hover:bg-slate-700/40 hover:text-white"
@@ -139,7 +149,7 @@ const navItems = computed(() => [
         <div class="flex items-center gap-3">
           <h1 class="font-pixel text-xs" style="color: #ee1515">POKE-IDLE</h1>
         </div>
-        <div class="flex items-center gap-4 text-sm">
+        <div v-if="auth.isAuthenticated" class="flex items-center gap-4 text-sm">
           <div class="flex items-center gap-1.5 rounded-lg px-3 py-1.5" style="background: rgba(255,204,0,0.08)">
             <span class="text-base">🪙</span>
             <span class="font-bold" style="color: #ffcc00">{{ player.formattedGold }}</span>
