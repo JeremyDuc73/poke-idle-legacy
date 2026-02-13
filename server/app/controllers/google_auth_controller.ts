@@ -93,7 +93,7 @@ export default class GoogleAuthController {
         // Create new user with a random password (they'll use Google to login)
         const randomPassword = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
         // Generate a unique username from Google name
-        let username = googleUser.name.replace(/[^a-zA-Z0-9_]/g, '').slice(0, 40)
+        let username = googleUser.name.replace(/[^\p{L}\p{N}_\s-]/gu, '').trim().slice(0, 40)
         const existing = await User.query().where('username', username).first()
         if (existing) {
           username = `${username}${Date.now() % 10000}`
