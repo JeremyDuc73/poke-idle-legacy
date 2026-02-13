@@ -174,7 +174,7 @@ export const GENERATIONS: Generation[] = [
           slug: 'sabrina',
           team: [
             { nameFr: 'Kadabra', nameEn: 'Kadabra', slug: 'kadabra', level: 38 },
-            { nameFr: 'M. Mime', nameEn: 'Mr. Mime', slug: 'mr-mime', level: 37 },
+            { nameFr: 'M. Mime', nameEn: 'Mr. Mime', slug: 'mrmime', level: 37 },
             { nameFr: 'Hypnomade', nameEn: 'Hypno', slug: 'hypno', level: 38 },
             { nameFr: 'Alakazam', nameEn: 'Alakazam', slug: 'alakazam', level: 43 },
           ],

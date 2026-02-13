@@ -54,9 +54,9 @@ export const EVOLUTIONS: Evolution[] = [
   { fromSlug: 'sandshrew', toSlug: 'sandslash', toNameFr: 'Sablaireau', toNameEn: 'Sandslash', method: 'level', levelRequired: 22 },
 
   // Nidoran
-  { fromSlug: 'nidoran-f', toSlug: 'nidorina', toNameFr: 'Nidorina', toNameEn: 'Nidorina', method: 'level', levelRequired: 16 },
+  { fromSlug: 'nidoranf', toSlug: 'nidorina', toNameFr: 'Nidorina', toNameEn: 'Nidorina', method: 'level', levelRequired: 16 },
   { fromSlug: 'nidorina', toSlug: 'nidoqueen', toNameFr: 'Nidoqueen', toNameEn: 'Nidoqueen', method: 'stone', itemRequired: 'moon-stone' },
-  { fromSlug: 'nidoran-m', toSlug: 'nidorino', toNameFr: 'Nidorino', toNameEn: 'Nidorino', method: 'level', levelRequired: 16 },
+  { fromSlug: 'nidoranm', toSlug: 'nidorino', toNameFr: 'Nidorino', toNameEn: 'Nidorino', method: 'level', levelRequired: 16 },
   { fromSlug: 'nidorino', toSlug: 'nidoking', toNameFr: 'Nidoking', toNameEn: 'Nidoking', method: 'stone', itemRequired: 'moon-stone' },
 
   // Vulpix

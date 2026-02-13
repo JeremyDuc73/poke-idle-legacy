@@ -173,7 +173,7 @@ export const useAuthStore = defineStore('auth', {
 
         const fetchOpts = keepalive ? { keepalive: true } : undefined
 
-        await api.post('/game/save', {
+        const playerPayload = {
           gold: player.gold,
           gems: player.gems,
           xp: player.xp,
@@ -186,28 +186,38 @@ export const useAuthStore = defineStore('auth', {
           teamDpsBonus: player.teamDpsBonus,
           badges: player.badges,
           candies: player.candies,
-        } as Record<string, unknown>, fetchOpts)
+        } as Record<string, unknown>
 
-        if (!speciesLoaded.value) {
-          console.warn('Species cache not loaded, skipping pokemon save')
-          return
+        let pokemonsPayload: Record<string, unknown> | null = null
+        if (speciesLoaded.value) {
+          const pokemons = inventory.collection
+            .map((p) => ({
+              speciesId: getSpeciesId(p.slug),
+              level: p.level,
+              xp: p.xp,
+              stars: p.stars,
+              isShiny: p.isShiny,
+              rarity: p.rarity ?? 'common',
+              teamSlot: p.teamSlot,
+            }))
+            .filter((p) => p.speciesId !== null)
+
+          if (pokemons.length > 0 || inventory.collectionCount === 0) {
+            pokemonsPayload = { pokemons } as Record<string, unknown>
+          }
         }
 
-        const pokemons = inventory.collection
-          .map((p) => ({
-            speciesId: getSpeciesId(p.slug),
-            level: p.level,
-            xp: p.xp,
-            stars: p.stars,
-            isShiny: p.isShiny,
-            rarity: p.rarity ?? 'common',
-            teamSlot: p.teamSlot,
-          }))
-          .filter((p) => p.speciesId !== null)
-
-        // Only save if we have pokemon OR if the user truly has none
-        if (pokemons.length > 0 || inventory.collectionCount === 0) {
-          await api.post('/game/save-pokemons', { pokemons } as Record<string, unknown>, fetchOpts)
+        if (keepalive) {
+          // Fire both in parallel — don't await, page is closing
+          api.post('/game/save', playerPayload, fetchOpts)
+          if (pokemonsPayload) {
+            api.post('/game/save-pokemons', pokemonsPayload, fetchOpts)
+          }
+        } else {
+          await api.post('/game/save', playerPayload)
+          if (pokemonsPayload) {
+            await api.post('/game/save-pokemons', pokemonsPayload)
+          }
         }
       } catch (e) {
         console.error('Failed to save game state:', e)

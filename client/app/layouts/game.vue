@@ -30,7 +30,7 @@ onMounted(() => {
     if (auth.isAuthenticated) {
       auth.saveGameState()
     }
-  }, 30_000)
+  }, 10_000)
 
   window.addEventListener('beforeunload', saveOnUnload)
 })
