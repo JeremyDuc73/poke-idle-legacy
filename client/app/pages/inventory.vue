@@ -143,7 +143,7 @@ function getDetailStats(poke: OwnedPokemon) {
     mult: getEffectiveness(pokeType, tp.id),
   }))
 
-  return { baseDmg, evoStage, evoMult, rarityMult, shinyMult, permanentDps, pokeType, typeMatchups }
+  return { baseDmg, evoStage, evoMult, rarityMult, shinyMult, starMult, permanentDps, pokeType, typeMatchups }
 }
 </script>
 
@@ -404,6 +404,12 @@ function getDetailStats(poke: OwnedPokemon) {
                 <span class="text-gray-500">Shiny</span>
                 <span class="ml-1 font-bold" :class="detailPokemon.isShiny ? 'text-yellow-400' : 'text-gray-400'">
                   x{{ getDetailStats(detailPokemon).shinyMult }}
+                </span>
+              </div>
+              <div class="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs">
+                <span class="text-gray-500">★{{ detailPokemon.stars }}</span>
+                <span class="ml-1 font-bold" :class="getDetailStats(detailPokemon).starMult > 1 ? 'text-amber-400' : 'text-gray-400'">
+                  x{{ getDetailStats(detailPokemon).starMult }}
                 </span>
               </div>
             </div>
