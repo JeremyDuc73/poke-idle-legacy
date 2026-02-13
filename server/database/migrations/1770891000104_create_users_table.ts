@@ -19,6 +19,7 @@ export default class extends BaseSchema {
       table.integer('level').unsigned().notNullable().defaultTo(1)
       table.integer('badges').unsigned().notNullable().defaultTo(0)
       table.jsonb('candies').notNullable().defaultTo('{"S":0,"M":0,"L":0,"XL":0}')
+      table.jsonb('daycare').notNullable().defaultTo('[]')
       table.timestamp('last_login_at').nullable()
 
       table.timestamp('created_at').notNullable()

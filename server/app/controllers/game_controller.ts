@@ -61,6 +61,7 @@ export default class GameController {
         clickDamage: user.clickDamage,
         badges: user.badges,
         candies: user.candies ?? { S: 0, M: 0, L: 0, XL: 0 },
+        daycare: user.daycare ?? [],
       },
       pokemons: user.pokemons.map((p) => ({
         id: p.id,
@@ -98,6 +99,9 @@ export default class GameController {
     user.badges = data.badges
     if ((request.body() as any).candies) {
       user.candies = (request.body() as any).candies
+    }
+    if ((request.body() as any).daycare !== undefined) {
+      user.daycare = (request.body() as any).daycare
     }
     user.lastLoginAt = DateTime.now()
     await user.save()

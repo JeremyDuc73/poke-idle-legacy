@@ -1,6 +1,7 @@
 import { useCombatStore } from '~/stores/useCombatStore'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
+import { useDaycareStore } from '~/stores/useDaycareStore'
 import { getSpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
 import { getZone } from '~/data/zones'
 import { getPokemonType, getEffectiveness } from '~/data/types'
@@ -16,6 +17,7 @@ export function useCombatLoop() {
   const combat = useCombatStore()
   const player = usePlayerStore()
   const inventory = useInventoryStore()
+  const daycare = useDaycareStore()
 
   // New damage formula:
   // base = level (1 at lv1, 100 at lv100)
@@ -155,6 +157,7 @@ export function useCombatLoop() {
       const effectiveDps = getEffectiveDps(combat.enemy.type)
       if (effectiveDps <= 0) return
       combat.enemy.currentHp = Math.max(0, combat.enemy.currentHp - effectiveDps)
+      daycare.addDamage(effectiveDps)
       checkEnemyDeath()
     }
 

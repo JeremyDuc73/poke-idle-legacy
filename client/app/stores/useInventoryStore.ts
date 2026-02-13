@@ -173,7 +173,7 @@ export const useInventoryStore = defineStore('inventory', {
         nameEn: evo.toNameEn,
         level: 1,
         xp: 0,
-        stars: pokemon.stars,
+        stars: 1,
         isShiny: pokemon.isShiny,
         rarity: pokemon.rarity,
         teamSlot: pokemon.teamSlot,

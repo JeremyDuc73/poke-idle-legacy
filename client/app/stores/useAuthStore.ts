@@ -4,6 +4,7 @@ import { useSpeciesCache } from '~/composables/useSpeciesCache'
 import type { CandySize } from '~/stores/usePlayerStore'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
+import { useDaycareStore } from '~/stores/useDaycareStore'
 import { getRarity } from '~/data/gacha'
 
 interface AuthState {
@@ -155,6 +156,13 @@ export const useAuthStore = defineStore('auth', {
         }))
         inventory.nextId = data.pokemons.length + 1
 
+        // Restore daycare
+        const daycareStore = useDaycareStore()
+        const daycareData = (data.player as any).daycare
+        if (Array.isArray(daycareData)) {
+          daycareStore.slots = daycareData
+        }
+
         return data.afkReward
       } catch (e) {
         console.error('Failed to load game state:', e)
@@ -186,6 +194,7 @@ export const useAuthStore = defineStore('auth', {
           teamDpsBonus: player.teamDpsBonus,
           badges: player.badges,
           candies: player.candies,
+          daycare: useDaycareStore().slots,
         } as Record<string, unknown>
 
         let pokemonsPayload: Record<string, unknown> | null = null

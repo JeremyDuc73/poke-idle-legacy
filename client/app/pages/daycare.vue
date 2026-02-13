@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { Egg, Coins, X, Sparkles, Star } from 'lucide-vue-next'
+import { Egg, Coins, X, Star, Trash2, Plus } from 'lucide-vue-next'
 import { getSpriteUrl, getShinySpriteUrl } from '~/utils/showdown'
 import { usePlayerStore } from '~/stores/usePlayerStore'
-import { useInventoryStore, MAX_STARS } from '~/stores/useInventoryStore'
+import { useInventoryStore, MAX_LEVEL, MAX_STARS } from '~/stores/useInventoryStore'
+import { useDaycareStore, MAX_DAYCARE_SLOTS, DAYCARE_COST, HATCH_DAMAGE, FIVE_STAR_SHINY_CHANCE } from '~/stores/useDaycareStore'
+import type { DaycareSlot } from '~/stores/useDaycareStore'
 import { useLocale } from '~/composables/useLocale'
 import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
@@ -14,110 +16,93 @@ definePageMeta({
 
 const player = usePlayerStore()
 const inventory = useInventoryStore()
+const daycare = useDaycareStore()
 const { t } = useLocale()
 
-const EGG_COST = 500
-const SHINY_CHANCE = 1 / 100
-
 // ── State ──
-const selectedPokemon = ref<OwnedPokemon | null>(null)
 const showPicker = ref(false)
-const isHatching = ref(false)
-const hatchResult = ref<{
-  slug: string
-  nameFr: string
-  nameEn: string
-  isShiny: boolean
-  isNew: boolean
-  stars: number
-  rarity: Rarity
-} | null>(null)
+const hatchResults = ref<{ slug: string; nameFr: string; nameEn: string; isShiny: boolean; isNew: boolean; stars: number; rarity: Rarity }[]>([])
 
-const animPhase = ref<'idle' | 'shake' | 'crack' | 'hatch'>('idle')
-
-// Eligible pokemon: level 100 only, deduplicated by slug
+// Eligible pokemon: level 100, not shiny, deduplicated by slug
 const eligiblePokemon = computed(() => {
   const seen = new Set<string>()
   return inventory.collection.filter((p) => {
     if (p.level < MAX_LEVEL) return false
+    if (p.isShiny) return false
     if (seen.has(p.slug)) return false
     seen.add(p.slug)
     return true
   })
 })
 
-function openPicker() {
-  showPicker.value = true
-}
-
-function closePicker() {
-  showPicker.value = false
-}
-
-function selectPokemon(p: OwnedPokemon) {
-  selectedPokemon.value = p
-  showPicker.value = false
-}
-
 function rarityLabel(r: Rarity): string {
   return t(RARITY_LABELS_FR[r], RARITY_LABELS_EN[r])
 }
 
-async function hatchEgg() {
-  if (!selectedPokemon.value) return
-  if (!player.spendGold(EGG_COST)) return
+function formatDmg(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`
+  return String(n)
+}
 
-  const poke = selectedPokemon.value
-  isHatching.value = true
-  hatchResult.value = null
+function slotProgress(slot: DaycareSlot): number {
+  return Math.min(100, (slot.damageDealt / slot.damageRequired) * 100)
+}
 
-  // Animation
-  animPhase.value = 'shake'
-  await sleep(1200)
-  animPhase.value = 'crack'
-  await sleep(800)
+function slotReady(slot: DaycareSlot): boolean {
+  return slot.damageDealt >= slot.damageRequired
+}
 
-  // Determine shiny
-  const isShiny = Math.random() < SHINY_CHANCE
-
-  // Only shiny eggs are added to inventory — non-shiny = miss
-  let isNew = false
-  let stars = 0
-  if (isShiny) {
-    const result = inventory.addPokemon({
-      slug: poke.slug,
-      nameFr: poke.nameFr,
-      nameEn: poke.nameEn,
-      stars: 1,
-      isShiny: true,
-      rarity: poke.rarity,
-    })
-    isNew = result.isNew
-    stars = result.pokemon.stars
-  }
-
-  hatchResult.value = {
+function depositPokemon(poke: OwnedPokemon) {
+  if (daycare.isFull) return
+  if (!player.spendGold(DAYCARE_COST)) return
+  daycare.deposit({
     slug: poke.slug,
     nameFr: poke.nameFr,
     nameEn: poke.nameEn,
-    isShiny,
-    isNew,
-    stars,
+    stars: poke.stars,
     rarity: poke.rarity,
+  })
+  showPicker.value = false
+}
+
+function removeSlot(index: number) {
+  daycare.remove(index)
+}
+
+function collectAll() {
+  const hatched = daycare.collectHatched()
+  const results: typeof hatchResults.value = []
+  for (const { slot, isShiny } of hatched) {
+    const { isNew, pokemon: owned } = inventory.addPokemon({
+      slug: slot.slug,
+      nameFr: slot.nameFr,
+      nameEn: slot.nameEn,
+      stars: 1,
+      isShiny,
+      rarity: slot.rarity,
+    })
+    results.push({
+      slug: slot.slug,
+      nameFr: slot.nameFr,
+      nameEn: slot.nameEn,
+      isShiny,
+      isNew,
+      stars: owned.stars,
+      rarity: slot.rarity,
+    })
   }
-
-  animPhase.value = 'hatch'
-  isHatching.value = false
+  if (results.length > 0) {
+    hatchResults.value = results
+  }
 }
 
-function dismissResult() {
-  hatchResult.value = null
-  animPhase.value = 'idle'
+function dismissResults() {
+  hatchResults.value = []
 }
 
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
+// Auto-check for hatched eggs
+const readyCount = computed(() => daycare.slots.filter(slotReady).length)
 </script>
 
 <template>
@@ -127,153 +112,167 @@ function sleep(ms: number): Promise<void> {
       <h2 class="text-2xl font-bold text-green-400">
         {{ t('Pension Pokémon', 'Pokémon Daycare') }}
       </h2>
-      <p class="mt-1 text-sm text-gray-400">
+      <p class="mt-1 text-sm text-gray-400 max-w-md">
         {{ t(
-          'Dépose un Pokémon niv.100 pour obtenir un œuf. Chance de shiny : 1/100 !',
-          'Leave a Lv.100 Pokémon to get an egg. Shiny chance: 1/100!'
+          'Dépose un Pokémon niv.100 (non-shiny). Il éclot après un certain nombre de dégâts en combat. Les 5★ ont 1/50 de chance shiny !',
+          'Leave a Lv.100 Pokémon (non-shiny). It hatches after dealing enough combat damage. 5★ have 1/50 shiny chance!'
         ) }}
       </p>
+      <p class="mt-1 text-xs text-gray-500">
+        {{ t('Slots', 'Slots') }}: {{ daycare.slots.length }}/{{ MAX_DAYCARE_SLOTS }}
+        · {{ t('Coût', 'Cost') }}: {{ DAYCARE_COST }} {{ t('or', 'gold') }}
+      </p>
     </div>
 
-    <!-- Selected Pokemon display -->
-    <div class="flex flex-col items-center gap-4">
+    <!-- Daycare Slots -->
+    <div class="grid w-full max-w-2xl gap-3 sm:grid-cols-1">
+      <!-- Filled slots -->
       <div
-        class="relative flex h-48 w-56 items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed px-3 transition-all"
-        :class="selectedPokemon
-          ? 'border-green-500/50 bg-green-500/5'
-          : 'border-gray-600 bg-gray-800/50'"
+        v-for="(slot, i) in daycare.slots"
+        :key="i"
+        class="flex items-center gap-3 rounded-xl border bg-gray-800/80 p-3 transition-all"
+        :class="slotReady(slot) ? 'border-green-500/70 bg-green-500/10' : 'border-gray-700'"
       >
-        <template v-if="selectedPokemon">
-          <img
-            :src="selectedPokemon.isShiny ? getShinySpriteUrl(selectedPokemon.slug) : getSpriteUrl(selectedPokemon.slug)"
-            :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn)"
-            class="h-24 w-24 object-contain"
-          />
-          <div class="absolute bottom-2 left-0 right-0 text-center">
-            <p class="text-sm font-bold text-white">{{ t(selectedPokemon.nameFr, selectedPokemon.nameEn) }}</p>
-            <span class="text-[10px] font-bold" :style="{ color: RARITY_COLORS[selectedPokemon.rarity] }">
-              {{ rarityLabel(selectedPokemon.rarity) }}
+        <!-- Sprite -->
+        <img
+          :src="getSpriteUrl(slot.slug)"
+          :alt="t(slot.nameFr, slot.nameEn)"
+          class="h-14 w-14 flex-shrink-0 object-contain"
+        />
+
+        <!-- Info + progress -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <p class="truncate text-sm font-bold text-white">{{ t(slot.nameFr, slot.nameEn) }}</p>
+            <div class="flex items-center gap-0.5">
+              <Star v-for="s in slot.stars" :key="s" class="h-3 w-3 fill-yellow-400 text-yellow-400" />
+            </div>
+            <span class="text-[10px] font-bold" :style="{ color: RARITY_COLORS[slot.rarity] }">
+              {{ rarityLabel(slot.rarity) }}
             </span>
           </div>
-        </template>
-        <template v-else>
-          <div class="flex flex-col items-center gap-2 text-gray-500">
-            <Egg class="h-12 w-12" />
-            <p class="text-xs">{{ t('Aucun Pokémon sélectionné', 'No Pokémon selected') }}</p>
+
+          <!-- Progress bar -->
+          <div class="mt-1.5 h-3 w-full overflow-hidden rounded-full bg-gray-700">
+            <div
+              class="h-full rounded-full transition-all duration-500"
+              :class="slotReady(slot) ? 'bg-green-500' : 'bg-blue-500'"
+              :style="{ width: `${slotProgress(slot)}%` }"
+            />
           </div>
-        </template>
-      </div>
-
-      <button
-        class="rounded-xl bg-slate-700 px-6 py-2 text-sm font-medium text-white transition-all hover:bg-slate-600"
-        @click="openPicker"
-      >
-        {{ selectedPokemon ? t('Changer de Pokémon', 'Change Pokémon') : t('Choisir un Pokémon', 'Choose a Pokémon') }}
-      </button>
-    </div>
-
-    <!-- Egg animation area -->
-    <div class="relative flex h-40 w-40 items-center justify-center">
-      <!-- Egg idle / shake / crack -->
-      <div
-        v-if="!hatchResult"
-        class="egg-wrapper"
-        :class="{
-          'anim-egg-idle': animPhase === 'idle' && selectedPokemon,
-          'anim-egg-shake': animPhase === 'shake',
-          'anim-egg-crack': animPhase === 'crack',
-        }"
-      >
-        <svg viewBox="0 0 80 100" class="h-28 w-22 drop-shadow-xl">
-          <ellipse cx="40" cy="55" rx="30" ry="40" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2" />
-          <ellipse cx="40" cy="55" rx="30" ry="40" fill="url(#eggGrad)" />
-          <!-- Crack lines (visible during crack phase) -->
-          <g v-if="animPhase === 'crack'" class="animate-pulse">
-            <line x1="30" y1="40" x2="40" y2="55" stroke="#374151" stroke-width="1.5" />
-            <line x1="40" y1="55" x2="50" y2="45" stroke="#374151" stroke-width="1.5" />
-            <line x1="40" y1="55" x2="35" y2="70" stroke="#374151" stroke-width="1.5" />
-          </g>
-          <defs>
-            <linearGradient id="eggGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#e2e8f0" />
-              <stop offset="50%" stop-color="#f8fafc" />
-              <stop offset="100%" stop-color="#e2e8f0" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-
-      <!-- Hatch result -->
-      <div
-        v-if="hatchResult"
-        class="flex flex-col items-center gap-2 animate-in fade-in zoom-in duration-500"
-      >
-        <div class="relative">
-          <img
-            :src="hatchResult.isShiny ? getShinySpriteUrl(hatchResult.slug) : getSpriteUrl(hatchResult.slug)"
-            :alt="t(hatchResult.nameFr, hatchResult.nameEn)"
-            class="h-24 w-24 object-contain"
-            :style="{ filter: hatchResult.isShiny ? 'drop-shadow(0 0 16px #fbbf24)' : `drop-shadow(0 0 10px ${RARITY_COLORS[hatchResult.rarity]})` }"
-          />
-          <span
-            v-if="hatchResult.isShiny"
-            class="absolute -right-2 -top-2 rounded-full bg-yellow-500 px-2 py-0.5 text-[10px] font-bold text-black"
-          >
-            ✨ SHINY
-          </span>
+          <p class="mt-0.5 text-[10px] text-gray-400">
+            <template v-if="slotReady(slot)">
+              {{ t('Prêt à éclore !', 'Ready to hatch!') }}
+            </template>
+            <template v-else>
+              {{ formatDmg(slot.damageDealt) }} / {{ formatDmg(slot.damageRequired) }} {{ t('dégâts', 'damage') }}
+            </template>
+          </p>
         </div>
 
-        <p class="text-lg font-bold" :style="{ color: hatchResult.isShiny ? '#fbbf24' : RARITY_COLORS[hatchResult.rarity] }">
-          {{ t(hatchResult.nameFr, hatchResult.nameEn) }}
-          <span v-if="hatchResult.isShiny" class="text-sm">✨</span>
-        </p>
-
-        <div class="flex items-center gap-1">
-          <Star
-            v-for="s in hatchResult.stars"
-            :key="s"
-            class="h-3.5 w-3.5"
-            :class="hatchResult.stars >= MAX_STARS
-              ? 'fill-amber-400 text-amber-400'
-              : 'fill-yellow-400 text-yellow-400'"
-          />
-        </div>
-
-        <p v-if="hatchResult.isShiny && hatchResult.isNew" class="text-sm font-bold text-yellow-400">
-          {{ t('✨ Shiny obtenu !', '✨ Shiny obtained!') }}
-        </p>
-        <p v-else-if="hatchResult.isShiny" class="text-sm text-slate-400">
-          {{ t('Doublon → ★', 'Duplicate → ★') }}{{ hatchResult.stars }}
-        </p>
-        <p v-else class="text-sm text-slate-400">
-          {{ t('Pas de shiny cette fois…', 'No shiny this time…') }}
-        </p>
-
+        <!-- Actions -->
         <button
-          class="mt-1 rounded-lg bg-gray-700 px-6 py-2 text-sm font-medium transition-colors hover:bg-gray-600"
-          @click="dismissResult"
+          v-if="!slotReady(slot)"
+          class="flex-shrink-0 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-red-500/20 hover:text-red-400"
+          :title="t('Retirer', 'Remove')"
+          @click="removeSlot(i)"
         >
-          OK
+          <Trash2 class="h-4 w-4" />
         </button>
+        <Egg v-else class="h-6 w-6 flex-shrink-0 animate-bounce text-green-400" />
       </div>
-    </div>
 
-    <!-- Hatch button -->
-    <div v-if="!isHatching && !hatchResult" class="flex flex-col items-center gap-2">
+      <!-- Empty slots -->
       <button
-        class="flex items-center gap-2 rounded-xl bg-green-600 px-8 py-3 text-sm font-bold text-white transition-all hover:bg-green-500 active:scale-95 disabled:opacity-40"
-        :disabled="!selectedPokemon || player.gold < EGG_COST"
-        @click="hatchEgg"
+        v-for="n in daycare.freeSlots"
+        :key="'empty-' + n"
+        class="flex h-20 items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm text-gray-500 transition-all hover:border-green-500/40 hover:bg-gray-800/60 hover:text-green-400"
+        :disabled="player.gold < DAYCARE_COST"
+        @click="showPicker = true"
       >
-        <Egg class="h-5 w-5" />
-        {{ t('Produire un œuf', 'Produce an Egg') }}
-        <span class="flex items-center gap-1 text-yellow-300">
-          <Coins class="h-4 w-4" /> {{ EGG_COST }}
+        <Plus class="h-5 w-5" />
+        {{ t('Déposer un Pokémon', 'Deposit a Pokémon') }}
+        <span class="flex items-center gap-1 text-yellow-500/70">
+          <Coins class="h-3.5 w-3.5" /> {{ DAYCARE_COST }}
         </span>
       </button>
-      <p class="text-[10px] text-gray-500">
-        {{ t('1% de chance d\'obtenir un shiny', '1% chance to get a shiny') }}
-      </p>
+    </div>
+
+    <!-- Collect button -->
+    <button
+      v-if="readyCount > 0"
+      class="flex items-center gap-2 rounded-xl bg-green-600 px-8 py-3 text-sm font-bold text-white transition-all hover:bg-green-500 active:scale-95 animate-pulse"
+      @click="collectAll"
+    >
+      <Egg class="h-5 w-5" />
+      {{ t(`Récupérer ${readyCount} œuf(s)`, `Collect ${readyCount} egg(s)`) }}
+    </button>
+
+    <!-- Hatch results modal -->
+    <Teleport to="body">
+      <div
+        v-if="hatchResults.length > 0"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+        @click.self="dismissResults"
+      >
+        <div class="relative w-full max-w-md rounded-2xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
+          <h3 class="mb-4 text-center text-lg font-bold text-green-400">
+            {{ t('Éclosion !', 'Hatched!') }}
+          </h3>
+          <div class="flex flex-col gap-3">
+            <div
+              v-for="(r, i) in hatchResults"
+              :key="i"
+              class="flex items-center gap-3 rounded-xl border border-gray-700 bg-gray-800 p-3"
+            >
+              <img
+                :src="r.isShiny ? getShinySpriteUrl(r.slug) : getSpriteUrl(r.slug)"
+                :alt="t(r.nameFr, r.nameEn)"
+                class="h-14 w-14 object-contain"
+                :style="{ filter: r.isShiny ? 'drop-shadow(0 0 12px #fbbf24)' : 'none' }"
+              />
+              <div class="flex-1">
+                <p class="font-bold" :style="{ color: r.isShiny ? '#fbbf24' : RARITY_COLORS[r.rarity] }">
+                  {{ t(r.nameFr, r.nameEn) }}
+                  <span v-if="r.isShiny" class="text-sm">✨</span>
+                </p>
+                <div class="flex items-center gap-1">
+                  <Star v-for="s in r.stars" :key="s" class="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                </div>
+                <p v-if="r.isShiny && r.isNew" class="text-xs font-bold text-yellow-400">
+                  {{ t('Shiny obtenu !', 'Shiny obtained!') }}
+                </p>
+                <p v-else-if="r.isNew" class="text-xs text-green-400">
+                  {{ t('Nouveau !', 'New!') }}
+                </p>
+                <p v-else class="text-xs text-slate-400">
+                  {{ t('Doublon → ★', 'Duplicate → ★') }}{{ r.stars }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <button
+            class="mt-4 w-full rounded-lg bg-gray-700 py-2 text-sm font-medium transition-colors hover:bg-gray-600"
+            @click="dismissResults"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- Damage thresholds info -->
+    <div class="w-full max-w-2xl rounded-xl border border-gray-700/50 bg-gray-800/30 p-4">
+      <h4 class="mb-2 text-xs font-semibold text-gray-400 uppercase">
+        {{ t('Dégâts requis par étoile', 'Damage required per star') }}
+      </h4>
+      <div class="flex flex-wrap gap-2">
+        <div v-for="s in 5" :key="s" class="rounded-lg bg-gray-800 px-3 py-1.5 text-xs">
+          <span class="text-yellow-400">{{ '★'.repeat(s) }}</span>
+          <span class="ml-1 text-gray-300">{{ formatDmg(HATCH_DAMAGE[s]!) }}</span>
+          <span v-if="s === 5" class="ml-1 text-amber-400">(1/{{ Math.round(1 / FIVE_STAR_SHINY_CHANCE) }} shiny)</span>
+        </div>
+      </div>
     </div>
 
     <!-- Empty state -->
@@ -286,79 +285,46 @@ function sleep(ms: number): Promise<void> {
       <div
         v-if="showPicker"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-        @click.self="closePicker"
+        @click.self="showPicker = false"
       >
         <div class="relative w-full max-w-lg rounded-2xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
-          <button class="absolute right-3 top-3 rounded-lg p-1 text-gray-500 hover:bg-gray-800 hover:text-white" @click="closePicker">
+          <button class="absolute right-3 top-3 rounded-lg p-1 text-gray-500 hover:bg-gray-800 hover:text-white" @click="showPicker = false">
             <X class="h-5 w-5" />
           </button>
-          <h3 class="mb-4 text-lg font-bold text-white">
-            {{ t('Choisir un Pokémon', 'Choose a Pokémon') }}
+          <h3 class="mb-1 text-lg font-bold text-white">
+            {{ t('Déposer un Pokémon', 'Deposit a Pokémon') }}
           </h3>
+          <p class="mb-4 text-xs text-gray-500">
+            {{ t('Niv.100 requis · Pas de shiny', 'Lv.100 required · No shinies') }}
+          </p>
           <div class="grid max-h-96 grid-cols-4 gap-2 overflow-y-auto pr-1 sm:grid-cols-5">
             <button
               v-for="poke in eligiblePokemon"
               :key="poke.id"
               class="flex flex-col items-center gap-1 rounded-xl border border-gray-700 bg-gray-800 p-2 transition-all hover:border-green-500/50 hover:bg-gray-750 active:scale-95"
-              @click="selectPokemon(poke)"
+              @click="depositPokemon(poke)"
             >
               <img
-                :src="poke.isShiny ? getShinySpriteUrl(poke.slug) : getSpriteUrl(poke.slug)"
+                :src="getSpriteUrl(poke.slug)"
                 :alt="t(poke.nameFr, poke.nameEn)"
                 class="h-12 w-12 object-contain"
               />
               <p class="w-full truncate text-center text-[9px] text-gray-300">
                 {{ t(poke.nameFr, poke.nameEn) }}
               </p>
+              <div class="flex items-center gap-0.5">
+                <Star v-for="s in poke.stars" :key="s" class="h-2.5 w-2.5 fill-yellow-400 text-yellow-400" />
+              </div>
               <span class="text-[8px] font-bold" :style="{ color: RARITY_COLORS[poke.rarity] }">
                 {{ rarityLabel(poke.rarity) }}
               </span>
             </button>
           </div>
           <p v-if="eligiblePokemon.length === 0" class="py-8 text-center text-sm text-gray-500">
-            {{ t('Aucun Pokémon disponible', 'No Pokémon available') }}
+            {{ t('Aucun Pokémon éligible (niv.100, non-shiny)', 'No eligible Pokémon (lv.100, non-shiny)') }}
           </p>
         </div>
       </div>
     </Teleport>
   </div>
 </template>
-
-<style scoped>
-.egg-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.anim-egg-idle {
-  animation: eggFloat 2.5s ease-in-out infinite;
-}
-
-.anim-egg-shake {
-  animation: eggShake 0.1s ease-in-out infinite;
-}
-
-.anim-egg-crack {
-  animation: eggCrack 0.3s ease-in-out infinite;
-}
-
-@keyframes eggFloat {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(2deg); }
-}
-
-@keyframes eggShake {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(-10deg); }
-  50% { transform: rotate(10deg); }
-  75% { transform: rotate(-6deg); }
-  100% { transform: rotate(0deg); }
-}
-
-@keyframes eggCrack {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-</style>

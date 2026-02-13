@@ -58,6 +58,13 @@ export default class User extends compose(BaseModel, AuthFinder) {
   })
   declare candies: Record<string, number>
 
+  @column({
+    prepare: (value: any[]) => JSON.stringify(value),
+    consume: (value: string | any[]) =>
+      typeof value === 'string' ? JSON.parse(value) : (value ?? []),
+  })
+  declare daycare: any[]
+
   @column.dateTime()
   declare lastLoginAt: DateTime | null
 
