@@ -39,7 +39,7 @@ function getEvoCandidates(itemId: string): OwnedPokemon[] {
     if (seen.has(p.slug)) return false
     const evos = getEvolutionsFor(p.slug)
     const eligible = evos.some((e) => {
-      if (!((e.method === 'stone' || e.method === 'trade') && e.itemRequired === itemId)) return false
+      if (!((e.method === 'stone' || e.method === 'trade' || e.method === 'happiness') && e.itemRequired === itemId)) return false
       if (ownedSlugs.has(e.toSlug)) return false
       if (getGenForSlug(e.toSlug) > player.currentGeneration) return false
       return true
@@ -98,6 +98,10 @@ const ITEM_SPRITES: Record<string, string> = {
   'thunder-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/thunder-stone.png',
   'leaf-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leaf-stone.png',
   'moon-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/moon-stone.png',
+  'link-cable': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/link-cable.png',
+  'soothe-bell': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soothe-bell.png',
+  'sun-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sun-stone.png',
+  'dusk-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dusk-stone.png',
 }
 
 const gemExchanges = [

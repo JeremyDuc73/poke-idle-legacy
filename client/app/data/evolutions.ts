@@ -1,4 +1,4 @@
-export type EvoMethod = 'level' | 'stone' | 'trade'
+export type EvoMethod = 'level' | 'stone' | 'trade' | 'happiness'
 
 export interface Evolution {
   fromSlug: string
@@ -194,6 +194,137 @@ export const EVOLUTIONS: Evolution[] = [
 
   // Clefairy
   { fromSlug: 'clefairy', toSlug: 'clefable', toNameFr: 'Mélodelfe', toNameEn: 'Clefable', method: 'stone', itemRequired: 'moon-stone' },
+
+  // ══════════════ Gen 2 Johto ══════════════
+  // Starters
+  { fromSlug: 'chikorita', toSlug: 'bayleef', toNameFr: 'Macronium', toNameEn: 'Bayleef', method: 'level', levelRequired: 16 },
+  { fromSlug: 'bayleef', toSlug: 'meganium', toNameFr: 'Méganium', toNameEn: 'Meganium', method: 'level', levelRequired: 32 },
+  { fromSlug: 'cyndaquil', toSlug: 'quilava', toNameFr: 'Feurisson', toNameEn: 'Quilava', method: 'level', levelRequired: 14 },
+  { fromSlug: 'quilava', toSlug: 'typhlosion', toNameFr: 'Typhlosion', toNameEn: 'Typhlosion', method: 'level', levelRequired: 36 },
+  { fromSlug: 'totodile', toSlug: 'croconaw', toNameFr: 'Crocrodil', toNameEn: 'Croconaw', method: 'level', levelRequired: 18 },
+  { fromSlug: 'croconaw', toSlug: 'feraligatr', toNameFr: 'Aligatueur', toNameEn: 'Feraligatr', method: 'level', levelRequired: 30 },
+
+  // Birds & bugs
+  { fromSlug: 'sentret', toSlug: 'furret', toNameFr: 'Fouinar', toNameEn: 'Furret', method: 'level', levelRequired: 15 },
+  { fromSlug: 'hoothoot', toSlug: 'noctowl', toNameFr: 'Noarfang', toNameEn: 'Noctowl', method: 'level', levelRequired: 20 },
+  { fromSlug: 'ledyba', toSlug: 'ledian', toNameFr: 'Coxyclaque', toNameEn: 'Ledian', method: 'level', levelRequired: 18 },
+  { fromSlug: 'spinarak', toSlug: 'ariados', toNameFr: 'Migalos', toNameEn: 'Ariados', method: 'level', levelRequired: 22 },
+
+  // Happiness evolutions (use soothe-bell item)
+  { fromSlug: 'pichu', toSlug: 'pikachu', toNameFr: 'Pikachu', toNameEn: 'Pikachu', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'cleffa', toSlug: 'clefairy', toNameFr: 'Mélofée', toNameEn: 'Clefairy', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'igglybuff', toSlug: 'jigglypuff', toNameFr: 'Rondoudou', toNameEn: 'Jigglypuff', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'togepi', toSlug: 'togetic', toNameFr: 'Togetic', toNameEn: 'Togetic', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'golbat', toSlug: 'crobat', toNameFr: 'Nostenfer', toNameEn: 'Crobat', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'chansey', toSlug: 'blissey', toNameFr: 'Leuphorie', toNameEn: 'Blissey', method: 'happiness', itemRequired: 'soothe-bell' },
+
+  // Eevee Gen 2
+  { fromSlug: 'eevee', toSlug: 'espeon', toNameFr: 'Mentali', toNameEn: 'Espeon', method: 'stone', itemRequired: 'sun-stone' },
+  { fromSlug: 'eevee', toSlug: 'umbreon', toNameFr: 'Noctali', toNameEn: 'Umbreon', method: 'stone', itemRequired: 'moon-stone' },
+
+  // Electric
+  { fromSlug: 'mareep', toSlug: 'flaaffy', toNameFr: 'Lainergie', toNameEn: 'Flaaffy', method: 'level', levelRequired: 15 },
+  { fromSlug: 'flaaffy', toSlug: 'ampharos', toNameFr: 'Pharamp', toNameEn: 'Ampharos', method: 'level', levelRequired: 30 },
+
+  // Water
+  { fromSlug: 'marill', toSlug: 'azumarill', toNameFr: 'Azumarill', toNameEn: 'Azumarill', method: 'level', levelRequired: 18 },
+  { fromSlug: 'wooper', toSlug: 'quagsire', toNameFr: 'Maraiste', toNameEn: 'Quagsire', method: 'level', levelRequired: 20 },
+  { fromSlug: 'remoraid', toSlug: 'octillery', toNameFr: 'Octillery', toNameEn: 'Octillery', method: 'level', levelRequired: 25 },
+
+  // Grass
+  { fromSlug: 'hoppip', toSlug: 'skiploom', toNameFr: 'Floravol', toNameEn: 'Skiploom', method: 'level', levelRequired: 18 },
+  { fromSlug: 'skiploom', toSlug: 'jumpluff', toNameFr: 'Cotovol', toNameEn: 'Jumpluff', method: 'level', levelRequired: 27 },
+  { fromSlug: 'sunkern', toSlug: 'sunflora', toNameFr: 'Héliatronc', toNameEn: 'Sunflora', method: 'stone', itemRequired: 'sun-stone' },
+  { fromSlug: 'gloom', toSlug: 'bellossom', toNameFr: 'Joliflor', toNameEn: 'Bellossom', method: 'stone', itemRequired: 'sun-stone' },
+
+  // Psychic
+  { fromSlug: 'natu', toSlug: 'xatu', toNameFr: 'Xatu', toNameEn: 'Xatu', method: 'level', levelRequired: 25 },
+
+  // Normal/misc
+  { fromSlug: 'teddiursa', toSlug: 'ursaring', toNameFr: 'Ursaring', toNameEn: 'Ursaring', method: 'level', levelRequired: 30 },
+  { fromSlug: 'snubbull', toSlug: 'granbull', toNameFr: 'Granbull', toNameEn: 'Granbull', method: 'level', levelRequired: 23 },
+  { fromSlug: 'slugma', toSlug: 'magcargo', toNameFr: 'Volcaropod', toNameEn: 'Magcargo', method: 'level', levelRequired: 38 },
+  { fromSlug: 'swinub', toSlug: 'piloswine', toNameFr: 'Cochignon', toNameEn: 'Piloswine', method: 'level', levelRequired: 33 },
+
+  // Dark
+  { fromSlug: 'houndour', toSlug: 'houndoom', toNameFr: 'Démolosse', toNameEn: 'Houndoom', method: 'level', levelRequired: 24 },
+  { fromSlug: 'murkrow', toSlug: 'honchkrow', toNameFr: 'Corboss', toNameEn: 'Honchkrow', method: 'stone', itemRequired: 'dusk-stone' },
+
+  // Pseudo-legendary
+  { fromSlug: 'larvitar', toSlug: 'pupitar', toNameFr: 'Ymphect', toNameEn: 'Pupitar', method: 'level', levelRequired: 30 },
+  { fromSlug: 'pupitar', toSlug: 'tyranitar', toNameFr: 'Tyranocif', toNameEn: 'Tyranitar', method: 'level', levelRequired: 55 },
+
+  // Trade evos
+  { fromSlug: 'onix', toSlug: 'steelix', toNameFr: 'Steelix', toNameEn: 'Steelix', method: 'trade', itemRequired: 'link-cable' },
+  { fromSlug: 'scyther', toSlug: 'scizor', toNameFr: 'Cizayox', toNameEn: 'Scizor', method: 'trade', itemRequired: 'link-cable' },
+  { fromSlug: 'seadra', toSlug: 'kingdra', toNameFr: 'Hyporoi', toNameEn: 'Kingdra', method: 'trade', itemRequired: 'link-cable' },
+
+  // Baby → base (happiness)
+  { fromSlug: 'tyrogue', toSlug: 'hitmonlee', toNameFr: 'Kicklee', toNameEn: 'Hitmonlee', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'smoochum', toSlug: 'jynx', toNameFr: 'Lippoutou', toNameEn: 'Jynx', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'elekid', toSlug: 'electabuzz', toNameFr: 'Élektek', toNameEn: 'Electabuzz', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'magby', toSlug: 'magmar', toNameFr: 'Magmar', toNameEn: 'Magmar', method: 'happiness', itemRequired: 'soothe-bell' },
+
+  // ══════════════ Gen 3 Hoenn ══════════════
+  // Starters
+  { fromSlug: 'treecko', toSlug: 'grovyle', toNameFr: 'Massko', toNameEn: 'Grovyle', method: 'level', levelRequired: 16 },
+  { fromSlug: 'grovyle', toSlug: 'sceptile', toNameFr: 'Jungko', toNameEn: 'Sceptile', method: 'level', levelRequired: 36 },
+  { fromSlug: 'torchic', toSlug: 'combusken', toNameFr: 'Galifeu', toNameEn: 'Combusken', method: 'level', levelRequired: 16 },
+  { fromSlug: 'combusken', toSlug: 'blaziken', toNameFr: 'Braségali', toNameEn: 'Blaziken', method: 'level', levelRequired: 36 },
+  { fromSlug: 'mudkip', toSlug: 'marshtomp', toNameFr: 'Flobio', toNameEn: 'Marshtomp', method: 'level', levelRequired: 16 },
+  { fromSlug: 'marshtomp', toSlug: 'swampert', toNameFr: 'Laggron', toNameEn: 'Swampert', method: 'level', levelRequired: 36 },
+
+  // Normal
+  { fromSlug: 'zigzagoon', toSlug: 'linoone', toNameFr: 'Linéon', toNameEn: 'Linoone', method: 'level', levelRequired: 20 },
+  { fromSlug: 'poochyena', toSlug: 'mightyena', toNameFr: 'Grahyèna', toNameEn: 'Mightyena', method: 'level', levelRequired: 18 },
+  { fromSlug: 'taillow', toSlug: 'swellow', toNameFr: 'Hélédelle', toNameEn: 'Swellow', method: 'level', levelRequired: 22 },
+  { fromSlug: 'whismur', toSlug: 'loudred', toNameFr: 'Ramboum', toNameEn: 'Loudred', method: 'level', levelRequired: 20 },
+  { fromSlug: 'loudred', toSlug: 'exploud', toNameFr: 'Brouhabam', toNameEn: 'Exploud', method: 'level', levelRequired: 40 },
+  { fromSlug: 'slakoth', toSlug: 'vigoroth', toNameFr: 'Vigoroth', toNameEn: 'Vigoroth', method: 'level', levelRequired: 18 },
+  { fromSlug: 'vigoroth', toSlug: 'slaking', toNameFr: 'Monaflèmit', toNameEn: 'Slaking', method: 'level', levelRequired: 36 },
+
+  // Fighting
+  { fromSlug: 'makuhita', toSlug: 'hariyama', toNameFr: 'Hariyama', toNameEn: 'Hariyama', method: 'level', levelRequired: 24 },
+
+  // Psychic
+  { fromSlug: 'ralts', toSlug: 'kirlia', toNameFr: 'Kirlia', toNameEn: 'Kirlia', method: 'level', levelRequired: 20 },
+  { fromSlug: 'kirlia', toSlug: 'gardevoir', toNameFr: 'Gardevoir', toNameEn: 'Gardevoir', method: 'level', levelRequired: 30 },
+  { fromSlug: 'spoink', toSlug: 'grumpig', toNameFr: 'Groret', toNameEn: 'Grumpig', method: 'level', levelRequired: 32 },
+  { fromSlug: 'baltoy', toSlug: 'claydol', toNameFr: 'Kaorine', toNameEn: 'Claydol', method: 'level', levelRequired: 36 },
+
+  // Electric
+  { fromSlug: 'electrike', toSlug: 'manectric', toNameFr: 'Élecsprint', toNameEn: 'Manectric', method: 'level', levelRequired: 26 },
+
+  // Fire/Ground
+  { fromSlug: 'numel', toSlug: 'camerupt', toNameFr: 'Camérupt', toNameEn: 'Camerupt', method: 'level', levelRequired: 33 },
+
+  // Dragon
+  { fromSlug: 'trapinch', toSlug: 'vibrava', toNameFr: 'Vibraninf', toNameEn: 'Vibrava', method: 'level', levelRequired: 35 },
+  { fromSlug: 'vibrava', toSlug: 'flygon', toNameFr: 'Libégon', toNameEn: 'Flygon', method: 'level', levelRequired: 45 },
+  { fromSlug: 'bagon', toSlug: 'shelgon', toNameFr: 'Drackhaus', toNameEn: 'Shelgon', method: 'level', levelRequired: 30 },
+  { fromSlug: 'shelgon', toSlug: 'salamence', toNameFr: 'Drattak', toNameEn: 'Salamence', method: 'level', levelRequired: 50 },
+
+  // Steel
+  { fromSlug: 'beldum', toSlug: 'metang', toNameFr: 'Métang', toNameEn: 'Metang', method: 'level', levelRequired: 20 },
+  { fromSlug: 'metang', toSlug: 'metagross', toNameFr: 'Métalosse', toNameEn: 'Metagross', method: 'level', levelRequired: 45 },
+
+  // Water
+  { fromSlug: 'carvanha', toSlug: 'sharpedo', toNameFr: 'Sharpedo', toNameEn: 'Sharpedo', method: 'level', levelRequired: 30 },
+  { fromSlug: 'wailmer', toSlug: 'wailord', toNameFr: 'Wailord', toNameEn: 'Wailord', method: 'level', levelRequired: 40 },
+  { fromSlug: 'feebas', toSlug: 'milotic', toNameFr: 'Milobellus', toNameEn: 'Milotic', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'spheal', toSlug: 'sealeo', toNameFr: 'Phogleur', toNameEn: 'Sealeo', method: 'level', levelRequired: 32 },
+  { fromSlug: 'sealeo', toSlug: 'walrein', toNameFr: 'Kaimorse', toNameEn: 'Walrein', method: 'level', levelRequired: 44 },
+
+  // Dark
+  { fromSlug: 'cacnea', toSlug: 'cacturne', toNameFr: 'Cacturne', toNameEn: 'Cacturne', method: 'level', levelRequired: 32 },
+
+  // Ghost
+  { fromSlug: 'shuppet', toSlug: 'banette', toNameFr: 'Branette', toNameEn: 'Banette', method: 'level', levelRequired: 37 },
+  { fromSlug: 'duskull', toSlug: 'dusclops', toNameFr: 'Téraclope', toNameEn: 'Dusclops', method: 'level', levelRequired: 37 },
+
+  // Fossils
+  { fromSlug: 'lileep', toSlug: 'cradily', toNameFr: 'Vacilys', toNameEn: 'Cradily', method: 'level', levelRequired: 40 },
+  { fromSlug: 'anorith', toSlug: 'armaldo', toNameFr: 'Armaldo', toNameEn: 'Armaldo', method: 'level', levelRequired: 40 },
 ]
 
 // Evolution items available for Gen 1
@@ -250,7 +381,34 @@ export const EVO_ITEMS: EvoItem[] = [
     descFr: 'Simule un échange pour faire évoluer un Pokémon',
     descEn: 'Simulates a trade to evolve a Pokémon',
     icon: '🔗',
-    applicableTo: ['kadabra', 'machoke', 'graveler', 'haunter', 'porygon'],
+    applicableTo: ['kadabra', 'machoke', 'graveler', 'haunter', 'porygon', 'onix', 'scyther', 'seadra'],
+  },
+  {
+    id: 'soothe-bell',
+    nameFr: 'Grelot Zen',
+    nameEn: 'Soothe Bell',
+    descFr: 'Fait évoluer un Pokémon lié par le bonheur',
+    descEn: 'Evolves a Pokémon that evolves through happiness',
+    icon: '🔔',
+    applicableTo: ['pichu', 'cleffa', 'igglybuff', 'togepi', 'golbat', 'chansey', 'tyrogue', 'smoochum', 'elekid', 'magby', 'feebas'],
+  },
+  {
+    id: 'sun-stone',
+    nameFr: 'Pierre Soleil',
+    nameEn: 'Sun Stone',
+    descFr: 'Fait évoluer certains Pokémon avec la lumière du soleil',
+    descEn: 'Evolves certain Pokémon with sunlight',
+    icon: '☀️',
+    applicableTo: ['sunkern', 'gloom', 'eevee'],
+  },
+  {
+    id: 'dusk-stone',
+    nameFr: 'Pierre Nuit',
+    nameEn: 'Dusk Stone',
+    descFr: 'Fait évoluer certains Pokémon liés aux ténèbres',
+    descEn: 'Evolves certain Pokémon tied to darkness',
+    icon: '🌑',
+    applicableTo: ['murkrow', 'misdreavus'],
   },
 ]
 
@@ -264,7 +422,7 @@ export function canEvolveByLevel(slug: string, level: number): Evolution | null 
 
 export function canEvolveByItem(slug: string, itemId: string): Evolution | null {
   return EVOLUTIONS.find(
-    (e) => e.fromSlug === slug && (e.method === 'stone' || e.method === 'trade') && e.itemRequired === itemId
+    (e) => e.fromSlug === slug && (e.method === 'stone' || e.method === 'trade' || e.method === 'happiness') && e.itemRequired === itemId
   ) ?? null
 }
 

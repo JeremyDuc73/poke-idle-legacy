@@ -15,7 +15,8 @@ const player = usePlayerStore()
 const inventory = useInventoryStore()
 const { t } = useLocale()
 
-const activeBanner = computed(() => BANNERS[0]!)
+const selectedBannerIndex = ref(0)
+const activeBanner = computed(() => BANNERS[selectedBannerIndex.value] ?? BANNERS[0]!)
 
 const availablePool = computed(() => {
   const maxed = inventory.maxedSlugs
@@ -176,6 +177,22 @@ function dismiss() {
 
 <template>
   <div class="flex flex-col items-center gap-6">
+    <!-- Banner Selector -->
+    <div class="flex flex-wrap justify-center gap-2">
+      <button
+        v-for="(banner, idx) in BANNERS"
+        :key="banner.id"
+        class="rounded-lg px-4 py-2 text-xs font-bold transition-all"
+        :class="selectedBannerIndex === idx
+          ? 'bg-yellow-500/20 text-yellow-400 ring-1 ring-yellow-500/50'
+          : 'bg-gray-700/40 text-gray-400 hover:bg-gray-700/60'"
+        @click="selectedBannerIndex = idx"
+      >
+        {{ t(banner.nameFr, banner.nameEn) }}
+        <span class="ml-1 text-[10px] opacity-60">({{ banner.pool.length }})</span>
+      </button>
+    </div>
+
     <!-- Banner Header -->
     <div class="text-center">
       <h2 class="text-2xl font-bold text-yellow-400">

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { GENERATIONS } from '~/data/zones'
 
 const BONUSES_KEY = 'poke-idle-bonuses'
 
@@ -158,8 +159,22 @@ export const usePlayerStore = defineStore('player', {
         this.currentStage++
       } else {
         this.currentStage = 1
-        this.currentZone++
         this.badges++
+        // Check if there are more zones in the current generation
+        const gen = GENERATIONS.find((g) => g.id === this.currentGeneration)
+        if (gen && this.currentZone >= gen.zones.length) {
+          // Move to next generation
+          const nextGen = GENERATIONS.find((g) => g.id === this.currentGeneration + 1)
+          if (nextGen) {
+            this.currentGeneration++
+            this.currentZone = 1
+          } else {
+            // Last generation — stay at last zone
+            this.currentZone = gen.zones.length
+          }
+        } else {
+          this.currentZone++
+        }
       }
       this.stageKills = 0
     },
