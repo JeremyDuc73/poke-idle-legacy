@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { Search, Sparkles, EyeOff } from 'lucide-vue-next'
+import { Search, Sparkles, EyeOff, X, Star } from 'lucide-vue-next'
 import { getSpriteUrl, getStaticSpriteUrl, getShinySpriteUrl, getStaticShinySpriteUrl, getPokeApiSpriteUrl } from '~/utils/showdown'
-import { getPokemonType } from '~/data/types'
+import { getPokemonType, getTypeInfo } from '~/data/types'
 import { useLocale } from '~/composables/useLocale'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { POKEDEX, GEN_NAMES, getAllGens } from '~/data/pokedex'
 import type { PokedexEntry } from '~/data/pokedex'
+import { EVOLUTIONS } from '~/data/evolutions'
 
 definePageMeta({
   layout: 'game',
@@ -18,6 +19,7 @@ const search = ref('')
 const selectedGen = ref<number | null>(null)
 const showShiny = ref(false)
 const hideOwned = ref(false)
+const selectedPokemon = ref<PokedexEntry | null>(null)
 
 const allGens = getAllGens()
 
@@ -81,6 +83,45 @@ function getApiUrl(id: number): string {
 function isOwned(slug: string): boolean {
   const owned = showShiny.value ? ownedShinySlugs.value : ownedNormalSlugs.value
   return owned.has(slug)
+}
+
+function getOwnedInfo(slug: string) {
+  return inventory.collection.find((p) => p.slug === slug && !p.isShiny) ?? null
+}
+
+function getOwnedShinyInfo(slug: string) {
+  return inventory.collection.find((p) => p.slug === slug && p.isShiny) ?? null
+}
+
+function getEvolutions(slug: string): PokedexEntry[] {
+  const chain: PokedexEntry[] = []
+  const visited = new Set<string>()
+  function walk(s: string) {
+    if (visited.has(s)) return
+    visited.add(s)
+    const entry = POKEDEX.find((p) => p.slug === s)
+    if (entry) chain.push(entry)
+    const evos = EVOLUTIONS.filter((e) => e.fromSlug === s)
+    for (const evo of evos) walk(evo.toSlug)
+  }
+  // Walk back to root
+  let root = slug
+  let safety = 10
+  while (safety-- > 0) {
+    const pre = EVOLUTIONS.find((e) => e.toSlug === root)
+    if (pre) root = pre.fromSlug
+    else break
+  }
+  walk(root)
+  return chain
+}
+
+function openDetail(p: PokedexEntry) {
+  selectedPokemon.value = p
+}
+
+function closeDetail() {
+  selectedPokemon.value = null
 }
 
 watch(showShiny, () => {
@@ -161,19 +202,20 @@ watch(showShiny, () => {
     </div>
 
     <!-- Pokemon Grid -->
-    <div class="grid grid-cols-5 gap-1.5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 xl:grid-cols-14">
-      <div
+    <div class="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12">
+      <button
         v-for="p in filtered"
         :key="p.id"
-        class="group relative flex flex-col items-center rounded-lg border border-slate-700 bg-slate-800 p-1 transition-colors hover:border-slate-500 hover:bg-slate-700"
+        class="group relative flex flex-col items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 p-2 transition-all hover:scale-105 hover:border-slate-500 hover:bg-slate-700"
+        @click="openDetail(p)"
       >
         <!-- Dex number -->
-        <span class="absolute left-0.5 top-0.5 text-[8px] font-mono text-slate-600">#{{ String(p.id).padStart(4, '0') }}</span>
+        <span class="absolute left-1 top-1 text-[8px] font-mono text-slate-600">#{{ String(p.id).padStart(4, '0') }}</span>
 
         <!-- Owned indicator -->
         <span
           v-if="isOwned(p.slug)"
-          class="absolute right-0.5 top-0.5 text-[8px] text-green-500"
+          class="absolute right-1 top-1 text-[8px] text-green-500"
         >&#x2714;</span>
 
         <!-- Sprite: animated GIF → static PNG → PokeAPI → ? -->
@@ -181,7 +223,7 @@ watch(showShiny, () => {
           v-if="!aniErrors.has(p.slug)"
           :src="getAniUrl(p.slug)"
           :alt="t(p.nameFr, p.nameEn)"
-          class="h-12 w-12 object-contain"
+          class="mt-1 h-14 w-14 object-contain"
           style="image-rendering: pixelated;"
           loading="lazy"
           @error="onAniError(p.slug)"
@@ -190,7 +232,7 @@ watch(showShiny, () => {
           v-else-if="!staticErrors.has(p.slug)"
           :src="getStaticUrl(p.slug)"
           :alt="t(p.nameFr, p.nameEn)"
-          class="h-12 w-12 object-contain"
+          class="mt-1 h-14 w-14 object-contain"
           loading="lazy"
           @error="onStaticError(p.slug)"
         />
@@ -198,38 +240,129 @@ watch(showShiny, () => {
           v-else-if="p.id <= 1025 && !pokeApiErrors.has(p.slug)"
           :src="getApiUrl(p.id)"
           :alt="t(p.nameFr, p.nameEn)"
-          class="h-12 w-12 object-contain"
+          class="mt-1 h-14 w-14 object-contain"
           loading="lazy"
           @error="onPokeApiError(p.slug)"
         />
         <div
           v-else
-          class="flex h-12 w-12 items-center justify-center text-lg text-slate-600"
+          class="mt-1 flex h-14 w-14 items-center justify-center text-lg text-slate-600"
         >
           ?
         </div>
 
-        <!-- Type + Name -->
+        <!-- Type -->
         <TypeBadge :type="getPokemonType(p.slug)" />
-        <p class="max-w-full truncate text-[9px] font-medium text-slate-300">
+
+        <!-- Name -->
+        <p class="max-w-full truncate text-[10px] font-medium text-slate-300">
           {{ t(p.nameFr, p.nameEn) }}
         </p>
-
-        <!-- Tooltip -->
-        <div class="pointer-events-none absolute -top-12 left-1/2 z-20 hidden -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-2 py-1 text-[10px] text-white shadow-lg ring-1 ring-slate-700 group-hover:block">
-          <span class="font-bold">#{{ p.id }}</span> {{ t(p.nameFr, p.nameEn) }}
-          <span class="text-slate-500">({{ p.nameEn }})</span>
-          <br />
-          <TypeBadge :type="getPokemonType(p.slug)" size="sm" class="mr-1" />
-          <span class="text-slate-400">Gen {{ p.gen }} — {{ t(GEN_NAMES[p.gen]?.fr ?? '', GEN_NAMES[p.gen]?.en ?? '') }}</span>
-          <span v-if="staticErrors.has(p.slug)" class="ml-1 text-red-400">⚠ sprite manquant</span>
-        </div>
-      </div>
+      </button>
     </div>
 
     <!-- Empty state -->
     <div v-if="filtered.length === 0" class="py-12 text-center text-sm text-slate-500">
       {{ t('Aucun Pokémon trouvé.', 'No Pokémon found.') }}
     </div>
+
+    <!-- Detail Modal -->
+    <Teleport to="body">
+      <div
+        v-if="selectedPokemon"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+        @click.self="closeDetail"
+      >
+        <div class="relative mx-4 flex w-full max-w-md flex-col gap-4 rounded-2xl border border-slate-700 bg-[#0f172a] p-6 shadow-2xl">
+          <!-- Close -->
+          <button class="absolute right-3 top-3 rounded-lg p-1 text-slate-500 hover:bg-slate-800 hover:text-white" @click="closeDetail">
+            <X class="h-5 w-5" />
+          </button>
+
+          <!-- Header -->
+          <div class="flex items-center gap-4">
+            <img
+              :src="getAniUrl(selectedPokemon.slug)"
+              :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn)"
+              class="h-24 w-24 object-contain"
+              style="image-rendering: pixelated;"
+            />
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-mono text-slate-500">#{{ String(selectedPokemon.id).padStart(4, '0') }}</span>
+              <h3 class="text-lg font-bold text-white">{{ t(selectedPokemon.nameFr, selectedPokemon.nameEn) }}</h3>
+              <p class="text-xs text-slate-400">{{ selectedPokemon.nameEn }}</p>
+              <div class="flex items-center gap-2">
+                <TypeBadge :type="getPokemonType(selectedPokemon.slug)" />
+                <span class="text-[10px] text-slate-500">Gen {{ selectedPokemon.gen }} — {{ t(GEN_NAMES[selectedPokemon.gen]?.fr ?? '', GEN_NAMES[selectedPokemon.gen]?.en ?? '') }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Owned status -->
+          <div class="flex flex-col gap-2 rounded-xl bg-slate-800/50 p-3">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">{{ t('Collection', 'Collection') }}</p>
+            <div v-if="getOwnedInfo(selectedPokemon.slug)" class="flex items-center gap-2">
+              <span class="text-xs text-green-400">✓ {{ t('Possédé', 'Owned') }}</span>
+              <span class="text-[10px] text-slate-400">Lv.{{ getOwnedInfo(selectedPokemon.slug)!.level }}</span>
+              <div class="flex gap-0.5">
+                <Star v-for="s in getOwnedInfo(selectedPokemon.slug)!.stars" :key="s" class="h-2.5 w-2.5 fill-yellow-400 text-yellow-400" />
+              </div>
+            </div>
+            <span v-else class="text-xs text-slate-500">{{ t('Non possédé', 'Not owned') }}</span>
+            <div v-if="getOwnedShinyInfo(selectedPokemon.slug)" class="flex items-center gap-2">
+              <span class="text-xs text-yellow-400">✨ Shiny</span>
+              <span class="text-[10px] text-slate-400">Lv.{{ getOwnedShinyInfo(selectedPokemon.slug)!.level }}</span>
+              <div class="flex gap-0.5">
+                <Star v-for="s in getOwnedShinyInfo(selectedPokemon.slug)!.stars" :key="s" class="h-2.5 w-2.5 fill-yellow-400 text-yellow-400" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Evolution chain -->
+          <div v-if="getEvolutions(selectedPokemon.slug).length > 1" class="flex flex-col gap-2 rounded-xl bg-slate-800/50 p-3">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">{{ t('Évolutions', 'Evolutions') }}</p>
+            <div class="flex items-center justify-center gap-1">
+              <template v-for="(evo, i) in getEvolutions(selectedPokemon.slug)" :key="evo.id">
+                <span v-if="i > 0" class="text-xs text-slate-600">→</span>
+                <button
+                  class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 transition-colors hover:bg-slate-700"
+                  :class="evo.slug === selectedPokemon.slug ? 'ring-1 ring-blue-500 bg-blue-500/10' : ''"
+                  @click="openDetail(evo)"
+                >
+                  <img
+                    :src="getSpriteUrl(evo.slug)"
+                    :alt="t(evo.nameFr, evo.nameEn)"
+                    class="h-10 w-10 object-contain"
+                    style="image-rendering: pixelated;"
+                  />
+                  <span class="text-[9px] text-slate-400">{{ t(evo.nameFr, evo.nameEn) }}</span>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <!-- Shiny preview -->
+          <div class="flex flex-col gap-2 rounded-xl bg-slate-800/50 p-3">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Shiny</p>
+            <div class="flex items-center gap-3">
+              <img
+                :src="getSpriteUrl(selectedPokemon.slug)"
+                :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn)"
+                class="h-16 w-16 object-contain"
+                style="image-rendering: pixelated;"
+              />
+              <span class="text-slate-600">→</span>
+              <img
+                :src="getShinySpriteUrl(selectedPokemon.slug)"
+                :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn) + ' Shiny'"
+                class="h-16 w-16 object-contain"
+                style="image-rendering: pixelated;"
+              />
+              <span class="text-[10px] text-yellow-400">✨</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>

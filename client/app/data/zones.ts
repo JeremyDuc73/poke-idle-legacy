@@ -101,7 +101,7 @@ export const GENERATIONS: Generation[] = [
         boss: {
           nameFr: 'Major Bob',
           nameEn: 'Lt. Surge',
-          slug: 'surge',
+          slug: 'ltsurge',
           team: [
             { nameFr: 'Voltorbe', nameEn: 'Voltorb', slug: 'voltorb', level: 21 },
             { nameFr: 'Pikachu', nameEn: 'Pikachu', slug: 'pikachu', level: 18 },

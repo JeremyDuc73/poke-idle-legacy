@@ -15,6 +15,11 @@ const { t } = useLocale()
 
 const allBosses = getAllBosses()
 
+const trainerSpriteErrors = reactive(new Set<string>())
+function onTrainerError(slug: string) {
+  trainerSpriteErrors.add(slug)
+}
+
 function isBossDefeated(boss: BossInfo): boolean {
   if (player.currentGeneration > boss.genId) return true
   if (player.currentGeneration === boss.genId && player.currentZone > boss.zoneId) return true
@@ -99,11 +104,20 @@ const bossGroups = computed(() => {
 
           <!-- Trainer Sprite -->
           <img
+            v-if="!trainerSpriteErrors.has(boss.boss.slug)"
             :src="getTrainerSpriteUrl(boss.boss.slug)"
             :alt="t(boss.boss.nameFr, boss.boss.nameEn)"
             class="h-20 w-20 object-contain"
             :class="{ grayscale: !isBossDefeated(boss) && !isBossCurrent(boss) }"
+            @error="onTrainerError(boss.boss.slug)"
           />
+          <div
+            v-else
+            class="flex h-20 w-20 items-center justify-center rounded-full text-2xl font-bold"
+            :class="isBossDefeated(boss) ? 'bg-yellow-500/20 text-yellow-400' : isBossCurrent(boss) ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-700 text-slate-500'"
+          >
+            {{ t(boss.boss.nameFr, boss.boss.nameEn).charAt(0) }}
+          </div>
 
           <!-- Boss Name -->
           <p class="text-center text-xs font-bold" :class="isBossDefeated(boss) ? 'text-yellow-400' : 'text-slate-300'">
