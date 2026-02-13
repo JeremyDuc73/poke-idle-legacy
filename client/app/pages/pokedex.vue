@@ -282,11 +282,28 @@ watch(showShiny, () => {
           <!-- Header -->
           <div class="flex items-center gap-4">
             <img
+              v-if="!aniErrors.has(selectedPokemon.slug)"
               :src="getAniUrl(selectedPokemon.slug)"
               :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn)"
               class="h-24 w-24 object-contain"
               style="image-rendering: pixelated;"
+              @error="onAniError(selectedPokemon.slug)"
             />
+            <img
+              v-else-if="!staticErrors.has(selectedPokemon.slug)"
+              :src="getStaticUrl(selectedPokemon.slug)"
+              :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn)"
+              class="h-24 w-24 object-contain"
+              @error="onStaticError(selectedPokemon.slug)"
+            />
+            <img
+              v-else-if="selectedPokemon.id <= 1025 && !pokeApiErrors.has(selectedPokemon.slug)"
+              :src="getApiUrl(selectedPokemon.id)"
+              :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn)"
+              class="h-24 w-24 object-contain"
+              @error="onPokeApiError(selectedPokemon.slug)"
+            />
+            <div v-else class="flex h-24 w-24 items-center justify-center text-3xl text-slate-600">?</div>
             <div class="flex flex-col gap-1">
               <span class="text-xs font-mono text-slate-500">#{{ String(selectedPokemon.id).padStart(4, '0') }}</span>
               <h3 class="text-lg font-bold text-white">{{ t(selectedPokemon.nameFr, selectedPokemon.nameEn) }}</h3>
@@ -346,18 +363,50 @@ watch(showShiny, () => {
             <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Shiny</p>
             <div class="flex items-center gap-3">
               <img
+                v-if="!aniErrors.has(selectedPokemon.slug)"
                 :src="getSpriteUrl(selectedPokemon.slug)"
                 :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn)"
                 class="h-16 w-16 object-contain"
                 style="image-rendering: pixelated;"
+                @error="onAniError(selectedPokemon.slug)"
               />
+              <img
+                v-else-if="!staticErrors.has(selectedPokemon.slug)"
+                :src="getStaticSpriteUrl(selectedPokemon.slug)"
+                :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn)"
+                class="h-16 w-16 object-contain"
+                @error="onStaticError(selectedPokemon.slug)"
+              />
+              <img
+                v-else-if="selectedPokemon.id <= 1025"
+                :src="getPokeApiSpriteUrl(selectedPokemon.id, false)"
+                :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn)"
+                class="h-16 w-16 object-contain"
+              />
+              <div v-else class="flex h-16 w-16 items-center justify-center text-lg text-slate-600">?</div>
               <span class="text-slate-600">→</span>
               <img
+                v-if="!aniErrors.has(selectedPokemon.slug + '-shiny')"
                 :src="getShinySpriteUrl(selectedPokemon.slug)"
                 :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn) + ' Shiny'"
                 class="h-16 w-16 object-contain"
                 style="image-rendering: pixelated;"
+                @error="onAniError(selectedPokemon.slug + '-shiny')"
               />
+              <img
+                v-else-if="!staticErrors.has(selectedPokemon.slug + '-shiny')"
+                :src="getStaticShinySpriteUrl(selectedPokemon.slug)"
+                :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn) + ' Shiny'"
+                class="h-16 w-16 object-contain"
+                @error="onStaticError(selectedPokemon.slug + '-shiny')"
+              />
+              <img
+                v-else-if="selectedPokemon.id <= 1025"
+                :src="getPokeApiSpriteUrl(selectedPokemon.id, true)"
+                :alt="t(selectedPokemon.nameFr, selectedPokemon.nameEn) + ' Shiny'"
+                class="h-16 w-16 object-contain"
+              />
+              <div v-else class="flex h-16 w-16 items-center justify-center text-lg text-slate-600">?</div>
               <span class="text-[10px] text-yellow-400">✨</span>
             </div>
           </div>

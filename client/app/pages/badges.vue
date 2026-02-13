@@ -111,12 +111,15 @@ const bossGroups = computed(() => {
             :class="{ grayscale: !isBossDefeated(boss) && !isBossCurrent(boss) }"
             @error="onTrainerError(boss.boss.slug)"
           />
-          <div
-            v-else
-            class="flex h-20 w-20 items-center justify-center rounded-full text-2xl font-bold"
-            :class="isBossDefeated(boss) ? 'bg-yellow-500/20 text-yellow-400' : isBossCurrent(boss) ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-700 text-slate-500'"
-          >
-            {{ t(boss.boss.nameFr, boss.boss.nameEn).charAt(0) }}
+          <div v-else class="relative flex h-20 w-20 items-center justify-center">
+            <img
+              :src="getSpriteUrl(boss.boss.team[boss.boss.team.length - 1]?.slug ?? '')"
+              :alt="t(boss.boss.nameFr, boss.boss.nameEn)"
+              class="h-16 w-16 object-contain"
+              :class="{ grayscale: !isBossDefeated(boss) && !isBossCurrent(boss) }"
+              style="image-rendering: pixelated;"
+            />
+            <span class="absolute bottom-0 right-0 rounded-full bg-slate-700 px-1 text-[8px] font-bold text-slate-300">👤</span>
           </div>
 
           <!-- Boss Name -->
