@@ -243,7 +243,7 @@ export const GENERATIONS: Generation[] = [
         boss: {
           nameFr: 'Olga',
           nameEn: 'Lorelei',
-          slug: 'lorelei',
+          slug: 'lorelei-gen3',
           team: [
             { nameFr: 'Lamantine', nameEn: 'Dewgong', slug: 'dewgong', level: 52 },
             { nameFr: 'Crustabri', nameEn: 'Cloyster', slug: 'cloyster', level: 51 },
@@ -293,7 +293,7 @@ export const GENERATIONS: Generation[] = [
         boss: {
           nameFr: 'Agatha',
           nameEn: 'Agatha',
-          slug: 'agatha',
+          slug: 'agatha-gen3',
           team: [
             { nameFr: 'Ectoplasma', nameEn: 'Gengar', slug: 'gengar', level: 54 },
             { nameFr: 'Nosféralto', nameEn: 'Golbat', slug: 'golbat', level: 54 },
