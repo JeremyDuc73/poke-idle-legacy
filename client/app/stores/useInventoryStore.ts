@@ -114,18 +114,19 @@ export const useInventoryStore = defineStore('inventory', {
     addPokemonXp(pokemonId: number, amount: number, currentGeneration?: number) {
       const pokemon = this.collection.find((p) => p.id === pokemonId)
       if (!pokemon || pokemon.level >= MAX_LEVEL) return
+      const levelBefore = pokemon.level
       pokemon.xp += amount
-      const alreadyEvolved = new Set<string>()
       while (pokemon.level < MAX_LEVEL && pokemon.xp >= pokemonXpForLevel(pokemon.level + 1)) {
         pokemon.level++
-        // Check auto-evolution by level (region-restricted), only once per evo target
+      }
+      // After all level-ups, check if we crossed any evolution threshold
+      if (pokemon.level > levelBefore) {
         const evo = canEvolveByLevel(pokemon.slug, pokemon.level)
-        if (evo && !alreadyEvolved.has(evo.toSlug)) {
+        if (evo && evo.levelRequired && levelBefore < evo.levelRequired) {
           const targetGen = getGenForSlug(evo.toSlug)
           const maxGen = currentGeneration ?? 9
           if (targetGen <= maxGen) {
             this.applyEvolution(pokemon, evo)
-            alreadyEvolved.add(evo.toSlug)
           }
         }
       }
