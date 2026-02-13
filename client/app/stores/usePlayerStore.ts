@@ -1,5 +1,21 @@
 import { defineStore } from 'pinia'
 
+const BONUSES_KEY = 'poke-idle-bonuses'
+
+function loadBonusesFromStorage(): { clickDamageBonus: number; teamDpsBonus: number } {
+  try {
+    const raw = localStorage.getItem(BONUSES_KEY)
+    if (raw) return JSON.parse(raw)
+  } catch { /* ignore */ }
+  return { clickDamageBonus: 0, teamDpsBonus: 0 }
+}
+
+function saveBonusesToStorage(clickDamageBonus: number, teamDpsBonus: number) {
+  try {
+    localStorage.setItem(BONUSES_KEY, JSON.stringify({ clickDamageBonus, teamDpsBonus }))
+  } catch { /* ignore */ }
+}
+
 const GENERATION_NAMES: Record<number, string> = {
   1: 'Kanto',
   2: 'Johto',
@@ -38,22 +54,25 @@ interface PlayerState {
 }
 
 export const usePlayerStore = defineStore('player', {
-  state: (): PlayerState => ({
-    username: '',
-    gold: 0,
-    gems: 0,
-    xp: 0,
-    level: 1,
-    currentGeneration: 1,
-    currentZone: 1,
-    currentStage: 1,
-    stageKills: 0,
-    clickDamage: 1,
-    clickDamageBonus: 0,
-    teamDpsBonus: 0,
-    badges: 0,
-    isLoggedIn: false,
-  }),
+  state: (): PlayerState => {
+    const saved = typeof localStorage !== 'undefined' ? loadBonusesFromStorage() : { clickDamageBonus: 0, teamDpsBonus: 0 }
+    return {
+      username: '',
+      gold: 0,
+      gems: 0,
+      xp: 0,
+      level: 1,
+      currentGeneration: 1,
+      currentZone: 1,
+      currentStage: 1,
+      stageKills: 0,
+      clickDamage: 1,
+      clickDamageBonus: saved.clickDamageBonus,
+      teamDpsBonus: saved.teamDpsBonus,
+      badges: 0,
+      isLoggedIn: false,
+    }
+  },
 
   getters: {
     formattedGold: (state): string => {
@@ -145,8 +164,13 @@ export const usePlayerStore = defineStore('player', {
       this.stageKills = 0
     },
 
+    saveBonuses() {
+      saveBonusesToStorage(this.clickDamageBonus, this.teamDpsBonus)
+    },
+
     setPlayer(data: Partial<PlayerState>) {
       Object.assign(this, data)
+      this.saveBonuses()
     },
 
     reset() {

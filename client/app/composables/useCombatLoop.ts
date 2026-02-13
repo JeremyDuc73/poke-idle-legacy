@@ -4,6 +4,7 @@ import { useInventoryStore } from '~/stores/useInventoryStore'
 import { getSpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
 import { getZone } from '~/data/zones'
 import { getPokemonType, getEffectiveness } from '~/data/types'
+import { getRarityDpsMult } from '~/data/gacha'
 import type { PokemonType } from '~/data/types'
 import type { WildPokemon, BossTrainer } from '~/data/zones'
 
@@ -16,11 +17,13 @@ export function useCombatLoop() {
 
   function getPokeDps(poke: { slug: string; level: number; stars: number; isShiny: boolean }, enemyType?: PokemonType) {
     const pokeType = getPokemonType(poke.slug)
-    const baseDps = Math.floor(poke.level * (1 + poke.stars * 0.25))
+    const rarityMult = getRarityDpsMult(poke.slug)
+    const baseDps = Math.floor(poke.level * (1 + poke.stars * 0.25) * rarityMult)
     const typeMult = enemyType ? getEffectiveness(pokeType, enemyType) : 1
     const shinyMult = poke.isShiny ? 1.5 : 1
     return {
       baseDps,
+      rarityMult,
       typeMult,
       shinyMult,
       effectiveDps: Math.round(baseDps * typeMult * shinyMult),

@@ -163,6 +163,30 @@ export const RARITY_LABELS_EN: Record<Rarity, string> = {
   legendary: 'Legendary',
 }
 
+// Rarity DPS multiplier: higher rarity = more base damage
+export const RARITY_DPS_MULT: Record<Rarity, number> = {
+  common: 1.0,
+  rare: 1.5,
+  epic: 2.0,
+  legendary: 3.0,
+}
+
+// Build a slug → rarity lookup from all banners
+const _slugRarity = new Map<string, Rarity>()
+for (const b of BANNERS) {
+  for (const p of b.pool) {
+    _slugRarity.set(p.slug, p.rarity)
+  }
+}
+
+export function getRarity(slug: string): Rarity {
+  return _slugRarity.get(slug) ?? 'common'
+}
+
+export function getRarityDpsMult(slug: string): number {
+  return RARITY_DPS_MULT[getRarity(slug)]
+}
+
 export function pullFromBanner(banner: Banner): { pokemon: GachaPokemon; isShiny: boolean } {
   const byRarity = new Map<Rarity, GachaPokemon[]>()
   for (const p of banner.pool) {

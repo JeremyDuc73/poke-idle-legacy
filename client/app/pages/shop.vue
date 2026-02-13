@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { Coins, Gem, Zap, Swords, ShieldPlus, Sparkles, FlaskConical } from 'lucide-vue-next'
+import { Coins, Gem, Zap, Swords, ShieldPlus, Sparkles, FlaskConical, X } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useCombatStore } from '~/stores/useCombatStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
 import { EVO_ITEMS, getEvolutionsFor } from '~/data/evolutions'
+import { getSpriteUrl } from '~/utils/showdown'
+import type { OwnedPokemon } from '~/stores/useInventoryStore'
 
 definePageMeta({
   layout: 'game',
@@ -26,34 +28,56 @@ function flash(id: string) {
 // Evolution items cost
 const EVO_ITEM_COST = 1500
 
-function buyEvoItem(itemId: string) {
-  if (!player.spendGold(EVO_ITEM_COST)) return
+// --- Evolution picker modal ---
+const pickerItemId = ref<string | null>(null)
+const pickerCandidates = ref<OwnedPokemon[]>([])
 
-  // Find first Pokemon in collection that can use this item
-  const candidates = inventory.collection.filter((p) => {
+function getEvoCandidates(itemId: string): OwnedPokemon[] {
+  const ownedSlugs = new Set(inventory.collection.map((p) => p.slug))
+  return inventory.collection.filter((p) => {
     const evos = getEvolutionsFor(p.slug)
-    return evos.some((e) => (e.method === 'stone' || e.method === 'trade') && e.itemRequired === itemId)
+    return evos.some((e) => {
+      if (!((e.method === 'stone' || e.method === 'trade') && e.itemRequired === itemId)) return false
+      // Prevent evolving if you already own the evolved form
+      if (ownedSlugs.has(e.toSlug)) return false
+      return true
+    })
   })
+}
 
+function openEvoPicker(itemId: string) {
+  const candidates = getEvoCandidates(itemId)
   if (candidates.length === 0) {
-    player.addGold(EVO_ITEM_COST) // Refund
     evoMessage.value = t('Aucun Pokémon compatible !', 'No compatible Pokémon!')
     setTimeout(() => (evoMessage.value = null), 2000)
     return
   }
+  pickerItemId.value = itemId
+  pickerCandidates.value = candidates
+}
 
-  const target = candidates[0]!
-  const success = inventory.evolveWithItem(target.id, itemId)
+function closeEvoPicker() {
+  pickerItemId.value = null
+  pickerCandidates.value = []
+}
+
+function confirmEvolve(pokemon: OwnedPokemon) {
+  const itemId = pickerItemId.value
+  if (!itemId) return
+  if (!player.spendGold(EVO_ITEM_COST)) return
+
+  const success = inventory.evolveWithItem(pokemon.id, itemId)
   if (success) {
     flash(`evo-${itemId}`)
     evoMessage.value = t(
-      `${target.nameFr} a évolué !`,
-      `${target.nameEn} evolved!`
+      `${pokemon.nameFr} a évolué !`,
+      `${pokemon.nameEn} evolved!`
     )
     setTimeout(() => (evoMessage.value = null), 3000)
   } else {
     player.addGold(EVO_ITEM_COST) // Refund
   }
+  closeEvoPicker()
 }
 
 function buyGems(amount: number, goldCost: number) {
@@ -70,7 +94,6 @@ const ITEM_SPRITES: Record<string, string> = {
   'thunder-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/thunder-stone.png',
   'leaf-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leaf-stone.png',
   'moon-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/moon-stone.png',
-  'link-cable': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/linking-cord.png',
 }
 
 interface ShopItem {
@@ -113,6 +136,7 @@ const shopItems = computed<ShopItem[]>(() => [
         player.clickDamageBonus++
         player.clickDamage = Math.floor(1 + player.level * 0.5 + player.badges * 2) + player.clickDamageBonus
         combat.clickDamage = player.clickDamage
+        player.saveBonuses()
         flash('click-boost')
       }
     },
@@ -146,6 +170,7 @@ const shopItems = computed<ShopItem[]>(() => [
     action: () => {
       if (player.spendGold(dpsUpgradeCost.value)) {
         player.teamDpsBonus += 5
+        player.saveBonuses()
         flash('team-dps')
       }
     },
@@ -236,7 +261,7 @@ const shopItems = computed<ShopItem[]>(() => [
           class="flex flex-col gap-2 rounded-xl border border-gray-700 bg-gray-800 p-4 text-left transition-all hover:border-green-500/30 active:scale-[0.98] disabled:opacity-40"
           :class="{ 'ring-2 ring-green-500/50': purchaseFlash === `evo-${item.id}` }"
           :disabled="player.gold < EVO_ITEM_COST"
-          @click="buyEvoItem(item.id)"
+          @click="openEvoPicker(item.id)"
         >
           <div class="flex items-center gap-3">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-700">
@@ -255,7 +280,7 @@ const shopItems = computed<ShopItem[]>(() => [
           </div>
           <div class="flex items-center justify-between">
             <span class="text-[10px] text-gray-600">
-              {{ item.applicableTo.length }} {{ t('Pokémon compatibles', 'compatible Pokémon') }}
+              {{ getEvoCandidates(item.id).length }} {{ t('Pokémon éligibles', 'eligible Pokémon') }}
             </span>
             <span class="flex items-center gap-1 text-sm font-bold text-yellow-400">
               🪙 {{ EVO_ITEM_COST.toLocaleString() }}
@@ -274,5 +299,41 @@ const shopItems = computed<ShopItem[]>(() => [
         <Gem class="h-4 w-4" /> {{ player.formattedGems }} {{ t('gemmes', 'gems') }}
       </span>
     </div>
+
+    <!-- Evolution Picker Modal -->
+    <Teleport to="body">
+      <div
+        v-if="pickerItemId"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+        @click.self="closeEvoPicker"
+      >
+        <div class="relative w-full max-w-md rounded-2xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
+          <button class="absolute right-3 top-3 rounded-lg p-1 text-gray-500 hover:bg-gray-800 hover:text-white" @click="closeEvoPicker">
+            <X class="h-5 w-5" />
+          </button>
+          <h3 class="mb-4 text-lg font-bold text-white">
+            {{ t('Choisir un Pokémon à faire évoluer', 'Choose a Pokémon to evolve') }}
+          </h3>
+          <div class="flex flex-col gap-2 max-h-80 overflow-y-auto pr-1">
+            <button
+              v-for="poke in pickerCandidates"
+              :key="poke.id"
+              class="flex items-center gap-3 rounded-xl border border-gray-700 bg-gray-800 p-3 text-left transition-all hover:border-green-500/50 hover:bg-gray-750 active:scale-[0.98]"
+              @click="confirmEvolve(poke)"
+            >
+              <img :src="getSpriteUrl(poke.slug)" :alt="t(poke.nameFr, poke.nameEn)" class="h-12 w-12 object-contain" />
+              <div class="flex-1">
+                <p class="font-bold text-white">{{ t(poke.nameFr, poke.nameEn) }}</p>
+                <p class="text-xs text-gray-500">Lv.{{ poke.level }} — ★{{ poke.stars }}</p>
+              </div>
+              <span class="text-sm font-bold text-yellow-400">🪙 {{ EVO_ITEM_COST.toLocaleString() }}</span>
+            </button>
+          </div>
+          <p v-if="pickerCandidates.length === 0" class="py-6 text-center text-sm text-gray-500">
+            {{ t('Aucun Pokémon éligible', 'No eligible Pokémon') }}
+          </p>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
