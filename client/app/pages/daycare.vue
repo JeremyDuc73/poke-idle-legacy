@@ -23,12 +23,13 @@ const { t } = useLocale()
 const showPicker = ref(false)
 const hatchResults = ref<{ slug: string; nameFr: string; nameEn: string; isShiny: boolean; isNew: boolean; stars: number; rarity: Rarity }[]>([])
 
-// Eligible pokemon: level 100, not shiny, deduplicated by slug
+// Eligible pokemon: level 100, not shiny, not already in daycare, deduplicated by slug
 const eligiblePokemon = computed(() => {
   const seen = new Set<string>()
   return inventory.collection.filter((p) => {
     if (p.level < MAX_LEVEL) return false
     if (p.isShiny) return false
+    if (daycare.hasSlug(p.slug)) return false
     if (seen.has(p.slug)) return false
     seen.add(p.slug)
     return true
@@ -55,7 +56,12 @@ function slotReady(slot: DaycareSlot): boolean {
 
 function depositPokemon(poke: OwnedPokemon) {
   if (daycare.isFull) return
+  if (daycare.hasSlug(poke.slug)) return
   if (!player.spendGold(DAYCARE_COST)) return
+  // Remove from team before depositing
+  if (poke.teamSlot !== null) {
+    inventory.removeFromTeam(poke.id)
+  }
   daycare.deposit({
     slug: poke.slug,
     nameFr: poke.nameFr,

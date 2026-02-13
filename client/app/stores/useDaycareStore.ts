@@ -16,11 +16,11 @@ export const DAYCARE_COST = 500
 
 // Damage required to hatch based on the pokemon's current star count
 export const HATCH_DAMAGE: Record<number, number> = {
-  1: 5_000,
-  2: 15_000,
-  3: 50_000,
-  4: 150_000,
-  5: 500_000,
+  1: 2_000,
+  2: 6_000,
+  3: 20_000,
+  4: 60_000,
+  5: 200_000,
 }
 
 // 5-star pokemon have a 1/50 chance to hatch shiny
@@ -41,8 +41,13 @@ export const useDaycareStore = defineStore('daycare', {
   },
 
   actions: {
+    hasSlug(slug: string): boolean {
+      return this.slots.some((s) => s.slug === slug)
+    },
+
     deposit(pokemon: { slug: string; nameFr: string; nameEn: string; stars: number; rarity: Rarity }): boolean {
       if (this.isFull) return false
+      if (this.hasSlug(pokemon.slug)) return false
       const dmgRequired = HATCH_DAMAGE[pokemon.stars] ?? HATCH_DAMAGE[5]!
       this.slots.push({
         slug: pokemon.slug,

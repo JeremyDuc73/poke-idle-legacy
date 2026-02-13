@@ -11,6 +11,7 @@ import type { PokemonType } from '~/data/types'
 import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, getRarityDpsMult, getStarDpsMult, RARITY_DPS_MULT } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
 import { getEvolutionStage, getEvoStageMult, EVO_STAGE_MULT } from '~/data/evolutions'
+import { useDaycareStore } from '~/stores/useDaycareStore'
 
 definePageMeta({
   layout: 'game',
@@ -18,6 +19,7 @@ definePageMeta({
 
 const inventory = useInventoryStore()
 const player = usePlayerStore()
+const daycare = useDaycareStore()
 const { t } = useLocale()
 
 const candySizes: CandySize[] = ['S', 'M', 'L', 'XL']
@@ -85,9 +87,14 @@ const collectionTypes = computed(() => {
   return TYPES.filter((t) => types.has(t.id))
 })
 
+function isInDaycare(pokemon: OwnedPokemon): boolean {
+  return daycare.hasSlug(pokemon.slug)
+}
+
 function toggleTeam(pokemonId: number) {
   const pokemon = inventory.collection.find((p) => p.id === pokemonId)
   if (!pokemon) return
+  if (isInDaycare(pokemon)) return
 
   if (pokemon.teamSlot !== null) {
     inventory.removeFromTeam(pokemonId)
@@ -456,6 +463,13 @@ function getDetailStats(poke: OwnedPokemon) {
                 @click="toggleTeam(detailPokemon.id); closeDetail()"
               >
                 {{ t('Retirer de l\'équipe', 'Remove from Team') }}
+              </button>
+              <button
+                v-else-if="isInDaycare(detailPokemon)"
+                class="flex-1 rounded-lg bg-gray-500/20 py-2 text-sm font-bold text-gray-500 cursor-not-allowed"
+                disabled
+              >
+                {{ t('En pension', 'In Daycare') }}
               </button>
               <button
                 v-else
