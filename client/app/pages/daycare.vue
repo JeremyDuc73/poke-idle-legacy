@@ -17,7 +17,7 @@ const inventory = useInventoryStore()
 const { t } = useLocale()
 
 const EGG_COST = 500
-const SHINY_CHANCE = 1 / 1000
+const SHINY_CHANCE = 1 / 100
 
 // ── State ──
 const selectedPokemon = ref<OwnedPokemon | null>(null)
@@ -80,15 +80,33 @@ async function hatchEgg() {
   // Determine shiny
   const isShiny = Math.random() < SHINY_CHANCE
 
-  // Add to inventory
-  const { isNew, pokemon: owned } = inventory.addPokemon({
-    slug: poke.slug,
-    nameFr: poke.nameFr,
-    nameEn: poke.nameEn,
-    stars: 1,
-    isShiny,
-    rarity: poke.rarity,
-  })
+  // Add to inventory — non-shiny eggs never merge as duplicates
+  let isNew: boolean
+  let stars: number
+  if (isShiny) {
+    const result = inventory.addPokemon({
+      slug: poke.slug,
+      nameFr: poke.nameFr,
+      nameEn: poke.nameEn,
+      stars: 1,
+      isShiny: true,
+      rarity: poke.rarity,
+    })
+    isNew = result.isNew
+    stars = result.pokemon.stars
+  } else {
+    // Non-shiny: always add as a fresh entry, skip duplicate merge
+    inventory.addPokemonRaw({
+      slug: poke.slug,
+      nameFr: poke.nameFr,
+      nameEn: poke.nameEn,
+      stars: 1,
+      isShiny: false,
+      rarity: poke.rarity,
+    })
+    isNew = true
+    stars = 1
+  }
 
   hatchResult.value = {
     slug: poke.slug,
@@ -96,7 +114,7 @@ async function hatchEgg() {
     nameEn: poke.nameEn,
     isShiny,
     isNew,
-    stars: owned.stars,
+    stars,
     rarity: poke.rarity,
   }
 
@@ -123,8 +141,8 @@ function sleep(ms: number): Promise<void> {
       </h2>
       <p class="mt-1 text-sm text-gray-400">
         {{ t(
-          'Dépose un Pokémon niv.100 pour obtenir un œuf. Chance de shiny : 1/1000 !',
-          'Leave a Lv.100 Pokémon to get an egg. Shiny chance: 1/1000!'
+          'Dépose un Pokémon niv.100 pour obtenir un œuf. Chance de shiny : 1/100 !',
+          'Leave a Lv.100 Pokémon to get an egg. Shiny chance: 1/100!'
         ) }}
       </p>
     </div>
@@ -266,7 +284,7 @@ function sleep(ms: number): Promise<void> {
         </span>
       </button>
       <p class="text-[10px] text-gray-500">
-        {{ t('0.1% de chance d\'obtenir un shiny', '0.1% chance to get a shiny') }}
+        {{ t('1% de chance d\'obtenir un shiny', '1% chance to get a shiny') }}
       </p>
     </div>
 

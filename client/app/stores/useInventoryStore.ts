@@ -93,6 +93,18 @@ export const useInventoryStore = defineStore('inventory', {
       return { isNew: true, isMaxed: false, pokemon: newPokemon }
     },
 
+    addPokemonRaw(pokemon: Omit<OwnedPokemon, 'id' | 'level' | 'xp' | 'teamSlot'>): OwnedPokemon {
+      const newPokemon: OwnedPokemon = {
+        ...pokemon,
+        id: this.nextId++,
+        level: 1,
+        xp: 0,
+        teamSlot: null,
+      }
+      this.collection.push(newPokemon)
+      return newPokemon
+    },
+
     setTeamSlot(pokemonId: number, slot: number | null) {
       const pokemon = this.collection.find((p) => p.id === pokemonId)
       if (!pokemon) return

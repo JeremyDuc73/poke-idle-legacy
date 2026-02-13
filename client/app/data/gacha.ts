@@ -214,7 +214,7 @@ export function pullFromBanner(banner: Banner): { pokemon: GachaPokemon; isShiny
 
   const candidates = byRarity.get(selectedRarity) ?? byRarity.get('common') ?? banner.pool
   const pokemon = candidates[Math.floor(Math.random() * candidates.length)]!
-  const isShiny = Math.random() < pokemon.shinyRate
+  const isShiny = Math.random() < 1 / 1000
 
   return { pokemon, isShiny }
 }
