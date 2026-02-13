@@ -16,10 +16,8 @@ const { init: initCombat } = useCombatLoop()
 
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null
 
-onMounted(async () => {
-  await loadSpecies()
-  await auth.checkAuth()
-  // checkAfkRewards() // disabled for now
+onMounted(() => {
+  // Auth + species cache handled by auth.global middleware
   initCombat()
 
   autoSaveInterval = setInterval(() => {

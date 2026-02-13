@@ -111,13 +111,13 @@ async function handleSubmit() {
         </button>
       </p>
 
-      <!-- Skip (play without account) -->
+      <!-- Pokedex link -->
       <div class="mt-4 text-center">
         <NuxtLink
-          to="/"
+          to="/pokedex"
           class="text-xs text-gray-600 transition-colors hover:text-gray-400"
         >
-          {{ t('Jouer sans compte (données locales)', 'Play without account (local data)') }}
+          {{ t('Consulter le Pokédex', 'Browse the Pokédex') }}
         </NuxtLink>
       </div>
     </div>
