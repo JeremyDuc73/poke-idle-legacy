@@ -36,6 +36,11 @@ function xpForLevel(level: number): number {
   return Math.floor(50 * Math.pow(level, 1.8))
 }
 
+export type CandySize = 'S' | 'M' | 'L' | 'XL'
+
+export const CANDY_XP: Record<CandySize, number> = { S: 100, M: 500, L: 2000, XL: 10000 }
+export const CANDY_COST: Record<CandySize, number> = { S: 50, M: 200, L: 750, XL: 3000 }
+
 interface PlayerState {
   username: string
   gold: number
@@ -51,6 +56,7 @@ interface PlayerState {
   teamDpsBonus: number
   badges: number
   isLoggedIn: boolean
+  candies: Record<CandySize, number>
 }
 
 export const usePlayerStore = defineStore('player', {
@@ -71,6 +77,7 @@ export const usePlayerStore = defineStore('player', {
       teamDpsBonus: saved.teamDpsBonus,
       badges: 0,
       isLoggedIn: false,
+      candies: { S: 0, M: 0, L: 0, XL: 0 },
     }
   },
 
@@ -162,6 +169,19 @@ export const usePlayerStore = defineStore('player', {
         this.currentStage--
       }
       this.stageKills = 0
+    },
+
+    buyCandy(size: CandySize, qty: number = 1): boolean {
+      const cost = CANDY_COST[size] * qty
+      if (!this.spendGold(cost)) return false
+      this.candies[size] += qty
+      return true
+    },
+
+    useCandy(size: CandySize): boolean {
+      if (this.candies[size] <= 0) return false
+      this.candies[size]--
+      return true
     },
 
     saveBonuses() {

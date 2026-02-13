@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Swords, Backpack, User, Star, ShoppingBag, Globe, Trophy, LogOut, LogIn, BookOpen, Award } from 'lucide-vue-next'
+import { Swords, Backpack, User, Star, ShoppingBag, Globe, Trophy, LogOut, LogIn, BookOpen, Award, Egg } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useLocale } from '~/composables/useLocale'
@@ -42,6 +42,7 @@ const navItems = computed(() => [
   { label: t('Inventaire', 'Inventory'), icon: Backpack, to: '/inventory' },
   { label: t('Invocation', 'Gacha'), icon: Star, to: '/gacha' },
   { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex' },
+  { label: t('Pension', 'Daycare'), icon: Egg, to: '/daycare' },
   { label: t('Badges', 'Badges'), icon: Award, to: '/badges' },
   { label: t('Boutique', 'Shop'), icon: ShoppingBag, to: '/shop' },
   { label: t('Profil', 'Profile'), icon: User, to: '/profile' },

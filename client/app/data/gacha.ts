@@ -88,6 +88,11 @@ const KANTO_POOL: GachaPokemon[] = [
   { nameFr: 'Porygon', nameEn: 'Porygon', slug: 'porygon', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Amonita', nameEn: 'Omanyte', slug: 'omanyte', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Kabuto', nameEn: 'Kabuto', slug: 'kabuto', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Onix', nameEn: 'Onix', slug: 'onix', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Kicklee', nameEn: 'Hitmonlee', slug: 'hitmonlee', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Tygnon', nameEn: 'Hitmonchan', slug: 'hitmonchan', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Excelangue', nameEn: 'Lickitung', slug: 'lickitung', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Saquedeneu', nameEn: 'Tangela', slug: 'tangela', rarity: 'rare', shinyRate: 0.02 },
 
   // --- EPIC (starters, pseudo-legendary Dratini, iconic strong Pokémon) ---
   { nameFr: 'Bulbizarre', nameEn: 'Bulbasaur', slug: 'bulbasaur', rarity: 'epic', shinyRate: 0.03 },

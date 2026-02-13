@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Coins, Gem, Sparkles, FlaskConical, X } from 'lucide-vue-next'
-import { usePlayerStore } from '~/stores/usePlayerStore'
+import { Coins, Gem, Sparkles, FlaskConical, X, Candy } from 'lucide-vue-next'
+import { usePlayerStore, CANDY_XP, CANDY_COST } from '~/stores/usePlayerStore'
+import type { CandySize } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
 import { EVO_ITEMS, getEvolutionsFor } from '~/data/evolutions'
@@ -33,16 +34,18 @@ const pickerCandidates = ref<OwnedPokemon[]>([])
 
 function getEvoCandidates(itemId: string): OwnedPokemon[] {
   const ownedSlugs = new Set(inventory.collection.map((p) => p.slug))
+  const seen = new Set<string>()
   return inventory.collection.filter((p) => {
+    if (seen.has(p.slug)) return false
     const evos = getEvolutionsFor(p.slug)
-    return evos.some((e) => {
+    const eligible = evos.some((e) => {
       if (!((e.method === 'stone' || e.method === 'trade') && e.itemRequired === itemId)) return false
-      // Prevent evolving if you already own the evolved form
       if (ownedSlugs.has(e.toSlug)) return false
-      // Restrict evolution to unlocked regions
       if (getGenForSlug(e.toSlug) > player.currentGeneration) return false
       return true
     })
+    if (eligible) seen.add(p.slug)
+    return eligible
   })
 }
 
@@ -67,8 +70,8 @@ function confirmEvolve(pokemon: OwnedPokemon) {
   if (!itemId) return
   if (!player.spendGold(EVO_ITEM_COST)) return
 
-  const success = inventory.evolveWithItem(pokemon.id, itemId)
-  if (success) {
+  const count = inventory.evolveAllWithItem(pokemon.slug, itemId)
+  if (count > 0) {
     flash(`evo-${itemId}`)
     evoMessage.value = t(
       `${pokemon.nameFr} a évolué !`,
@@ -102,6 +105,15 @@ const gemExchanges = [
   { gems: 5, gold: 450 },
   { gems: 10, gold: 800 },
 ]
+
+const candySizes: CandySize[] = ['S', 'M', 'L', 'XL']
+const CANDY_COLORS: Record<CandySize, string> = { S: '#4ade80', M: '#60a5fa', L: '#c084fc', XL: '#fbbf24' }
+
+function buyCandy(size: CandySize) {
+  if (player.buyCandy(size)) {
+    flash(`candy-${size}`)
+  }
+}
 </script>
 
 <template>
@@ -138,6 +150,45 @@ const gemExchanges = [
       </div>
     </section>
 
+
+    <!-- XP Candies -->
+    <section>
+      <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-400">
+        <Candy class="h-4 w-4 text-green-400" />
+        {{ t('Bonbons XP', 'XP Candies') }}
+      </h3>
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <button
+          v-for="size in candySizes"
+          :key="size"
+          class="flex flex-col items-center gap-2 rounded-xl border border-gray-700 bg-gray-800 p-4 transition-all hover:border-green-500/30 active:scale-[0.98] disabled:opacity-40"
+          :class="{ 'ring-2 ring-green-500/50': purchaseFlash === `candy-${size}` }"
+          :disabled="player.gold < CANDY_COST[size]"
+          @click="buyCandy(size)"
+        >
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full text-lg font-black"
+            :style="{ backgroundColor: CANDY_COLORS[size] + '20', color: CANDY_COLORS[size] }"
+          >
+            {{ size }}
+          </div>
+          <div class="text-center">
+            <p class="text-xs font-bold" :style="{ color: CANDY_COLORS[size] }">
+              {{ t('Bonbon', 'Candy') }} {{ size }}
+            </p>
+            <p class="text-[10px] text-gray-500">+{{ CANDY_XP[size].toLocaleString() }} XP</p>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <span class="rounded-full bg-gray-700/50 px-2 py-0.5 text-[10px] text-gray-400">
+              x{{ player.candies[size] }}
+            </span>
+            <span class="flex items-center gap-1 text-xs font-bold text-yellow-400">
+              🪙 {{ CANDY_COST[size].toLocaleString() }}
+            </span>
+          </div>
+        </button>
+      </div>
+    </section>
 
     <!-- Evolution Items -->
     <section>

@@ -60,6 +60,7 @@ export default class GameController {
         currentStage: user.currentStage,
         clickDamage: user.clickDamage,
         badges: user.badges,
+        candies: user.candies ?? { S: 0, M: 0, L: 0, XL: 0 },
       },
       pokemons: user.pokemons.map((p) => ({
         id: p.id,
@@ -95,6 +96,9 @@ export default class GameController {
     user.currentStage = data.currentStage
     user.clickDamage = data.clickDamage
     user.badges = data.badges
+    if ((request.body() as any).candies) {
+      user.candies = (request.body() as any).candies
+    }
     user.lastLoginAt = DateTime.now()
     await user.save()
 

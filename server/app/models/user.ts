@@ -51,6 +51,13 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare badges: number
 
+  @column({
+    prepare: (value: Record<string, number>) => JSON.stringify(value),
+    consume: (value: string | Record<string, number>) =>
+      typeof value === 'string' ? JSON.parse(value) : value,
+  })
+  declare candies: Record<string, number>
+
   @column.dateTime()
   declare lastLoginAt: DateTime | null
 

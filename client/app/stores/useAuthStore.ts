@@ -136,6 +136,7 @@ export const useAuthStore = defineStore('auth', {
           clickDamageBonus: data.player.clickDamageBonus ?? 0,
           teamDpsBonus: data.player.teamDpsBonus ?? 0,
           badges: data.player.badges,
+          candies: (data.player as any).candies ?? { S: 0, M: 0, L: 0, XL: 0 },
           isLoggedIn: true,
         })
 
@@ -181,6 +182,7 @@ export const useAuthStore = defineStore('auth', {
           clickDamageBonus: player.clickDamageBonus,
           teamDpsBonus: player.teamDpsBonus,
           badges: player.badges,
+          candies: player.candies,
         })
 
         const pokemons = inventory.collection

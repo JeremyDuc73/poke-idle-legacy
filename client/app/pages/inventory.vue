@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { Star, Shield, ArrowUpDown, Search, Sparkles, X } from 'lucide-vue-next'
 import { getSpriteUrl, getShinySpriteUrl } from '~/utils/showdown'
-import { useInventoryStore } from '~/stores/useInventoryStore'
+import { useInventoryStore, MAX_LEVEL } from '~/stores/useInventoryStore'
 import type { OwnedPokemon } from '~/stores/useInventoryStore'
+import { usePlayerStore, CANDY_XP, CANDY_COST } from '~/stores/usePlayerStore'
+import type { CandySize } from '~/stores/usePlayerStore'
 import { useLocale } from '~/composables/useLocale'
 import { getPokemonType, getEffectiveness, TYPES } from '~/data/types'
 import type { PokemonType } from '~/data/types'
@@ -15,7 +17,17 @@ definePageMeta({
 })
 
 const inventory = useInventoryStore()
+const player = usePlayerStore()
 const { t } = useLocale()
+
+const candySizes: CandySize[] = ['S', 'M', 'L', 'XL']
+const CANDY_COLORS: Record<CandySize, string> = { S: '#4ade80', M: '#60a5fa', L: '#c084fc', XL: '#fbbf24' }
+
+function useCandy(poke: OwnedPokemon, size: CandySize) {
+  if (poke.level >= MAX_LEVEL) return
+  if (!player.useCandy(size)) return
+  inventory.addPokemonXp(poke.id, CANDY_XP[size], player.currentGeneration)
+}
 
 const sortBy = ref<'stars' | 'level' | 'name' | 'dps'>('stars')
 const search = ref('')
@@ -407,6 +419,26 @@ function getDetailStats(poke: OwnedPokemon) {
                 </div>
               </template>
             </div>
+
+            <!-- XP Candies -->
+            <h4 class="text-sm font-semibold text-gray-300">{{ t('Bonbons XP', 'XP Candies') }}</h4>
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="size in candySizes"
+                :key="size"
+                class="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs font-bold transition-all hover:bg-gray-800 active:scale-95 disabled:opacity-30"
+                :disabled="player.candies[size] <= 0 || detailPokemon.level >= MAX_LEVEL"
+                :style="{ color: CANDY_COLORS[size], borderColor: CANDY_COLORS[size] + '40' }"
+                @click="useCandy(detailPokemon, size)"
+              >
+                {{ size }}
+                <span class="text-[10px] text-gray-500">+{{ CANDY_XP[size].toLocaleString() }} XP</span>
+                <span class="rounded bg-gray-800 px-1 py-px text-[9px] text-gray-400">x{{ player.candies[size] }}</span>
+              </button>
+            </div>
+            <p v-if="detailPokemon.level >= MAX_LEVEL" class="text-[10px] text-amber-400">
+              {{ t('Niveau max atteint !', 'Max level reached!') }}
+            </p>
 
             <!-- Team action -->
             <div class="flex gap-2 pt-2">

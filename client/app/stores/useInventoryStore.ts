@@ -138,6 +138,16 @@ export const useInventoryStore = defineStore('inventory', {
       return true
     },
 
+    evolveAllWithItem(slug: string, itemId: string): number {
+      const evo = canEvolveByItem(slug, itemId)
+      if (!evo) return 0
+      const targets = this.collection.filter((p) => p.slug === slug)
+      for (const p of targets) {
+        this.applyEvolution(p, evo)
+      }
+      return targets.length
+    },
+
     applyEvolution(pokemon: OwnedPokemon, evo: Evolution) {
       // Living dex: keep the original pokemon, add the evolution as a new entry
       const evolved: OwnedPokemon = {
