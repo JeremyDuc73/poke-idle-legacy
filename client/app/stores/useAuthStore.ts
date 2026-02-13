@@ -162,14 +162,16 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async saveGameState() {
+    async saveGameState(keepalive = false) {
       if (!this.isAuthenticated) return
 
       try {
         const api = useApi()
         const player = usePlayerStore()
         const inventory = useInventoryStore()
-        const { getSpeciesId } = useSpeciesCache()
+        const { getSpeciesId, loaded: speciesLoaded } = useSpeciesCache()
+
+        const fetchOpts = keepalive ? { keepalive: true } : undefined
 
         await api.post('/game/save', {
           gold: player.gold,
@@ -184,9 +186,8 @@ export const useAuthStore = defineStore('auth', {
           teamDpsBonus: player.teamDpsBonus,
           badges: player.badges,
           candies: player.candies,
-        })
+        } as Record<string, unknown>, fetchOpts)
 
-        const { loaded: speciesLoaded } = useSpeciesCache()
         if (!speciesLoaded.value) {
           console.warn('Species cache not loaded, skipping pokemon save')
           return
@@ -206,7 +207,7 @@ export const useAuthStore = defineStore('auth', {
 
         // Only save if we have pokemon OR if the user truly has none
         if (pokemons.length > 0 || inventory.collectionCount === 0) {
-          await api.post('/game/save-pokemons', { pokemons })
+          await api.post('/game/save-pokemons', { pokemons } as Record<string, unknown>, fetchOpts)
         }
       } catch (e) {
         console.error('Failed to save game state:', e)

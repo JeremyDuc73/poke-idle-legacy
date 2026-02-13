@@ -16,6 +16,12 @@ const { init: initCombat } = useCombatLoop()
 
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null
 
+function saveOnUnload() {
+  if (auth.isAuthenticated) {
+    auth.saveGameState(true)
+  }
+}
+
 onMounted(() => {
   // Auth + species cache handled by auth.global middleware
   initCombat()
@@ -25,10 +31,13 @@ onMounted(() => {
       auth.saveGameState()
     }
   }, 30_000)
+
+  window.addEventListener('beforeunload', saveOnUnload)
 })
 
 onUnmounted(() => {
   if (autoSaveInterval) clearInterval(autoSaveInterval)
+  window.removeEventListener('beforeunload', saveOnUnload)
 })
 
 function toggleLocale() {

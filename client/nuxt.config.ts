@@ -24,6 +24,10 @@ export default defineNuxtConfig({
     },
   },
 
+  routeRules: {
+    '/api/**': { proxy: 'http://server:3333/**' },
+  },
+
   typescript: {
     strict: true,
   },

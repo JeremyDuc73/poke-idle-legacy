@@ -1,21 +1,21 @@
-const API_BASE = 'http://localhost:3333'
-
 interface ApiOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
   body?: Record<string, unknown>
+  keepalive?: boolean
 }
 
 async function api<T = unknown>(path: string, options: ApiOptions = {}): Promise<T> {
-  const { method = 'GET', body } = options
+  const { method = 'GET', body, keepalive } = options
 
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`/api${path}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
     },
-    credentials: 'include',
+    credentials: 'same-origin',
     body: body ? JSON.stringify(body) : undefined,
+    keepalive,
   })
 
   if (!res.ok) {
@@ -29,7 +29,7 @@ async function api<T = unknown>(path: string, options: ApiOptions = {}): Promise
 export function useApi() {
   return {
     get: <T = unknown>(path: string) => api<T>(path),
-    post: <T = unknown>(path: string, body?: Record<string, unknown>) =>
-      api<T>(path, { method: 'POST', body }),
+    post: <T = unknown>(path: string, body?: Record<string, unknown>, opts?: { keepalive?: boolean }) =>
+      api<T>(path, { method: 'POST', body, ...opts }),
   }
 }
