@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.string('username', 50).notNullable().unique()
       table.string('email', 254).notNullable().unique()
       table.string('password').notNullable()
+      table.string('google_id').nullable().unique()
       table.integer('gold').unsigned().notNullable().defaultTo(0)
       table.integer('gems').unsigned().notNullable().defaultTo(0)
       table.integer('current_generation').unsigned().notNullable().defaultTo(1)

@@ -25,6 +25,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare password: string
 
   @column()
+  declare googleId: string | null
+
+  @column()
   declare gold: number
 
   @column()

@@ -11,6 +11,7 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
 
 const AuthController = () => import('#controllers/auth_controller')
+const GoogleAuthController = () => import('#controllers/google_auth_controller')
 const GameController = () => import('#controllers/game_controller')
 
 router.get('/', async () => {
@@ -25,6 +26,9 @@ router
     router.get('/me', [AuthController, 'me']).use(middleware.auth())
   })
   .prefix('/auth')
+
+router.get('/auth/google/redirect', [GoogleAuthController, 'redirect'])
+router.get('/auth/google/callback', [GoogleAuthController, 'callback'])
 
 router
   .group(() => {
