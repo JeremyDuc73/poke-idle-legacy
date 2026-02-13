@@ -80,9 +80,9 @@ async function hatchEgg() {
   // Determine shiny
   const isShiny = Math.random() < SHINY_CHANCE
 
-  // Add to inventory — non-shiny eggs never merge as duplicates
-  let isNew: boolean
-  let stars: number
+  // Only shiny eggs are added to inventory — non-shiny = miss
+  let isNew = false
+  let stars = 0
   if (isShiny) {
     const result = inventory.addPokemon({
       slug: poke.slug,
@@ -94,18 +94,6 @@ async function hatchEgg() {
     })
     isNew = result.isNew
     stars = result.pokemon.stars
-  } else {
-    // Non-shiny: always add as a fresh entry, skip duplicate merge
-    inventory.addPokemonRaw({
-      slug: poke.slug,
-      nameFr: poke.nameFr,
-      nameEn: poke.nameEn,
-      stars: 1,
-      isShiny: false,
-      rarity: poke.rarity,
-    })
-    isNew = true
-    stars = 1
   }
 
   hatchResult.value = {
@@ -254,11 +242,11 @@ function sleep(ms: number): Promise<void> {
         <p v-if="hatchResult.isShiny && hatchResult.isNew" class="text-sm font-bold text-yellow-400">
           {{ t('✨ Shiny obtenu !', '✨ Shiny obtained!') }}
         </p>
-        <p v-else-if="hatchResult.isNew" class="text-sm font-bold text-green-400">
-          {{ t('Nouveau Pokémon !', 'New Pokémon!') }}
+        <p v-else-if="hatchResult.isShiny" class="text-sm text-slate-400">
+          {{ t('Doublon → ★', 'Duplicate → ★') }}{{ hatchResult.stars }}
         </p>
         <p v-else class="text-sm text-slate-400">
-          {{ t('Doublon → ★', 'Duplicate → ★') }}{{ hatchResult.stars }}
+          {{ t('Pas de shiny cette fois…', 'No shiny this time…') }}
         </p>
 
         <button
