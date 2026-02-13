@@ -14,16 +14,27 @@ export function useCombatLoop() {
   const player = usePlayerStore()
   const inventory = useInventoryStore()
 
+  function getPokeDps(poke: { slug: string; level: number; stars: number; isShiny: boolean }, enemyType?: PokemonType) {
+    const pokeType = getPokemonType(poke.slug)
+    const baseDps = Math.floor(poke.level * (1 + poke.stars * 0.25))
+    const typeMult = enemyType ? getEffectiveness(pokeType, enemyType) : 1
+    const shinyMult = poke.isShiny ? 1.5 : 1
+    return {
+      baseDps,
+      typeMult,
+      shinyMult,
+      effectiveDps: Math.round(baseDps * typeMult * shinyMult),
+    }
+  }
+
   function getEffectiveDps(enemyType: PokemonType): number {
     const team = inventory.team
     if (team.length === 0) return 0
     let total = 0
     for (const poke of team) {
-      const pokeType = getPokemonType(poke.slug)
-      const mult = getEffectiveness(pokeType, enemyType)
-      total += Math.floor(poke.level * (1 + poke.stars * 0.25)) * mult
+      total += getPokeDps(poke, enemyType).effectiveDps
     }
-    return Math.round(total)
+    return total
   }
 
   function currentZone() {
@@ -168,6 +179,7 @@ export function useCombatLoop() {
     spawnEnemy,
     checkEnemyDeath,
     getEffectiveDps,
+    getPokeDps,
     currentZone,
   }
 }

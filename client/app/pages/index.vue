@@ -6,7 +6,7 @@ import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
 import { useCombatLoop } from '~/composables/useCombatLoop'
-import { getPokemonType } from '~/data/types'
+import { getPokemonType, getTypeInfo } from '~/data/types'
 import { pokemonXpForLevel } from '~/data/evolutions'
 
 definePageMeta({
@@ -17,7 +17,7 @@ const combat = useCombatStore()
 const player = usePlayerStore()
 const inventory = useInventoryStore()
 const { t } = useLocale()
-const { spawnEnemy, checkEnemyDeath, getEffectiveDps, currentZone } = useCombatLoop()
+const { spawnEnemy, checkEnemyDeath, getEffectiveDps, getPokeDps, currentZone } = useCombatLoop()
 
 watch(() => player.clickDamage, (dmg) => {
   combat.clickDamage = dmg
@@ -32,6 +32,14 @@ const zoneName = computed(() => {
 const effectiveDps = computed(() => {
   if (!combat.enemy) return 0
   return getEffectiveDps(combat.enemy.type)
+})
+
+const teamBreakdown = computed(() => {
+  const enemyType = combat.enemy?.type
+  return inventory.team.map((poke) => {
+    const stats = getPokeDps(poke, enemyType)
+    return { ...poke, ...stats, pokeType: getPokemonType(poke.slug) }
+  })
 })
 
 interface DmgFloat {
@@ -200,7 +208,7 @@ function pokemonXpPercent(poke: { level: number; xp: number }): number {
       <div class="flex items-center gap-2 rounded-xl bg-[#1e293b] px-4 py-2.5 ring-1 ring-slate-700">
         <Zap class="h-4 w-4 text-cyan-400" />
         <div class="text-center">
-          <p class="text-sm font-bold" :class="effectiveDps > inventory.teamDps ? 'text-green-400' : effectiveDps < inventory.teamDps ? 'text-red-400' : 'text-white'">{{ effectiveDps }}</p>
+          <p class="text-sm font-bold text-white">{{ effectiveDps }}</p>
           <p class="text-xs uppercase tracking-wider text-slate-500">DPS</p>
         </div>
       </div>
@@ -213,32 +221,52 @@ function pokemonXpPercent(poke: { level: number; xp: number }): number {
       </div>
     </div>
 
-    <!-- Team Visualization -->
-    <div v-if="inventory.team.length > 0" class="w-full max-w-2xl">
+    <!-- Team DPS Breakdown -->
+    <div v-if="teamBreakdown.length > 0" class="w-full max-w-2xl">
       <h3 class="mb-3 text-center text-sm font-bold uppercase tracking-widest text-slate-500">
         {{ t('Mon équipe', 'My Team') }}
       </h3>
-      <div class="grid gap-3" :class="inventory.team.length <= 3 ? 'grid-cols-3' : 'grid-cols-3 sm:grid-cols-6'">
+      <div class="flex flex-col gap-2">
         <div
-          v-for="poke in inventory.team"
+          v-for="poke in teamBreakdown"
           :key="poke.id"
-          class="flex flex-col items-center gap-1.5 rounded-xl bg-[#1e293b] p-3 ring-1 ring-slate-700"
+          class="flex items-center gap-3 rounded-xl bg-[#1e293b] px-3 py-2 ring-1 ring-slate-700"
         >
+          <!-- Sprite -->
           <img
             :src="poke.isShiny ? getShinySpriteUrl(poke.slug) : getSpriteUrl(poke.slug)"
             :alt="t(poke.nameFr, poke.nameEn)"
-            class="h-14 w-14 object-contain"
+            class="h-12 w-12 shrink-0 object-contain"
             style="image-rendering: pixelated;"
           />
-          <TypeBadge :type="getPokemonType(poke.slug)" />
-          <p class="max-w-full truncate text-xs font-medium text-slate-300">{{ t(poke.nameFr, poke.nameEn) }}</p>
-          <p class="text-xs text-slate-500">Lv.{{ poke.level }}</p>
-          <!-- XP Bar -->
-          <div class="h-2 w-full overflow-hidden rounded-full bg-[#0f172a]">
-            <div
-              class="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-400 transition-all duration-300"
-              :style="{ width: `${pokemonXpPercent(poke)}%` }"
-            />
+          <!-- Info -->
+          <div class="flex min-w-0 flex-1 flex-col gap-1">
+            <div class="flex items-center gap-1.5">
+              <span v-if="poke.isShiny" class="text-xs">✨</span>
+              <p class="truncate text-xs font-medium text-slate-200">{{ t(poke.nameFr, poke.nameEn) }}</p>
+              <TypeBadge :type="poke.pokeType" />
+              <span class="ml-auto shrink-0 text-[10px] text-slate-500">Lv.{{ poke.level }}</span>
+            </div>
+            <!-- XP Bar -->
+            <div class="h-1.5 w-full overflow-hidden rounded-full bg-[#0f172a]">
+              <div
+                class="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-400 transition-all duration-300"
+                :style="{ width: `${pokemonXpPercent(poke)}%` }"
+              />
+            </div>
+            <!-- DPS detail -->
+            <div class="flex items-center gap-2 text-[10px]">
+              <span class="text-slate-500">{{ t('Base', 'Base') }}: <span class="font-medium text-slate-300">{{ poke.baseDps }}</span></span>
+              <span v-if="poke.typeMult !== 1" class="font-medium" :class="poke.typeMult > 1 ? 'text-green-400' : 'text-red-400'">
+                {{ t('Type', 'Type') }} x{{ poke.typeMult }}
+              </span>
+              <span v-if="poke.isShiny" class="font-medium text-yellow-400">
+                Shiny x1.5
+              </span>
+              <span class="ml-auto font-bold" :class="poke.typeMult > 1 ? 'text-green-400' : poke.typeMult < 1 ? 'text-red-400' : 'text-white'">
+                {{ poke.effectiveDps }} DPS
+              </span>
+            </div>
           </div>
         </div>
       </div>

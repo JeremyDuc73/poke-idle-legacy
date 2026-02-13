@@ -20,6 +20,7 @@ interface InventoryState {
 }
 
 export const MAX_STARS = 5
+export const MAX_LEVEL = 100
 
 export const useInventoryStore = defineStore('inventory', {
   state: (): InventoryState => ({
@@ -104,9 +105,9 @@ export const useInventoryStore = defineStore('inventory', {
 
     addPokemonXp(pokemonId: number, amount: number) {
       const pokemon = this.collection.find((p) => p.id === pokemonId)
-      if (!pokemon) return
+      if (!pokemon || pokemon.level >= MAX_LEVEL) return
       pokemon.xp += amount
-      while (pokemon.xp >= pokemonXpForLevel(pokemon.level + 1)) {
+      while (pokemon.level < MAX_LEVEL && pokemon.xp >= pokemonXpForLevel(pokemon.level + 1)) {
         pokemon.level++
         // Check auto-evolution by level
         const evo = canEvolveByLevel(pokemon.slug, pokemon.level)
