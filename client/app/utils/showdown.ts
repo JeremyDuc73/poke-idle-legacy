@@ -13,6 +13,15 @@ const SPECIAL_SLUGS: Record<string, string> = {
   "Flabébé": 'flabebe',
 }
 
+const SLUG_FIXES: Record<string, string> = {
+  'nidoran-f': 'nidoranf',
+  'nidoran-m': 'nidoranm',
+}
+
+function fixSlug(slug: string): string {
+  return SLUG_FIXES[slug] ?? slug
+}
+
 export function toShowdownSlug(nameEn: string): string {
   if (SPECIAL_SLUGS[nameEn]) {
     return SPECIAL_SLUGS[nameEn]
@@ -25,19 +34,19 @@ export function toShowdownSlug(nameEn: string): string {
 }
 
 export function getSpriteUrl(slug: string): string {
-  return `${SHOWDOWN_BASE}/ani/${slug}.gif`
+  return `${SHOWDOWN_BASE}/ani/${fixSlug(slug)}.gif`
 }
 
 export function getStaticSpriteUrl(slug: string): string {
-  return `${SHOWDOWN_BASE}/dex/${slug}.png`
+  return `${SHOWDOWN_BASE}/dex/${fixSlug(slug)}.png`
 }
 
 export function getShinySpriteUrl(slug: string): string {
-  return `${SHOWDOWN_BASE}/ani-shiny/${slug}.gif`
+  return `${SHOWDOWN_BASE}/ani-shiny/${fixSlug(slug)}.gif`
 }
 
 export function getStaticShinySpriteUrl(slug: string): string {
-  return `${SHOWDOWN_BASE}/dex-shiny/${slug}.png`
+  return `${SHOWDOWN_BASE}/dex-shiny/${fixSlug(slug)}.png`
 }
 
 export function getPokeApiSpriteUrl(id: number, shiny = false): string {

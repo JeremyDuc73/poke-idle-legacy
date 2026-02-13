@@ -25,9 +25,13 @@ const RARITY_WEIGHTS: Record<Rarity, number> = {
   legendary: 3,
 }
 
-// All Gen 1 base (non-evolved) Pokemon
+// === Gen 1 Kanto Pool ===
+// COMMON: early-game wild Pokémon you encounter constantly
+// RARE: mid-game Pokémon, useful but not exceptional
+// EPIC: pseudo-legendaries (Dratini line), starters, iconic strong Pokémon
+// LEGENDARY: legendary + mythical Pokémon
 const KANTO_POOL: GachaPokemon[] = [
-  // --- COMMON (basic Pokemon found everywhere) ---
+  // --- COMMON (early routes, caves, water — the Pokémon you see everywhere) ---
   { nameFr: 'Rattata', nameEn: 'Rattata', slug: 'rattata', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Roucool', nameEn: 'Pidgey', slug: 'pidgey', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Chenipan', nameEn: 'Caterpie', slug: 'caterpie', rarity: 'common', shinyRate: 0.01 },
@@ -53,12 +57,9 @@ const KANTO_POOL: GachaPokemon[] = [
   { nameFr: 'Magicarpe', nameEn: 'Magikarp', slug: 'magikarp', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Piafabec', nameEn: 'Spearow', slug: 'spearow', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Chétiflor', nameEn: 'Bellsprout', slug: 'bellsprout', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Pikachu', nameEn: 'Pikachu', slug: 'pikachu', rarity: 'common', shinyRate: 0.01 },
 
-  // --- RARE (starters, popular, useful) ---
-  { nameFr: 'Bulbizarre', nameEn: 'Bulbasaur', slug: 'bulbasaur', rarity: 'rare', shinyRate: 0.02 },
-  { nameFr: 'Salamèche', nameEn: 'Charmander', slug: 'charmander', rarity: 'rare', shinyRate: 0.02 },
-  { nameFr: 'Carapuce', nameEn: 'Squirtle', slug: 'squirtle', rarity: 'rare', shinyRate: 0.02 },
-  { nameFr: 'Pikachu', nameEn: 'Pikachu', slug: 'pikachu', rarity: 'rare', shinyRate: 0.02 },
+  // --- RARE (mid-game: useful battlers, trade evolutions pre-evos, less common wild) ---
   { nameFr: 'Abo', nameEn: 'Ekans', slug: 'ekans', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Sabelette', nameEn: 'Sandshrew', slug: 'sandshrew', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Nidoran♀', nameEn: 'Nidoran♀', slug: 'nidoran-f', rarity: 'rare', shinyRate: 0.02 },
@@ -78,12 +79,22 @@ const KANTO_POOL: GachaPokemon[] = [
   { nameFr: 'Tadmorv', nameEn: 'Grimer', slug: 'grimer', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Rhinocorne', nameEn: 'Rhyhorn', slug: 'rhyhorn', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Hypotrempe', nameEn: 'Horsea', slug: 'horsea', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Abra', nameEn: 'Abra', slug: 'abra', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Fantominus', nameEn: 'Gastly', slug: 'gastly', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'M. Mime', nameEn: 'Mr. Mime', slug: 'mr-mime', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Lippoutou', nameEn: 'Jynx', slug: 'jynx', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Élektek', nameEn: 'Electabuzz', slug: 'electabuzz', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Magmar', nameEn: 'Magmar', slug: 'magmar', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Porygon', nameEn: 'Porygon', slug: 'porygon', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Amonita', nameEn: 'Omanyte', slug: 'omanyte', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Kabuto', nameEn: 'Kabuto', slug: 'kabuto', rarity: 'rare', shinyRate: 0.02 },
 
-  // --- EPIC (strong, desirable) ---
-  { nameFr: 'Abra', nameEn: 'Abra', slug: 'abra', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Fantominus', nameEn: 'Gastly', slug: 'gastly', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Évoli', nameEn: 'Eevee', slug: 'eevee', rarity: 'epic', shinyRate: 0.03 },
+  // --- EPIC (starters, pseudo-legendary Dratini, iconic strong Pokémon) ---
+  { nameFr: 'Bulbizarre', nameEn: 'Bulbasaur', slug: 'bulbasaur', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Salamèche', nameEn: 'Charmander', slug: 'charmander', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Carapuce', nameEn: 'Squirtle', slug: 'squirtle', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Minidraco', nameEn: 'Dratini', slug: 'dratini', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Évoli', nameEn: 'Eevee', slug: 'eevee', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Lokhlass', nameEn: 'Lapras', slug: 'lapras', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Ronflex', nameEn: 'Snorlax', slug: 'snorlax', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Insécateur', nameEn: 'Scyther', slug: 'scyther', rarity: 'epic', shinyRate: 0.03 },
@@ -91,22 +102,11 @@ const KANTO_POOL: GachaPokemon[] = [
   { nameFr: 'Tauros', nameEn: 'Tauros', slug: 'tauros', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Kangourex', nameEn: 'Kangaskhan', slug: 'kangaskhan', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Leveinard', nameEn: 'Chansey', slug: 'chansey', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Kicklee', nameEn: 'Hitmonlee', slug: 'hitmonlee', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Tygnon', nameEn: 'Hitmonchan', slug: 'hitmonchan', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Excelangue', nameEn: 'Lickitung', slug: 'lickitung', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Saquedeneu', nameEn: 'Tangela', slug: 'tangela', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Ptéra', nameEn: 'Aerodactyl', slug: 'aerodactyl', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Canarticho', nameEn: "Farfetch'd", slug: 'farfetchd', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Métamorph', nameEn: 'Ditto', slug: 'ditto', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'M. Mime', nameEn: 'Mr. Mime', slug: 'mr-mime', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Lippoutou', nameEn: 'Jynx', slug: 'jynx', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Élektek', nameEn: 'Electabuzz', slug: 'electabuzz', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Magmar', nameEn: 'Magmar', slug: 'magmar', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Porygon', nameEn: 'Porygon', slug: 'porygon', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Amonita', nameEn: 'Omanyte', slug: 'omanyte', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Kabuto', nameEn: 'Kabuto', slug: 'kabuto', rarity: 'epic', shinyRate: 0.03 },
-  { nameFr: 'Ptéra', nameEn: 'Aerodactyl', slug: 'aerodactyl', rarity: 'epic', shinyRate: 0.03 },
 
-  // --- LEGENDARY ---
+  // --- LEGENDARY (legendary + mythical) ---
   { nameFr: 'Artikodin', nameEn: 'Articuno', slug: 'articuno', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Électhor', nameEn: 'Zapdos', slug: 'zapdos', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Sulfura', nameEn: 'Moltres', slug: 'moltres', rarity: 'legendary', shinyRate: 0.05 },

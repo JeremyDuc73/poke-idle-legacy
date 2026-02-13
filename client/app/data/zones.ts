@@ -240,3 +240,31 @@ export function getGeneration(genId: number): Generation | undefined {
 export function getZone(genId: number, zoneId: number): Zone | undefined {
   return getGeneration(genId)?.zones.find((z) => z.id === zoneId)
 }
+
+export interface BossInfo {
+  genId: number
+  zoneId: number
+  zoneFr: string
+  zoneEn: string
+  regionFr: string
+  regionEn: string
+  boss: BossTrainer
+}
+
+export function getAllBosses(): BossInfo[] {
+  const bosses: BossInfo[] = []
+  for (const gen of GENERATIONS) {
+    for (const zone of gen.zones) {
+      bosses.push({
+        genId: gen.id,
+        zoneId: zone.id,
+        zoneFr: zone.nameFr,
+        zoneEn: zone.nameEn,
+        regionFr: gen.regionFr,
+        regionEn: gen.regionEn,
+        boss: zone.boss,
+      })
+    }
+  }
+  return bosses
+}
