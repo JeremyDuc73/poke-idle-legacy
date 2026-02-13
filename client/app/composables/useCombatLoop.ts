@@ -132,10 +132,13 @@ export function useCombatLoop() {
     if (initialized) return
     initialized = true
 
-    // Override autoAttackTick to use type-effective DPS
+    // Sync persisted upgrade bonuses from player store
+    combat.clickDamage = player.clickDamage
+
+    // Override autoAttackTick to use type-effective DPS + teamDpsBonus
     combat.overrideAutoAttack = () => {
       if (!combat.enemy || combat.enemy.currentHp <= 0) return
-      const effectiveDps = getEffectiveDps(combat.enemy.type)
+      const effectiveDps = getEffectiveDps(combat.enemy.type) + player.teamDpsBonus
       if (effectiveDps <= 0) return
       combat.enemy.currentHp = Math.max(0, combat.enemy.currentHp - effectiveDps)
       checkEnemyDeath()

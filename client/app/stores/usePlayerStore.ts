@@ -31,6 +31,8 @@ interface PlayerState {
   currentStage: number
   stageKills: number
   clickDamage: number
+  clickDamageBonus: number
+  teamDpsBonus: number
   badges: number
   isLoggedIn: boolean
 }
@@ -47,6 +49,8 @@ export const usePlayerStore = defineStore('player', {
     currentStage: 1,
     stageKills: 0,
     clickDamage: 1,
+    clickDamageBonus: 0,
+    teamDpsBonus: 0,
     badges: 0,
     isLoggedIn: false,
   }),
@@ -109,8 +113,8 @@ export const usePlayerStore = defineStore('player', {
       this.xp += amount
       while (this.xp >= xpForLevel(this.level + 1)) {
         this.level++
-        this.clickDamage = Math.floor(1 + this.level * 0.5 + this.badges * 2)
       }
+      this.clickDamage = Math.floor(1 + this.level * 0.5 + this.badges * 2) + this.clickDamageBonus
     },
 
     addStageKill(): boolean {

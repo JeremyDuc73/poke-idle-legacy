@@ -99,11 +99,11 @@ export const EVOLUTIONS: Evolution[] = [
 
   // Abra
   { fromSlug: 'abra', toSlug: 'kadabra', toNameFr: 'Kadabra', toNameEn: 'Kadabra', method: 'level', levelRequired: 16 },
-  { fromSlug: 'kadabra', toSlug: 'alakazam', toNameFr: 'Alakazam', toNameEn: 'Alakazam', method: 'trade' },
+  { fromSlug: 'kadabra', toSlug: 'alakazam', toNameFr: 'Alakazam', toNameEn: 'Alakazam', method: 'trade', itemRequired: 'link-cable' },
 
   // Machop
   { fromSlug: 'machop', toSlug: 'machoke', toNameFr: 'Machopeur', toNameEn: 'Machoke', method: 'level', levelRequired: 28 },
-  { fromSlug: 'machoke', toSlug: 'machamp', toNameFr: 'Mackogneur', toNameEn: 'Machamp', method: 'trade' },
+  { fromSlug: 'machoke', toSlug: 'machamp', toNameFr: 'Mackogneur', toNameEn: 'Machamp', method: 'trade', itemRequired: 'link-cable' },
 
   // Bellsprout
   { fromSlug: 'bellsprout', toSlug: 'weepinbell', toNameFr: 'Boustiflor', toNameEn: 'Weepinbell', method: 'level', levelRequired: 21 },
@@ -114,7 +114,7 @@ export const EVOLUTIONS: Evolution[] = [
 
   // Geodude
   { fromSlug: 'geodude', toSlug: 'graveler', toNameFr: 'Gravalanch', toNameEn: 'Graveler', method: 'level', levelRequired: 25 },
-  { fromSlug: 'graveler', toSlug: 'golem', toNameFr: 'Grolem', toNameEn: 'Golem', method: 'trade' },
+  { fromSlug: 'graveler', toSlug: 'golem', toNameFr: 'Grolem', toNameEn: 'Golem', method: 'trade', itemRequired: 'link-cable' },
 
   // Ponyta
   { fromSlug: 'ponyta', toSlug: 'rapidash', toNameFr: 'Galopa', toNameEn: 'Rapidash', method: 'level', levelRequired: 40 },
@@ -139,7 +139,7 @@ export const EVOLUTIONS: Evolution[] = [
 
   // Gastly
   { fromSlug: 'gastly', toSlug: 'haunter', toNameFr: 'Spectrum', toNameEn: 'Haunter', method: 'level', levelRequired: 25 },
-  { fromSlug: 'haunter', toSlug: 'gengar', toNameFr: 'Ectoplasma', toNameEn: 'Gengar', method: 'trade' },
+  { fromSlug: 'haunter', toSlug: 'gengar', toNameFr: 'Ectoplasma', toNameEn: 'Gengar', method: 'trade', itemRequired: 'link-cable' },
 
   // Drowzee
   { fromSlug: 'drowzee', toSlug: 'hypno', toNameFr: 'Hypnomade', toNameEn: 'Hypno', method: 'level', levelRequired: 26 },
@@ -190,7 +190,7 @@ export const EVOLUTIONS: Evolution[] = [
   { fromSlug: 'dragonair', toSlug: 'dragonite', toNameFr: 'Dracolosse', toNameEn: 'Dragonite', method: 'level', levelRequired: 55 },
 
   // Porygon
-  { fromSlug: 'porygon', toSlug: 'porygon2', toNameFr: 'Porygon2', toNameEn: 'Porygon2', method: 'trade' },
+  { fromSlug: 'porygon', toSlug: 'porygon2', toNameFr: 'Porygon2', toNameEn: 'Porygon2', method: 'trade', itemRequired: 'link-cable' },
 
   // Clefairy
   { fromSlug: 'clefairy', toSlug: 'clefable', toNameFr: 'Mélodelfe', toNameEn: 'Clefable', method: 'stone', itemRequired: 'moon-stone' },

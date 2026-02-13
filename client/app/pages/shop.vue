@@ -42,7 +42,7 @@ function buyEvoItem(itemId: string) {
     return
   }
 
-  const target = candidates[0]
+  const target = candidates[0]!
   const success = inventory.evolveWithItem(target.id, itemId)
   if (success) {
     flash(`evo-${itemId}`)
@@ -63,6 +63,16 @@ function buyGems(amount: number, goldCost: number) {
   }
 }
 
+// PokeAPI item sprite URLs
+const ITEM_SPRITES: Record<string, string> = {
+  'fire-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/fire-stone.png',
+  'water-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/water-stone.png',
+  'thunder-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/thunder-stone.png',
+  'leaf-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leaf-stone.png',
+  'moon-stone': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/moon-stone.png',
+  'link-cable': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/linking-cord.png',
+}
+
 interface ShopItem {
   id: string
   iconComponent: any
@@ -77,26 +87,31 @@ interface ShopItem {
 }
 
 const gemExchanges = [
-  { gems: 1, gold: 500 },
-  { gems: 5, gold: 2200 },
-  { gems: 10, gold: 4000 },
+  { gems: 1, gold: 100 },
+  { gems: 5, gold: 450 },
+  { gems: 10, gold: 800 },
 ]
+
+const clickUpgradeLevel = computed(() => player.clickDamageBonus)
+const dpsUpgradeLevel = computed(() => player.teamDpsBonus)
+const clickUpgradeCost = computed(() => Math.floor(100 * Math.pow(1.5, clickUpgradeLevel.value)))
+const dpsUpgradeCost = computed(() => Math.floor(200 * Math.pow(1.4, Math.floor(dpsUpgradeLevel.value / 5))))
 
 const shopItems = computed<ShopItem[]>(() => [
   {
     id: 'click-boost',
     iconComponent: Swords,
     iconClass: 'text-orange-400',
-    labelFr: 'Force du clic +1',
-    labelEn: 'Click Power +1',
-    descFr: `Dégâts actuels : ${combat.clickDamage}`,
-    descEn: `Current damage: ${combat.clickDamage}`,
-    cost: Math.floor(100 * Math.pow(1.5, combat.clickDamage - 1)),
+    labelFr: `Force du clic +1 (bonus: +${clickUpgradeLevel.value})`,
+    labelEn: `Click Power +1 (bonus: +${clickUpgradeLevel.value})`,
+    descFr: `Dégâts actuels : ${player.clickDamage}`,
+    descEn: `Current damage: ${player.clickDamage}`,
+    cost: clickUpgradeCost.value,
     currency: 'gold' as const,
     action: () => {
-      const price = Math.floor(100 * Math.pow(1.5, combat.clickDamage - 1))
-      if (player.spendGold(price)) {
-        player.clickDamage++
+      if (player.spendGold(clickUpgradeCost.value)) {
+        player.clickDamageBonus++
+        player.clickDamage = Math.floor(1 + player.level * 0.5 + player.badges * 2) + player.clickDamageBonus
         combat.clickDamage = player.clickDamage
         flash('click-boost')
       }
@@ -119,20 +134,19 @@ const shopItems = computed<ShopItem[]>(() => [
     },
   },
   {
-    id: 'team-heal',
+    id: 'team-dps',
     iconComponent: ShieldPlus,
     iconClass: 'text-green-400',
-    labelFr: 'Bonus DPS équipe +5',
-    labelEn: 'Team DPS Bonus +5',
-    descFr: `DPS actuel : ${combat.teamDps}`,
-    descEn: `Current DPS: ${combat.teamDps}`,
-    cost: Math.floor(200 * Math.pow(1.4, Math.floor(combat.teamDps / 5))),
+    labelFr: `Bonus DPS équipe +5 (bonus: +${dpsUpgradeLevel.value})`,
+    labelEn: `Team DPS Bonus +5 (bonus: +${dpsUpgradeLevel.value})`,
+    descFr: `Bonus DPS : +${dpsUpgradeLevel.value}`,
+    descEn: `DPS bonus: +${dpsUpgradeLevel.value}`,
+    cost: dpsUpgradeCost.value,
     currency: 'gold' as const,
     action: () => {
-      const price = Math.floor(200 * Math.pow(1.4, Math.floor(combat.teamDps / 5)))
-      if (player.spendGold(price)) {
-        combat.upgradeTeamDps(5)
-        flash('team-heal')
+      if (player.spendGold(dpsUpgradeCost.value)) {
+        player.teamDpsBonus += 5
+        flash('team-dps')
       }
     },
   },
@@ -225,8 +239,14 @@ const shopItems = computed<ShopItem[]>(() => [
           @click="buyEvoItem(item.id)"
         >
           <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-700 text-xl">
-              {{ item.icon }}
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-700">
+              <img
+                v-if="ITEM_SPRITES[item.id]"
+                :src="ITEM_SPRITES[item.id]"
+                :alt="t(item.nameFr, item.nameEn)"
+                class="h-8 w-8 object-contain"
+              />
+              <span v-else class="text-xl">{{ item.icon }}</span>
             </div>
             <div>
               <p class="font-bold text-white">{{ t(item.nameFr, item.nameEn) }}</p>

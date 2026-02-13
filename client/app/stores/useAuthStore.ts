@@ -28,6 +28,8 @@ interface LoadGameResponse {
     currentZone: number
     currentStage: number
     clickDamage: number
+    clickDamageBonus?: number
+    teamDpsBonus?: number
     badges: number
   }
   pokemons: Array<{
@@ -130,6 +132,8 @@ export const useAuthStore = defineStore('auth', {
           currentZone: data.player.currentZone,
           currentStage: data.player.currentStage,
           clickDamage: data.player.clickDamage,
+          clickDamageBonus: data.player.clickDamageBonus ?? 0,
+          teamDpsBonus: data.player.teamDpsBonus ?? 0,
           badges: data.player.badges,
           isLoggedIn: true,
         })
@@ -172,6 +176,8 @@ export const useAuthStore = defineStore('auth', {
           currentZone: player.currentZone,
           currentStage: player.currentStage,
           clickDamage: player.clickDamage,
+          clickDamageBonus: player.clickDamageBonus,
+          teamDpsBonus: player.teamDpsBonus,
           badges: player.badges,
         })
 
