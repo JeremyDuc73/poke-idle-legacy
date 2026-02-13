@@ -4,6 +4,7 @@ import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
 import { EVO_ITEMS, getEvolutionsFor } from '~/data/evolutions'
+import { getGenForSlug } from '~/data/pokedex'
 import { getSpriteUrl } from '~/utils/showdown'
 import type { OwnedPokemon } from '~/stores/useInventoryStore'
 
@@ -38,6 +39,8 @@ function getEvoCandidates(itemId: string): OwnedPokemon[] {
       if (!((e.method === 'stone' || e.method === 'trade') && e.itemRequired === itemId)) return false
       // Prevent evolving if you already own the evolved form
       if (ownedSlugs.has(e.toSlug)) return false
+      // Restrict evolution to unlocked regions
+      if (getGenForSlug(e.toSlug) > player.currentGeneration) return false
       return true
     })
   })

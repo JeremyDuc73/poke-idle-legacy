@@ -5,6 +5,8 @@ import { getSpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
 import { getZone } from '~/data/zones'
 import { getPokemonType, getEffectiveness } from '~/data/types'
 import { getRarityDpsMult } from '~/data/gacha'
+import { getEvoStageMult } from '~/data/evolutions'
+import type { Rarity } from '~/data/gacha'
 import type { PokemonType } from '~/data/types'
 import type { WildPokemon, BossTrainer } from '~/data/zones'
 
@@ -15,18 +17,26 @@ export function useCombatLoop() {
   const player = usePlayerStore()
   const inventory = useInventoryStore()
 
-  function getPokeDps(poke: { slug: string; level: number; stars: number; isShiny: boolean }, enemyType?: PokemonType) {
+  // New damage formula:
+  // base = level (1 at lv1, 100 at lv100)
+  // permanent multipliers: evo stage (x1.2/x1.4), rarity (x1.1/x1.5/x2.0), shiny (x1.2)
+  // type-dependent: effectiveness table
+  function getPokeDps(poke: { slug: string; level: number; stars: number; isShiny: boolean; rarity?: Rarity }, enemyType?: PokemonType) {
+    const baseDmg = poke.level
+    const evoMult = getEvoStageMult(poke.slug)
+    const rarityMult = poke.rarity ? getRarityDpsMult(poke.slug) : 1.0
+    const shinyMult = poke.isShiny ? 1.2 : 1.0
     const pokeType = getPokemonType(poke.slug)
-    const rarityMult = getRarityDpsMult(poke.slug)
-    const baseDps = Math.floor(poke.level * (1 + poke.stars * 0.25) * rarityMult)
     const typeMult = enemyType ? getEffectiveness(pokeType, enemyType) : 1
-    const shinyMult = poke.isShiny ? 1.5 : 1
+    const permanentDps = Math.floor(baseDmg * evoMult * rarityMult * shinyMult)
     return {
-      baseDps,
+      baseDmg,
+      evoMult,
       rarityMult,
-      typeMult,
       shinyMult,
-      effectiveDps: Math.round(baseDps * typeMult * shinyMult),
+      typeMult,
+      permanentDps,
+      effectiveDps: Math.round(permanentDps * typeMult),
     }
   }
 
@@ -115,7 +125,7 @@ export function useCombatLoop() {
       if (team.length > 0) {
         const xpPerPokemon = Math.max(1, Math.floor(xpReward / team.length))
         for (const poke of team) {
-          inventory.addPokemonXp(poke.id, xpPerPokemon)
+          inventory.addPokemonXp(poke.id, xpPerPokemon, player.currentGeneration)
         }
       }
 
@@ -138,10 +148,10 @@ export function useCombatLoop() {
     // Sync persisted upgrade bonuses from player store
     combat.clickDamage = player.clickDamage
 
-    // Override autoAttackTick to use type-effective DPS + teamDpsBonus
+    // Override autoAttackTick to use type-effective DPS
     combat.overrideAutoAttack = () => {
       if (!combat.enemy || combat.enemy.currentHp <= 0) return
-      const effectiveDps = getEffectiveDps(combat.enemy.type) + player.teamDpsBonus
+      const effectiveDps = getEffectiveDps(combat.enemy.type)
       if (effectiveDps <= 0) return
       combat.enemy.currentHp = Math.max(0, combat.enemy.currentHp - effectiveDps)
       checkEnemyDeath()

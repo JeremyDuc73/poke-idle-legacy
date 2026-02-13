@@ -272,3 +272,47 @@ export function pokemonXpForLevel(level: number): number {
   if (level <= 1) return 0
   return Math.floor(20 * Math.pow(level, 1.6))
 }
+
+// --- Evolution stage detection ---
+// 0 = base form, 1 = first evolution, 2 = second evolution
+const _evoStageCache = new Map<string, number>()
+
+function _buildEvoStageCache() {
+  // All slugs that appear as toSlug are evolved forms
+  const evolvedFrom = new Map<string, string>()
+  for (const e of EVOLUTIONS) {
+    evolvedFrom.set(e.toSlug, e.fromSlug)
+  }
+  // Walk backwards to find stage
+  function getStage(slug: string): number {
+    if (_evoStageCache.has(slug)) return _evoStageCache.get(slug)!
+    const parent = evolvedFrom.get(slug)
+    if (!parent) {
+      _evoStageCache.set(slug, 0)
+      return 0
+    }
+    const stage = getStage(parent) + 1
+    _evoStageCache.set(slug, stage)
+    return stage
+  }
+  // Compute for all known slugs
+  const allSlugs = new Set<string>()
+  for (const e of EVOLUTIONS) {
+    allSlugs.add(e.fromSlug)
+    allSlugs.add(e.toSlug)
+  }
+  for (const slug of allSlugs) getStage(slug)
+}
+_buildEvoStageCache()
+
+export function getEvolutionStage(slug: string): number {
+  return _evoStageCache.get(slug) ?? 0
+}
+
+// Evolution multiplier: base=1.0, stage1=1.2, stage2=1.4
+export const EVO_STAGE_MULT = [1.0, 1.2, 1.4] as const
+
+export function getEvoStageMult(slug: string): number {
+  const stage = getEvolutionStage(slug)
+  return EVO_STAGE_MULT[Math.min(stage, 2)] ?? 1.0
+}

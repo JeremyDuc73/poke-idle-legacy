@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia'
-import { canEvolveByLevel, canEvolveByItem, pokemonXpForLevel } from '~/data/evolutions'
+import { canEvolveByLevel, canEvolveByItem, pokemonXpForLevel, getEvoStageMult } from '~/data/evolutions'
 import type { Evolution } from '~/data/evolutions'
+import { getRarityDpsMult } from '~/data/gacha'
+import type { Rarity } from '~/data/gacha'
+import { getGenForSlug } from '~/data/pokedex'
 
 export interface OwnedPokemon {
   id: number
@@ -11,6 +14,7 @@ export interface OwnedPokemon {
   xp: number
   stars: number
   isShiny: boolean
+  rarity: Rarity
   teamSlot: number | null
 }
 
@@ -36,7 +40,11 @@ export const useInventoryStore = defineStore('inventory', {
     },
     teamDps(): number {
       return this.team.reduce((sum: number, p: OwnedPokemon) => {
-        return sum + Math.floor(p.level * (1 + p.stars * 0.25))
+        const baseDmg = p.level
+        const evoMult = getEvoStageMult(p.slug)
+        const rarityMult = getRarityDpsMult(p.slug)
+        const shinyMult = p.isShiny ? 1.2 : 1.0
+        return sum + Math.floor(baseDmg * evoMult * rarityMult * shinyMult)
       }, 0)
     },
     collectionCount: (state): number => state.collection.length,
@@ -103,16 +111,20 @@ export const useInventoryStore = defineStore('inventory', {
       if (pokemon) pokemon.teamSlot = null
     },
 
-    addPokemonXp(pokemonId: number, amount: number) {
+    addPokemonXp(pokemonId: number, amount: number, currentGeneration?: number) {
       const pokemon = this.collection.find((p) => p.id === pokemonId)
       if (!pokemon || pokemon.level >= MAX_LEVEL) return
       pokemon.xp += amount
       while (pokemon.level < MAX_LEVEL && pokemon.xp >= pokemonXpForLevel(pokemon.level + 1)) {
         pokemon.level++
-        // Check auto-evolution by level
+        // Check auto-evolution by level (region-restricted)
         const evo = canEvolveByLevel(pokemon.slug, pokemon.level)
         if (evo) {
-          this.applyEvolution(pokemon, evo)
+          const targetGen = getGenForSlug(evo.toSlug)
+          const maxGen = currentGeneration ?? 9
+          if (targetGen <= maxGen) {
+            this.applyEvolution(pokemon, evo)
+          }
         }
       }
     },
@@ -133,10 +145,11 @@ export const useInventoryStore = defineStore('inventory', {
         slug: evo.toSlug,
         nameFr: evo.toNameFr,
         nameEn: evo.toNameEn,
-        level: 1,
-        xp: 0,
+        level: pokemon.level,
+        xp: pokemon.xp,
         stars: pokemon.stars,
         isShiny: pokemon.isShiny,
+        rarity: pokemon.rarity,
         teamSlot: pokemon.teamSlot,
       }
       // Remove original from team, put evolved in its slot

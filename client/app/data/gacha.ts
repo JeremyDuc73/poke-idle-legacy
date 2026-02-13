@@ -166,9 +166,9 @@ export const RARITY_LABELS_EN: Record<Rarity, string> = {
 // Rarity DPS multiplier: higher rarity = more base damage
 export const RARITY_DPS_MULT: Record<Rarity, number> = {
   common: 1.0,
-  rare: 1.5,
-  epic: 2.0,
-  legendary: 3.0,
+  rare: 1.1,
+  epic: 1.5,
+  legendary: 2.0,
 }
 
 // Build a slug → rarity lookup from all banners

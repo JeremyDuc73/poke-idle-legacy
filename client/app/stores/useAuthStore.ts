@@ -3,6 +3,7 @@ import { useApi } from '~/composables/useApi'
 import { useSpeciesCache } from '~/composables/useSpeciesCache'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
+import { getRarity } from '~/data/gacha'
 
 interface AuthState {
   isAuthenticated: boolean
@@ -147,6 +148,7 @@ export const useAuthStore = defineStore('auth', {
           xp: p.xp,
           stars: p.stars,
           isShiny: p.isShiny,
+          rarity: (p as any).rarity ?? getRarity(p.slug),
           teamSlot: p.teamSlot,
         }))
         inventory.nextId = data.pokemons.length + 1
@@ -188,6 +190,7 @@ export const useAuthStore = defineStore('auth', {
             xp: p.xp,
             stars: p.stars,
             isShiny: p.isShiny,
+            rarity: p.rarity ?? 'common',
             teamSlot: p.teamSlot,
           }))
           .filter((p) => p.speciesId !== null)

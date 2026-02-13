@@ -71,6 +71,7 @@ export default class GameController {
         xp: p.xp,
         stars: p.stars,
         isShiny: p.isShiny,
+        rarity: p.rarity ?? 'common',
         teamSlot: p.teamSlot,
       })),
       afkReward,
@@ -113,6 +114,7 @@ export default class GameController {
         xp: number
         stars: number
         isShiny: boolean
+        rarity?: string
         teamSlot: number | null
       }>
     }
@@ -128,6 +130,7 @@ export default class GameController {
           xp: p.xp,
           stars: p.stars,
           isShiny: p.isShiny,
+          rarity: p.rarity ?? 'common',
           teamSlot: p.teamSlot,
         }))
       )

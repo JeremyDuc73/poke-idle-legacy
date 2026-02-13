@@ -1173,3 +1173,13 @@ export function getPokedexByGen(gen: number): PokedexEntry[] {
 export function getAllGens(): number[] {
   return [...new Set(POKEDEX.map((p) => p.gen))].sort((a, b) => a - b)
 }
+
+// slug → generation lookup
+const _slugGen = new Map<string, number>()
+for (const entry of POKEDEX) {
+  _slugGen.set(entry.slug, entry.gen)
+}
+
+export function getGenForSlug(slug: string): number {
+  return _slugGen.get(slug) ?? 1
+}

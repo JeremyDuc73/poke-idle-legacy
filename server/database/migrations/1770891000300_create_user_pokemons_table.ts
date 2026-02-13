@@ -24,6 +24,7 @@ export default class extends BaseSchema {
       table.integer('level').unsigned().notNullable().defaultTo(1)
       table.boolean('is_shiny').notNullable().defaultTo(false)
       table.integer('stars').unsigned().notNullable().defaultTo(1)
+      table.string('rarity', 20).notNullable().defaultTo('common')
       table.integer('team_slot').unsigned().nullable()
 
       table.timestamp('created_at').notNullable()
