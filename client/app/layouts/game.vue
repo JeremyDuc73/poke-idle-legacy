@@ -5,12 +5,14 @@ import { useAuthStore } from '~/stores/useAuthStore'
 import { useLocale } from '~/composables/useLocale'
 import { useAfkReward } from '~/composables/useAfkReward'
 import { useSpeciesCache } from '~/composables/useSpeciesCache'
+import { useCombatLoop } from '~/composables/useCombatLoop'
 
 const player = usePlayerStore()
 const auth = useAuthStore()
 const { locale, setLocale, t } = useLocale()
 const { showPopup, afkResult, checkAfkRewards, dismissPopup } = useAfkReward()
 const { loadSpecies } = useSpeciesCache()
+const { init: initCombat } = useCombatLoop()
 
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null
 
@@ -18,6 +20,7 @@ onMounted(async () => {
   loadSpecies()
   await auth.checkAuth()
   // checkAfkRewards() // disabled for now
+  initCombat()
 
   autoSaveInterval = setInterval(() => {
     if (auth.isAuthenticated) {

@@ -1,7 +1,10 @@
+import type { PokemonType } from './types'
+
 export interface WildPokemon {
   nameFr: string
   nameEn: string
   slug: string
+  type: PokemonType
   baseHp: number
   baseAtk: number
 }
@@ -18,6 +21,7 @@ export interface Zone {
   id: number
   nameFr: string
   nameEn: string
+  types: PokemonType[]
   wild: WildPokemon[]
   boss: BossTrainer
 }
@@ -43,11 +47,12 @@ export const GENERATIONS: Generation[] = [
         id: 1,
         nameFr: 'Route 1',
         nameEn: 'Route 1',
+        types: ['normal', 'bug'],
         wild: [
-          { nameFr: 'Rattata', nameEn: 'Rattata', slug: 'rattata', baseHp: 30, baseAtk: 6 },
-          { nameFr: 'Roucool', nameEn: 'Pidgey', slug: 'pidgey', baseHp: 40, baseAtk: 5 },
-          { nameFr: 'Chenipan', nameEn: 'Caterpie', slug: 'caterpie', baseHp: 25, baseAtk: 3 },
-          { nameFr: 'Aspicot', nameEn: 'Weedle', slug: 'weedle', baseHp: 25, baseAtk: 4 },
+          { nameFr: 'Rattata', nameEn: 'Rattata', slug: 'rattata', type: 'normal', baseHp: 30, baseAtk: 6 },
+          { nameFr: 'Roucool', nameEn: 'Pidgey', slug: 'pidgey', type: 'normal', baseHp: 40, baseAtk: 5 },
+          { nameFr: 'Chenipan', nameEn: 'Caterpie', slug: 'caterpie', type: 'bug', baseHp: 25, baseAtk: 3 },
+          { nameFr: 'Aspicot', nameEn: 'Weedle', slug: 'weedle', type: 'bug', baseHp: 25, baseAtk: 4 },
         ],
         boss: {
           nameFr: 'Pierre',
@@ -64,11 +69,12 @@ export const GENERATIONS: Generation[] = [
         id: 2,
         nameFr: 'Mont Sélénite',
         nameEn: 'Mt. Moon',
+        types: ['poison', 'rock', 'fairy'],
         wild: [
-          { nameFr: 'Nosferapti', nameEn: 'Zubat', slug: 'zubat', baseHp: 40, baseAtk: 5 },
-          { nameFr: 'Racaillou', nameEn: 'Geodude', slug: 'geodude', baseHp: 40, baseAtk: 8 },
-          { nameFr: 'Paras', nameEn: 'Paras', slug: 'paras', baseHp: 35, baseAtk: 7 },
-          { nameFr: 'Mélofée', nameEn: 'Clefairy', slug: 'clefairy', baseHp: 50, baseAtk: 5 },
+          { nameFr: 'Nosferapti', nameEn: 'Zubat', slug: 'zubat', type: 'poison', baseHp: 40, baseAtk: 5 },
+          { nameFr: 'Racaillou', nameEn: 'Geodude', slug: 'geodude', type: 'rock', baseHp: 40, baseAtk: 8 },
+          { nameFr: 'Paras', nameEn: 'Paras', slug: 'paras', type: 'bug', baseHp: 35, baseAtk: 7 },
+          { nameFr: 'Mélofée', nameEn: 'Clefairy', slug: 'clefairy', type: 'fairy', baseHp: 50, baseAtk: 5 },
         ],
         boss: {
           nameFr: 'Ondine',
@@ -85,11 +91,12 @@ export const GENERATIONS: Generation[] = [
         id: 3,
         nameFr: 'Route 24 — Pont Pépite',
         nameEn: 'Route 24 — Nugget Bridge',
+        types: ['grass', 'poison', 'fighting'],
         wild: [
-          { nameFr: 'Mystherbe', nameEn: 'Oddish', slug: 'oddish', baseHp: 45, baseAtk: 6 },
-          { nameFr: 'Abra', nameEn: 'Abra', slug: 'abra', baseHp: 25, baseAtk: 10 },
-          { nameFr: 'Abo', nameEn: 'Ekans', slug: 'ekans', baseHp: 35, baseAtk: 6 },
-          { nameFr: 'Férosinge', nameEn: 'Mankey', slug: 'mankey', baseHp: 40, baseAtk: 8 },
+          { nameFr: 'Mystherbe', nameEn: 'Oddish', slug: 'oddish', type: 'grass', baseHp: 45, baseAtk: 6 },
+          { nameFr: 'Abra', nameEn: 'Abra', slug: 'abra', type: 'psychic', baseHp: 25, baseAtk: 10 },
+          { nameFr: 'Abo', nameEn: 'Ekans', slug: 'ekans', type: 'poison', baseHp: 35, baseAtk: 6 },
+          { nameFr: 'Férosinge', nameEn: 'Mankey', slug: 'mankey', type: 'fighting', baseHp: 40, baseAtk: 8 },
         ],
         boss: {
           nameFr: 'Major Bob',
@@ -107,11 +114,12 @@ export const GENERATIONS: Generation[] = [
         id: 4,
         nameFr: 'Forêt de Jade',
         nameEn: 'Viridian Forest',
+        types: ['bug', 'grass'],
         wild: [
-          { nameFr: 'Insécateur', nameEn: 'Scyther', slug: 'scyther', baseHp: 50, baseAtk: 11 },
-          { nameFr: 'Scarabrute', nameEn: 'Pinsir', slug: 'pinsir', baseHp: 55, baseAtk: 12 },
-          { nameFr: 'Papilusion', nameEn: 'Butterfree', slug: 'butterfree', baseHp: 45, baseAtk: 5 },
-          { nameFr: 'Dardargnan', nameEn: 'Beedrill', slug: 'beedrill', baseHp: 45, baseAtk: 8 },
+          { nameFr: 'Insécateur', nameEn: 'Scyther', slug: 'scyther', type: 'bug', baseHp: 50, baseAtk: 11 },
+          { nameFr: 'Scarabrute', nameEn: 'Pinsir', slug: 'pinsir', type: 'bug', baseHp: 55, baseAtk: 12 },
+          { nameFr: 'Papilusion', nameEn: 'Butterfree', slug: 'butterfree', type: 'bug', baseHp: 45, baseAtk: 5 },
+          { nameFr: 'Dardargnan', nameEn: 'Beedrill', slug: 'beedrill', type: 'bug', baseHp: 45, baseAtk: 8 },
         ],
         boss: {
           nameFr: 'Érika',
@@ -129,11 +137,12 @@ export const GENERATIONS: Generation[] = [
         id: 5,
         nameFr: 'Tour Pokémon',
         nameEn: 'Pokémon Tower',
+        types: ['ghost', 'poison'],
         wild: [
-          { nameFr: 'Fantominus', nameEn: 'Gastly', slug: 'gastly', baseHp: 30, baseAtk: 10 },
-          { nameFr: 'Spectrum', nameEn: 'Haunter', slug: 'haunter', baseHp: 45, baseAtk: 12 },
-          { nameFr: 'Osselait', nameEn: 'Cubone', slug: 'cubone', baseHp: 50, baseAtk: 7 },
-          { nameFr: 'Smogo', nameEn: 'Koffing', slug: 'koffing', baseHp: 40, baseAtk: 7 },
+          { nameFr: 'Fantominus', nameEn: 'Gastly', slug: 'gastly', type: 'ghost', baseHp: 30, baseAtk: 10 },
+          { nameFr: 'Spectrum', nameEn: 'Haunter', slug: 'haunter', type: 'ghost', baseHp: 45, baseAtk: 12 },
+          { nameFr: 'Osselait', nameEn: 'Cubone', slug: 'cubone', type: 'ground', baseHp: 50, baseAtk: 7 },
+          { nameFr: 'Smogo', nameEn: 'Koffing', slug: 'koffing', type: 'poison', baseHp: 40, baseAtk: 7 },
         ],
         boss: {
           nameFr: 'Koga',
@@ -152,11 +161,12 @@ export const GENERATIONS: Generation[] = [
         id: 6,
         nameFr: 'Îles Écume',
         nameEn: 'Seafoam Islands',
+        types: ['water', 'ice'],
         wild: [
-          { nameFr: 'Tentacool', nameEn: 'Tentacool', slug: 'tentacool', baseHp: 40, baseAtk: 5 },
-          { nameFr: 'Kokiyas', nameEn: 'Shellder', slug: 'shellder', baseHp: 30, baseAtk: 7 },
-          { nameFr: 'Otaria', nameEn: 'Seel', slug: 'seel', baseHp: 55, baseAtk: 5 },
-          { nameFr: 'Stari', nameEn: 'Staryu', slug: 'staryu', baseHp: 30, baseAtk: 7 },
+          { nameFr: 'Tentacool', nameEn: 'Tentacool', slug: 'tentacool', type: 'water', baseHp: 40, baseAtk: 5 },
+          { nameFr: 'Kokiyas', nameEn: 'Shellder', slug: 'shellder', type: 'water', baseHp: 30, baseAtk: 7 },
+          { nameFr: 'Otaria', nameEn: 'Seel', slug: 'seel', type: 'water', baseHp: 55, baseAtk: 5 },
+          { nameFr: 'Stari', nameEn: 'Staryu', slug: 'staryu', type: 'water', baseHp: 30, baseAtk: 7 },
         ],
         boss: {
           nameFr: 'Morgane',
@@ -175,11 +185,12 @@ export const GENERATIONS: Generation[] = [
         id: 7,
         nameFr: 'Manoir Pokémon',
         nameEn: 'Pokémon Mansion',
+        types: ['fire', 'poison'],
         wild: [
-          { nameFr: 'Caninos', nameEn: 'Growlithe', slug: 'growlithe', baseHp: 55, baseAtk: 7 },
-          { nameFr: 'Ponyta', nameEn: 'Ponyta', slug: 'ponyta', baseHp: 50, baseAtk: 8 },
-          { nameFr: 'Tadmorv', nameEn: 'Grimer', slug: 'grimer', baseHp: 60, baseAtk: 8 },
-          { nameFr: 'Magnéti', nameEn: 'Magnemite', slug: 'magnemite', baseHp: 25, baseAtk: 10 },
+          { nameFr: 'Caninos', nameEn: 'Growlithe', slug: 'growlithe', type: 'fire', baseHp: 55, baseAtk: 7 },
+          { nameFr: 'Ponyta', nameEn: 'Ponyta', slug: 'ponyta', type: 'fire', baseHp: 50, baseAtk: 8 },
+          { nameFr: 'Tadmorv', nameEn: 'Grimer', slug: 'grimer', type: 'poison', baseHp: 60, baseAtk: 8 },
+          { nameFr: 'Magnéti', nameEn: 'Magnemite', slug: 'magnemite', type: 'electric', baseHp: 25, baseAtk: 10 },
         ],
         boss: {
           nameFr: 'Auguste',
@@ -198,11 +209,12 @@ export const GENERATIONS: Generation[] = [
         id: 8,
         nameFr: 'Route Victoire',
         nameEn: 'Victory Road',
+        types: ['fighting', 'rock', 'ground'],
         wild: [
-          { nameFr: 'Machopeur', nameEn: 'Machoke', slug: 'machoke', baseHp: 70, baseAtk: 10 },
-          { nameFr: 'Onix', nameEn: 'Onix', slug: 'onix', baseHp: 35, baseAtk: 5 },
-          { nameFr: 'Marowak', nameEn: 'Marowak', slug: 'marowak', baseHp: 60, baseAtk: 8 },
-          { nameFr: 'Grolem', nameEn: 'Golem', slug: 'golem', baseHp: 70, baseAtk: 11 },
+          { nameFr: 'Machopeur', nameEn: 'Machoke', slug: 'machoke', type: 'fighting', baseHp: 70, baseAtk: 10 },
+          { nameFr: 'Onix', nameEn: 'Onix', slug: 'onix', type: 'rock', baseHp: 35, baseAtk: 5 },
+          { nameFr: 'Marowak', nameEn: 'Marowak', slug: 'marowak', type: 'ground', baseHp: 60, baseAtk: 8 },
+          { nameFr: 'Grolem', nameEn: 'Golem', slug: 'golem', type: 'rock', baseHp: 70, baseAtk: 11 },
         ],
         boss: {
           nameFr: 'Giovanni',

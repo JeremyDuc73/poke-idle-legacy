@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
+import type { PokemonType } from '~/data/types'
 
-interface Enemy {
+export interface Enemy {
   nameFr: string
   nameEn: string
   slug: string
+  type: PokemonType
   spriteUrl: string
   maxHp: number
   currentHp: number
@@ -24,6 +26,7 @@ interface CombatState {
   bossTimeRemaining: number | null
   autoAttackInterval: ReturnType<typeof setInterval> | null
   bossTimerInterval: ReturnType<typeof setInterval> | null
+  overrideAutoAttack: (() => void) | null
 }
 
 export const useCombatStore = defineStore('combat', {
@@ -37,6 +40,7 @@ export const useCombatStore = defineStore('combat', {
     bossTimeRemaining: null,
     autoAttackInterval: null,
     bossTimerInterval: null,
+    overrideAutoAttack: null,
   }),
 
   getters: {
@@ -82,7 +86,11 @@ export const useCombatStore = defineStore('combat', {
 
     startAutoAttack() {
       this.autoAttackInterval = setInterval(() => {
-        this.autoAttackTick()
+        if (this.overrideAutoAttack) {
+          this.overrideAutoAttack()
+        } else {
+          this.autoAttackTick()
+        }
       }, 1000)
     },
 
@@ -118,6 +126,15 @@ export const useCombatStore = defineStore('combat', {
       this.enemy = null
       this.isFighting = false
       this.bossTimeRemaining = null
+    },
+
+    resumeTimers() {
+      if (!this.autoAttackInterval && this.enemy) {
+        this.startAutoAttack()
+        if (this.enemy.isBoss && this.bossTimeRemaining !== null && this.bossTimeRemaining > 0) {
+          this.startBossTimer()
+        }
+      }
     },
 
     upgradeClickDamage(amount: number) {

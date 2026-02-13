@@ -3,6 +3,7 @@ import { Star, Shield, ArrowUpDown } from 'lucide-vue-next'
 import { getSpriteUrl, getShinySpriteUrl } from '~/utils/showdown'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
+import { getPokemonType } from '~/data/types'
 
 definePageMeta({
   layout: 'game',
@@ -134,6 +135,7 @@ function toggleTeam(pokemonId: number) {
           :alt="t(pokemon.nameFr, pokemon.nameEn)"
           class="h-14 w-14 object-contain"
         />
+        <TypeBadge :type="getPokemonType(pokemon.slug)" />
         <p class="w-full truncate text-center text-[10px] text-gray-300">
           {{ t(pokemon.nameFr, pokemon.nameEn) }}
         </p>

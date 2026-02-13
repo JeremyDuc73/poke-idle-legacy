@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Search, Sparkles, EyeOff } from 'lucide-vue-next'
 import { getSpriteUrl, getStaticSpriteUrl, getShinySpriteUrl, getStaticShinySpriteUrl, getPokeApiSpriteUrl } from '~/utils/showdown'
+import { getPokemonType } from '~/data/types'
 import { useLocale } from '~/composables/useLocale'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { POKEDEX, GEN_NAMES, getAllGens } from '~/data/pokedex'
@@ -208,7 +209,8 @@ watch(showShiny, () => {
           ?
         </div>
 
-        <!-- Name -->
+        <!-- Type + Name -->
+        <TypeBadge :type="getPokemonType(p.slug)" />
         <p class="max-w-full truncate text-[9px] font-medium text-slate-300">
           {{ t(p.nameFr, p.nameEn) }}
         </p>
@@ -218,6 +220,7 @@ watch(showShiny, () => {
           <span class="font-bold">#{{ p.id }}</span> {{ t(p.nameFr, p.nameEn) }}
           <span class="text-slate-500">({{ p.nameEn }})</span>
           <br />
+          <TypeBadge :type="getPokemonType(p.slug)" size="sm" class="mr-1" />
           <span class="text-slate-400">Gen {{ p.gen }} — {{ t(GEN_NAMES[p.gen]?.fr ?? '', GEN_NAMES[p.gen]?.en ?? '') }}</span>
           <span v-if="staticErrors.has(p.slug)" class="ml-1 text-red-400">⚠ sprite manquant</span>
         </div>

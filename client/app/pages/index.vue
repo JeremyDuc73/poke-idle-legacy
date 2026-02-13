@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { Swords, Zap, Timer, Skull, MapPin } from 'lucide-vue-next'
-import { getSpriteUrl, getShinySpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
+import { getSpriteUrl, getShinySpriteUrl } from '~/utils/showdown'
 import { useCombatStore } from '~/stores/useCombatStore'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
-import { getZone } from '~/data/zones'
+import { useCombatLoop } from '~/composables/useCombatLoop'
+import { getPokemonType } from '~/data/types'
 import { pokemonXpForLevel } from '~/data/evolutions'
-import type { WildPokemon, BossTrainer } from '~/data/zones'
 
 definePageMeta({
   layout: 'game',
@@ -17,78 +17,22 @@ const combat = useCombatStore()
 const player = usePlayerStore()
 const inventory = useInventoryStore()
 const { t } = useLocale()
-
-watch(() => inventory.teamDps, (dps) => {
-  combat.teamDps = dps
-}, { immediate: true })
+const { spawnEnemy, checkEnemyDeath, getEffectiveDps, currentZone } = useCombatLoop()
 
 watch(() => player.clickDamage, (dmg) => {
   combat.clickDamage = dmg
 }, { immediate: true })
 
-const currentZone = computed(() => getZone(player.currentGeneration, player.currentZone))
+const zone = computed(() => currentZone())
 const zoneName = computed(() => {
-  const z = currentZone.value
+  const z = zone.value
   return z ? t(z.nameFr, z.nameEn) : `Zone ${player.currentZone}`
 })
 
-function randomWild(): WildPokemon {
-  const zone = currentZone.value
-  if (!zone || zone.wild.length === 0) {
-    return { nameFr: 'Rattata', nameEn: 'Rattata', slug: 'rattata', baseHp: 30, baseAtk: 6 }
-  }
-  return zone.wild[Math.floor(Math.random() * zone.wild.length)]
-}
-
-function spawnEnemy() {
-  const stage = player.currentStage
-  const zone = player.currentZone
-  const difficulty = (zone - 1) * 10 + stage
-
-  if (player.isBossStage) {
-    const boss = currentZone.value?.boss
-    if (boss) {
-      spawnBoss(boss, difficulty)
-    }
-  } else {
-    spawnWild(difficulty)
-  }
-}
-
-function spawnWild(difficulty: number) {
-  const poke = randomWild()
-  const hp = Math.round(poke.baseHp * (1 + difficulty * 0.5))
-  combat.setEnemy({
-    nameFr: `${poke.nameFr} sauvage`,
-    nameEn: `Wild ${poke.nameEn}`,
-    slug: poke.slug,
-    spriteUrl: getSpriteUrl(poke.slug),
-    maxHp: hp,
-    currentHp: hp,
-    level: difficulty,
-    goldReward: 5 * difficulty,
-    xpReward: 3 * difficulty,
-    isBoss: false,
-    bossTimerSeconds: null,
-  })
-}
-
-function spawnBoss(boss: BossTrainer, difficulty: number) {
-  const totalHp = boss.team.reduce((sum, p) => sum + Math.round(50 * p.level * (1 + difficulty * 0.1)), 0)
-  combat.setEnemy({
-    nameFr: `Boss : ${boss.nameFr}`,
-    nameEn: `Boss: ${boss.nameEn}`,
-    slug: boss.slug,
-    spriteUrl: getTrainerSpriteUrl(boss.slug),
-    maxHp: totalHp,
-    currentHp: totalHp,
-    level: Math.max(...boss.team.map((p) => p.level)),
-    goldReward: 50 * difficulty,
-    xpReward: 20 * difficulty,
-    isBoss: true,
-    bossTimerSeconds: boss.timerSeconds,
-  })
-}
+const effectiveDps = computed(() => {
+  if (!combat.enemy) return 0
+  return getEffectiveDps(combat.enemy.type)
+})
 
 interface DmgFloat {
   id: number
@@ -119,47 +63,6 @@ function handleClick(event?: MouseEvent) {
   checkEnemyDeath()
 }
 
-function checkEnemyDeath() {
-  if (combat.isEnemyDead && combat.enemy) {
-    const goldReward = combat.enemy.goldReward
-    const xpReward = combat.enemy.xpReward
-    const wasBoss = combat.enemy.isBoss
-    player.addGold(goldReward)
-    player.addXp(xpReward)
-
-    // Give XP to team pokemon
-    const team = inventory.team
-    if (team.length > 0) {
-      const xpPerPokemon = Math.max(1, Math.floor(xpReward / team.length))
-      for (const poke of team) {
-        inventory.addPokemonXp(poke.id, xpPerPokemon)
-      }
-    }
-
-    combat.killEnemy()
-
-    if (wasBoss) {
-      player.advanceStage()
-    } else {
-      player.addStageKill()
-    }
-
-    setTimeout(() => spawnEnemy(), 400)
-  }
-}
-
-watch(() => combat.bossTimedOut, (timedOut) => {
-  if (timedOut) {
-    combat.bossFailed()
-    player.retreatStage()
-    setTimeout(() => spawnEnemy(), 1000)
-  }
-})
-
-watch(() => combat.enemy?.currentHp, () => {
-  checkEnemyDeath()
-})
-
 function pokemonXpPercent(poke: { level: number; xp: number }): number {
   const current = pokemonXpForLevel(poke.level)
   const next = pokemonXpForLevel(poke.level + 1)
@@ -167,14 +70,6 @@ function pokemonXpPercent(poke: { level: number; xp: number }): number {
   if (range <= 0) return 0
   return Math.min(100, Math.max(0, ((poke.xp - current) / range) * 100))
 }
-
-onMounted(() => {
-  spawnEnemy()
-})
-
-onUnmounted(() => {
-  combat.clearTimers()
-})
 </script>
 
 <template>
@@ -184,6 +79,9 @@ onUnmounted(() => {
       <div class="flex items-center justify-center gap-2 text-sm text-slate-400">
         <MapPin class="h-3.5 w-3.5" />
         <span>{{ zoneName }}</span>
+      </div>
+      <div v-if="zone?.types" class="mt-1 flex items-center justify-center gap-1">
+        <TypeBadge v-for="tp in zone.types" :key="tp" :type="tp" size="sm" />
       </div>
       <p class="font-pixel mt-1 text-xs text-yellow-400">{{ player.stageLabel }}</p>
       <p v-if="player.isBossStage" class="mt-1.5 inline-block rounded-full bg-red-600/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-red-400">
@@ -224,13 +122,14 @@ onUnmounted(() => {
         <span class="font-pixel text-xs" :class="combat.isBossFight ? 'text-red-400' : 'text-blue-300'">
           {{ t(combat.enemy.nameFr, combat.enemy.nameEn) }}
         </span>
+        <TypeBadge :type="combat.enemy.type" size="sm" />
         <span class="rounded-md bg-white/10 px-2 py-0.5 text-xs font-medium text-slate-400">Lv.{{ combat.enemy.level }}</span>
       </div>
 
       <!-- Boss Team Preview -->
-      <div v-if="combat.isBossFight && currentZone?.boss" class="flex gap-1.5">
+      <div v-if="combat.isBossFight && zone?.boss" class="flex gap-1.5">
         <img
-          v-for="(p, i) in currentZone.boss.team"
+          v-for="(p, i) in zone.boss.team"
           :key="i"
           :src="getSpriteUrl(p.slug)"
           :alt="t(p.nameFr, p.nameEn)"
@@ -301,7 +200,7 @@ onUnmounted(() => {
       <div class="flex items-center gap-2 rounded-xl bg-[#1e293b] px-4 py-2.5 ring-1 ring-slate-700">
         <Zap class="h-4 w-4 text-cyan-400" />
         <div class="text-center">
-          <p class="text-sm font-bold text-white">{{ combat.teamDps }}</p>
+          <p class="text-sm font-bold" :class="effectiveDps > inventory.teamDps ? 'text-green-400' : effectiveDps < inventory.teamDps ? 'text-red-400' : 'text-white'">{{ effectiveDps }}</p>
           <p class="text-xs uppercase tracking-wider text-slate-500">DPS</p>
         </div>
       </div>
@@ -331,6 +230,7 @@ onUnmounted(() => {
             class="h-14 w-14 object-contain"
             style="image-rendering: pixelated;"
           />
+          <TypeBadge :type="getPokemonType(poke.slug)" />
           <p class="max-w-full truncate text-xs font-medium text-slate-300">{{ t(poke.nameFr, poke.nameEn) }}</p>
           <p class="text-xs text-slate-500">Lv.{{ poke.level }}</p>
           <!-- XP Bar -->
