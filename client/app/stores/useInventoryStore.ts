@@ -151,14 +151,14 @@ export const useInventoryStore = defineStore('inventory', {
     },
 
     applyEvolution(pokemon: OwnedPokemon, evo: Evolution) {
-      // Living dex: keep the original pokemon, add the evolution as a new entry
+      // Living dex: keep the original pokemon, add the evolution as a new entry at level 1
       const evolved: OwnedPokemon = {
         id: this.nextId++,
         slug: evo.toSlug,
         nameFr: evo.toNameFr,
         nameEn: evo.toNameEn,
-        level: pokemon.level,
-        xp: pokemon.xp,
+        level: 1,
+        xp: 0,
         stars: pokemon.stars,
         isShiny: pokemon.isShiny,
         rarity: pokemon.rarity,
