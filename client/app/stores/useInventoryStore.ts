@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { canEvolveByLevel, canEvolveByItem, pokemonXpForLevel, getEvoStageMult } from '~/data/evolutions'
 import type { Evolution } from '~/data/evolutions'
-import { getRarityDpsMult } from '~/data/gacha'
+import { getRarityDpsMult, getStarDpsMult } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
 import { getGenForSlug } from '~/data/pokedex'
 
@@ -44,7 +44,8 @@ export const useInventoryStore = defineStore('inventory', {
         const evoMult = getEvoStageMult(p.slug)
         const rarityMult = getRarityDpsMult(p.slug)
         const shinyMult = p.isShiny ? 1.2 : 1.0
-        return sum + Math.floor(baseDmg * evoMult * rarityMult * shinyMult)
+        const starMult = getStarDpsMult(p.stars, p.isShiny)
+        return sum + Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult)
       }, 0)
     },
     collectionCount: (state): number => state.collection.length,

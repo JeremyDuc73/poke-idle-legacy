@@ -4,7 +4,7 @@ import { useInventoryStore } from '~/stores/useInventoryStore'
 import { getSpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
 import { getZone } from '~/data/zones'
 import { getPokemonType, getEffectiveness } from '~/data/types'
-import { getRarityDpsMult } from '~/data/gacha'
+import { getRarityDpsMult, getStarDpsMult } from '~/data/gacha'
 import { getEvoStageMult } from '~/data/evolutions'
 import type { Rarity } from '~/data/gacha'
 import type { PokemonType } from '~/data/types'
@@ -26,9 +26,10 @@ export function useCombatLoop() {
     const evoMult = getEvoStageMult(poke.slug)
     const rarityMult = poke.rarity ? getRarityDpsMult(poke.slug) : 1.0
     const shinyMult = poke.isShiny ? 1.2 : 1.0
+    const starMult = getStarDpsMult(poke.stars, poke.isShiny)
     const pokeType = getPokemonType(poke.slug)
     const typeMult = enemyType ? getEffectiveness(pokeType, enemyType) : 1
-    const permanentDps = Math.floor(baseDmg * evoMult * rarityMult * shinyMult)
+    const permanentDps = Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult)
     return {
       baseDmg,
       evoMult,

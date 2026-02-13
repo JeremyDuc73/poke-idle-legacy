@@ -8,7 +8,7 @@ import type { CandySize } from '~/stores/usePlayerStore'
 import { useLocale } from '~/composables/useLocale'
 import { getPokemonType, getEffectiveness, TYPES } from '~/data/types'
 import type { PokemonType } from '~/data/types'
-import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, getRarityDpsMult, RARITY_DPS_MULT } from '~/data/gacha'
+import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, getRarityDpsMult, getStarDpsMult, RARITY_DPS_MULT } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
 import { getEvolutionStage, getEvoStageMult, EVO_STAGE_MULT } from '~/data/evolutions'
 
@@ -107,8 +107,9 @@ function pokeDps(p: OwnedPokemon, enemyType?: PokemonType): number {
   const evoMult = getEvoStageMult(p.slug)
   const rarityMult = getRarityDpsMult(p.slug)
   const shinyMult = p.isShiny ? 1.2 : 1.0
+  const starMult = getStarDpsMult(p.stars, p.isShiny)
   const typeMult = enemyType ? getEffectiveness(getPokemonType(p.slug), enemyType) : 1
-  return Math.round(Math.floor(baseDmg * evoMult * rarityMult * shinyMult) * typeMult)
+  return Math.round(Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult) * typeMult)
 }
 
 function rarityLabel(r: Rarity): string {
@@ -132,7 +133,8 @@ function getDetailStats(poke: OwnedPokemon) {
   const evoMult = getEvoStageMult(poke.slug)
   const rarityMult = getRarityDpsMult(poke.slug)
   const shinyMult = poke.isShiny ? 1.2 : 1.0
-  const permanentDps = Math.floor(baseDmg * evoMult * rarityMult * shinyMult)
+  const starMult = getStarDpsMult(poke.stars, poke.isShiny)
+  const permanentDps = Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult)
   const pokeType = getPokemonType(poke.slug)
 
   // Type effectiveness against all types

@@ -173,7 +173,16 @@ export const RARITY_DPS_MULT: Record<Rarity, number> = {
   common: 1.0,
   rare: 1.1,
   epic: 1.5,
-  legendary: 2.0,
+  legendary: 4.0,
+}
+
+// Star-based DPS multiplier (index = stars count: 1★=x1, 2★=x1.1, etc.)
+export const STAR_DPS_MULT: number[] = [1, 1, 1.1, 1.2, 1.3, 1.5]
+export const STAR_DPS_MULT_SHINY: number[] = [1, 1, 1.5, 2, 3, 5]
+
+export function getStarDpsMult(stars: number, isShiny: boolean): number {
+  const table = isShiny ? STAR_DPS_MULT_SHINY : STAR_DPS_MULT
+  return table[Math.min(stars, table.length - 1)] ?? 1
 }
 
 // Build a slug → rarity lookup from all banners
