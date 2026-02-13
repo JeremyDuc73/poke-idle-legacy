@@ -17,7 +17,7 @@ const inventory = useInventoryStore()
 const { t } = useLocale()
 
 const EGG_COST = 500
-const SHINY_CHANCE = 1 / 100
+const SHINY_CHANCE = 1 / 1000
 
 // ── State ──
 const selectedPokemon = ref<OwnedPokemon | null>(null)
@@ -35,10 +35,11 @@ const hatchResult = ref<{
 
 const animPhase = ref<'idle' | 'shake' | 'crack' | 'hatch'>('idle')
 
-// Eligible pokemon: only non-shiny base forms you own (no dupes in picker)
+// Eligible pokemon: level 100 only, deduplicated by slug
 const eligiblePokemon = computed(() => {
   const seen = new Set<string>()
   return inventory.collection.filter((p) => {
+    if (p.level < MAX_LEVEL) return false
     if (seen.has(p.slug)) return false
     seen.add(p.slug)
     return true
@@ -122,8 +123,8 @@ function sleep(ms: number): Promise<void> {
       </h2>
       <p class="mt-1 text-sm text-gray-400">
         {{ t(
-          'Dépose un Pokémon pour obtenir un œuf. Chance de shiny : 1/100 !',
-          'Leave a Pokémon to get an egg. Shiny chance: 1/100!'
+          'Dépose un Pokémon niv.100 pour obtenir un œuf. Chance de shiny : 1/1000 !',
+          'Leave a Lv.100 Pokémon to get an egg. Shiny chance: 1/1000!'
         ) }}
       </p>
     </div>
@@ -265,7 +266,7 @@ function sleep(ms: number): Promise<void> {
         </span>
       </button>
       <p class="text-[10px] text-gray-500">
-        {{ t('1% de chance d\'obtenir un shiny', '1% chance to get a shiny') }}
+        {{ t('0.1% de chance d\'obtenir un shiny', '0.1% chance to get a shiny') }}
       </p>
     </div>
 

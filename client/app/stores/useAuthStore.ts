@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useApi } from '~/composables/useApi'
 import { useSpeciesCache } from '~/composables/useSpeciesCache'
+import type { CandySize } from '~/stores/usePlayerStore'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { getRarity } from '~/data/gacha'
@@ -185,6 +186,12 @@ export const useAuthStore = defineStore('auth', {
           candies: player.candies,
         })
 
+        const { loaded: speciesLoaded } = useSpeciesCache()
+        if (!speciesLoaded.value) {
+          console.warn('Species cache not loaded, skipping pokemon save')
+          return
+        }
+
         const pokemons = inventory.collection
           .map((p) => ({
             speciesId: getSpeciesId(p.slug),
@@ -197,7 +204,8 @@ export const useAuthStore = defineStore('auth', {
           }))
           .filter((p) => p.speciesId !== null)
 
-        if (pokemons.length > 0) {
+        // Only save if we have pokemon OR if the user truly has none
+        if (pokemons.length > 0 || inventory.collectionCount === 0) {
           await api.post('/game/save-pokemons', { pokemons })
         }
       } catch (e) {
