@@ -16,6 +16,9 @@ const SPECIAL_SLUGS: Record<string, string> = {
 const SLUG_FIXES: Record<string, string> = {
   'nidoran-f': 'nidoranf',
   'nidoran-m': 'nidoranm',
+  'mr-mime': 'mrmime',
+  'mime-jr': 'mimejr',
+  'mr-rime': 'mrrime',
 }
 
 function fixSlug(slug: string): string {

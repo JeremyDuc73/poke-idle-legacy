@@ -106,12 +106,28 @@ const KANTO_POOL: GachaPokemon[] = [
   { nameFr: 'Canarticho', nameEn: "Farfetch'd", slug: 'farfetchd', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Métamorph', nameEn: 'Ditto', slug: 'ditto', rarity: 'epic', shinyRate: 0.03 },
 
-  // --- LEGENDARY (legendary + mythical) ---
+  // --- LEGENDARY (legendary + mythical + Mega Evolutions) ---
   { nameFr: 'Artikodin', nameEn: 'Articuno', slug: 'articuno', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Électhor', nameEn: 'Zapdos', slug: 'zapdos', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Sulfura', nameEn: 'Moltres', slug: 'moltres', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Mewtwo', nameEn: 'Mewtwo', slug: 'mewtwo', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Mew', nameEn: 'Mew', slug: 'mew', rarity: 'legendary', shinyRate: 0.05 },
+  // Mega Evolutions (Kanto base Pokémon)
+  { nameFr: 'Méga-Florizarre', nameEn: 'Mega Venusaur', slug: 'venusaur-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Dracaufeu X', nameEn: 'Mega Charizard X', slug: 'charizard-megax', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Dracaufeu Y', nameEn: 'Mega Charizard Y', slug: 'charizard-megay', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Tortank', nameEn: 'Mega Blastoise', slug: 'blastoise-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Dardargnan', nameEn: 'Mega Beedrill', slug: 'beedrill-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Roucarnage', nameEn: 'Mega Pidgeot', slug: 'pidgeot-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Alakazam', nameEn: 'Mega Alakazam', slug: 'alakazam-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Flagadoss', nameEn: 'Mega Slowbro', slug: 'slowbro-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Ectoplasma', nameEn: 'Mega Gengar', slug: 'gengar-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Kangourex', nameEn: 'Mega Kangaskhan', slug: 'kangaskhan-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Scarabrute', nameEn: 'Mega Pinsir', slug: 'pinsir-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Léviator', nameEn: 'Mega Gyarados', slug: 'gyarados-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Ptéra', nameEn: 'Mega Aerodactyl', slug: 'aerodactyl-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Mewtwo X', nameEn: 'Mega Mewtwo X', slug: 'mewtwo-megax', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Mewtwo Y', nameEn: 'Mega Mewtwo Y', slug: 'mewtwo-megay', rarity: 'legendary', shinyRate: 0.05 },
 ]
 
 export const BANNERS: Banner[] = [
