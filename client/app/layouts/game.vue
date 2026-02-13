@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Swords, Backpack, User, Star, ShoppingBag, Globe, Trophy, LogOut, LogIn, BookOpen, Award, Egg } from 'lucide-vue-next'
+import { Swords, Backpack, User, Star, ShoppingBag, Globe, Trophy, LogOut, LogIn, BookOpen, Award, Egg, HelpCircle } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useLocale } from '~/composables/useLocale'
@@ -45,6 +45,7 @@ function toggleLocale() {
 }
 
 const navItems = computed(() => [
+  { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide' },
   { label: t('Combat', 'Combat'), icon: Swords, to: '/' },
   { label: t('Inventaire', 'Inventory'), icon: Backpack, to: '/inventory' },
   { label: t('Invocation', 'Gacha'), icon: Star, to: '/gacha' },

@@ -1,7 +1,7 @@
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useSpeciesCache } from '~/composables/useSpeciesCache'
 
-const PUBLIC_ROUTES = ['/login', '/pokedex']
+const PUBLIC_ROUTES = ['/login', '/pokedex', '/guide']
 
 let initialized = false
 

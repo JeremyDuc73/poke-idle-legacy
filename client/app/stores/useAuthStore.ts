@@ -105,6 +105,7 @@ export const useAuthStore = defineStore('auth', {
       this.isAuthenticated = false
       const player = usePlayerStore()
       player.reset()
+      navigateTo('/guide')
     },
 
     async checkAuth() {
