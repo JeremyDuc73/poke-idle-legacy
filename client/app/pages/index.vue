@@ -277,7 +277,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Rewards Preview -->
-      <div class="flex gap-5 text-xs">
+      <div class="flex gap-5 text-sm">
         <span class="flex items-center gap-1 font-medium text-yellow-500">🪙 +{{ combat.enemy.goldReward }}</span>
         <span class="flex items-center gap-1 font-medium text-blue-400">✦ +{{ combat.enemy.xpReward }} xp</span>
       </div>
@@ -295,46 +295,46 @@ onUnmounted(() => {
         <Swords class="h-4 w-4 text-orange-400" />
         <div class="text-center">
           <p class="text-sm font-bold text-white">{{ combat.clickDamage }}</p>
-          <p class="text-[10px] uppercase tracking-wider text-slate-500">{{ t('Click', 'Click') }}</p>
+          <p class="text-xs uppercase tracking-wider text-slate-500">{{ t('Click', 'Click') }}</p>
         </div>
       </div>
       <div class="flex items-center gap-2 rounded-xl bg-[#1e293b] px-4 py-2.5 ring-1 ring-slate-700">
         <Zap class="h-4 w-4 text-cyan-400" />
         <div class="text-center">
           <p class="text-sm font-bold text-white">{{ combat.teamDps }}</p>
-          <p class="text-[10px] uppercase tracking-wider text-slate-500">DPS</p>
+          <p class="text-xs uppercase tracking-wider text-slate-500">DPS</p>
         </div>
       </div>
       <div class="flex items-center gap-2 rounded-xl bg-[#1e293b] px-4 py-2.5 ring-1 ring-slate-700">
         <Skull class="h-4 w-4 text-red-400" />
         <div class="text-center">
           <p class="text-sm font-bold text-white">{{ combat.totalKills }}</p>
-          <p class="text-[10px] uppercase tracking-wider text-slate-500">Kills</p>
+          <p class="text-xs uppercase tracking-wider text-slate-500">Kills</p>
         </div>
       </div>
     </div>
 
     <!-- Team Visualization -->
-    <div v-if="inventory.team.length > 0" class="w-full max-w-lg">
-      <h3 class="mb-2 text-center text-xs font-bold uppercase tracking-widest text-slate-500">
+    <div v-if="inventory.team.length > 0" class="w-full max-w-2xl">
+      <h3 class="mb-3 text-center text-sm font-bold uppercase tracking-widest text-slate-500">
         {{ t('Mon équipe', 'My Team') }}
       </h3>
-      <div class="grid gap-2" :class="inventory.team.length <= 3 ? 'grid-cols-3' : 'grid-cols-3 sm:grid-cols-6'">
+      <div class="grid gap-3" :class="inventory.team.length <= 3 ? 'grid-cols-3' : 'grid-cols-3 sm:grid-cols-6'">
         <div
           v-for="poke in inventory.team"
           :key="poke.id"
-          class="flex flex-col items-center gap-1 rounded-xl bg-[#1e293b] p-2 ring-1 ring-slate-700"
+          class="flex flex-col items-center gap-1.5 rounded-xl bg-[#1e293b] p-3 ring-1 ring-slate-700"
         >
           <img
             :src="poke.isShiny ? getShinySpriteUrl(poke.slug) : getSpriteUrl(poke.slug)"
             :alt="t(poke.nameFr, poke.nameEn)"
-            class="h-10 w-10 object-contain"
+            class="h-14 w-14 object-contain"
             style="image-rendering: pixelated;"
           />
-          <p class="max-w-full truncate text-[10px] font-medium text-slate-300">{{ t(poke.nameFr, poke.nameEn) }}</p>
-          <p class="text-[10px] text-slate-500">Lv.{{ poke.level }}</p>
+          <p class="max-w-full truncate text-xs font-medium text-slate-300">{{ t(poke.nameFr, poke.nameEn) }}</p>
+          <p class="text-xs text-slate-500">Lv.{{ poke.level }}</p>
           <!-- XP Bar -->
-          <div class="h-1.5 w-full overflow-hidden rounded-full bg-[#0f172a]">
+          <div class="h-2 w-full overflow-hidden rounded-full bg-[#0f172a]">
             <div
               class="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-400 transition-all duration-300"
               :style="{ width: `${pokemonXpPercent(poke)}%` }"

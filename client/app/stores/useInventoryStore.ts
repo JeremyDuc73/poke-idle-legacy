@@ -126,9 +126,21 @@ export const useInventoryStore = defineStore('inventory', {
     },
 
     applyEvolution(pokemon: OwnedPokemon, evo: Evolution) {
-      pokemon.slug = evo.toSlug
-      pokemon.nameFr = evo.toNameFr
-      pokemon.nameEn = evo.toNameEn
+      // Living dex: keep the original pokemon, add the evolution as a new entry
+      const evolved: OwnedPokemon = {
+        id: this.nextId++,
+        slug: evo.toSlug,
+        nameFr: evo.toNameFr,
+        nameEn: evo.toNameEn,
+        level: 1,
+        xp: 0,
+        stars: pokemon.stars,
+        isShiny: pokemon.isShiny,
+        teamSlot: pokemon.teamSlot,
+      }
+      // Remove original from team, put evolved in its slot
+      pokemon.teamSlot = null
+      this.collection.push(evolved)
     },
   },
 })
