@@ -131,7 +131,7 @@ function sleep(ms: number): Promise<void> {
     <!-- Selected Pokemon display -->
     <div class="flex flex-col items-center gap-4">
       <div
-        class="relative flex h-48 w-48 items-center justify-center rounded-2xl border-2 border-dashed transition-all"
+        class="relative flex h-48 w-56 items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed px-3 transition-all"
         :class="selectedPokemon
           ? 'border-green-500/50 bg-green-500/5'
           : 'border-gray-600 bg-gray-800/50'"
