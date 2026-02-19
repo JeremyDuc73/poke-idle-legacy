@@ -113,6 +113,12 @@ export const usePlayerStore = defineStore('player', {
       const range = needed - prevNeeded
       return range > 0 ? Math.min(100, Math.max(0, (progress / range) * 100)) : 0
     },
+    teamDpsMult(state): number {
+      return 1 + (state.level - 1) * 0.02
+    },
+    goldBonusMult(state): number {
+      return 1 + (state.level - 1) * 0.01
+    },
   },
 
   actions: {
@@ -141,7 +147,7 @@ export const usePlayerStore = defineStore('player', {
       while (this.xp >= xpForLevel(this.level + 1)) {
         this.level++
       }
-      this.clickDamage = Math.floor(1 + this.level * 0.5 + this.badges * 2) + this.clickDamageBonus
+      this.clickDamage = Math.floor(1 + this.level * 2 + this.badges * 10) + this.clickDamageBonus
     },
 
     addStageKill(): boolean {

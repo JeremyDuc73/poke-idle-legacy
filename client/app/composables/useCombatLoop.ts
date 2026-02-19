@@ -80,7 +80,7 @@ export function useCombatLoop() {
 
   function spawnWild(difficulty: number) {
     const poke = randomWild()
-    const hp = Math.round(poke.baseHp * (1 + difficulty * 0.5))
+    const hp = Math.round(poke.baseHp * (1 + difficulty * 0.12))
     combat.setEnemy({
       nameFr: `${poke.nameFr} sauvage`,
       nameEn: `Wild ${poke.nameEn}`,
@@ -98,7 +98,8 @@ export function useCombatLoop() {
   }
 
   function spawnBoss(boss: BossTrainer, difficulty: number) {
-    const totalHp = boss.team.reduce((sum, p) => sum + Math.round(50 * p.level * (1 + difficulty * 0.1)), 0)
+    const zone = player.currentZone
+    const totalHp = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0) * (1 + zone * 0.1)
     const bossType = getPokemonType(boss.team[0]?.slug ?? 'normal')
     combat.setEnemy({
       nameFr: `Boss : ${boss.nameFr}`,
@@ -121,7 +122,8 @@ export function useCombatLoop() {
       const goldReward = combat.enemy.goldReward
       const xpReward = combat.enemy.xpReward
       const wasBoss = combat.enemy.isBoss
-      player.addGold(goldReward)
+      const goldBonusMult = 1 + (player.level - 1) * 0.01
+      player.addGold(Math.round(goldReward * goldBonusMult))
       player.addXp(xpReward)
 
       const team = inventory.team
@@ -151,11 +153,18 @@ export function useCombatLoop() {
     // Sync persisted upgrade bonuses from player store
     combat.clickDamage = player.clickDamage
 
-    // Override autoAttackTick to use type-effective DPS
+    // Keep click damage in sync when player levels up
+    watch(() => player.clickDamage, (val) => {
+      combat.clickDamage = val
+    })
+
+    // Override autoAttackTick to use type-effective DPS + player level multiplier
     combat.overrideAutoAttack = () => {
       if (!combat.enemy || combat.enemy.currentHp <= 0) return
-      const effectiveDps = getEffectiveDps(combat.enemy.type)
-      if (effectiveDps <= 0) return
+      const baseDps = getEffectiveDps(combat.enemy.type)
+      if (baseDps <= 0) return
+      const playerLevelMult = 1 + (player.level - 1) * 0.02
+      const effectiveDps = Math.round(baseDps * playerLevelMult)
       combat.enemy.currentHp = Math.max(0, combat.enemy.currentHp - effectiveDps)
       daycare.addDamage(effectiveDps)
       checkEnemyDeath()

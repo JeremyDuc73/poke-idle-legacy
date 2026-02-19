@@ -86,6 +86,11 @@ const navItems = computed(() => [
         <div class="h-2 w-full overflow-hidden rounded-full bg-[#0f172a]">
           <div class="pk-xp-bar h-full rounded-full transition-all duration-500" :style="{ width: `${player.xpPercent}%` }" />
         </div>
+        <div class="hidden w-full flex-col gap-0.5 text-[9px] text-slate-500 lg:flex">
+          <div class="flex justify-between"><span>⚔️ {{ t('DPS équipe', 'Team DPS') }}</span><span class="text-emerald-400">×{{ player.teamDpsMult.toFixed(2) }}</span></div>
+          <div class="flex justify-between"><span>🪙 {{ t('Bonus or', 'Gold bonus') }}</span><span class="text-yellow-400">+{{ Math.round((player.goldBonusMult - 1) * 100) }}%</span></div>
+          <div class="flex justify-between"><span>👆 {{ t('Clic', 'Click') }}</span><span class="text-blue-400">{{ player.clickDamage }}</span></div>
+        </div>
       </div>
 
       <nav class="flex w-full flex-1 flex-col gap-0.5 px-2">
