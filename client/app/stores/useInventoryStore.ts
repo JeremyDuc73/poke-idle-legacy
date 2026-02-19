@@ -145,18 +145,22 @@ export const useInventoryStore = defineStore('inventory', {
       }
     },
 
-    evolveWithItem(pokemonId: number, itemId: string): boolean {
+    evolveWithItem(pokemonId: number, itemId: string, currentGeneration?: number): boolean {
       const pokemon = this.collection.find((p) => p.id === pokemonId)
       if (!pokemon) return false
       const evo = canEvolveByItem(pokemon.slug, itemId)
       if (!evo) return false
+      const maxGen = currentGeneration ?? 9
+      if (getGenForSlug(evo.toSlug) > maxGen) return false
       this.applyEvolution(pokemon, evo)
       return true
     },
 
-    evolveAllWithItem(slug: string, itemId: string): number {
+    evolveAllWithItem(slug: string, itemId: string, currentGeneration?: number): number {
       const evo = canEvolveByItem(slug, itemId)
       if (!evo) return 0
+      const maxGen = currentGeneration ?? 9
+      if (getGenForSlug(evo.toSlug) > maxGen) return 0
       const targets = this.collection.filter((p) => p.slug === slug)
       for (const p of targets) {
         this.applyEvolution(p, evo)

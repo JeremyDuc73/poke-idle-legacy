@@ -457,6 +457,28 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 5,
+        nameFr: 'Ironto',
+        nameEn: 'Cianwood City',
+        types: ['fighting'],
+        wild: [
+          { nameFr: 'Machoc', nameEn: 'Machop', slug: 'machop', type: 'fighting', baseHp: 50, baseAtk: 7 },
+          { nameFr: 'Têtarte', nameEn: 'Poliwhirl', slug: 'poliwhirl', type: 'water', baseHp: 55, baseAtk: 6 },
+          { nameFr: 'Krabby', nameEn: 'Krabby', slug: 'krabby', type: 'water', baseHp: 30, baseAtk: 10 },
+          { nameFr: 'Tentacool', nameEn: 'Tentacool', slug: 'tentacool', type: 'water', baseHp: 30, baseAtk: 5 },
+        ],
+        boss: {
+          nameFr: 'Chuck',
+          nameEn: 'Chuck',
+          slug: 'chuck',
+          team: [
+            { nameFr: 'Colossinge', nameEn: 'Primeape', slug: 'primeape', level: 27 },
+            { nameFr: 'Tartard', nameEn: 'Poliwrath', slug: 'poliwrath', level: 30 },
+          ],
+          timerSeconds: 30,
+        },
+      },
+      {
+        id: 6,
         nameFr: 'Oliville',
         nameEn: 'Olivine City',
         types: ['steel', 'electric'],
@@ -471,15 +493,15 @@ export const GENERATIONS: Generation[] = [
           nameEn: 'Jasmine',
           slug: 'jasmine',
           team: [
-            { nameFr: 'Magnéton', nameEn: 'Magneton', slug: 'magneton', level: 30 },
+            { nameFr: 'Magnéti', nameEn: 'Magnemite', slug: 'magnemite', level: 30 },
             { nameFr: 'Steelix', nameEn: 'Steelix', slug: 'steelix', level: 35 },
-            { nameFr: 'Magnéton', nameEn: 'Magneton', slug: 'magneton', level: 30 },
+            { nameFr: 'Magnéti', nameEn: 'Magnemite', slug: 'magnemite', level: 30 },
           ],
           timerSeconds: 30,
         },
       },
       {
-        id: 6,
+        id: 7,
         nameFr: 'Acajou',
         nameEn: 'Mahogany Town',
         types: ['ice', 'water'],
@@ -502,7 +524,7 @@ export const GENERATIONS: Generation[] = [
         },
       },
       {
-        id: 7,
+        id: 8,
         nameFr: 'Ébènelle',
         nameEn: 'Blackthorn City',
         types: ['dragon', 'flying'],
@@ -526,7 +548,7 @@ export const GENERATIONS: Generation[] = [
         },
       },
       {
-        id: 8,
+        id: 9,
         nameFr: 'Ligue — Clément',
         nameEn: 'League — Will',
         types: ['psychic'],
@@ -551,7 +573,7 @@ export const GENERATIONS: Generation[] = [
         },
       },
       {
-        id: 9,
+        id: 10,
         nameFr: 'Ligue — Koga',
         nameEn: 'League — Koga',
         types: ['poison'],
@@ -576,7 +598,7 @@ export const GENERATIONS: Generation[] = [
         },
       },
       {
-        id: 10,
+        id: 11,
         nameFr: 'Ligue — Aldo',
         nameEn: 'League — Bruno',
         types: ['fighting'],
@@ -601,8 +623,8 @@ export const GENERATIONS: Generation[] = [
         },
       },
       {
-        id: 11,
-        nameFr: 'Ligue — Karen',
+        id: 12,
+        nameFr: 'Ligue — Marion',
         nameEn: 'League — Karen',
         types: ['dark'],
         wild: [
@@ -612,7 +634,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Ténéfix', nameEn: 'Sneasel', slug: 'sneasel', type: 'dark', baseHp: 45, baseAtk: 10 },
         ],
         boss: {
-          nameFr: 'Karen',
+          nameFr: 'Marion',
           nameEn: 'Karen',
           slug: 'karen',
           team: [
@@ -626,7 +648,7 @@ export const GENERATIONS: Generation[] = [
         },
       },
       {
-        id: 12,
+        id: 13,
         nameFr: 'Maître — Peter',
         nameEn: 'Champion — Lance',
         types: ['dragon', 'flying'],
@@ -815,7 +837,7 @@ export const GENERATIONS: Generation[] = [
         boss: {
           nameFr: 'Lévy & Tatia',
           nameEn: 'Tate & Liza',
-          slug: 'tateandliza',
+          slug: 'liza',
           team: [
             { nameFr: 'Solaroc', nameEn: 'Solrock', slug: 'solrock', level: 42 },
             { nameFr: 'Séléroc', nameEn: 'Lunatone', slug: 'lunatone', level: 42 },
@@ -835,9 +857,9 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Coquiperl', nameEn: 'Clamperl', slug: 'clamperl', type: 'water', baseHp: 30, baseAtk: 6 },
         ],
         boss: {
-          nameFr: 'Juan',
-          nameEn: 'Juan',
-          slug: 'juan',
+          nameFr: 'Marc',
+          nameEn: 'Wallace',
+          slug: 'wallace',
           team: [
             { nameFr: 'Lovdisc', nameEn: 'Luvdisc', slug: 'luvdisc', level: 41 },
             { nameFr: 'Barpau', nameEn: 'Feebas', slug: 'feebas', level: 41 },
@@ -850,7 +872,7 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 9,
-        nameFr: 'Ligue — Sidney',
+        nameFr: 'Ligue — Damien',
         nameEn: 'League — Sidney',
         types: ['dark'],
         wild: [
@@ -860,7 +882,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Absol', nameEn: 'Absol', slug: 'absol', type: 'dark', baseHp: 55, baseAtk: 13 },
         ],
         boss: {
-          nameFr: 'Sidney',
+          nameFr: 'Damien',
           nameEn: 'Sidney',
           slug: 'sidney',
           team: [
@@ -925,7 +947,7 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 12,
-        nameFr: 'Ligue — Drake',
+        nameFr: 'Ligue — Aragon',
         nameEn: 'League — Drake',
         types: ['dragon'],
         wild: [
@@ -935,7 +957,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Libégon', nameEn: 'Flygon', slug: 'flygon', type: 'dragon', baseHp: 65, baseAtk: 10 },
         ],
         boss: {
-          nameFr: 'Drake',
+          nameFr: 'Aragon',
           nameEn: 'Drake',
           slug: 'drake',
           team: [
