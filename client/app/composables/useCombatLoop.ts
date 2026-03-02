@@ -122,7 +122,7 @@ export function useCombatLoop() {
       const goldReward = combat.enemy.goldReward
       const xpReward = combat.enemy.xpReward
       const wasBoss = combat.enemy.isBoss
-      const goldBonusMult = 1 + (player.level - 1) * 0.01
+      const goldBonusMult = 1 + (player.level - 1) * 0.005
       player.addGold(Math.round(goldReward * goldBonusMult))
       player.addXp(xpReward)
 
