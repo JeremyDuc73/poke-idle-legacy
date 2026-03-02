@@ -96,6 +96,7 @@ export const EVOLUTIONS: Evolution[] = [
   // Poliwag
   { fromSlug: 'poliwag', toSlug: 'poliwhirl', toNameFr: 'Têtarte', toNameEn: 'Poliwhirl', method: 'level', levelRequired: 25 },
   { fromSlug: 'poliwhirl', toSlug: 'poliwrath', toNameFr: 'Tartard', toNameEn: 'Poliwrath', method: 'stone', itemRequired: 'water-stone' },
+  { fromSlug: 'poliwhirl', toSlug: 'politoed', toNameFr: 'Tarpaud', toNameEn: 'Politoed', method: 'trade', itemRequired: 'kings-rock' },
 
   // Abra
   { fromSlug: 'abra', toSlug: 'kadabra', toNameFr: 'Kadabra', toNameEn: 'Kadabra', method: 'level', levelRequired: 16 },
@@ -121,6 +122,7 @@ export const EVOLUTIONS: Evolution[] = [
 
   // Slowpoke
   { fromSlug: 'slowpoke', toSlug: 'slowbro', toNameFr: 'Flagadoss', toNameEn: 'Slowbro', method: 'level', levelRequired: 37 },
+  { fromSlug: 'slowpoke', toSlug: 'slowking', toNameFr: 'Roigada', toNameEn: 'Slowking', method: 'trade', itemRequired: 'kings-rock' },
 
   // Magnemite
   { fromSlug: 'magnemite', toSlug: 'magneton', toNameFr: 'Magnéton', toNameEn: 'Magneton', method: 'level', levelRequired: 30 },
@@ -261,6 +263,8 @@ export const EVOLUTIONS: Evolution[] = [
 
   // Baby → base (happiness)
   { fromSlug: 'tyrogue', toSlug: 'hitmonlee', toNameFr: 'Kicklee', toNameEn: 'Hitmonlee', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'tyrogue', toSlug: 'hitmonchan', toNameFr: 'Tygnon', toNameEn: 'Hitmonchan', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'tyrogue', toSlug: 'hitmontop', toNameFr: 'Kapoera', toNameEn: 'Hitmontop', method: 'happiness', itemRequired: 'soothe-bell' },
   { fromSlug: 'smoochum', toSlug: 'jynx', toNameFr: 'Lippoutou', toNameEn: 'Jynx', method: 'happiness', itemRequired: 'soothe-bell' },
   { fromSlug: 'elekid', toSlug: 'electabuzz', toNameFr: 'Élektek', toNameEn: 'Electabuzz', method: 'happiness', itemRequired: 'soothe-bell' },
   { fromSlug: 'magby', toSlug: 'magmar', toNameFr: 'Magmar', toNameEn: 'Magmar', method: 'happiness', itemRequired: 'soothe-bell' },
@@ -446,6 +450,15 @@ export const EVO_ITEMS: EvoItem[] = [
     descEn: 'Simulates a trade to evolve a Pokémon',
     icon: '🔗',
     applicableTo: ['kadabra', 'machoke', 'graveler', 'haunter', 'porygon', 'onix', 'scyther', 'seadra'],
+  },
+  {
+    id: 'kings-rock',
+    nameFr: 'Roche Royale',
+    nameEn: 'King\'s Rock',
+    descFr: 'Ramoloss → Roigada / Têtarte → Tarpaud (échange)',
+    descEn: 'Slowpoke → Slowking / Poliwhirl → Politoed (trade)',
+    icon: '👑',
+    applicableTo: ['slowpoke', 'poliwhirl'],
   },
   {
     id: 'prism-scale',

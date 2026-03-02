@@ -170,6 +170,8 @@ const JOHTO_POOL: GachaPokemon[] = [
   { nameFr: 'Toudoudou', nameEn: 'Igglybuff', slug: 'igglybuff', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Togepi', nameEn: 'Togepi', slug: 'togepi', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Démanta', nameEn: 'Mantine', slug: 'mantine', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Limagma', nameEn: 'Slugma', slug: 'slugma', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Caratroc', nameEn: 'Shuckle', slug: 'shuckle', rarity: 'common', shinyRate: 0.01 },
   // RARE
   { nameFr: 'Germignon', nameEn: 'Chikorita', slug: 'chikorita', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Héricendre', nameEn: 'Cyndaquil', slug: 'cyndaquil', rarity: 'rare', shinyRate: 0.02 },
@@ -222,7 +224,6 @@ const HOENN_POOL: GachaPokemon[] = [
   { nameFr: 'Carvanha', nameEn: 'Carvanha', slug: 'carvanha', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Balbuto', nameEn: 'Baltoy', slug: 'baltoy', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Obalie', nameEn: 'Spheal', slug: 'spheal', rarity: 'common', shinyRate: 0.01 },
-  { nameFr: 'Limagma', nameEn: 'Slugma', slug: 'slugma', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Posipi', nameEn: 'Plusle', slug: 'plusle', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Négapi', nameEn: 'Minun', slug: 'minun', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Chenipotte', nameEn: 'Wurmple', slug: 'wurmple', rarity: 'common', shinyRate: 0.01 },
