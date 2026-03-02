@@ -18,7 +18,7 @@ services:
       - internal
 
   server:
-    image: ghcr.io/${GITHUB_REPOSITORY}/server:latest
+    image: ghcr.io/jeremyduc73/poke-idle-legacy/server:latest
     container_name: poke-idle-server
     restart: always
     ports:
@@ -42,7 +42,7 @@ services:
       - web
 
   client:
-    image: ghcr.io/${GITHUB_REPOSITORY}/client:latest
+    image: ghcr.io/jeremyduc73/poke-idle-legacy/client:latest
     container_name: poke-idle-client
     restart: always
     ports:

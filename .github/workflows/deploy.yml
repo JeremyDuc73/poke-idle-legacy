@@ -6,7 +6,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_PREFIX: ghcr.io/${{ github.repository }}
 
 jobs:
   build-and-push:
@@ -31,8 +30,8 @@ jobs:
           context: ./server
           push: true
           tags: |
-            ${{ env.IMAGE_PREFIX }}/server:latest
-            ${{ env.IMAGE_PREFIX }}/server:${{ github.sha }}
+            ghcr.io/jeremyduc73/poke-idle-legacy/server:latest
+            ghcr.io/jeremyduc73/poke-idle-legacy/server:${{ github.sha }}
 
       - name: Build & push client image
         uses: docker/build-push-action@v6
@@ -40,8 +39,8 @@ jobs:
           context: ./client
           push: true
           tags: |
-            ${{ env.IMAGE_PREFIX }}/client:latest
-            ${{ env.IMAGE_PREFIX }}/client:${{ github.sha }}
+            ghcr.io/jeremyduc73/poke-idle-legacy/client:latest
+            ghcr.io/jeremyduc73/poke-idle-legacy/client:${{ github.sha }}
 
   deploy:
     name: Deploy to Production
