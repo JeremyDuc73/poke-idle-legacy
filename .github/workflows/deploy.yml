@@ -57,7 +57,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           source: docker-compose.prod.yml
-          target: /opt/poke-idle-legacy/
+          target: /var/www/poke-idle-legacy/
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.0
@@ -66,7 +66,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            cd /opt/poke-idle-legacy
+            cd /var/www/poke-idle-legacy
 
             # Pull latest images
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
