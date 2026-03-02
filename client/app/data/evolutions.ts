@@ -346,6 +346,7 @@ export const EVOLUTIONS: Evolution[] = [
   { fromSlug: 'clamperl', toSlug: 'gorebyss', toNameFr: 'Rosabyss', toNameEn: 'Gorebyss', method: 'stone', itemRequired: 'deep-sea-scale' },
 
   // Bugs & birds
+  { fromSlug: 'surskit', toSlug: 'masquerain', toNameFr: 'Maskadra', toNameEn: 'Masquerain', method: 'level', levelRequired: 22 },
   { fromSlug: 'nincada', toSlug: 'ninjask', toNameFr: 'Ninjask', toNameEn: 'Ninjask', method: 'level', levelRequired: 20 },
   { fromSlug: 'wingull', toSlug: 'pelipper', toNameFr: 'Bekipan', toNameEn: 'Pelipper', method: 'level', levelRequired: 25 },
 
@@ -373,6 +374,10 @@ export const EVOLUTIONS: Evolution[] = [
   // Water/Ground
   { fromSlug: 'barboach', toSlug: 'whiscash', toNameFr: 'Barbicha', toNameEn: 'Whiscash', method: 'level', levelRequired: 30 },
   { fromSlug: 'corphish', toSlug: 'crawdaunt', toNameFr: 'Colhomard', toNameEn: 'Crawdaunt', method: 'level', levelRequired: 30 },
+
+  // Steel/Rock
+  { fromSlug: 'aron', toSlug: 'lairon', toNameFr: 'Galegon', toNameEn: 'Lairon', method: 'level', levelRequired: 32 },
+  { fromSlug: 'lairon', toSlug: 'aggron', toNameFr: 'Galeking', toNameEn: 'Aggron', method: 'level', levelRequired: 42 },
 
   // Ice
   { fromSlug: 'snorunt', toSlug: 'glalie', toNameFr: 'Oniglali', toNameEn: 'Glalie', method: 'level', levelRequired: 42 },

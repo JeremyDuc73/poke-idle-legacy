@@ -248,6 +248,8 @@ const HOENN_POOL: GachaPokemon[] = [
   { nameFr: 'Écrapince', nameEn: 'Corphish', slug: 'corphish', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Okéoké', nameEn: 'Wynaut', slug: 'wynaut', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Stalgamin', nameEn: 'Snorunt', slug: 'snorunt', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Galekid', nameEn: 'Aron', slug: 'aron', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Arakdo', nameEn: 'Surskit', slug: 'surskit', rarity: 'common', shinyRate: 0.01 },
   // RARE
   { nameFr: 'Gobou', nameEn: 'Mudkip', slug: 'mudkip', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Poussifeu', nameEn: 'Torchic', slug: 'torchic', rarity: 'rare', shinyRate: 0.02 },
