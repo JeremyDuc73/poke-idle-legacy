@@ -348,6 +348,7 @@ export const EVOLUTIONS: Evolution[] = [
   // Bugs & birds
   { fromSlug: 'surskit', toSlug: 'masquerain', toNameFr: 'Maskadra', toNameEn: 'Masquerain', method: 'level', levelRequired: 22 },
   { fromSlug: 'nincada', toSlug: 'ninjask', toNameFr: 'Ninjask', toNameEn: 'Ninjask', method: 'level', levelRequired: 20 },
+  { fromSlug: 'nincada', toSlug: 'shedinja', toNameFr: 'Munja', toNameEn: 'Shedinja', method: 'stone', itemRequired: 'shed-shell' },
   { fromSlug: 'wingull', toSlug: 'pelipper', toNameFr: 'Bekipan', toNameEn: 'Pelipper', method: 'level', levelRequired: 25 },
 
   // Grass
@@ -498,6 +499,15 @@ export const EVO_ITEMS: EvoItem[] = [
     descEn: 'Clamperl → Gorebyss',
     icon: '🐚',
     applicableTo: ['clamperl'],
+  },
+  {
+    id: 'shed-shell',
+    nameFr: 'Carapace Mue',
+    nameEn: 'Shed Shell',
+    descFr: 'Ningale → Munja (carapace vide)',
+    descEn: 'Nincada → Shedinja (empty husk)',
+    icon: '🪲',
+    applicableTo: ['nincada'],
   },
   {
     id: 'soothe-bell',
