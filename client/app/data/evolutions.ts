@@ -262,8 +262,6 @@ export const EVOLUTIONS: Evolution[] = [
   { fromSlug: 'seadra', toSlug: 'kingdra', toNameFr: 'Hyporoi', toNameEn: 'Kingdra', method: 'trade', itemRequired: 'link-cable' },
 
   // Baby → base (happiness)
-  { fromSlug: 'tyrogue', toSlug: 'hitmonlee', toNameFr: 'Kicklee', toNameEn: 'Hitmonlee', method: 'happiness', itemRequired: 'soothe-bell' },
-  { fromSlug: 'tyrogue', toSlug: 'hitmonchan', toNameFr: 'Tygnon', toNameEn: 'Hitmonchan', method: 'happiness', itemRequired: 'soothe-bell' },
   { fromSlug: 'tyrogue', toSlug: 'hitmontop', toNameFr: 'Kapoera', toNameEn: 'Hitmontop', method: 'happiness', itemRequired: 'soothe-bell' },
   { fromSlug: 'smoochum', toSlug: 'jynx', toNameFr: 'Lippoutou', toNameEn: 'Jynx', method: 'happiness', itemRequired: 'soothe-bell' },
   { fromSlug: 'elekid', toSlug: 'electabuzz', toNameFr: 'Élektek', toNameEn: 'Electabuzz', method: 'happiness', itemRequired: 'soothe-bell' },
