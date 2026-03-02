@@ -51,6 +51,7 @@ jobs:
         run: npm run test
         env:
           NODE_ENV: test
+          LOG_LEVEL: info
           DB_HOST: localhost
           DB_PORT: 5432
           DB_USER: postgres

@@ -38,7 +38,7 @@ services:
       SESSION_DRIVER: cookie
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-https://pokemon.jeremyduc.dev/auth/google/callback}
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-https://poke-idle.jeremyduc.dev/auth/google/callback}
     depends_on:
       postgres:
         condition: service_healthy
