@@ -58,6 +58,7 @@ interface PlayerState {
   badges: number
   isLoggedIn: boolean
   candies: Record<CandySize, number>
+  regionUnlockMessage: string | null
 }
 
 export const usePlayerStore = defineStore('player', {
@@ -79,6 +80,7 @@ export const usePlayerStore = defineStore('player', {
       badges: 0,
       isLoggedIn: false,
       candies: { S: 0, M: 0, L: 0, XL: 0 },
+      regionUnlockMessage: null,
     }
   },
 
@@ -174,6 +176,10 @@ export const usePlayerStore = defineStore('player', {
           if (nextGen) {
             this.currentGeneration++
             this.currentZone = 1
+            // Show congratulations message
+            const newRegionName = GENERATION_NAMES[this.currentGeneration] ?? 'Unknown'
+            this.regionUnlockMessage = `\ud83c\udf89 F\u00e9licitations ! Vous avez d\u00e9bloqu\u00e9 la r\u00e9gion ${newRegionName} !`
+            setTimeout(() => { this.regionUnlockMessage = null }, 5000)
           } else {
             // Last generation — stay at last zone
             this.currentZone = gen.zones.length

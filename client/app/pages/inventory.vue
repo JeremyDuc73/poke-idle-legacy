@@ -12,6 +12,7 @@ import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, getRarityDpsMult, ge
 import type { Rarity } from '~/data/gacha'
 import { getEvolutionStage, getEvoStageMult, EVO_STAGE_MULT } from '~/data/evolutions'
 import { useDaycareStore } from '~/stores/useDaycareStore'
+import { POKEDEX } from '~/data/pokedex'
 
 definePageMeta({
   layout: 'game',
@@ -36,6 +37,11 @@ const search = ref('')
 const filterType = ref<PokemonType | null>(null)
 const filterShiny = ref<boolean | null>(null)
 const filterTeam = ref<boolean | null>(null)
+const filterGen = ref<number | null>(null)
+
+function getPokemonGen(slug: string): number {
+  return POKEDEX.find(p => p.slug === slug)?.gen ?? 1
+}
 
 const filteredCollection = computed(() => {
   let list = [...inventory.collection]
@@ -58,6 +64,11 @@ const filteredCollection = computed(() => {
   // Team filter
   if (filterTeam.value === true) list = list.filter((p) => p.teamSlot !== null)
   else if (filterTeam.value === false) list = list.filter((p) => p.teamSlot === null)
+
+  // Gen filter
+  if (filterGen.value !== null) {
+    list = list.filter((p) => getPokemonGen(p.slug) === filterGen.value)
+  }
 
   // Sort — shinies grouped next to their base forms
   switch (sortBy.value) {
@@ -244,6 +255,17 @@ function getDetailStats(poke: OwnedPokemon) {
         <Shield class="h-3.5 w-3.5" />
         {{ t('Équipe', 'Team') }}
       </button>
+
+      <!-- Gen/Region filter -->
+      <select
+        v-model="filterGen"
+        class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-gray-300 outline-none hover:bg-gray-700 focus:border-blue-500"
+      >
+        <option :value="null">{{ t('Toutes régions', 'All regions') }}</option>
+        <option :value="1">Gen 1 - Kanto</option>
+        <option :value="2">Gen 2 - Johto</option>
+        <option :value="3">Gen 3 - Hoenn</option>
+      </select>
     </div>
 
     <!-- Type filter row -->

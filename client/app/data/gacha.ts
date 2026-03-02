@@ -173,9 +173,6 @@ const JOHTO_POOL: GachaPokemon[] = [
   { nameFr: 'Limagma', nameEn: 'Slugma', slug: 'slugma', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Caratroc', nameEn: 'Shuckle', slug: 'shuckle', rarity: 'common', shinyRate: 0.01 },
   // RARE
-  { nameFr: 'Germignon', nameEn: 'Chikorita', slug: 'chikorita', rarity: 'rare', shinyRate: 0.02 },
-  { nameFr: 'Héricendre', nameEn: 'Cyndaquil', slug: 'cyndaquil', rarity: 'rare', shinyRate: 0.02 },
-  { nameFr: 'Kaiminus', nameEn: 'Totodile', slug: 'totodile', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Feuforêve', nameEn: 'Misdreavus', slug: 'misdreavus', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Cornèbre', nameEn: 'Murkrow', slug: 'murkrow', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Farfuret', nameEn: 'Sneasel', slug: 'sneasel', rarity: 'rare', shinyRate: 0.02 },
@@ -188,8 +185,12 @@ const JOHTO_POOL: GachaPokemon[] = [
   { nameFr: 'Porygon2', nameEn: 'Porygon2', slug: 'porygon2', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Steelix', nameEn: 'Steelix', slug: 'steelix', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Scorplane', nameEn: 'Gligar', slug: 'gligar', rarity: 'rare', shinyRate: 0.02 },
-  { nameFr: 'Embrylex', nameEn: 'Larvitar', slug: 'larvitar', rarity: 'rare', shinyRate: 0.02 },
-  // EPIC
+  { nameFr: 'Embrylex', nameEn: 'Larvitar', slug: 'larvitar', rarity: 'epic', shinyRate: 0.03 },
+  // EPIC STARTERS GEN 2
+  { nameFr: 'Germignon', nameEn: 'Chikorita', slug: 'chikorita', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Héricendre', nameEn: 'Cyndaquil', slug: 'cyndaquil', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Kaiminus', nameEn: 'Totodile', slug: 'totodile', rarity: 'epic', shinyRate: 0.03 },
+  // LEGENDARY
   { nameFr: 'Évoli', nameEn: 'Eevee', slug: 'eevee', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Écremeuh', nameEn: 'Miltank', slug: 'miltank', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Leuphorie', nameEn: 'Blissey', slug: 'blissey', rarity: 'epic', shinyRate: 0.03 },
@@ -252,9 +253,6 @@ const HOENN_POOL: GachaPokemon[] = [
   { nameFr: 'Arakdo', nameEn: 'Surskit', slug: 'surskit', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Rosélia', nameEn: 'Roselia', slug: 'roselia', rarity: 'common', shinyRate: 0.01 },
   // RARE
-  { nameFr: 'Gobou', nameEn: 'Mudkip', slug: 'mudkip', rarity: 'rare', shinyRate: 0.02 },
-  { nameFr: 'Poussifeu', nameEn: 'Torchic', slug: 'torchic', rarity: 'rare', shinyRate: 0.02 },
-  { nameFr: 'Arcko', nameEn: 'Treecko', slug: 'treecko', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Tarsal', nameEn: 'Ralts', slug: 'ralts', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Parecool', nameEn: 'Slakoth', slug: 'slakoth', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Ténéfix', nameEn: 'Sableye', slug: 'sableye', rarity: 'rare', shinyRate: 0.02 },
@@ -275,6 +273,10 @@ const HOENN_POOL: GachaPokemon[] = [
   { nameFr: 'Coquiperl', nameEn: 'Clamperl', slug: 'clamperl', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Éoko', nameEn: 'Chimecho', slug: 'chimecho', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Lovdisc', nameEn: 'Luvdisc', slug: 'luvdisc', rarity: 'epic', shinyRate: 0.03 },
+  // EPIC STARTERS GEN 3
+  { nameFr: 'Gobou', nameEn: 'Mudkip', slug: 'mudkip', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Poussifeu', nameEn: 'Torchic', slug: 'torchic', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Arcko', nameEn: 'Treecko', slug: 'treecko', rarity: 'epic', shinyRate: 0.03 },
   // LEGENDARY
   { nameFr: 'Regirock', nameEn: 'Regirock', slug: 'regirock', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Regice', nameEn: 'Regice', slug: 'regice', rarity: 'legendary', shinyRate: 0.05 },

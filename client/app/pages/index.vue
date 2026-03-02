@@ -82,6 +82,16 @@ function pokemonXpPercent(poke: { level: number; xp: number }): number {
 
 <template>
   <div class="flex flex-col items-center gap-5 select-none">
+    <!-- Region Unlock Message -->
+    <Transition name="slide-down">
+      <div
+        v-if="player.regionUnlockMessage"
+        class="fixed top-20 left-1/2 -translate-x-1/2 z-50 rounded-xl border-2 border-yellow-500 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 px-6 py-4 shadow-2xl backdrop-blur-sm"
+      >
+        <p class="text-lg font-bold text-yellow-300">{{ player.regionUnlockMessage }}</p>
+      </div>
+    </Transition>
+
     <!-- Stage Info -->
     <div class="w-full max-w-md text-center">
       <div class="flex items-center justify-center gap-2 text-sm text-slate-400">
@@ -282,3 +292,19 @@ function pokemonXpPercent(poke: { level: number; xp: number }): number {
     />
   </div>
 </template>
+
+<style scoped>
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 0.5s ease;
+}
+
+.slide-down-enter-from {
+  transform: translate(-50%, -120%);
+  opacity: 0;
+}
+
+.slide-down-leave-to {
+  opacity: 0;
+}
+</style>
