@@ -187,7 +187,7 @@ const JOHTO_POOL: GachaPokemon[] = [
   { nameFr: 'Entei', nameEn: 'Entei', slug: 'entei', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Suicune', nameEn: 'Suicune', slug: 'suicune', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Lugia', nameEn: 'Lugia', slug: 'lugia', rarity: 'legendary', shinyRate: 0.05 },
-  { nameFr: 'Ho-Oh', nameEn: 'Ho-Oh', slug: 'ho-oh', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Ho-Oh', nameEn: 'Ho-Oh', slug: 'hooh', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Celebi', nameEn: 'Celebi', slug: 'celebi', rarity: 'legendary', shinyRate: 0.05 },
 ]
 
@@ -213,6 +213,15 @@ const HOENN_POOL: GachaPokemon[] = [
   { nameFr: 'Limagma', nameEn: 'Slugma', slug: 'slugma', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Posipi', nameEn: 'Plusle', slug: 'plusle', rarity: 'common', shinyRate: 0.01 },
   { nameFr: 'Négapi', nameEn: 'Minun', slug: 'minun', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Chenipotte', nameEn: 'Wurmple', slug: 'wurmple', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Ningale', nameEn: 'Nincada', slug: 'nincada', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Nénupiot', nameEn: 'Lotad', slug: 'lotad', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Grainipiot', nameEn: 'Seedot', slug: 'seedot', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Goélise', nameEn: 'Wingull', slug: 'wingull', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Azurill', nameEn: 'Azurill', slug: 'azurill', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Rosélia', nameEn: 'Roselia', slug: 'roselia', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Gloupti', nameEn: 'Gulpin', slug: 'gulpin', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Morphéo', nameEn: 'Castform', slug: 'castform', rarity: 'common', shinyRate: 0.01 },
   // RARE
   { nameFr: 'Gobou', nameEn: 'Mudkip', slug: 'mudkip', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Poussifeu', nameEn: 'Torchic', slug: 'torchic', rarity: 'rare', shinyRate: 0.02 },

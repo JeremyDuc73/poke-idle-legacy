@@ -325,6 +325,38 @@ export const EVOLUTIONS: Evolution[] = [
   // Fossils
   { fromSlug: 'lileep', toSlug: 'cradily', toNameFr: 'Vacilys', toNameEn: 'Cradily', method: 'level', levelRequired: 40 },
   { fromSlug: 'anorith', toSlug: 'armaldo', toNameFr: 'Armaldo', toNameEn: 'Armaldo', method: 'level', levelRequired: 40 },
+
+  // Multi-evolutions (require specific items to choose path)
+  { fromSlug: 'wurmple', toSlug: 'silcoon', toNameFr: 'Armulys', toNameEn: 'Silcoon', method: 'stone', itemRequired: 'prism-scale' },
+  { fromSlug: 'wurmple', toSlug: 'cascoon', toNameFr: 'Blindalys', toNameEn: 'Cascoon', method: 'stone', itemRequired: 'razor-claw' },
+  { fromSlug: 'silcoon', toSlug: 'beautifly', toNameFr: 'Charmillon', toNameEn: 'Beautifly', method: 'level', levelRequired: 10 },
+  { fromSlug: 'cascoon', toSlug: 'dustox', toNameFr: 'Papinox', toNameEn: 'Dustox', method: 'level', levelRequired: 10 },
+  { fromSlug: 'clamperl', toSlug: 'huntail', toNameFr: 'Serpang', toNameEn: 'Huntail', method: 'stone', itemRequired: 'deep-sea-tooth' },
+  { fromSlug: 'clamperl', toSlug: 'gorebyss', toNameFr: 'Rosabyss', toNameEn: 'Gorebyss', method: 'stone', itemRequired: 'deep-sea-scale' },
+
+  // Bugs & birds
+  { fromSlug: 'nincada', toSlug: 'ninjask', toNameFr: 'Ninjask', toNameEn: 'Ninjask', method: 'level', levelRequired: 20 },
+  { fromSlug: 'wingull', toSlug: 'pelipper', toNameFr: 'Bekipan', toNameEn: 'Pelipper', method: 'level', levelRequired: 25 },
+
+  // Grass
+  { fromSlug: 'lotad', toSlug: 'lombre', toNameFr: 'Lombre', toNameEn: 'Lombre', method: 'level', levelRequired: 14 },
+  { fromSlug: 'lombre', toSlug: 'ludicolo', toNameFr: 'Ludicolo', toNameEn: 'Ludicolo', method: 'stone', itemRequired: 'water-stone' },
+  { fromSlug: 'seedot', toSlug: 'nuzleaf', toNameFr: 'Pifeuil', toNameEn: 'Nuzleaf', method: 'level', levelRequired: 14 },
+  { fromSlug: 'nuzleaf', toSlug: 'shiftry', toNameFr: 'Tengalice', toNameEn: 'Shiftry', method: 'stone', itemRequired: 'leaf-stone' },
+
+  // Baby → base
+  { fromSlug: 'azurill', toSlug: 'marill', toNameFr: 'Marill', toNameEn: 'Marill', method: 'happiness', itemRequired: 'soothe-bell' },
+
+  // Poison
+  { fromSlug: 'gulpin', toSlug: 'swalot', toNameFr: 'Avaltout', toNameEn: 'Swalot', method: 'level', levelRequired: 26 },
+
+  // Fairy (requires item, will evolve in Gen 4+)
+  { fromSlug: 'skitty', toSlug: 'delcatty', toNameFr: 'Delcatty', toNameEn: 'Delcatty', method: 'stone', itemRequired: 'moon-stone' },
+
+  // NOTE: Gen 4+ evolutions (locked until player reaches Gen 4)
+  // Roselia → Roserade requires Shiny Stone (Gen 4)
+  // Togetic → Togekiss requires Shiny Stone (Gen 4)
+  // Murkrow → Honchkrow moved to Gen 4 with Dusk Stone (already added above in Gen 2)
 ]
 
 // Evolution items available for Gen 1
@@ -382,6 +414,42 @@ export const EVO_ITEMS: EvoItem[] = [
     descEn: 'Simulates a trade to evolve a Pokémon',
     icon: '🔗',
     applicableTo: ['kadabra', 'machoke', 'graveler', 'haunter', 'porygon', 'onix', 'scyther', 'seadra'],
+  },
+  {
+    id: 'prism-scale',
+    nameFr: 'Écaille Prisme',
+    nameEn: 'Prism Scale',
+    descFr: 'Chenipotte → Armulys (papillon de jour)',
+    descEn: 'Wurmple → Silcoon (day butterfly)',
+    icon: '🦋',
+    applicableTo: ['wurmple'],
+  },
+  {
+    id: 'razor-claw',
+    nameFr: 'Griffe Rasoir',
+    nameEn: 'Razor Claw',
+    descFr: 'Chenipotte → Blindalys (papillon de nuit)',
+    descEn: 'Wurmple → Cascoon (night moth)',
+    icon: '🦗',
+    applicableTo: ['wurmple'],
+  },
+  {
+    id: 'deep-sea-tooth',
+    nameFr: 'Dent Océan',
+    nameEn: 'Deep Sea Tooth',
+    descFr: 'Coquiperl → Serpang',
+    descEn: 'Clamperl → Huntail',
+    icon: '🦷',
+    applicableTo: ['clamperl'],
+  },
+  {
+    id: 'deep-sea-scale',
+    nameFr: 'Écaille Océan',
+    nameEn: 'Deep Sea Scale',
+    descFr: 'Coquiperl → Rosabyss',
+    descEn: 'Clamperl → Gorebyss',
+    icon: '🐚',
+    applicableTo: ['clamperl'],
   },
   {
     id: 'soothe-bell',
