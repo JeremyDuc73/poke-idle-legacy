@@ -28,8 +28,9 @@ function setGenZone(genId: number, zoneId: number) {
 
 function maxAllPokemon() {
   for (const p of inventory.collection) {
-    p.level = 100
-    p.xp = 0
+    // Use addPokemonXp to trigger evolutions automatically
+    const xpNeeded = 999999999 // Large amount to reach level 100
+    inventory.addPokemonXp(p.id, xpNeeded, player.currentGeneration)
   }
 }
 

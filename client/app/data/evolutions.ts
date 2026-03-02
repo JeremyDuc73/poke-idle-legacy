@@ -265,6 +265,15 @@ export const EVOLUTIONS: Evolution[] = [
   { fromSlug: 'elekid', toSlug: 'electabuzz', toNameFr: 'Élektek', toNameEn: 'Electabuzz', method: 'happiness', itemRequired: 'soothe-bell' },
   { fromSlug: 'magby', toSlug: 'magmar', toNameFr: 'Magmar', toNameEn: 'Magmar', method: 'happiness', itemRequired: 'soothe-bell' },
 
+  // Electric/Water
+  { fromSlug: 'chinchou', toSlug: 'lanturn', toNameFr: 'Lanturn', toNameEn: 'Lanturn', method: 'level', levelRequired: 27 },
+
+  // Bug
+  { fromSlug: 'pineco', toSlug: 'forretress', toNameFr: 'Foretress', toNameEn: 'Forretress', method: 'level', levelRequired: 31 },
+
+  // Ground
+  { fromSlug: 'phanpy', toSlug: 'donphan', toNameFr: 'Donphan', toNameEn: 'Donphan', method: 'level', levelRequired: 25 },
+
   // ══════════════ Gen 3 Hoenn ══════════════
   // Starters
   { fromSlug: 'treecko', toSlug: 'grovyle', toNameFr: 'Massko', toNameEn: 'Grovyle', method: 'level', levelRequired: 16 },
@@ -349,6 +358,25 @@ export const EVOLUTIONS: Evolution[] = [
 
   // Poison
   { fromSlug: 'gulpin', toSlug: 'swalot', toNameFr: 'Avaltout', toNameEn: 'Swalot', method: 'level', levelRequired: 26 },
+
+  // Grass
+  { fromSlug: 'shroomish', toSlug: 'breloom', toNameFr: 'Chapignon', toNameEn: 'Breloom', method: 'level', levelRequired: 23 },
+
+  // Fighting
+  { fromSlug: 'meditite', toSlug: 'medicham', toNameFr: 'Charmina', toNameEn: 'Medicham', method: 'level', levelRequired: 37 },
+
+  // Dragon/Flying
+  { fromSlug: 'swablu', toSlug: 'altaria', toNameFr: 'Altaria', toNameEn: 'Altaria', method: 'level', levelRequired: 35 },
+
+  // Water/Ground
+  { fromSlug: 'barboach', toSlug: 'whiscash', toNameFr: 'Barbicha', toNameEn: 'Whiscash', method: 'level', levelRequired: 30 },
+  { fromSlug: 'corphish', toSlug: 'crawdaunt', toNameFr: 'Colhomard', toNameEn: 'Crawdaunt', method: 'level', levelRequired: 30 },
+
+  // Ice
+  { fromSlug: 'snorunt', toSlug: 'glalie', toNameFr: 'Oniglali', toNameEn: 'Glalie', method: 'level', levelRequired: 42 },
+
+  // Baby → base
+  { fromSlug: 'wynaut', toSlug: 'wobbuffet', toNameFr: 'Qulbutoké', toNameEn: 'Wobbuffet', method: 'level', levelRequired: 15 },
 
   // Fairy (requires item, will evolve in Gen 4+)
   { fromSlug: 'skitty', toSlug: 'delcatty', toNameFr: 'Delcatty', toNameEn: 'Delcatty', method: 'stone', itemRequired: 'moon-stone' },
