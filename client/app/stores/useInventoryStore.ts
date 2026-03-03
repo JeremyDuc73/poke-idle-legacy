@@ -258,5 +258,33 @@ export const useInventoryStore = defineStore('inventory', {
         }
       }
     },
+
+    // Migrate starter evolutions to epic rarity
+    migrateStarterRarities() {
+      const starterSlugs = new Set([
+        // Gen 1
+        'bulbasaur', 'ivysaur', 'venusaur',
+        'charmander', 'charmeleon', 'charizard',
+        'squirtle', 'wartortle', 'blastoise',
+        // Gen 2
+        'chikorita', 'bayleef', 'meganium',
+        'cyndaquil', 'quilava', 'typhlosion',
+        'totodile', 'croconaw', 'feraligatr',
+        // Gen 3
+        'treecko', 'grovyle', 'sceptile',
+        'torchic', 'combusken', 'blaziken',
+        'mudkip', 'marshtomp', 'swampert',
+        // Gen 4
+        'turtwig', 'grotle', 'torterra',
+        'chimchar', 'monferno', 'infernape',
+        'piplup', 'prinplup', 'empoleon',
+      ])
+
+      for (const pokemon of this.collection) {
+        if (starterSlugs.has(pokemon.slug) && pokemon.rarity !== 'epic') {
+          pokemon.rarity = 'epic'
+        }
+      }
+    },
   },
 })

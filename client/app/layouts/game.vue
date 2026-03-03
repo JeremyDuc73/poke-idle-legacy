@@ -29,6 +29,9 @@ onMounted(() => {
   // Migrate rarities for existing Pokemon (starters Gen 2/3 rare → epic)
   inventory.migrateRarities()
 
+  // Migrate starter evolutions to epic (fix for existing Pokemon)
+  inventory.migrateStarterRarities()
+
   // Check evolutions on mount
   inventory.checkAllEvolutions(player.currentGeneration)
 
