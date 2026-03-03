@@ -204,6 +204,18 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
       <span class="font-pixel text-base text-red-400">{{ combat.bossTimeRemaining }}s</span>
     </div>
 
+    <!-- Boss Team Preview (colonne gauche HORS carte) -->
+    <div v-if="combat.enemy && combat.isBossFight && zone?.boss" class="flex flex-col gap-2">
+      <img
+        v-for="(p, i) in zone.boss.team"
+        :key="i"
+        :src="getSpriteUrl(p.slug)"
+        :alt="t(p.nameFr, p.nameEn)"
+        class="h-16 w-16 rounded-xl border-2 border-slate-700 bg-slate-800/90 object-contain p-2 shadow-lg transition-transform hover:scale-110"
+        :title="t(p.nameFr, p.nameEn)"
+      />
+    </div>
+
     <!-- Enemy Display -->
     <div
       v-if="combat.enemy"
@@ -258,35 +270,6 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
         </div>
       </div>
 
-      <!-- Rewards Preview (gauche, en colonne) -->
-      <div class="absolute left-4 top-1/2 z-0 flex -translate-y-1/2 flex-col gap-3">
-        <div class="flex items-center gap-2 rounded-xl border-2 border-slate-700/50 bg-slate-800/95 px-3 py-2 shadow-lg backdrop-blur-sm">
-          <span class="text-xl">🪙</span>
-          <div class="text-left">
-            <p class="text-[10px] text-slate-400">{{ t('Or', 'Gold') }}</p>
-            <p class="text-sm font-bold text-yellow-400">+{{ combat.enemy.goldReward }}</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 rounded-xl border-2 border-slate-700/50 bg-slate-800/95 px-3 py-2 shadow-lg backdrop-blur-sm">
-          <span class="text-xl">✦</span>
-          <div class="text-left">
-            <p class="text-[10px] text-slate-400">XP</p>
-            <p class="text-sm font-bold text-blue-400">+{{ combat.enemy.xpReward }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Boss Team Preview (positionné sous l'info box) -->
-      <div v-if="combat.isBossFight && zone?.boss" class="absolute bottom-4 right-4 z-0 flex gap-1.5">
-        <img
-          v-for="(p, i) in zone.boss.team"
-          :key="i"
-          :src="getSpriteUrl(p.slug)"
-          :alt="t(p.nameFr, p.nameEn)"
-          class="h-10 w-10 rounded-lg border-2 border-slate-700 bg-slate-800/90 object-contain p-1 shadow-lg transition-transform hover:scale-110"
-          :title="t(p.nameFr, p.nameEn)"
-        />
-      </div>
 
       <!-- Zone de combat centrale -->
       <div class="flex flex-col items-center gap-6 px-6 pb-8 pt-40">
@@ -311,6 +294,24 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
           </button>
         </div>
 
+      </div>
+    </div>
+
+    <!-- Rewards Preview (sous la carte, centré) -->
+    <div v-if="combat.enemy" class="flex gap-4">
+      <div class="flex items-center gap-2 rounded-xl border-2 border-slate-700/50 bg-slate-800/95 px-4 py-2 shadow-lg backdrop-blur-sm">
+        <span class="text-xl">🪙</span>
+        <div class="text-left">
+          <p class="text-[10px] text-slate-400">{{ t('Or', 'Gold') }}</p>
+          <p class="text-sm font-bold text-yellow-400">+{{ combat.enemy.goldReward }}</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 rounded-xl border-2 border-slate-700/50 bg-slate-800/95 px-4 py-2 shadow-lg backdrop-blur-sm">
+        <span class="text-xl">✦</span>
+        <div class="text-left">
+          <p class="text-[10px] text-slate-400">XP</p>
+          <p class="text-sm font-bold text-blue-400">+{{ combat.enemy.xpReward }}</p>
+        </div>
       </div>
     </div>
 
