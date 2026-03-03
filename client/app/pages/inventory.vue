@@ -346,6 +346,7 @@ function getDetailStats(poke: OwnedPokemon) {
         <option :value="1">Gen 1 - Kanto</option>
         <option :value="2">Gen 2 - Johto</option>
         <option :value="3">Gen 3 - Hoenn</option>
+        <option :value="4">Gen 4 - Sinnoh</option>
       </select>
     </div>
 
