@@ -486,6 +486,71 @@ function toggleGen(id: number) {
     <!-- ═══════════════ PATCH NOTES TAB ═══════════════ -->
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
 
+      <!-- v1.1.0 -->
+      <article class="rounded-xl border border-cyan-500/50 bg-cyan-900/20 p-5">
+        <h3 class="mb-3 text-lg font-bold text-cyan-300">v1.1.0 — Doubles Types & Équilibrage — 3 Mars 2026</h3>
+        
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Mise à jour majeure ajoutant l\'intelligence tactique des doubles types et un rééquilibrage complet de la difficulté !', 'Major update adding dual-type tactical intelligence and complete difficulty rebalance!') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-cyan-400">🎨 {{ t('Interface Combat Améliorée', 'Improved Combat Interface') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Layout desktop 2 colonnes : combat/stats à gauche, équipe à droite (plus de scroll)', 'Desktop 2-column layout: combat/stats left, team right (no more scrolling)') }}</li>
+              <li>{{ t('Boss Team Preview repositionnée en ligne au-dessus de la carte', 'Boss Team Preview repositioned in a line above the card') }}</li>
+              <li>{{ t('Récompenses (Or/XP) affichées sous la carte, bien centrées', 'Rewards (Gold/XP) displayed under the card, centered') }}</li>
+              <li>{{ t('HP des ennemis affichés en nombres arrondis (plus de décimales)', 'Enemy HP displayed as rounded numbers (no more decimals)') }}</li>
+              <li>{{ t('Layout mobile conservé intact pour une meilleure expérience tactile', 'Mobile layout kept intact for better touch experience') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-cyan-400">⚔️ {{ t('Intelligence Tactique - Doubles Types', 'Tactical Intelligence - Dual Types') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Système intelligent : les Pokémon double-type utilisent automatiquement leur MEILLEUR type offensif', 'Smart system: dual-type Pokémon automatically use their BEST offensive type') }}</li>
+              <li>{{ t('Calcul : Math.max(type1, type2) contre chaque ennemi', 'Calculation: Math.max(type1, type2) against each enemy') }}</li>
+              <li>{{ t('Exemple : Bulbizarre (Plante/Poison) vs Aquali → utilise Plante ×2', 'Example: Bulbasaur (Grass/Poison) vs Vaporeon → uses Grass ×2') }}</li>
+              <li>{{ t('Exemple : Léviator (Eau/Vol) vs Florizarre → utilise Vol ×2 (meilleur que Eau ×0.5)', 'Example: Gyarados (Water/Flying) vs Venusaur → uses Flying ×2 (better than Water ×0.5)') }}</li>
+              <li>{{ t('Affichage complet des doubles types dans l\'inventaire et le combat', 'Full dual-type display in inventory and combat') }}</li>
+              <li>{{ t('Fiche Pokémon mise à jour : table des types montre le meilleur multiplicateur', 'Pokémon card updated: type chart shows best multiplier') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-cyan-400">⚖️ {{ t('Rééquilibrage Difficulté', 'Difficulty Rebalance') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('XP Joueur : base 75→120 (+60%), exposant 1.9→2.0 = progression ~60% plus lente', 'Player XP: base 75→120 (+60%), exponent 1.9→2.0 = ~60% slower progression') }}</li>
+              <li>{{ t('XP Pokémons : base 20→35 (+75%), exposant 1.6→1.7 = progression ~75% plus lente', 'Pokémon XP: base 20→35 (+75%), exponent 1.6→1.7 = ~75% slower progression') }}</li>
+              <li>{{ t('Scaling niveau 50+ : 3%→5% par niveau (encore plus difficile en fin de game)', 'Level 50+ scaling: 3%→5% per level (even harder late game)') }}</li>
+              <li>{{ t('Dégâts clics réduits de 50% : niveau×2→×1, badges×10→×5', 'Click damage reduced by 50%: level×2→×1, badges×10→×5') }}</li>
+              <li>{{ t('HP sauvages ×3 : multiplicateur 0.12→0.35 (combats 2-3× plus longs)', 'Wild HP ×3: multiplier 0.12→0.35 (fights 2-3× longer)') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-cyan-400">🐛 {{ t('Corrections', 'Bug Fixes') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Fix : balises HTML mal fermées causant des erreurs de compilation', 'Fix: improperly closed HTML tags causing compilation errors') }}</li>
+              <li>{{ t('Fix : sprites des Pokémon qui chevauchaient les éléments d\'interface', 'Fix: Pokémon sprites overlapping UI elements') }}</li>
+              <li>{{ t('Fix : affichage HP avec trop de décimales (maintenant arrondis)', 'Fix: HP display with too many decimals (now rounded)') }}</li>
+            </ul>
+          </div>
+
+          <div class="rounded-lg border border-cyan-600/30 bg-cyan-950/30 p-3">
+            <h4 class="mb-2 text-sm font-semibold text-cyan-300">📊 {{ t('Impact Global', 'Overall Impact') }}</h4>
+            <ul class="space-y-1 text-xs text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('✅ Progression plus équilibrée - le jeu n\'est plus trop facile', '✅ More balanced progression - game is no longer too easy') }}</li>
+              <li>{{ t('✅ Stratégie de type améliorée - doubles types offrent avantages tactiques', '✅ Enhanced type strategy - dual types offer tactical advantages') }}</li>
+              <li>{{ t('✅ Équipe primordiale - les clics seuls ne suffisent plus', '✅ Team is essential - clicks alone are no longer enough') }}</li>
+              <li>{{ t('✅ Interface épurée - plus de chevauchements visuels', '✅ Clean interface - no more visual overlaps') }}</li>
+              <li>{{ t('✅ Combats plus engageants - durée augmentée pour plus de profondeur', '✅ More engaging battles - increased duration for more depth') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
       <article class="rounded-xl border border-emerald-500/50 bg-emerald-900/20 p-5">
         <h3 class="mb-3 text-lg font-bold text-emerald-300">v1.0.0 — Release Officielle — Mars 2026</h3>
         
