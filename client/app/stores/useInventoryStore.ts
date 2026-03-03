@@ -286,5 +286,61 @@ export const useInventoryStore = defineStore('inventory', {
         }
       }
     },
+
+    // Migrate Gen 4 evolutions to correct rarity based on their base form
+    migrateGen4Evolutions() {
+      // Map: evolution slug → correct rarity based on base form
+      const evolutionRarities: Record<string, 'common' | 'rare' | 'epic'> = {
+        // Budew → Roselia → Roserade (common line)
+        'roserade': 'common',
+        // Burmy → Wormadam/Mothim (common)
+        'wormadam': 'common',
+        'mothim': 'common',
+        // Aipom → Ambipom (common)
+        'ambipom': 'common',
+        // Sneasel → Weavile (rare)
+        'weavile': 'rare',
+        // Magneton → Magnezone (rare - from Magnemite common)
+        'magnezone': 'rare',
+        // Lickitung → Lickilicky (rare)
+        'lickilicky': 'rare',
+        // Rhydon → Rhyperior (rare)
+        'rhyperior': 'rare',
+        // Tangela → Tangrowth (rare)
+        'tangrowth': 'rare',
+        // Electabuzz → Electivire (rare)
+        'electivire': 'rare',
+        // Magmar → Magmortar (rare)
+        'magmortar': 'rare',
+        // Togetic → Togekiss (epic - from Togepi)
+        'togekiss': 'epic',
+        // Yanma → Yanmega (common)
+        'yanmega': 'common',
+        // Eevee → Glaceon/Leafeon (epic)
+        'glaceon': 'epic',
+        'leafeon': 'epic',
+        // Gligar → Gliscor (rare)
+        'gliscor': 'rare',
+        // Piloswine → Mamoswine (common from Swinub)
+        'mamoswine': 'common',
+        // Porygon2 → Porygon-Z (rare)
+        'porygonz': 'rare',
+        // Kirlia → Gallade (rare from Ralts)
+        'gallade': 'rare',
+        // Mime Jr. → Mr. Mime (common)
+        'mrmime': 'rare', // Actually Mr. Mime is rare in gacha
+        // Dusclops → Dusknoir (rare from Duskull)
+        'dusknoir': 'rare',
+        // Snorunt → Froslass (common)
+        'froslass': 'common',
+      }
+
+      for (const pokemon of this.collection) {
+        const correctRarity = evolutionRarities[pokemon.slug]
+        if (correctRarity && pokemon.rarity !== correctRarity) {
+          pokemon.rarity = correctRarity
+        }
+      }
+    },
   },
 })
