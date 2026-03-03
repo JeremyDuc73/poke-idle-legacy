@@ -1,8 +1,6 @@
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useSpeciesCache } from '~/composables/useSpeciesCache'
 
-const PUBLIC_ROUTES = ['/login', '/pokedex', '/guide']
-
 let initialized = false
 
 export default defineNuxtRouteMiddleware(async (to) => {
@@ -19,11 +17,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
     initialized = true
   }
 
-  // Allow public routes
-  if (PUBLIC_ROUTES.includes(to.path)) return
+  // Login page is always accessible
+  if (to.path === '/login') return
 
-  // Redirect unauthenticated users to login
-  if (!auth.isAuthenticated) {
-    return navigateTo('/login')
-  }
+  // All other pages are accessible in guest mode
+  // Users can play without authentication
 })
