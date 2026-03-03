@@ -4,7 +4,7 @@ import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useDaycareStore } from '~/stores/useDaycareStore'
 import { getSpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
 import { getZone } from '~/data/zones'
-import { getPokemonType, getEffectiveness } from '~/data/types'
+import { getPokemonType, getPokemonTypes, getTypeEffectiveness } from '~/data/types'
 import { getRarityDpsMult, getStarDpsMult } from '~/data/gacha'
 import { getEvoStageMult } from '~/data/evolutions'
 import type { Rarity } from '~/data/gacha'
@@ -23,14 +23,15 @@ export function useCombatLoop() {
   // base = level (1 at lv1, 100 at lv100)
   // permanent multipliers: evo stage (x1.2/x1.4), rarity (x1.1/x1.5/x2.0), shiny (x1.2)
   // type-dependent: effectiveness table
-  function getPokeDps(poke: { slug: string; level: number; stars: number; isShiny: boolean; rarity?: Rarity }, enemyType?: PokemonType) {
+  function getPokeDps(poke: { slug: string; level: number; stars: number; isShiny: boolean; rarity?: Rarity }, enemyTypes?: PokemonType[]) {
     const baseDmg = poke.level
     const evoMult = getEvoStageMult(poke.slug)
     const rarityMult = poke.rarity ? getRarityDpsMult(poke.slug) : 1.0
     const shinyMult = poke.isShiny ? 1.2 : 1.0
     const starMult = getStarDpsMult(poke.stars, poke.isShiny)
     const pokeType = getPokemonType(poke.slug)
-    const typeMult = enemyType ? getEffectiveness(pokeType, enemyType) : 1
+    // Calculer effectiveness contre tous les types défenseurs (multiplicatif)
+    const typeMult = enemyTypes && enemyTypes.length > 0 ? getTypeEffectiveness(pokeType, enemyTypes) : 1
     const permanentDps = Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult)
     return {
       baseDmg,
@@ -43,12 +44,12 @@ export function useCombatLoop() {
     }
   }
 
-  function getEffectiveDps(enemyType: PokemonType): number {
+  function getEffectiveDps(enemyTypes: PokemonType[]): number {
     const team = inventory.team
     if (team.length === 0) return 0
     let total = 0
     for (const poke of team) {
-      total += getPokeDps(poke, enemyType).effectiveDps
+      total += getPokeDps(poke, enemyTypes).effectiveDps
     }
     return total
   }
@@ -85,7 +86,7 @@ export function useCombatLoop() {
       nameFr: `${poke.nameFr} sauvage`,
       nameEn: `Wild ${poke.nameEn}`,
       slug: poke.slug,
-      type: poke.type,
+      types: getPokemonTypes(poke.slug),
       spriteUrl: getSpriteUrl(poke.slug),
       maxHp: hp,
       currentHp: hp,
@@ -100,12 +101,12 @@ export function useCombatLoop() {
   function spawnBoss(boss: BossTrainer, difficulty: number) {
     const zone = player.currentZone
     const totalHp = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0) * (1 + zone * 0.1)
-    const bossType = getPokemonType(boss.team[0]?.slug ?? 'normal')
+    const bossTypes = getPokemonTypes(boss.team[0]?.slug ?? 'normal')
     combat.setEnemy({
       nameFr: `Boss : ${boss.nameFr}`,
       nameEn: `Boss: ${boss.nameEn}`,
       slug: boss.slug,
-      type: bossType,
+      types: bossTypes,
       spriteUrl: getTrainerSpriteUrl(boss.slug),
       maxHp: totalHp,
       currentHp: totalHp,
@@ -161,7 +162,7 @@ export function useCombatLoop() {
     // Override autoAttackTick to use type-effective DPS + player level multiplier
     combat.overrideAutoAttack = () => {
       if (!combat.enemy || combat.enemy.currentHp <= 0) return
-      const baseDps = getEffectiveDps(combat.enemy.type)
+      const baseDps = getEffectiveDps(combat.enemy.types)
       if (baseDps <= 0) return
       const playerLevelMult = 1 + (player.level - 1) * 0.02
       const effectiveDps = Math.round(baseDps * playerLevelMult)

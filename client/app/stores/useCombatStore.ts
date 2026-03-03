@@ -5,7 +5,7 @@ export interface Enemy {
   nameFr: string
   nameEn: string
   slug: string
-  type: PokemonType
+  types: PokemonType[]  // Support pour doubles types
   spriteUrl: string
   maxHp: number
   currentHp: number

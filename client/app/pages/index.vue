@@ -58,13 +58,13 @@ const zoneName = computed(() => {
 
 const effectiveDps = computed(() => {
   if (!combat.enemy) return 0
-  return getEffectiveDps(combat.enemy.type)
+  return getEffectiveDps(combat.enemy.types)
 })
 
 const teamBreakdown = computed(() => {
-  const enemyType = combat.enemy?.type
+  const enemyTypes = combat.enemy?.types ?? []
   return inventory.team.map((poke) => {
-    const stats = getPokeDps(poke, enemyType)
+    const stats = getPokeDps(poke, enemyTypes)
     return { ...poke, ...stats, pokeType: getPokemonType(poke.slug) }
   })
 })
@@ -213,8 +213,8 @@ function pokemonXpPercent(poke: { level: number; xp: number }): number {
           <span class="text-center font-pixel text-sm font-bold" :class="combat.isBossFight ? 'text-red-400' : 'text-blue-400'">
             {{ t(combat.enemy.nameFr, combat.enemy.nameEn) }}
           </span>
-          <div class="flex items-center justify-center">
-            <TypeBadge :type="combat.enemy.type" size="sm" />
+          <div class="flex items-center justify-center gap-1">
+            <TypeBadge v-for="type in combat.enemy.types" :key="type" :type="type" size="sm" />
           </div>
         </div>
         <div class="mb-3 flex items-center justify-center gap-2">

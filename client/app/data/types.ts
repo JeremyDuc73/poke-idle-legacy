@@ -61,6 +61,13 @@ export function getEffectiveness(attacker: PokemonType, defender: PokemonType): 
   return CHART[attacker]?.[defender] ?? 1
 }
 
+// Calcul effectiveness contre plusieurs types défenseurs (multiplicatif comme dans Pokémon)
+export function getTypeEffectiveness(attackerType: PokemonType, defenderTypes: PokemonType[]): number {
+  return defenderTypes.reduce((mult, defType) => {
+    return mult * getEffectiveness(attackerType, defType)
+  }, 1.0)
+}
+
 // ── Slug → PokemonType mapping ──────────────────────────────────────
 // Peut être un type simple (string) ou double type (array de 2)
 const POKEMON_TYPES: Record<string, PokemonType | [PokemonType, PokemonType]> = {
