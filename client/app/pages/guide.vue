@@ -487,7 +487,7 @@ function toggleGen(id: number) {
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
 
       <article class="rounded-xl border border-emerald-500/50 bg-emerald-900/20 p-5">
-        <h3 class="mb-3 text-lg font-bold text-emerald-300">🚀 v1.0.0 — Release Officielle — Mars 2026</h3>
+        <h3 class="mb-3 text-lg font-bold text-emerald-300">v1.0.0 — Release Officielle — Mars 2026</h3>
         
         <p class="mb-4 text-sm text-gray-300 italic">
           {{ t('Première version stable de Poke-Idle Legacy avec toutes les fonctionnalités principales !', 'First stable release of Poke-Idle Legacy with all core features!') }}
@@ -495,7 +495,7 @@ function toggleGen(id: number) {
 
         <div class="space-y-4">
           <div>
-            <h4 class="mb-2 text-sm font-semibold text-emerald-400">🎮 {{ t('Système de Combat', 'Combat System') }}</h4>
+            <h4 class="mb-2 text-sm font-semibold text-emerald-400">{{ t('Système de Combat', 'Combat System') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
               <li>{{ t('Combat automatique idle avec DPS d\'équipe calculé en temps réel', 'Automatic idle combat with real-time team DPS calculation') }}</li>
               <li>{{ t('Système de clics manuels avec bonus de dégâts personnalisables', 'Manual click system with customizable damage bonuses') }}</li>
@@ -506,7 +506,7 @@ function toggleGen(id: number) {
           </div>
 
           <div>
-            <h4 class="mb-2 text-sm font-semibold text-emerald-400">✨ {{ t('Système Gacha', 'Gacha System') }}</h4>
+            <h4 class="mb-2 text-sm font-semibold text-emerald-400">{{ t('Système Gacha', 'Gacha System') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
               <li>{{ t('4 raretés : Commun (×1), Rare (×1.5), Épique (×2), Légendaire (×4)', '4 rarities: Common (×1), Rare (×1.5), Epic (×2), Legendary (×4)') }}</li>
               <li>{{ t('Système de doublons : 5 étoiles maximum (×1 à ×1.8)', 'Duplicate system: 5 stars maximum (×1 to ×1.8)') }}</li>
@@ -517,7 +517,7 @@ function toggleGen(id: number) {
           </div>
 
           <div>
-            <h4 class="mb-2 text-sm font-semibold text-emerald-400">🔄 {{ t('Évolutions', 'Evolutions') }}</h4>
+            <h4 class="mb-2 text-sm font-semibold text-emerald-400">{{ t('Évolutions', 'Evolutions') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
               <li>{{ t('Évolutions par niveau avec seuils spécifiques', 'Level-based evolutions with specific thresholds') }}</li>
               <li>{{ t('Évolutions par pierre (Feu, Eau, Plante, Foudre, Lune, Soleil)', 'Stone evolutions (Fire, Water, Leaf, Thunder, Moon, Sun)') }}</li>
@@ -529,7 +529,7 @@ function toggleGen(id: number) {
           </div>
 
           <div>
-            <h4 class="mb-2 text-sm font-semibold text-emerald-400">🥚 {{ t('Pension (Daycare)', 'Daycare') }}</h4>
+            <h4 class="mb-2 text-sm font-semibold text-emerald-400">{{ t('Pension (Daycare)', 'Daycare') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
               <li>{{ t('5 slots de pension simultanés', '5 simultaneous daycare slots') }}</li>
               <li>{{ t('Éclosion basée sur les dégâts infligés en combat', 'Hatching based on combat damage dealt') }}</li>
@@ -540,7 +540,7 @@ function toggleGen(id: number) {
           </div>
 
           <div>
-            <h4 class="mb-2 text-sm font-semibold text-emerald-400">🏪 {{ t('Boutique', 'Shop') }}</h4>
+            <h4 class="mb-2 text-sm font-semibold text-emerald-400">{{ t('Boutique', 'Shop') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
               <li>{{ t('Améliorations permanentes : Click Damage (+10/20/30%) et Team DPS (+15/30/50%)', 'Permanent upgrades: Click Damage (+10/20/30%) and Team DPS (+15/30/50%)') }}</li>
               <li>{{ t('Bonbons XP : S (100 XP), M (500), L (2k), XL (10k)', 'XP Candies: S (100 XP), M (500), L (2k), XL (10k)') }}</li>
@@ -550,7 +550,7 @@ function toggleGen(id: number) {
           </div>
 
           <div>
-            <h4 class="mb-2 text-sm font-semibold text-emerald-400">🗺️ {{ t('Contenu', 'Content') }}</h4>
+            <h4 class="mb-2 text-sm font-semibold text-emerald-400">{{ t('Contenu', 'Content') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
               <li>{{ t('3 générations complètes : Kanto (13 zones), Johto (16 zones), Hoenn (24 zones)', '3 complete generations: Kanto (13 zones), Johto (16 zones), Hoenn (24 zones)') }}</li>
               <li>{{ t('53 zones totales avec boss uniques et équipes thématiques', '53 total zones with unique bosses and themed teams') }}</li>
@@ -561,29 +561,18 @@ function toggleGen(id: number) {
           </div>
 
           <div>
-            <h4 class="mb-2 text-sm font-semibold text-emerald-400">👤 {{ t('Mode Invité & Sauvegarde', 'Guest Mode & Saves') }}</h4>
+            <h4 class="mb-2 text-sm font-semibold text-emerald-400">{{ t('Mode Invité & Sauvegarde', 'Guest Mode & Saves') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
               <li>{{ t('Mode invité avec sauvegarde localStorage complète', 'Guest mode with full localStorage save') }}</li>
               <li>{{ t('Sauvegarde automatique toutes les 10 secondes', 'Auto-save every 10 seconds') }}</li>
               <li>{{ t('Synchronisation cloud pour comptes authentifiés', 'Cloud sync for authenticated accounts') }}</li>
-              <li>{{ t('Système AFK : récompenses d\'or basées sur le temps d\'absence', 'AFK system: gold rewards based on time away') }}</li>
             </ul>
           </div>
 
           <div>
-            <h4 class="mb-2 text-sm font-semibold text-emerald-400">🔐 {{ t('Authentification', 'Authentication') }}</h4>
+            <h4 class="mb-2 text-sm font-semibold text-emerald-400">{{ t('Interface', 'Interface') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
-              <li>{{ t('Connexion email/mot de passe', 'Email/password login') }}</li>
-              <li>{{ t('OAuth Google pour connexion rapide', 'Google OAuth for quick login') }}</li>
-              <li>{{ t('Système de rôles (utilisateur/admin)', 'Role system (user/admin)') }}</li>
-              <li>{{ t('Dashboard admin avec gestion complète', 'Admin dashboard with full management') }}</li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 class="mb-2 text-sm font-semibold text-emerald-400">🎨 {{ t('Interface', 'Interface') }}</h4>
-            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
-              <li>{{ t('Design moderne avec Tailwind CSS et composants shadcn/ui', 'Modern design with Tailwind CSS and shadcn/ui components') }}</li>
+              <li>{{ t('Design inspiré de l\'univers Pokémon', 'Pokémon-inspired design') }}</li>
               <li>{{ t('Filtres avancés : génération, rareté, type, équipe', 'Advanced filters: generation, rarity, type, team') }}</li>
               <li>{{ t('Tri personnalisable : niveau, DPS, étoiles, alphabétique', 'Custom sorting: level, DPS, stars, alphabetical') }}</li>
               <li>{{ t('Équipes sauvegardées (jusqu\'à 5 compositions)', 'Saved teams (up to 5 compositions)') }}</li>

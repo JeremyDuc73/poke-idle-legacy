@@ -19,9 +19,7 @@ const { init: initCombat } = useCombatLoop()
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null
 
 function saveOnUnload() {
-  if (auth.isAuthenticated) {
-    auth.saveGameState(true)
-  }
+  auth.saveGameState(true)
 }
 
 onMounted(() => {
@@ -31,10 +29,9 @@ onMounted(() => {
   // Migrate rarities for existing Pokemon (starters Gen 2/3 rare → epic)
   inventory.migrateRarities()
 
+  // Auto-save every 10s (works for both authenticated and guest mode)
   autoSaveInterval = setInterval(() => {
-    if (auth.isAuthenticated) {
-      auth.saveGameState()
-    }
+    auth.saveGameState()
   }, 10_000)
 
   window.addEventListener('beforeunload', saveOnUnload)
@@ -49,31 +46,26 @@ function toggleLocale() {
   setLocale(locale.value === 'fr' ? 'en' : 'fr')
 }
 
-const publicNavItems = computed(() => [
-  { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide' },
-  { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex' },
-])
-
-const authNavItems = computed(() => [
-  { label: t('Combat', 'Combat'), icon: Swords, to: '/' },
-  { label: t('Inventaire', 'Inventory'), icon: Backpack, to: '/inventory' },
-  { label: t('Invocation', 'Gacha'), icon: Star, to: '/gacha' },
-  { label: t('Pension', 'Daycare'), icon: Egg, to: '/daycare' },
-  { label: t('Badges', 'Badges'), icon: Award, to: '/badges' },
-  { label: t('Boutique', 'Shop'), icon: ShoppingBag, to: '/shop' },
-  { label: t('Profil', 'Profile'), icon: User, to: '/profile' },
-])
-
-const adminNavItems = computed(() => [
-  { label: 'Admin', icon: Shield, to: '/admin' },
-  { label: 'Debug', icon: Bug, to: '/debug' },
-])
-
-const navItems = computed(() => [
-  ...publicNavItems.value,
-  ...(auth.isAuthenticated ? authNavItems.value : []),
-  ...(auth.user?.role === 'admin' ? adminNavItems.value : []),
-])
+const navItems = computed(() => {
+  const items = [
+    { label: t('Combat', 'Combat'), icon: Swords, to: '/' },
+    { label: t('Inventaire', 'Inventory'), icon: Backpack, to: '/inventory' },
+    { label: t('Invocation', 'Gacha'), icon: Star, to: '/gacha' },
+    { label: t('Pension', 'Daycare'), icon: Egg, to: '/daycare' },
+    { label: t('Badges', 'Badges'), icon: Award, to: '/badges' },
+    { label: t('Boutique', 'Shop'), icon: ShoppingBag, to: '/shop' },
+    { label: t('Profil', 'Profile'), icon: User, to: '/profile' },
+    { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide' },
+    { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex' },
+  ]
+  
+  if (auth.user?.role === 'admin') {
+    items.push({ label: 'Admin', icon: Shield, to: '/admin' })
+    items.push({ label: 'Debug', icon: Bug, to: '/debug' })
+  }
+  
+  return items
+})
 </script>
 
 <template>
@@ -88,29 +80,30 @@ const navItems = computed(() => [
       </div>
 
       <!-- Trainer Level -->
-      <div v-if="auth.isAuthenticated" class="mb-2 flex w-full flex-col items-center gap-1 px-3">
+      <div class="mb-2 flex w-full flex-col items-center gap-1 px-3">
         <div class="flex w-full items-center justify-between text-xs">
-          <span class="font-bold" style="color: #60a5fa">Lv.{{ player.level }}</span>
-          <span class="text-gray-500 text-[10px]">{{ player.xp }}/{{ player.xpToNextLevel }}</span>
+          <span class="font-bold" style="color: #60a5fa">{{ auth.isAuthenticated ? player.username : t('Invité', 'Guest') }}</span>
+          <span class="font-bold" style="color: #ffcc00">Lv.{{ player.level }}</span>
         </div>
-        <div class="h-2 w-full overflow-hidden rounded-full bg-[#0f172a]">
-          <div class="pk-xp-bar h-full rounded-full transition-all duration-500" :style="{ width: `${player.xpPercent}%` }" />
+        <div class="h-2.5 w-full overflow-hidden rounded-full" style="background: #1e3a5f; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5)">
+          <div class="h-full rounded-full transition-all duration-500" style="background: linear-gradient(to right, #3b82f6, #60a5fa); box-shadow: 0 0 8px rgba(96,165,250,0.6)" :style="{ width: `${player.xpPercent}%` }" />
         </div>
-        <div class="hidden w-full flex-col gap-0.5 text-[9px] text-slate-500 lg:flex">
-          <div class="flex justify-between"><span>⚔️ {{ t('DPS équipe', 'Team DPS') }}</span><span class="text-emerald-400">×{{ player.teamDpsMult.toFixed(2) }}</span></div>
-          <div class="flex justify-between"><span>🪙 {{ t('Bonus or', 'Gold bonus') }}</span><span class="text-yellow-400">+{{ Math.round((player.goldBonusMult - 1) * 100) }}%</span></div>
-          <div class="flex justify-between"><span>👆 {{ t('Clic', 'Click') }}</span><span class="text-blue-400">{{ player.clickDamage }}</span></div>
+        <div class="mt-1 hidden w-full flex-col gap-0.5 text-[9px] text-slate-400 lg:flex">
+          <div class="flex items-center justify-between"><span>{{ t('XP', 'XP') }}</span><span class="font-bold text-blue-300">{{ player.xp }}/{{ player.xpToNextLevel }}</span></div>
+          <div class="flex items-center justify-between"><span>{{ t('DPS', 'DPS') }}</span><span class="font-bold text-emerald-400">×{{ player.teamDpsMult.toFixed(2) }}</span></div>
+          <div class="flex items-center justify-between"><span>{{ t('Or+', 'Gold+') }}</span><span class="font-bold text-yellow-400">+{{ Math.round((player.goldBonusMult - 1) * 100) }}%</span></div>
         </div>
       </div>
 
-      <nav class="flex w-full flex-1 flex-col gap-0.5 px-2">
+      <nav class="flex w-full flex-1 flex-col gap-1 px-2">
         <NuxtLink
           v-for="item in navItems"
           :key="item.to"
           :to="item.to"
-          class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-400 transition-all hover:bg-slate-700/50 hover:text-white"
-          active-class="!text-white shadow-lg" style="--tw-shadow-color: rgba(238,21,21,0.2)"
-          :class="{ '!bg-[#ee1515]': $route.path === item.to }"
+          class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all"
+          :class="$route.path === item.to 
+            ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg font-bold' 
+            : 'text-slate-400 hover:bg-slate-800/60 hover:text-white'"
         >
           <component :is="item.icon" class="h-5 w-5 shrink-0" />
           <span class="hidden lg:inline">{{ item.label }}</span>
@@ -119,16 +112,14 @@ const navItems = computed(() => [
 
       <!-- Region + Badges -->
       <div class="mt-auto flex w-full flex-col gap-2 px-2 pb-2">
-        <template v-if="auth.isAuthenticated">
-          <div class="rounded-lg bg-[#0f172a]/60 p-2 text-center">
-            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">{{ t('Région', 'Region') }}</p>
-            <p class="font-pixel text-xs" style="color: #3b4cca">{{ player.regionName }}</p>
-          </div>
-          <div v-if="player.badges > 0" class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold" style="background: rgba(255,204,0,0.1); color: #ffcc00">
-            <Trophy class="h-3.5 w-3.5" />
-            <span>{{ player.badges }}</span>
-          </div>
-        </template>
+        <div class="rounded-lg p-2 text-center" style="background: linear-gradient(135deg, rgba(59,76,202,0.15), rgba(147,51,234,0.15)); border: 1px solid rgba(59,76,202,0.3)">
+          <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">{{ t('Région', 'Region') }}</p>
+          <p class="font-pixel text-xs font-bold" style="color: #60a5fa">{{ player.regionName }}</p>
+        </div>
+        <div v-if="player.badges > 0" class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-xs font-bold" style="background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(245,158,11,0.2)); border: 1px solid rgba(251,191,36,0.4); color: #fbbf24">
+          <Trophy class="h-4 w-4" />
+          <span>{{ player.badges }} {{ t('Badges', 'Badges') }}</span>
+        </div>
         <!-- Locale Toggle -->
         <button
           class="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[10px] text-slate-500 transition-colors hover:bg-slate-700/40 hover:text-white"
@@ -178,7 +169,7 @@ const navItems = computed(() => [
       </header>
 
       <!-- Page Content -->
-      <div class="p-6">
+      <div class="p-6" style="background-image: radial-gradient(rgba(255,255,255,0.015) 1px, transparent 1px); background-size: 20px 20px;">
         <slot />
       </div>
     </main>
