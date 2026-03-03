@@ -19,10 +19,6 @@ router.get('/', async () => {
   return { status: 'ok', name: 'Poke-Idle Legacy API' }
 })
 
-// Google OAuth routes (outside /api for callback URL compatibility)
-router.get('/auth/google/redirect', [GoogleAuthController, 'redirect'])
-router.get('/auth/google/callback', [GoogleAuthController, 'callback'])
-
 // All API routes under /api prefix
 router
   .group(() => {
@@ -32,6 +28,9 @@ router
         router.post('/login', [AuthController, 'login']).use(middleware.guest())
         router.post('/logout', [AuthController, 'logout']).use(middleware.auth())
         router.get('/me', [AuthController, 'me']).use(middleware.auth())
+        // Google OAuth routes
+        router.get('/google/redirect', [GoogleAuthController, 'redirect'])
+        router.get('/google/callback', [GoogleAuthController, 'callback'])
       })
       .prefix('/auth')
 

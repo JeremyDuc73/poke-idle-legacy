@@ -11,7 +11,7 @@ const config = useRuntimeConfig()
 const auth = useAuthStore()
 const { t } = useLocale()
 const router = useRouter()
-const googleAuthUrl = `${config.public.apiBase.replace('/api', '')}/auth/google/redirect`
+const googleAuthUrl = `${config.public.apiBase}/auth/google/redirect`
 
 const isRegister = ref(false)
 const username = ref('')
