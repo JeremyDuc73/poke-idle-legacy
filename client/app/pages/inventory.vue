@@ -188,15 +188,21 @@ function getDetailStats(poke: OwnedPokemon) {
   const shinyMult = poke.isShiny ? 1.2 : 1.0
   const starMult = getStarDpsMult(poke.stars, poke.isShiny)
   const permanentDps = Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult)
-  const pokeType = getPokemonType(poke.slug)
+  
+  // Pour doubles types: montrer le MEILLEUR multiplicateur offensif
+  const attackerTypes = getPokemonTypes(poke.slug)
+  const typeMatchups = TYPES.map((tp) => {
+    // Calculer effectiveness pour CHAQUE type offensif, prendre le meilleur
+    const mult = Math.max(...attackerTypes.map(atkType => 
+      getEffectiveness(atkType, tp.id)
+    ))
+    return {
+      type: tp,
+      mult,
+    }
+  })
 
-  // Type effectiveness against all types
-  const typeMatchups = TYPES.map((tp) => ({
-    type: tp,
-    mult: getEffectiveness(pokeType, tp.id),
-  }))
-
-  return { baseDmg, evoStage, evoMult, rarityMult, shinyMult, starMult, permanentDps, pokeType, typeMatchups }
+  return { baseDmg, evoStage, evoMult, rarityMult, shinyMult, starMult, permanentDps, typeMatchups }
 }
 </script>
 
