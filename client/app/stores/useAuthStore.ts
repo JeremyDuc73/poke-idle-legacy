@@ -109,7 +109,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const api = useApi()
         await this.saveGameState()
-        await api.post('/auth/logout')
+        await api.post('/api/auth/logout')
       } catch {
         // ignore logout errors
       }
@@ -301,14 +301,14 @@ export const useAuthStore = defineStore('auth', {
 
         if (keepalive) {
           // Fire both in parallel — don't await, page is closing
-          api.post('/game/save', playerPayload, fetchOpts)
+          api.post('/api/game/save', playerPayload, fetchOpts)
           if (pokemonsPayload) {
-            api.post('/game/save-pokemons', pokemonsPayload, fetchOpts)
+            api.post('/api/game/save-pokemons', pokemonsPayload, fetchOpts)
           }
         } else {
-          await api.post('/game/save', playerPayload)
+          await api.post('/api/game/save', playerPayload)
           if (pokemonsPayload) {
-            await api.post('/game/save-pokemons', pokemonsPayload)
+            await api.post('/api/game/save-pokemons', pokemonsPayload)
           }
         }
       } catch (e) {

@@ -12,7 +12,7 @@ const auth = useAuthStore()
 const { t } = useLocale()
 const router = useRouter()
 const route = useRoute()
-const googleAuthUrl = `${config.public.apiBase}/auth/google/redirect`
+const googleAuthUrl = `${config.public.apiBase}/api/auth/google/redirect`
 
 const isRegister = ref(false)
 const username = ref('')

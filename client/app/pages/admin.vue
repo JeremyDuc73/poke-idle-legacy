@@ -36,7 +36,7 @@ const gemsToGive = ref(0)
 async function loadDashboard() {
   loading.value = true
   try {
-    const response = await fetch(`${API_BASE}/admin/dashboard`, {
+    const response = await fetch(`${API_BASE}/api/admin/dashboard`, {
       credentials: 'include',
     })
     if (response.ok) {
@@ -53,7 +53,7 @@ async function loadDashboard() {
 async function loadUsers() {
   loading.value = true
   try {
-    const response = await fetch(`${API_BASE}/admin/users`, {
+    const response = await fetch(`${API_BASE}/api/admin/users`, {
       credentials: 'include',
     })
     if (response.ok) {
@@ -69,7 +69,7 @@ async function loadUsers() {
 
 async function updateUser(user: User) {
   try {
-    const response = await fetch(`${API_BASE}/admin/users/${user.id}`, {
+    const response = await fetch(`${API_BASE}/api/admin/users/${user.id}`, {
       method: 'PUT',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -88,7 +88,7 @@ async function deleteUser(userId: number) {
   if (!confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) return
 
   try {
-    const response = await fetch(`${API_BASE}/admin/users/${userId}`, {
+    const response = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
       method: 'DELETE',
       credentials: 'include',
     })
@@ -104,7 +104,7 @@ async function giveItems() {
   if (!selectedUser.value) return
 
   try {
-    const response = await fetch(`${API_BASE}/admin/users/${selectedUser.value.id}/give-items`, {
+    const response = await fetch(`${API_BASE}/api/admin/users/${selectedUser.value.id}/give-items`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -128,7 +128,7 @@ async function resetUser(userId: number) {
   if (!confirm('Êtes-vous sûr de vouloir réinitialiser la progression de cet utilisateur ?')) return
 
   try {
-    const response = await fetch(`${API_BASE}/admin/users/${userId}/reset`, {
+    const response = await fetch(`${API_BASE}/api/admin/users/${userId}/reset`, {
       method: 'POST',
       credentials: 'include',
     })

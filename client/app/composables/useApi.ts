@@ -9,7 +9,7 @@ async function api<T = unknown>(path: string, options: ApiOptions = {}): Promise
   const config = useRuntimeConfig()
   const apiBase = config.public.apiBase
 
-  const res = await fetch(`${apiBase}/api${path}`, {
+  const res = await fetch(`${apiBase}${path}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
