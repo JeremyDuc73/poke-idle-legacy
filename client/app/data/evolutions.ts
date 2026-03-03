@@ -393,11 +393,78 @@ export const EVOLUTIONS: Evolution[] = [
   // NOTE: Gen 4+ evolutions (locked until player reaches Gen 4)
   // Baby → Gen 3 base form
   { fromSlug: 'budew', toSlug: 'roselia', toNameFr: 'Rosélia', toNameEn: 'Roselia', method: 'happiness', itemRequired: 'soothe-bell' },
+
+  // ══════════════ Gen 4 Sinnoh ══════════════
+  // Starters
+  { fromSlug: 'turtwig', toSlug: 'grotle', toNameFr: 'Boskara', toNameEn: 'Grotle', method: 'level', levelRequired: 18 },
+  { fromSlug: 'grotle', toSlug: 'torterra', toNameFr: 'Torterra', toNameEn: 'Torterra', method: 'level', levelRequired: 32 },
+  { fromSlug: 'chimchar', toSlug: 'monferno', toNameFr: 'Chimpenfeu', toNameEn: 'Monferno', method: 'level', levelRequired: 14 },
+  { fromSlug: 'monferno', toSlug: 'infernape', toNameFr: 'Simiabraz', toNameEn: 'Infernape', method: 'level', levelRequired: 36 },
+  { fromSlug: 'piplup', toSlug: 'prinplup', toNameFr: 'Prinplouf', toNameEn: 'Prinplup', method: 'level', levelRequired: 16 },
+  { fromSlug: 'prinplup', toSlug: 'empoleon', toNameFr: 'Pingoléon', toNameEn: 'Empoleon', method: 'level', levelRequired: 36 },
   
-  // Future Gen 4+ evolutions:
-  // Roselia → Roserade requires Shiny Stone (Gen 4)
-  // Togetic → Togekiss requires Shiny Stone (Gen 4)
-  // Murkrow → Honchkrow moved to Gen 4 with Dusk Stone (already added above in Gen 2)
+  // Normal/Flying
+  { fromSlug: 'starly', toSlug: 'staravia', toNameFr: 'Étourvol', toNameEn: 'Staravia', method: 'level', levelRequired: 14 },
+  { fromSlug: 'staravia', toSlug: 'staraptor', toNameFr: 'Étouraptor', toNameEn: 'Staraptor', method: 'level', levelRequired: 34 },
+  { fromSlug: 'bidoof', toSlug: 'bibarel', toNameFr: 'Castorno', toNameEn: 'Bibarel', method: 'level', levelRequired: 15 },
+  
+  // Bug
+  { fromSlug: 'kricketot', toSlug: 'kricketune', toNameFr: 'Mélokrik', toNameEn: 'Kricketune', method: 'level', levelRequired: 10 },
+  { fromSlug: 'burmy', toSlug: 'wormadam', toNameFr: 'Cheniselle', toNameEn: 'Wormadam', method: 'level', levelRequired: 20 },
+  { fromSlug: 'burmy', toSlug: 'mothim', toNameFr: 'Papilord', toNameEn: 'Mothim', method: 'level', levelRequired: 20 },
+  { fromSlug: 'combee', toSlug: 'vespiquen', toNameFr: 'Apireine', toNameEn: 'Vespiquen', method: 'level', levelRequired: 21 },
+  
+  // Electric
+  { fromSlug: 'shinx', toSlug: 'luxio', toNameFr: 'Luxio', toNameEn: 'Luxio', method: 'level', levelRequired: 15 },
+  { fromSlug: 'luxio', toSlug: 'luxray', toNameFr: 'Luxray', toNameEn: 'Luxray', method: 'level', levelRequired: 30 },
+  
+  // Rock/Steel
+  { fromSlug: 'cranidos', toSlug: 'rampardos', toNameFr: 'Charkos', toNameEn: 'Rampardos', method: 'level', levelRequired: 30 },
+  { fromSlug: 'shieldon', toSlug: 'bastiodon', toNameFr: 'Bastiodon', toNameEn: 'Bastiodon', method: 'level', levelRequired: 30 },
+  
+  // Water
+  { fromSlug: 'buizel', toSlug: 'floatzel', toNameFr: 'Mustéflott', toNameEn: 'Floatzel', method: 'level', levelRequired: 26 },
+  { fromSlug: 'shellos', toSlug: 'gastrodon', toNameFr: 'Tritosor', toNameEn: 'Gastrodon', method: 'level', levelRequired: 30 },
+  { fromSlug: 'finneon', toSlug: 'lumineon', toNameFr: 'Luminéon', toNameEn: 'Lumineon', method: 'level', levelRequired: 31 },
+  
+  // Grass
+  { fromSlug: 'cherubi', toSlug: 'cherrim', toNameFr: 'Ceriflor', toNameEn: 'Cherrim', method: 'level', levelRequired: 25 },
+  
+  // Ghost/Flying
+  { fromSlug: 'drifloon', toSlug: 'drifblim', toNameFr: 'Grodrive', toNameEn: 'Drifblim', method: 'level', levelRequired: 28 },
+  
+  // Normal
+  { fromSlug: 'buneary', toSlug: 'lopunny', toNameFr: 'Lockpin', toNameEn: 'Lopunny', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'glameow', toSlug: 'purugly', toNameFr: 'Chaffreux', toNameEn: 'Purugly', method: 'level', levelRequired: 38 },
+  
+  // Poison
+  { fromSlug: 'stunky', toSlug: 'skuntank', toNameFr: 'Moufflair', toNameEn: 'Skuntank', method: 'level', levelRequired: 34 },
+  { fromSlug: 'skorupi', toSlug: 'drapion', toNameFr: 'Drascore', toNameEn: 'Drapion', method: 'level', levelRequired: 40 },
+  { fromSlug: 'croagunk', toSlug: 'toxicroak', toNameFr: 'Coatox', toNameEn: 'Toxicroak', method: 'level', levelRequired: 37 },
+  
+  // Steel/Psychic
+  { fromSlug: 'bronzor', toSlug: 'bronzong', toNameFr: 'Archéodong', toNameEn: 'Bronzong', method: 'level', levelRequired: 33 },
+  
+  // Dragon/Ground
+  { fromSlug: 'gible', toSlug: 'gabite', toNameFr: 'Carmache', toNameEn: 'Gabite', method: 'level', levelRequired: 24 },
+  { fromSlug: 'gabite', toSlug: 'garchomp', toNameFr: 'Carchacrok', toNameEn: 'Garchomp', method: 'level', levelRequired: 48 },
+  
+  // Fighting/Steel
+  { fromSlug: 'riolu', toSlug: 'lucario', toNameFr: 'Lucario', toNameEn: 'Lucario', method: 'happiness', itemRequired: 'soothe-bell' },
+  
+  // Ground
+  { fromSlug: 'hippopotas', toSlug: 'hippowdon', toNameFr: 'Hippodocus', toNameEn: 'Hippowdon', method: 'level', levelRequired: 34 },
+  
+  // Grass/Ice
+  { fromSlug: 'snover', toSlug: 'abomasnow', toNameFr: 'Blizzaroi', toNameEn: 'Abomasnow', method: 'level', levelRequired: 40 },
+  
+  // Baby evolutions
+  { fromSlug: 'chingling', toSlug: 'chimecho', toNameFr: 'Éoko', toNameEn: 'Chimecho', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'bonsly', toSlug: 'sudowoodo', toNameFr: 'Simularbre', toNameEn: 'Sudowoodo', method: 'level', levelRequired: 17 },
+  { fromSlug: 'mimejr', toSlug: 'mrmime', toNameFr: 'M. Mime', toNameEn: 'Mr. Mime', method: 'level', levelRequired: 18 },
+  { fromSlug: 'happiny', toSlug: 'chansey', toNameFr: 'Leveinard', toNameEn: 'Chansey', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'munchlax', toSlug: 'snorlax', toNameFr: 'Ronflex', toNameEn: 'Snorlax', method: 'happiness', itemRequired: 'soothe-bell' },
+  { fromSlug: 'mantyke', toSlug: 'mantine', toNameFr: 'Démanta', toNameEn: 'Mantine', method: 'level', levelRequired: 20 },
 ]
 
 // Evolution items available for Gen 1

@@ -318,6 +318,70 @@ const HOENN_POOL: GachaPokemon[] = [
   { nameFr: 'Méga-Rayquaza', nameEn: 'Mega Rayquaza', slug: 'rayquaza-mega', rarity: 'legendary', shinyRate: 0.05 },
 ]
 
+// === Gen 4 Sinnoh Pool ===
+const SINNOH_POOL: GachaPokemon[] = [
+  // COMMON
+  { nameFr: 'Étourmi', nameEn: 'Starly', slug: 'starly', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Keunotor', nameEn: 'Bidoof', slug: 'bidoof', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Crikzik', nameEn: 'Kricketot', slug: 'kricketot', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Rozbouton', nameEn: 'Budew', slug: 'budew', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Cheniti', nameEn: 'Burmy', slug: 'burmy', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Apitrini', nameEn: 'Combee', slug: 'combee', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Ceribou', nameEn: 'Cherubi', slug: 'cherubi', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Sancoki', nameEn: 'Shellos', slug: 'shellos', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Baudrive', nameEn: 'Drifloon', slug: 'drifloon', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Laporeille', nameEn: 'Buneary', slug: 'buneary', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Chaglam', nameEn: 'Glameow', slug: 'glameow', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Korillon', nameEn: 'Chingling', slug: 'chingling', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Moufouette', nameEn: 'Stunky', slug: 'stunky', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Archéomire', nameEn: 'Bronzor', slug: 'bronzor', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Manzaï', nameEn: 'Bonsly', slug: 'bonsly', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Mime Jr.', nameEn: 'Mime Jr.', slug: 'mimejr', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Hippopotas', nameEn: 'Hippopotas', slug: 'hippopotas', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Rapion', nameEn: 'Skorupi', slug: 'skorupi', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Cradopaud', nameEn: 'Croagunk', slug: 'croagunk', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Écayon', nameEn: 'Finneon', slug: 'finneon', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Babimanta', nameEn: 'Mantyke', slug: 'mantyke', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Blizzi', nameEn: 'Snover', slug: 'snover', rarity: 'common', shinyRate: 0.01 },
+  // RARE
+  { nameFr: 'Lixy', nameEn: 'Shinx', slug: 'shinx', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Pachirisu', nameEn: 'Pachirisu', slug: 'pachirisu', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Mustébouée', nameEn: 'Buizel', slug: 'buizel', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Pijako', nameEn: 'Chatot', slug: 'chatot', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Vortente', nameEn: 'Carnivine', slug: 'carnivine', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Motisma', nameEn: 'Rotom', slug: 'rotom', rarity: 'rare', shinyRate: 0.02 },
+  // EPIC
+  { nameFr: 'Kranidos', nameEn: 'Cranidos', slug: 'cranidos', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Dinoclier', nameEn: 'Shieldon', slug: 'shieldon', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Ptiravi', nameEn: 'Happiny', slug: 'happiny', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Goinfrex', nameEn: 'Munchlax', slug: 'munchlax', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Riolu', nameEn: 'Riolu', slug: 'riolu', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Spiritomb', nameEn: 'Spiritomb', slug: 'spiritomb', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Griknot', nameEn: 'Gible', slug: 'gible', rarity: 'epic', shinyRate: 0.03 },
+  // EPIC STARTERS GEN 4
+  { nameFr: 'Tortipouss', nameEn: 'Turtwig', slug: 'turtwig', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Ouisticram', nameEn: 'Chimchar', slug: 'chimchar', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Tiplouf', nameEn: 'Piplup', slug: 'piplup', rarity: 'epic', shinyRate: 0.03 },
+  // LEGENDARY
+  { nameFr: 'Créhelf', nameEn: 'Uxie', slug: 'uxie', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Créfollet', nameEn: 'Mesprit', slug: 'mesprit', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Créfadet', nameEn: 'Azelf', slug: 'azelf', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Dialga', nameEn: 'Dialga', slug: 'dialga', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Palkia', nameEn: 'Palkia', slug: 'palkia', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Heatran', nameEn: 'Heatran', slug: 'heatran', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Regigigas', nameEn: 'Regigigas', slug: 'regigigas', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Giratina', nameEn: 'Giratina', slug: 'giratina', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Cresselia', nameEn: 'Cresselia', slug: 'cresselia', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Phione', nameEn: 'Phione', slug: 'phione', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Manaphy', nameEn: 'Manaphy', slug: 'manaphy', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Darkrai', nameEn: 'Darkrai', slug: 'darkrai', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Shaymin', nameEn: 'Shaymin', slug: 'shaymin', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Arceus', nameEn: 'Arceus', slug: 'arceus', rarity: 'legendary', shinyRate: 0.05 },
+  // Mega Evolutions Gen 4
+  { nameFr: 'Méga-Lucario', nameEn: 'Mega Lucario', slug: 'lucario-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Carchacrok', nameEn: 'Mega Garchomp', slug: 'garchomp-mega', rarity: 'legendary', shinyRate: 0.05 },
+]
+
 export const BANNERS: Banner[] = [
   {
     id: 'kanto',
@@ -345,6 +409,15 @@ export const BANNERS: Banner[] = [
     costGold: 200,
     costGems: 2,
     pool: HOENN_POOL,
+  },
+  {
+    id: 'sinnoh',
+    nameFr: 'Bannière Sinnoh',
+    nameEn: 'Sinnoh Banner',
+    generation: 4,
+    costGold: 250,
+    costGems: 3,
+    pool: SINNOH_POOL,
   },
 ]
 
