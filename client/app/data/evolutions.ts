@@ -558,6 +558,12 @@ export function pokemonXpForLevel(level: number, rarity?: string): number {
   // Courbe de base augmentée: 20→35 (×1.75) + exposant 1.6→1.7
   let baseXp = Math.floor(35 * Math.pow(level, 1.7))
   
+  // Réduction pour les premiers niveaux (1-20) pour faciliter le début
+  if (level <= 20) {
+    const reductionFactor = 0.5 + (level / 40) // 0.5 au niveau 1 → 1.0 au niveau 20
+    baseXp = Math.floor(baseXp * reductionFactor)
+  }
+  
   // À partir du niveau 50, augmenter progressivement l'XP nécessaire
   if (level >= 50) {
     const excessLevels = level - 49
