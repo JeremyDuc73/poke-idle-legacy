@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Star, Sparkles, Coins } from 'lucide-vue-next'
+import { Star, Coins } from 'lucide-vue-next'
 import { getSpriteUrl, getShinySpriteUrl } from '~/utils/showdown'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore, MAX_STARS } from '~/stores/useInventoryStore'
@@ -86,24 +86,16 @@ function rarityLabel(r: Rarity): string {
 function totalCostGold(count: number): number {
   return activeBanner.value.costGold * count
 }
-function totalCostGems(count: number): number {
-  return activeBanner.value.costGems * count
-}
 
-async function doPull(currency: 'gold' | 'gems') {
+async function doPull() {
   if (allMaxed.value) return
   const banner = filteredBanner.value
   if (!banner || banner.pool.length === 0) return
 
   const count = pullCount.value
   const costGold = totalCostGold(count)
-  const costGems = totalCostGems(count)
 
-  if (currency === 'gold') {
-    if (!player.spendGold(costGold)) return
-  } else {
-    if (!player.spendGems(costGems)) return
-  }
+  if (!player.spendGold(costGold)) return
 
   isPulling.value = true
   showResult.value = false
@@ -451,25 +443,15 @@ function dismiss() {
           </button>
         </div>
 
-        <!-- Gold / Gems buttons -->
-        <div class="flex gap-3">
-          <button
-            class="flex items-center gap-2 rounded-xl bg-yellow-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-yellow-500 active:scale-95 disabled:opacity-40"
-            :disabled="player.gold < totalCostGold(pullCount)"
-            @click="doPull('gold')"
-          >
-            <Coins class="h-5 w-5" />
-            {{ totalCostGold(pullCount) }} {{ t('PokéDollar', 'PokéDollar') }}
-          </button>
-          <button
-            class="flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-purple-500 active:scale-95 disabled:opacity-40"
-            :disabled="player.gems < totalCostGems(pullCount)"
-            @click="doPull('gems')"
-          >
-            <Sparkles class="h-5 w-5" />
-            {{ totalCostGems(pullCount) }} {{ t('gemmes', 'gems') }}
-          </button>
-        </div>
+        <!-- Gold button -->
+        <button
+          class="flex items-center gap-2 rounded-xl bg-yellow-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-yellow-500 active:scale-95 disabled:opacity-40"
+          :disabled="player.gold < totalCostGold(pullCount)"
+          @click="doPull()"
+        >
+          <Coins class="h-5 w-5" />
+          {{ totalCostGold(pullCount) }} {{ t('PokéDollar', 'PokéDollar') }}
+        </button>
       </template>
       <p class="text-xs text-slate-500">
         {{ availablePool.length }} / {{ activeBanner.pool.length }} {{ t('disponibles', 'available') }}
