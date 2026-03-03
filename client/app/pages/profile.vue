@@ -31,8 +31,8 @@ const stats = computed<StatItem[]>(() => [
     color: 'text-blue-400',
   },
   {
-    labelFr: 'Or total',
-    labelEn: 'Total Gold',
+    labelFr: 'PokéDollar total',
+    labelEn: 'Total PokéDollar',
     value: player.formattedGold,
     icon: Coins,
     color: 'text-yellow-400',

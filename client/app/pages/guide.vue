@@ -495,6 +495,70 @@ function toggleGen(id: number) {
     <!-- ═══════════════ PATCH NOTES TAB ═══════════════ -->
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
 
+      <!-- v1.1.1 -->
+      <article class="rounded-xl border border-purple-500/50 bg-purple-900/20 p-5">
+        <h3 class="mb-3 text-lg font-bold text-purple-300">v1.1.1 — Sinnoh & Améliorations — 3 Mars 2026</h3>
+        
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Intégration complète de la Génération 4, améliorations de l\'inventaire et ajustements de l\'économie du jeu !', 'Full Generation 4 integration, inventory improvements and game economy adjustments!') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-purple-400">🌍 {{ t('Génération 4 Sinnoh', 'Generation 4 Sinnoh') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('107 Pokémon Gen 4 ajoutés avec tous les doubles types', '107 Gen 4 Pokémon added with all dual types') }}</li>
+              <li>{{ t('Bannière Sinnoh : 68 Pokémon (22 common, 6 rare, 10 epic, 14 legendary)', 'Sinnoh Banner: 68 Pokémon (22 common, 6 rare, 10 epic, 14 legendary)') }}</li>
+              <li>{{ t('32 lignes évolutives + préévolutions babies (Budew, Riolu, etc.)', '32 evolution lines + baby pre-evolutions (Budew, Riolu, etc.)') }}</li>
+              <li>{{ t('13 zones : 8 champions + Conseil des 4 + Cynthia (Maître)', '13 zones: 8 gym leaders + Elite Four + Cynthia (Champion)') }}</li>
+              <li>{{ t('Niveaux 60-78 : progression équilibrée après Hoenn', 'Levels 60-78: balanced progression after Hoenn') }}</li>
+              <li>{{ t('Champions : Pierrick, Flo, Mélina, Lovis, Kiméra, Charles, Gladys, Tanguy', 'Gym Leaders: Roark, Gardenia, Maylene, Wake, Fantina, Byron, Candice, Volkner') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-purple-400">📦 {{ t('Inventaire Amélioré', 'Improved Inventory') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Tri par numéro Pokédex (#) : ordre national complet', 'Sort by Pokédex number (#): full national order') }}</li>
+              <li>{{ t('Tri par rareté (🎨) : Legendary → Epic → Rare → Common', 'Sort by rarity (🎨): Legendary → Epic → Rare → Common') }}</li>
+              <li>{{ t('Cycle de tri étendu : ⭐ → Lv → A-Z → DPS → # → 🎨', 'Extended sort cycle: ⭐ → Lv → A-Z → DPS → # → 🎨') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-purple-400">💰 {{ t('Économie & Gacha', 'Economy & Gacha') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Renommage : "Or" → "PokéDollar" partout dans le jeu', 'Renamed: "Gold" → "PokéDollar" throughout the game') }}</li>
+              <li>{{ t('Probabilités gacha ajustées pour plus d\'équilibre :', 'Gacha probabilities adjusted for better balance:') }}</li>
+              <li class="pl-4">{{ t('• Common : 60% → 70% (+10%)', '• Common: 60% → 70% (+10%)') }}</li>
+              <li class="pl-4">{{ t('• Rare : 25% → 21% (-4%)', '• Rare: 25% → 21% (-4%)') }}</li>
+              <li class="pl-4">{{ t('• Epic : 12% → 8% (-4%)', '• Epic: 12% → 8% (-4%)') }}</li>
+              <li class="pl-4">{{ t('• Legendary : 3% → 1% (-2%) - beaucoup plus rares !', '• Legendary: 3% → 1% (-2%) - much rarer!') }}</li>
+              <li>{{ t('XP premiers niveaux réduite : facteur 0.5→1.0 pour niveaux 1-20', 'Early level XP reduced: 0.5→1.0 factor for levels 1-20') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-purple-400">✨ {{ t('Améliorations Interface', 'Interface Improvements') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Profil : "PokéDollar total" affiché correctement', 'Profile: "Total PokéDollar" displayed correctly') }}</li>
+              <li>{{ t('Guide : probabilités de drop actualisées', 'Guide: updated drop rates') }}</li>
+            </ul>
+          </div>
+
+          <div class="rounded-lg border border-purple-600/30 bg-purple-950/30 p-3">
+            <h4 class="mb-2 text-sm font-semibold text-purple-300">🎯 {{ t('Points Clés', 'Key Points') }}</h4>
+            <ul class="space-y-1 text-xs text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('✅ Contenu Gen 4 complet : 13 nouvelles zones de combat', '✅ Full Gen 4 content: 13 new battle zones') }}</li>
+              <li>{{ t('✅ Légendaires beaucoup plus rares (divisés par 3)', '✅ Legendaries much rarer (divided by 3)') }}</li>
+              <li>{{ t('✅ Onboarding amélioré : premiers niveaux plus rapides', '✅ Improved onboarding: faster early levels') }}</li>
+              <li>{{ t('✅ Inventaire plus flexible avec 2 nouveaux tris', '✅ More flexible inventory with 2 new sorts') }}</li>
+              <li>{{ t('✅ Terminologie cohérente avec l\'univers Pokémon', '✅ Terminology consistent with Pokémon universe') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
       <!-- v1.1.0 -->
       <article class="rounded-xl border border-cyan-500/50 bg-cyan-900/20 p-5">
         <h3 class="mb-3 text-lg font-bold text-cyan-300">v1.1.0 — Doubles Types & Équilibrage — 3 Mars 2026</h3>
