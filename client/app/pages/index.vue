@@ -32,7 +32,6 @@ onMounted(() => {
         showGuestModal.value = true
       }, 1000)
     }
-    auth.loadGuestGameState()
   }
 })
 

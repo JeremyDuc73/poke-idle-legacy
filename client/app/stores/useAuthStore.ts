@@ -130,6 +130,8 @@ export const useAuthStore = defineStore('auth', {
       } catch {
         this.isAuthenticated = false
         this.user = null
+        // En mode invité, charger depuis localStorage
+        this.loadGuestGameState()
       }
     },
 
