@@ -6,7 +6,7 @@ import type { OwnedPokemon } from '~/stores/useInventoryStore'
 import { usePlayerStore, CANDY_XP, CANDY_COST } from '~/stores/usePlayerStore'
 import type { CandySize } from '~/stores/usePlayerStore'
 import { useLocale } from '~/composables/useLocale'
-import { getPokemonType, getEffectiveness, TYPES } from '~/data/types'
+import { getPokemonType, getPokemonTypes, getEffectiveness, TYPES } from '~/data/types'
 import type { PokemonType } from '~/data/types'
 import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, getRarityDpsMult, getStarDpsMult, RARITY_DPS_MULT } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
@@ -398,7 +398,9 @@ function getDetailStats(poke: OwnedPokemon) {
           :alt="t(pokemon.nameFr, pokemon.nameEn)"
           class="h-14 w-14 object-contain"
         />
-        <TypeBadge :type="getPokemonType(pokemon.slug)" />
+        <div class="flex gap-0.5">
+          <TypeBadge v-for="type in getPokemonTypes(pokemon.slug)" :key="type" :type="type" size="xs" />
+        </div>
         <p class="w-full truncate text-center text-[10px] text-gray-300">
           {{ t(pokemon.nameFr, pokemon.nameEn) }}
         </p>
@@ -445,7 +447,9 @@ function getDetailStats(poke: OwnedPokemon) {
                 <span v-if="detailPokemon.isShiny" class="text-sm">✨</span>
               </h3>
               <div class="mt-1 flex items-center gap-2">
-                <TypeBadge :type="getPokemonType(detailPokemon.slug)" />
+                <div class="flex gap-1">
+                  <TypeBadge v-for="type in getPokemonTypes(detailPokemon.slug)" :key="type" :type="type" />
+                </div>
                 <span class="text-xs font-bold" :style="{ color: RARITY_COLORS[detailPokemon.rarity ?? 'common'] }">
                   {{ rarityLabel(detailPokemon.rarity ?? 'common') }}
                 </span>

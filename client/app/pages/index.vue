@@ -7,7 +7,7 @@ import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useLocale } from '~/composables/useLocale'
 import { useCombatLoop } from '~/composables/useCombatLoop'
-import { getPokemonType, getTypeInfo } from '~/data/types'
+import { getPokemonType, getPokemonTypes, getTypeInfo } from '~/data/types'
 import { pokemonXpForLevel } from '~/data/evolutions'
 import GuestModeModal from '~/components/GuestModeModal.vue'
 
@@ -65,7 +65,7 @@ const teamBreakdown = computed(() => {
   const enemyTypes = combat.enemy?.types ?? []
   return inventory.team.map((poke) => {
     const stats = getPokeDps(poke, enemyTypes)
-    return { ...poke, ...stats, pokeType: getPokemonType(poke.slug) }
+    return { ...poke, ...stats, pokeTypes: getPokemonTypes(poke.slug) }
   })
 })
 
@@ -316,47 +316,52 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
       <p class="font-pixel text-xs">{{ t('Recherche...', 'Searching...') }}</p>
     </div>
 
-    <!-- Stats Row -->
-    <div class="flex gap-3">
-      <div class="flex items-center gap-3 rounded-xl border-2 border-orange-500/30 bg-gradient-to-br from-orange-950/50 to-slate-900 px-5 py-3 shadow-lg">
-        <div class="rounded-lg bg-orange-500/20 p-2">
-          <Swords class="h-5 w-5 text-orange-400" />
-        </div>
-        <div class="text-left">
-          <p class="text-xs font-medium uppercase tracking-wider text-orange-300/70">{{ t('Click', 'Click') }}</p>
-          <p class="text-lg font-bold text-orange-400">{{ combat.clickDamage }}</p>
+    <!-- Layout Desktop: 2 colonnes | Mobile: colonne -->
+    <div class="flex w-full max-w-6xl flex-col gap-6 lg:flex-row lg:items-start">
+      <!-- Colonne Gauche: Stats -->
+      <div class="flex flex-1 flex-col items-center gap-5">
+        <!-- Stats Row -->
+        <div class="flex gap-3">
+          <div class="flex items-center gap-3 rounded-xl border-2 border-orange-500/30 bg-gradient-to-br from-orange-950/50 to-slate-900 px-5 py-3 shadow-lg">
+            <div class="rounded-lg bg-orange-500/20 p-2">
+              <Swords class="h-5 w-5 text-orange-400" />
+            </div>
+            <div class="text-left">
+              <p class="text-xs font-medium uppercase tracking-wider text-orange-300/70">{{ t('Click', 'Click') }}</p>
+              <p class="text-lg font-bold text-orange-400">{{ combat.clickDamage }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 rounded-xl border-2 border-cyan-500/30 bg-gradient-to-br from-cyan-950/50 to-slate-900 px-5 py-3 shadow-lg">
+            <div class="rounded-lg bg-cyan-500/20 p-2">
+              <Zap class="h-5 w-5 text-cyan-400" />
+            </div>
+            <div class="text-left">
+              <p class="text-xs font-medium uppercase tracking-wider text-cyan-300/70">DPS</p>
+              <p class="text-lg font-bold text-cyan-400">{{ effectiveDps }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 rounded-xl border-2 border-red-500/30 bg-gradient-to-br from-red-950/50 to-slate-900 px-5 py-3 shadow-lg">
+            <div class="rounded-lg bg-red-500/20 p-2">
+              <Skull class="h-5 w-5 text-red-400" />
+            </div>
+            <div class="text-left">
+              <p class="text-xs font-medium uppercase tracking-wider text-red-300/70">Kills</p>
+              <p class="text-lg font-bold text-red-400">{{ combat.totalKills }}</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="flex items-center gap-3 rounded-xl border-2 border-cyan-500/30 bg-gradient-to-br from-cyan-950/50 to-slate-900 px-5 py-3 shadow-lg">
-        <div class="rounded-lg bg-cyan-500/20 p-2">
-          <Zap class="h-5 w-5 text-cyan-400" />
-        </div>
-        <div class="text-left">
-          <p class="text-xs font-medium uppercase tracking-wider text-cyan-300/70">DPS</p>
-          <p class="text-lg font-bold text-cyan-400">{{ effectiveDps }}</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-3 rounded-xl border-2 border-red-500/30 bg-gradient-to-br from-red-950/50 to-slate-900 px-5 py-3 shadow-lg">
-        <div class="rounded-lg bg-red-500/20 p-2">
-          <Skull class="h-5 w-5 text-red-400" />
-        </div>
-        <div class="text-left">
-          <p class="text-xs font-medium uppercase tracking-wider text-red-300/70">Kills</p>
-          <p class="text-lg font-bold text-red-400">{{ combat.totalKills }}</p>
-        </div>
-      </div>
-    </div>
 
-    <!-- Team DPS Breakdown -->
-    <div v-if="teamBreakdown.length > 0" class="w-full max-w-2xl">
-      <div class="mb-4 flex items-center justify-center gap-2">
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
-        <h3 class="text-sm font-bold uppercase tracking-widest text-blue-400">
-          {{ t('Mon équipe', 'My Team') }}
-        </h3>
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
-      </div>
-      <div class="flex flex-col gap-3">
+      <!-- Colonne Droite: Team (desktop) / Bas (mobile) -->
+      <div v-if="teamBreakdown.length > 0" class="w-full lg:w-96">
+        <div class="mb-4 flex items-center justify-center gap-2">
+          <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+          <h3 class="text-sm font-bold uppercase tracking-widest text-blue-400">
+            {{ t('Mon équipe', 'My Team') }}
+          </h3>
+          <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+        </div>
+        <div class="flex flex-col gap-3">
         <div
           v-for="poke in teamBreakdown"
           :key="poke.id"
@@ -383,7 +388,9 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
             <div class="flex min-w-0 flex-1 flex-col gap-1.5">
               <div class="flex items-center gap-2">
                 <p class="truncate font-pixel text-xs font-bold text-slate-100">{{ t(poke.nameFr, poke.nameEn) }}</p>
-                <TypeBadge :type="poke.pokeType" />
+                <div class="flex gap-0.5">
+                  <TypeBadge v-for="type in poke.pokeTypes" :key="type" :type="type" size="xs" />
+                </div>
                 <span class="ml-auto shrink-0 rounded-md bg-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-400">Lv{{ poke.level }}</span>
               </div>
               
@@ -404,7 +411,7 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
               <div class="flex items-center gap-3 text-[10px]">
                 <div class="flex items-center gap-1">
                   <span class="text-slate-400">{{ t('Base', 'Base') }}:</span>
-                  <span class="font-bold text-slate-200">{{ poke.baseDps }}</span>
+                  <span class="font-bold text-slate-200">{{ poke.permanentDps }}</span>
                 </div>
                 <div v-if="poke.typeMult !== 1" class="flex items-center gap-1">
                   <span class="text-slate-400">{{ t('Type', 'Type') }}:</span>
@@ -424,6 +431,7 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
