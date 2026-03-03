@@ -136,7 +136,7 @@ async function doPull(currency: 'gold' | 'gems') {
 
   // Add all to inventory and build results
   const results: PullResultItem[] = []
-  const refundTotal = count * activeBanner.value!.costGold * 0.1 // 10% per pull
+  const costPerPull = activeBanner.value!.costGold
   
   for (const { pokemon, isShiny } of rawPulls) {
     const { isNew, isMaxed, wasAlreadyMaxed, pokemon: owned } = inventory.addPokemon({
@@ -148,8 +148,8 @@ async function doPull(currency: 'gold' | 'gems') {
       rarity: pokemon.rarity,
     })
     
-    // Calculate refund for this specific pull if already maxed
-    const refundAmount = wasAlreadyMaxed ? refundTotal : 0
+    // Calculate refund: 50% of cost per individual pull if already maxed
+    const refundAmount = wasAlreadyMaxed ? Math.floor(costPerPull * 0.5) : 0
     if (refundAmount > 0) {
       player.addGold(refundAmount)
     }
@@ -327,7 +327,7 @@ function dismiss() {
           {{ t('✨ Nouveau !', '✨ New!') }}
         </p>
         <p v-else-if="singleResult.wasAlreadyMaxed" class="text-sm font-bold text-amber-400">
-          {{ t(`⭐ MAX ! Remboursé 10% (🪙 ${singleResult.refundAmount})`, `⭐ MAX! 10% Refund (🪙 ${singleResult.refundAmount})`) }}
+          {{ t(`⭐ MAX ! Remboursé 50% (🪙 ${singleResult.refundAmount})`, `⭐ MAX! 50% Refund (🪙 ${singleResult.refundAmount})`) }}
         </p>
         <p v-else-if="singleResult.isMaxed" class="text-sm font-bold text-amber-400">
           {{ t('⭐ MAX atteint !', '⭐ MAX reached!') }}
@@ -406,7 +406,7 @@ function dismiss() {
             v-else-if="r.wasAlreadyMaxed"
             class="rounded-full bg-amber-500/20 px-1.5 py-px text-[8px] font-bold text-amber-400"
           >
-            -10%
+            -50%
           </span>
           <span
             v-else-if="r.isMaxed"

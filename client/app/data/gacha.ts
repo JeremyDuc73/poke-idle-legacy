@@ -14,7 +14,6 @@ export interface Banner {
   nameEn: string
   generation: number
   costGold: number
-  costGems: number
   pool: GachaPokemon[]
 }
 
@@ -388,8 +387,7 @@ export const BANNERS: Banner[] = [
     nameFr: 'Bannière Kanto',
     nameEn: 'Kanto Banner',
     generation: 1,
-    costGold: 100,
-    costGems: 1,
+    costGold: 500,
     pool: KANTO_POOL,
   },
   {
@@ -397,8 +395,7 @@ export const BANNERS: Banner[] = [
     nameFr: 'Bannière Johto',
     nameEn: 'Johto Banner',
     generation: 2,
-    costGold: 500,
-    costGems: 1,
+    costGold: 20000,
     pool: JOHTO_POOL,
   },
   {
@@ -406,8 +403,7 @@ export const BANNERS: Banner[] = [
     nameFr: 'Bannière Hoenn',
     nameEn: 'Hoenn Banner',
     generation: 3,
-    costGold: 20000,
-    costGems: 2,
+    costGold: 50000,
     pool: HOENN_POOL,
   },
   {
@@ -415,8 +411,7 @@ export const BANNERS: Banner[] = [
     nameFr: 'Bannière Sinnoh',
     nameEn: 'Sinnoh Banner',
     generation: 4,
-    costGold: 50000,
-    costGems: 3,
+    costGold: 100000,
     pool: SINNOH_POOL,
   },
 ]
