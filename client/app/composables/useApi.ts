@@ -6,8 +6,10 @@ interface ApiOptions {
 
 async function api<T = unknown>(path: string, options: ApiOptions = {}): Promise<T> {
   const { method = 'GET', body, keepalive } = options
+  const config = useRuntimeConfig()
+  const apiBase = config.public.apiBase
 
-  const res = await fetch(`/api${path}`, {
+  const res = await fetch(`${apiBase}/api${path}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
