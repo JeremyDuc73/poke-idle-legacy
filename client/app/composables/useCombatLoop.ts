@@ -90,7 +90,8 @@ export function useCombatLoop() {
 
   function spawnWild(difficulty: number) {
     const poke = randomWild()
-    const hp = Math.round(poke.baseHp * (1 + difficulty * 0.12))
+    // Augmentation HP: 0.12 → 0.35 (~×3) pour plus de durabilité
+    const hp = Math.round(poke.baseHp * (1 + difficulty * 0.35))
     combat.setEnemy({
       nameFr: `${poke.nameFr} sauvage`,
       nameEn: `Wild ${poke.nameEn}`,
