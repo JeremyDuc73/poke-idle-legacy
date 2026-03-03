@@ -302,7 +302,7 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
       <div class="flex items-center gap-2 rounded-xl border-2 border-slate-700/50 bg-slate-800/95 px-4 py-2 shadow-lg backdrop-blur-sm">
         <span class="text-xl">🪙</span>
         <div class="text-left">
-          <p class="text-[10px] text-slate-400">{{ t('Or', 'Gold') }}</p>
+          <p class="text-[10px] text-slate-400">{{ t('PokéDollar', 'PokéDollar') }}</p>
           <p class="text-sm font-bold text-yellow-400">+{{ combat.enemy.goldReward }}</p>
         </div>
       </div>

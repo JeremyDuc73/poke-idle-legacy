@@ -126,7 +126,7 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
       </p>
       <p class="mt-1 text-xs text-gray-500">
         {{ t('Slots', 'Slots') }}: {{ daycare.slots.length }}/{{ MAX_DAYCARE_SLOTS }}
-        · {{ t('Coût', 'Cost') }}: {{ DAYCARE_COST }} {{ t('or', 'gold') }}
+        · {{ t('Coût', 'Cost') }}: {{ DAYCARE_COST }} {{ t('PokéDollar', 'PokéDollar') }}
       </p>
     </div>
 

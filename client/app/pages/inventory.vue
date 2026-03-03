@@ -8,7 +8,7 @@ import type { CandySize } from '~/stores/usePlayerStore'
 import { useLocale } from '~/composables/useLocale'
 import { getPokemonType, getPokemonTypes, getEffectiveness, TYPES } from '~/data/types'
 import type { PokemonType } from '~/data/types'
-import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, getRarityDpsMult, getStarDpsMult, RARITY_DPS_MULT } from '~/data/gacha'
+import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, getRarityDpsMult, getStarDpsMult, RARITY_DPS_MULT, getRarity } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
 import { getEvolutionStage, getEvoStageMult, EVO_STAGE_MULT } from '~/data/evolutions'
 import { useDaycareStore } from '~/stores/useDaycareStore'
@@ -32,7 +32,7 @@ function useCandy(poke: OwnedPokemon, size: CandySize) {
   inventory.addPokemonXp(poke.id, CANDY_XP[size], player.currentGeneration)
 }
 
-const sortBy = ref<'stars' | 'level' | 'name' | 'dps'>('stars')
+const sortBy = ref<'stars' | 'level' | 'name' | 'dps' | 'pokedex' | 'rarity'>('stars')
 const search = ref('')
 const filterType = ref<PokemonType | null>(null)
 const filterShiny = ref<boolean | null>(null)
@@ -119,6 +119,21 @@ const filteredCollection = computed(() => {
     case 'dps':
       list.sort((a, b) => {
         return pokeDps(b) - pokeDps(a) || a.slug.localeCompare(b.slug) || Number(a.isShiny) - Number(b.isShiny)
+      })
+      break
+    case 'pokedex':
+      list.sort((a, b) => {
+        const aId = POKEDEX.find(p => p.slug === a.slug)?.id ?? 9999
+        const bId = POKEDEX.find(p => p.slug === b.slug)?.id ?? 9999
+        return aId - bId || Number(a.isShiny) - Number(b.isShiny)
+      })
+      break
+    case 'rarity':
+      const rarityOrder: Record<Rarity, number> = { legendary: 0, epic: 1, rare: 2, common: 3 }
+      list.sort((a, b) => {
+        const aRarity = getRarity(a.slug)
+        const bRarity = getRarity(b.slug)
+        return rarityOrder[aRarity] - rarityOrder[bRarity] || b.stars - a.stars || a.slug.localeCompare(b.slug) || Number(a.isShiny) - Number(b.isShiny)
       })
       break
   }
@@ -292,10 +307,10 @@ function getDetailStats(poke: OwnedPokemon) {
       <!-- Sort -->
       <button
         class="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-gray-300 transition-colors hover:bg-gray-700"
-        @click="sortBy = sortBy === 'stars' ? 'level' : sortBy === 'level' ? 'name' : sortBy === 'name' ? 'dps' : 'stars'"
+        @click="sortBy = sortBy === 'stars' ? 'level' : sortBy === 'level' ? 'name' : sortBy === 'name' ? 'dps' : sortBy === 'dps' ? 'pokedex' : sortBy === 'pokedex' ? 'rarity' : 'stars'"
       >
         <ArrowUpDown class="h-3.5 w-3.5" />
-        {{ sortBy === 'stars' ? '⭐' : sortBy === 'level' ? 'Lv' : sortBy === 'name' ? 'A-Z' : 'DPS' }}
+        {{ sortBy === 'stars' ? '⭐' : sortBy === 'level' ? 'Lv' : sortBy === 'name' ? 'A-Z' : sortBy === 'dps' ? 'DPS' : sortBy === 'pokedex' ? '#' : '🎨' }}
       </button>
 
       <!-- Shiny toggle -->

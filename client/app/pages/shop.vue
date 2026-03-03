@@ -249,7 +249,7 @@ function buyCandy(size: CandySize) {
     <!-- Balance -->
     <div class="flex gap-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4 text-sm">
       <span class="flex items-center gap-1.5 text-yellow-400">
-        <Coins class="h-4 w-4" /> {{ player.formattedGold }} {{ t('or', 'gold') }}
+        <Coins class="h-4 w-4" /> {{ player.formattedGold }} {{ t('PokéDollar', 'PokéDollar') }}
       </span>
       <span class="flex items-center gap-1.5 text-purple-400">
         <Gem class="h-4 w-4" /> {{ player.formattedGems }} {{ t('gemmes', 'gems') }}

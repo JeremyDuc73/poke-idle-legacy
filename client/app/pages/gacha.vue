@@ -437,7 +437,7 @@ function dismiss() {
             @click="doPull('gold')"
           >
             <Coins class="h-5 w-5" />
-            {{ totalCostGold(pullCount) }} {{ t('or', 'gold') }}
+            {{ totalCostGold(pullCount) }} {{ t('PokéDollar', 'PokéDollar') }}
           </button>
           <button
             class="flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-purple-500 active:scale-95 disabled:opacity-40"
