@@ -11,6 +11,7 @@ const config = useRuntimeConfig()
 const auth = useAuthStore()
 const { t } = useLocale()
 const router = useRouter()
+const route = useRoute()
 const googleAuthUrl = `${config.public.apiBase}/auth/google/redirect`
 
 const isRegister = ref(false)
@@ -18,6 +19,20 @@ const username = ref('')
 const email = ref('')
 const password = ref('')
 const error = ref('')
+
+// Check OAuth callback
+onMounted(async () => {
+  if (route.query.oauth_success === 'true') {
+    try {
+      await auth.checkAuth()
+      if (auth.isAuthenticated) {
+        await router.push('/')
+      }
+    } catch (e) {
+      error.value = t('Erreur de connexion OAuth', 'OAuth connection error')
+    }
+  }
+})
 
 async function handleSubmit() {
   error.value = ''

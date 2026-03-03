@@ -118,7 +118,7 @@ export default class GoogleAuthController {
     user.lastLoginAt = DateTime.now()
     await user.save()
 
-    // Redirect to the client app
-    return response.redirect(frontendUrl)
+    // Redirect to the client app with success param
+    return response.redirect(`${frontendUrl}/login?oauth_success=true`)
   }
 }
