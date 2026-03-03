@@ -163,7 +163,11 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
       </Transition>
     </Teleport>
 
-    <!-- Stage Info -->
+    <!-- Layout Desktop: 2 colonnes | Mobile: colonne -->
+    <div class="flex w-full max-w-6xl flex-col gap-6 lg:flex-row lg:items-start">
+      <!-- Colonne Gauche: Combat + Stats -->
+      <div class="flex flex-1 flex-col items-center gap-5">
+        <!-- Stage Info -->
     <div class="w-full max-w-md text-center">
       <div class="flex items-center justify-center gap-2 text-sm text-slate-400">
         <MapPin class="h-3.5 w-3.5" />
@@ -316,10 +320,6 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
       <p class="font-pixel text-xs">{{ t('Recherche...', 'Searching...') }}</p>
     </div>
 
-    <!-- Layout Desktop: 2 colonnes | Mobile: colonne -->
-    <div class="flex w-full max-w-6xl flex-col gap-6 lg:flex-row lg:items-start">
-      <!-- Colonne Gauche: Stats -->
-      <div class="flex flex-1 flex-col items-center gap-5">
         <!-- Stats Row -->
         <div class="flex gap-3">
           <div class="flex items-center gap-3 rounded-xl border-2 border-orange-500/30 bg-gradient-to-br from-orange-950/50 to-slate-900 px-5 py-3 shadow-lg">
@@ -350,6 +350,7 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       <!-- Colonne Droite: Team (desktop) / Bas (mobile) -->
@@ -432,7 +433,7 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
             </div>
           </div>
         </div>
-        </div>
+      </div>
       </div>
     </div>
 
