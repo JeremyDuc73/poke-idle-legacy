@@ -74,7 +74,10 @@ const navItems = computed(() => {
     <aside class="flex w-20 flex-col items-center gap-1 py-4 lg:w-56" style="background: linear-gradient(180deg, #dc2626 0%, #991b1b 4%, #1e293b 4%, #0f172a 100%)">
       <!-- Logo -->
       <div class="mb-3 flex flex-col items-center gap-1 px-2">
-        <span class="text-2xl">🔴</span>
+        <div class="relative h-8 w-8">
+          <div class="absolute inset-0 rounded-full" style="background: linear-gradient(to bottom, #ee1515 0%, #ee1515 50%, #ffffff 50%, #ffffff 100%); border: 3px solid #1e293b; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 2px 8px rgba(238,21,21,0.4)"></div>
+          <div class="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full" style="background: #1e293b; border: 2px solid #ffffff; box-shadow: inset 0 1px 2px rgba(0,0,0,0.5)"></div>
+        </div>
         <span class="hidden font-pixel text-[10px] leading-tight lg:inline" style="color: #ffcc00">POKE-IDLE</span>
         <span class="hidden font-pixel text-[7px] lg:inline" style="color: #ee1515">LEGACY</span>
       </div>
@@ -156,7 +159,7 @@ const navItems = computed(() => {
         <div class="flex items-center gap-3">
           <h1 class="font-pixel text-xs" style="color: #ee1515">POKE-IDLE</h1>
         </div>
-        <div v-if="auth.isAuthenticated" class="flex items-center gap-4 text-sm">
+        <div class="flex items-center gap-4 text-sm">
           <div class="flex items-center gap-1.5 rounded-lg px-3 py-1.5" style="background: rgba(255,204,0,0.08)">
             <span class="text-base">🪙</span>
             <span class="font-bold" style="color: #ffcc00">{{ player.formattedGold }}</span>
