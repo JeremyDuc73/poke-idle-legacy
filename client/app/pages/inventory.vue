@@ -187,7 +187,7 @@ function pokeDps(p: OwnedPokemon, enemyType?: PokemonType): number {
   const baseDmg = p.level
   const evoMult = getEvoStageMult(p.slug)
   const rarityMult = getRarityDpsMult(p.slug)
-  const shinyMult = p.isShiny ? 1.2 : 1.0
+  const shinyMult = p.isShiny ? 1.5 : 1.0
   const starMult = getStarDpsMult(p.stars, p.isShiny)
   const typeMult = enemyType ? getEffectiveness(getPokemonType(p.slug), enemyType) : 1
   return Math.round(Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult) * typeMult)
@@ -213,7 +213,7 @@ function getDetailStats(poke: OwnedPokemon) {
   const evoStage = getEvolutionStage(poke.slug)
   const evoMult = getEvoStageMult(poke.slug)
   const rarityMult = getRarityDpsMult(poke.slug)
-  const shinyMult = poke.isShiny ? 1.2 : 1.0
+  const shinyMult = poke.isShiny ? 1.5 : 1.0
   const starMult = getStarDpsMult(poke.stars, poke.isShiny)
   const permanentDps = Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult)
   

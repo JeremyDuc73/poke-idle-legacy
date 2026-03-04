@@ -51,7 +51,7 @@ export const useInventoryStore = defineStore('inventory', {
         const baseDmg = p.level
         const evoMult = getEvoStageMult(p.slug)
         const rarityMult = getRarityDpsMult(p.slug)
-        const shinyMult = p.isShiny ? 1.2 : 1.0
+        const shinyMult = p.isShiny ? 1.5 : 1.0
         const starMult = getStarDpsMult(p.stars, p.isShiny)
         return sum + Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult)
       }, 0)

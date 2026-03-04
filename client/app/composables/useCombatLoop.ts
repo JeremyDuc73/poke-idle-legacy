@@ -21,13 +21,13 @@ export function useCombatLoop() {
 
   // New damage formula:
   // base = level (1 at lv1, 100 at lv100)
-  // permanent multipliers: evo stage (x1.2/x1.4), rarity (x1.1/x1.5/x2.0), shiny (x1.2)
+  // permanent multipliers: evo stage (x1.2/x1.4), rarity (x1.1/x1.5/x2.0), shiny (x1.5)
   // type-dependent: effectiveness table
   function getPokeDps(poke: { slug: string; level: number; stars: number; isShiny: boolean; rarity?: Rarity }, enemyTypes?: PokemonType[]) {
     const baseDmg = poke.level
     const evoMult = getEvoStageMult(poke.slug)
     const rarityMult = poke.rarity ? (RARITY_DPS_MULT[poke.rarity] ?? 1.0) : getRarityDpsMult(poke.slug)
-    const shinyMult = poke.isShiny ? 1.2 : 1.0
+    const shinyMult = poke.isShiny ? 1.5 : 1.0
     const starMult = getStarDpsMult(poke.stars, poke.isShiny)
 
     // Region penalty: 50% damage if fighting outside native generation
