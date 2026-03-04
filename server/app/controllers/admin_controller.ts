@@ -111,6 +111,46 @@ export default class AdminController {
   }
 
   /**
+   * Get detailed user information
+   */
+  async getUserDetails({ params, response }: HttpContext) {
+    const user = await User.findOrFail(params.id)
+    const pokemons = await UserPokemon.query().where('user_id', params.id).preload('species')
+    
+    const teamPokemons = pokemons.filter(p => p.teamSlot !== null).sort((a, b) => (a.teamSlot ?? 0) - (b.teamSlot ?? 0))
+    const shinyCount = pokemons.filter(p => p.isShiny).length
+    
+    return response.ok({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      gold: user.gold,
+      gems: user.gems,
+      level: user.level,
+      badges: user.badges,
+      currentGeneration: user.currentGeneration,
+      currentZone: user.currentZone,
+      currentStage: user.currentStage,
+      xp: user.xp,
+      clickDamage: user.clickDamage,
+      clickDamageBonus: user.clickDamageBonus ?? 0,
+      teamDpsBonus: user.teamDpsBonus ?? 0,
+      defeatedBosses: user.defeatedBosses ?? [],
+      pokemonCount: pokemons.length,
+      shinyCount,
+      teamPokemons: teamPokemons.map(p => ({
+        nameFr: p.species.nameFr,
+        nameEn: p.species.nameEn,
+        level: p.level,
+        isShiny: p.isShiny,
+      })),
+      created_at: user.createdAt,
+      last_login_at: user.lastLoginAt,
+    })
+  }
+
+  /**
    * List all pokemon for a user
    */
   async listUserPokemons({ params, response }: HttpContext) {

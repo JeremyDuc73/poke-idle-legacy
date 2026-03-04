@@ -49,6 +49,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare clickDamage: number
 
   @column()
+  declare clickDamageBonus: number
+
+  @column()
+  declare teamDpsBonus: number
+
+  @column()
   declare xp: number
 
   @column()
@@ -70,6 +76,13 @@ export default class User extends compose(BaseModel, AuthFinder) {
       typeof value === 'string' ? JSON.parse(value) : (value ?? []),
   })
   declare daycare: any[]
+
+  @column({
+    prepare: (value: string[]) => JSON.stringify(value),
+    consume: (value: string | string[]) =>
+      typeof value === 'string' ? JSON.parse(value) : (value ?? []),
+  })
+  declare defeatedBosses: string[]
 
   @column.dateTime()
   declare lastLoginAt: DateTime | null

@@ -49,6 +49,7 @@ router
       .group(() => {
         router.get('/dashboard', [AdminController, 'dashboard'])
         router.get('/users', [AdminController, 'listUsers'])
+        router.get('/users/:id/details', [AdminController, 'getUserDetails'])
         router.put('/users/:id', [AdminController, 'updateUser'])
         router.delete('/users/:id', [AdminController, 'deleteUser'])
         router.post('/users/:id/give-items', [AdminController, 'giveItems'])
