@@ -137,7 +137,7 @@ export default class GameController {
       return response.unauthorized({ message: 'Not authenticated' })
     }
 
-    const { pokemons } = request.body() as {
+    const body = request.body() as {
       pokemons: Array<{
         slug: string
         nameFr?: string
@@ -152,6 +152,16 @@ export default class GameController {
         rarity?: string
         teamSlot: number | null
       }>
+      adminVersion?: number
+    }
+
+    const { pokemons } = body
+
+    // Check if admin modified this user since last client load (prevent re-saving after reset)
+    const clientAdminVersion = Number(body.adminVersion ?? 0)
+    const serverAdminVersion = user.adminVersion ?? 0
+    if (clientAdminVersion < serverAdminVersion) {
+      return response.ok({ message: 'Admin override — skipping pokemon save', reload: true })
     }
 
     if (!pokemons || pokemons.length === 0) {

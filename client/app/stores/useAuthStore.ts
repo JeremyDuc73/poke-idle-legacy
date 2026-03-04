@@ -327,7 +327,7 @@ export const useAuthStore = defineStore('auth', {
         })
 
         if (pokemons.length > 0 || inventory.collectionCount === 0) {
-          const pokemonsPayload = { pokemons } as Record<string, unknown>
+          const pokemonsPayload = { pokemons, adminVersion: player.adminVersion } as Record<string, unknown>
           if (keepalive) {
             api.post('/api/game/save-pokemons', pokemonsPayload, fetchOpts)
           } else {
