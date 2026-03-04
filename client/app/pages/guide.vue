@@ -527,12 +527,15 @@ function toggleGen(id: number) {
               <li>{{ t('Malus régional : un Pokémon qui combat hors de sa région native inflige 50% de dégâts en moins', 'Region penalty: a Pokémon fighting outside its native region deals 50% less damage') }}</li>
               <li>{{ t('Nouveau système de farm : retournez sur les anciennes routes pour gagner de l\'or et de l\'XP', 'New farming system: go back to old routes to earn gold and XP') }}</li>
               <li>{{ t('Sélecteur de route accessible depuis la page combat (icône ▼ à côté du nom de zone)', 'Route selector accessible from the combat page (▼ icon next to zone name)') }}</li>
+              <li>{{ t('Difficulté des Pokémon sauvages augmentée (HP +57%)', 'Wild Pokémon difficulty increased (HP +57%)') }}</li>
+              <li>{{ t('Boss de zone massivement renforcés : il faut upgrader son équipe pour les battre', 'Zone bosses massively buffed: team upgrades required to beat them') }}</li>
             </ul>
           </div>
 
           <div>
             <h4 class="mb-2 text-sm font-semibold text-blue-400">💰 {{ t('Économie', 'Economy') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Boost des récompenses en début de partie : gold de base augmenté pour atteindre la première invocation plus vite', 'Early game rewards boosted: base gold increased to reach first summon faster') }}</li>
               <li>{{ t('Scaling gold/XP entre générations : les récompenses augmentent de façon continue entre les régions', 'Gold/XP scaling across generations: rewards increase continuously between regions') }}</li>
               <li>{{ t('Multiplicateur de génération sur les récompenses (×gen) pour suivre le coût des bannières', 'Generation multiplier on rewards (×gen) to match banner costs') }}</li>
               <li>{{ t('Gacha infini : les Pokémon 5★ ne sont plus retirés du pool de tirage', 'Infinite gacha: 5★ Pokémon are no longer removed from the pull pool') }}</li>
