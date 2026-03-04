@@ -59,10 +59,10 @@ export default class GameController {
         currentZone: user.currentZone,
         currentStage: user.currentStage,
         clickDamage: user.clickDamage,
-        clickDamageBonus: user.clickDamageBonus ?? 0,
-        teamDpsBonus: user.teamDpsBonus ?? 0,
+        clickDamageBonus: (user as any).clickDamageBonus ?? 0,
+        teamDpsBonus: (user as any).teamDpsBonus ?? 0,
         badges: user.badges,
-        defeatedBosses: user.defeatedBosses ?? [],
+        defeatedBosses: (user as any).defeatedBosses ?? [],
         candies: user.candies ?? { S: 0, M: 0, L: 0, XL: 0 },
         daycare: user.daycare ?? [],
       },
@@ -107,13 +107,13 @@ export default class GameController {
       user.daycare = (request.body() as any).daycare
     }
     if ((request.body() as any).clickDamageBonus !== undefined) {
-      user.clickDamageBonus = (request.body() as any).clickDamageBonus
+      ;(user as any).clickDamageBonus = (request.body() as any).clickDamageBonus
     }
     if ((request.body() as any).teamDpsBonus !== undefined) {
-      user.teamDpsBonus = (request.body() as any).teamDpsBonus
+      ;(user as any).teamDpsBonus = (request.body() as any).teamDpsBonus
     }
     if ((request.body() as any).defeatedBosses !== undefined) {
-      user.defeatedBosses = (request.body() as any).defeatedBosses
+      ;(user as any).defeatedBosses = (request.body() as any).defeatedBosses
     }
     user.lastLoginAt = DateTime.now()
     await user.save()
