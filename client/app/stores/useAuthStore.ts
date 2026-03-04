@@ -188,7 +188,6 @@ export const useAuthStore = defineStore('auth', {
         // Overwrite localStorage bonuses with server data to prevent guest mode leakage
         player.saveBonuses()
 
-        console.log(`[LOAD] Server returned ${data.pokemons.length} Pokémon`)
         inventory.collection = data.pokemons.map((p, i) => ({
           id: i + 1,
           slug: p.slug,
@@ -314,8 +313,6 @@ export const useAuthStore = defineStore('auth', {
           }
         })
 
-        console.log(`[SAVE] Collection: ${inventory.collection.length}, Sending: ${pokemons.length}`)
-
         if (pokemons.length > 0 || inventory.collectionCount === 0) {
           const pokemonsPayload = { pokemons } as Record<string, unknown>
           if (keepalive) {
@@ -323,7 +320,6 @@ export const useAuthStore = defineStore('auth', {
           } else {
             await api.post('/api/game/save-pokemons', pokemonsPayload)
           }
-          console.log(`[SAVE] Pokémon saved: ${pokemons.length}`)
         }
       } catch (e) {
         console.error('[SAVE] Pokémon save failed:', e)

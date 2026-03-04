@@ -257,23 +257,23 @@ onMounted(async () => {
             <Sparkles class="hidden h-12 w-12 text-purple-500/30 sm:block" />
           </div>
         </div>
-        <div v-if="statsComputed" class="rounded-xl border border-slate-700 bg-gradient-to-br from-green-500/10 to-green-600/5 p-6 shadow-lg">
+        <div v-if="statsComputed" class="rounded-xl border border-slate-700 bg-gradient-to-br from-green-500/10 to-green-600/5 p-4 shadow-lg sm:p-6">
           <div class="flex items-center justify-between">
             <div>
-              <div class="text-xs font-medium uppercase tracking-wider text-green-400">Niveau Moy.</div>
-              <div class="mt-2 text-3xl font-bold text-white">{{ statsComputed.avgLevel }}</div>
-              <div class="mt-1 text-xs text-slate-400">Max: {{ statsComputed.maxLevel }}</div>
+              <div class="text-[10px] font-medium uppercase tracking-wider text-green-400 sm:text-xs">Niveau Moy.</div>
+              <div class="mt-1 text-2xl font-bold text-white sm:mt-2 sm:text-3xl">{{ statsComputed.avgLevel }}</div>
+              <div class="mt-1 text-[10px] text-slate-400 sm:text-xs">Max: {{ statsComputed.maxLevel }}</div>
             </div>
-            <TrendingUp class="h-12 w-12 text-green-500/30" />
+            <TrendingUp class="hidden h-12 w-12 text-green-500/30 sm:block" />
           </div>
         </div>
-        <div v-if="statsComputed" class="rounded-xl border border-slate-700 bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 p-6 shadow-lg">
+        <div v-if="statsComputed" class="rounded-xl border border-slate-700 bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 p-4 shadow-lg sm:p-6">
           <div class="flex items-center justify-between">
             <div>
-              <div class="text-xs font-medium uppercase tracking-wider text-yellow-400">Gold Moy.</div>
-              <div class="mt-2 text-3xl font-bold text-white">{{ statsComputed.avgGold.toLocaleString() }}</div>
+              <div class="text-[10px] font-medium uppercase tracking-wider text-yellow-400 sm:text-xs">Gold Moy.</div>
+              <div class="mt-1 text-2xl font-bold text-white sm:mt-2 sm:text-3xl">{{ statsComputed.avgGold.toLocaleString() }}</div>
             </div>
-            <span class="text-4xl">🪙</span>
+            <span class="hidden text-4xl sm:block">🪙</span>
           </div>
         </div>
       </div>

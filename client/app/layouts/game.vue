@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Swords, Backpack, User, Star, ShoppingBag, Globe, Trophy, LogOut, LogIn, BookOpen, Award, Egg, HelpCircle, Bug, Shield, X, MoreHorizontal } from 'lucide-vue-next'
+import { Swords, Package, User, Sparkles, Store, Globe, Trophy, LogOut, LogIn, BookOpen, Medal, Egg, HelpCircle, Bug, Shield, X, MoreHorizontal } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
@@ -65,11 +65,11 @@ function toggleLocale() {
 const navItems = computed(() => {
   const items = [
     { label: t('Combat', 'Combat'), icon: Swords, to: '/' },
-    { label: t('Inventaire', 'Inventory'), icon: Backpack, to: '/inventory' },
-    { label: t('Invocation', 'Gacha'), icon: Star, to: '/gacha' },
+    { label: t('Inventaire', 'Inventory'), icon: Package, to: '/inventory' },
+    { label: t('Invocation', 'Gacha'), icon: Sparkles, to: '/gacha' },
     { label: t('Pension', 'Daycare'), icon: Egg, to: '/daycare' },
-    { label: t('Badges', 'Badges'), icon: Award, to: '/badges' },
-    { label: t('Boutique', 'Shop'), icon: ShoppingBag, to: '/shop' },
+    { label: t('Badges', 'Badges'), icon: Medal, to: '/badges' },
+    { label: t('Boutique', 'Shop'), icon: Store, to: '/shop' },
     { label: t('Profil', 'Profile'), icon: User, to: '/profile' },
     { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide' },
     { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex' },
@@ -193,28 +193,38 @@ const navItems = computed(() => {
     </main>
 
     <!-- Bottom Navigation (mobile only) -->
-    <nav class="fixed bottom-0 left-0 right-0 z-20 flex items-stretch justify-around border-t border-slate-700/50 md:hidden" style="background: rgba(15, 23, 42, 0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
-      <NuxtLink
-        v-for="item in navItems.slice(0, 5)"
-        :key="item.to"
-        :to="item.to"
-        class="flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[9px] font-medium transition-colors"
-        :class="$route.path === item.to
-          ? 'text-red-400'
-          : 'text-slate-500'"
-      >
-        <component :is="item.icon" class="h-5 w-5" />
-        <span>{{ item.label }}</span>
-      </NuxtLink>
-      <!-- More button -->
-      <button
-        class="flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[9px] font-medium text-slate-500 transition-colors"
-        :class="{ 'text-red-400': mobileMenuOpen }"
-        @click="mobileMenuOpen = !mobileMenuOpen"
-      >
-        <component :is="mobileMenuOpen ? X : MoreHorizontal" class="h-5 w-5" />
-        <span>{{ t('Plus', 'More') }}</span>
-      </button>
+    <nav class="fixed bottom-0 left-0 right-0 z-20 border-t border-slate-700/50 md:hidden" style="background: rgba(15, 23, 42, 0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+      <div class="mx-auto flex max-w-lg items-stretch justify-around">
+        <NuxtLink
+          v-for="item in navItems.slice(0, 5)"
+          :key="item.to"
+          :to="item.to"
+          class="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5 text-[9px] font-medium transition-all"
+          :class="$route.path === item.to
+            ? 'text-red-400'
+            : 'text-slate-500 active:text-slate-300'"
+        >
+          <div
+            v-if="$route.path === item.to"
+            class="absolute top-0 h-0.5 w-8 rounded-full bg-red-400"
+          />
+          <component :is="item.icon" class="h-[18px] w-[18px]" :stroke-width="$route.path === item.to ? 2.5 : 1.5" />
+          <span>{{ item.label }}</span>
+        </NuxtLink>
+        <!-- More button -->
+        <button
+          class="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5 text-[9px] font-medium transition-all"
+          :class="mobileMenuOpen ? 'text-red-400' : 'text-slate-500 active:text-slate-300'"
+          @click="mobileMenuOpen = !mobileMenuOpen"
+        >
+          <div
+            v-if="mobileMenuOpen"
+            class="absolute top-0 h-0.5 w-8 rounded-full bg-red-400"
+          />
+          <component :is="mobileMenuOpen ? X : MoreHorizontal" class="h-[18px] w-[18px]" :stroke-width="mobileMenuOpen ? 2.5 : 1.5" />
+          <span>{{ t('Plus', 'More') }}</span>
+        </button>
+      </div>
     </nav>
 
     <!-- Mobile "More" slide-up panel -->
