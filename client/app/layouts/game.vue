@@ -35,8 +35,7 @@ onMounted(() => {
   // Migrate Gen 4 evolutions to correct rarity
   inventory.migrateGen4Evolutions()
 
-  // Remove duplicates and check evolutions on mount
-  inventory.removeDuplicates()
+  // Check evolutions on mount
   inventory.checkAllEvolutions(player.currentGeneration)
 
   // Auto-save every 10s (works for both authenticated and guest mode)
@@ -47,10 +46,9 @@ onMounted(() => {
   window.addEventListener('beforeunload', saveOnUnload)
 })
 
-// Clean duplicates and check evolutions on every page change
+// Check evolutions on every page change
 const route = useRoute()
 watch(() => route.path, () => {
-  inventory.removeDuplicates()
   inventory.checkAllEvolutions(player.currentGeneration)
 })
 
