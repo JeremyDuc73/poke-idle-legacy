@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Coins, FlaskConical, X, Candy, Zap } from 'lucide-vue-next'
-import { usePlayerStore, CANDY_XP, CANDY_COST } from '~/stores/usePlayerStore'
+import { usePlayerStore, CANDY_XP, getCandyCost } from '~/stores/usePlayerStore'
 import type { CandySize } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
@@ -203,7 +203,7 @@ const boostsByGen = computed(() => {
   const grouped: Record<number, ClickBoost[]> = {}
   for (const boost of CLICK_BOOSTS) {
     if (!grouped[boost.generation]) grouped[boost.generation] = []
-    grouped[boost.generation].push(boost)
+    grouped[boost.generation]!.push(boost)
   }
   return grouped
 })
@@ -264,7 +264,7 @@ const boostsByGen = computed(() => {
           :key="size"
           class="flex flex-col items-center gap-2 rounded-xl border border-gray-700 bg-gray-800 p-4 transition-all hover:border-green-500/30 active:scale-[0.98] disabled:opacity-40"
           :class="{ 'ring-2 ring-green-500/50': purchaseFlash === `candy-${size}` }"
-          :disabled="!isCandyUnlocked(size) || player.gold < CANDY_COST[size]"
+          :disabled="!isCandyUnlocked(size) || player.gold < getCandyCost(size, player.currentGeneration)"
           @click="buyCandy(size)"
         >
           <div
@@ -287,7 +287,7 @@ const boostsByGen = computed(() => {
               x{{ player.candies[size] }}
             </span>
             <span class="flex items-center gap-1 text-xs font-bold text-yellow-400">
-              🪙 {{ CANDY_COST[size].toLocaleString() }}
+              🪙 {{ getCandyCost(size, player.currentGeneration).toLocaleString() }}
             </span>
           </div>
         </button>

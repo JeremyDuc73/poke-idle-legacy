@@ -41,7 +41,17 @@ function xpForLevel(level: number): number {
 export type CandySize = 'S' | 'M' | 'L' | 'XL'
 
 export const CANDY_XP: Record<CandySize, number> = { S: 100, M: 500, L: 2000, XL: 10000 }
-export const CANDY_COST: Record<CandySize, number> = { S: 50, M: 200, L: 750, XL: 3000 }
+
+// Base candy costs (Gen 1)
+const CANDY_COST_BASE: Record<CandySize, number> = { S: 100, M: 500, L: 2000, XL: 10000 }
+
+// Candy cost scales with player generation (like evolution items)
+export function getCandyCost(size: CandySize, generation: number): number {
+  return Math.round(CANDY_COST_BASE[size] * Math.pow(2, generation - 1))
+}
+
+// Legacy export for compatibility (uses gen 1 prices)
+export const CANDY_COST: Record<CandySize, number> = CANDY_COST_BASE
 
 interface PlayerState {
   username: string
@@ -243,7 +253,7 @@ export const usePlayerStore = defineStore('player', {
     },
 
     buyCandy(size: CandySize, qty: number = 1): boolean {
-      const cost = CANDY_COST[size] * qty
+      const cost = getCandyCost(size, this.currentGeneration) * qty
       if (!this.spendGold(cost)) return false
       this.candies[size] += qty
       return true
