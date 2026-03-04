@@ -16,6 +16,7 @@ export interface OwnedPokemon {
   isShiny: boolean
   rarity: Rarity
   teamSlot: number | null
+  hasEvolved?: boolean
 }
 
 interface SavedTeam {
@@ -190,6 +191,9 @@ export const useInventoryStore = defineStore('inventory', {
     },
 
     applyEvolution(pokemon: OwnedPokemon, evo: Evolution) {
+      // Mark this pokemon as having evolved to prevent multiple evolutions
+      pokemon.hasEvolved = true
+      
       // Living dex: keep the original pokemon, add the evolution as a new entry at level 1
       const evolved: OwnedPokemon = {
         id: this.nextId++,
@@ -202,6 +206,7 @@ export const useInventoryStore = defineStore('inventory', {
         isShiny: pokemon.isShiny,
         rarity: pokemon.rarity, // Inherit rarity from original pokemon
         teamSlot: pokemon.teamSlot,
+        hasEvolved: false,
       }
       // Remove original from team, put evolved in its slot
       pokemon.teamSlot = null
@@ -250,6 +255,9 @@ export const useInventoryStore = defineStore('inventory', {
     checkAllEvolutions(currentGeneration?: number) {
       const maxGen = currentGeneration ?? 9
       for (const pokemon of this.collection) {
+        // Skip if already evolved
+        if (pokemon.hasEvolved) continue
+        
         // Check level-based evolution
         const evo = canEvolveByLevel(pokemon.slug, pokemon.level)
         if (evo && evo.levelRequired && pokemon.level >= evo.levelRequired) {

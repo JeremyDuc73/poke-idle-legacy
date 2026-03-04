@@ -39,6 +39,10 @@ const filterShiny = ref<boolean | null>(null)
 const filterTeam = ref<boolean | null>(null)
 const filterGen = ref<number | null>(null)
 
+// Drag & drop state
+const draggedPokemon = ref<OwnedPokemon | null>(null)
+const draggedSlot = ref<number | null>(null)
+
 // Team save/load
 const showSaveTeamModal = ref(false)
 const showLoadTeamModal = ref(false)
@@ -61,13 +65,21 @@ function deleteSavedTeam(name: string) {
 }
 
 function clearTeam() {
-  for (const p of inventory.collection) {
-    if (p.teamSlot !== null) {
-      inventory.removeFromTeam(p.id)
-    }
+  inventory.team.forEach(p => inventory.removeFromTeam(p.id))
+}
+
+// Drag & drop handlers
+function onDragStartTeam(slot: number, event: DragEvent) {
+  const pokemon = inventory.team.find(p => p.teamSlot === slot)
+  if (!pokemon) return
+  draggedPokemon.value = pokemon
+  draggedSlot.value = slot
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = 'move'
   }
 }
 
+function onDragOverTeam(event: DragEvent) {
 function handlePokemonRightClick(event: MouseEvent, pokemon: OwnedPokemon) {
   event.preventDefault()
   if (isInDaycare(pokemon)) return
@@ -268,7 +280,16 @@ function getDetailStats(poke: OwnedPokemon) {
           v-for="slot in [1, 2, 3, 4, 5, 6]"
           :key="slot"
           class="flex h-24 flex-col items-center justify-center rounded-xl border border-gray-700 bg-gray-800 transition-all"
-          :class="inventory.team.find((p) => p.teamSlot === slot) ? 'cursor-context-menu hover:border-red-500/50' : ''"
+          :class="{
+            'cursor-context-menu hover:border-red-500/50': inventory.team.find((p) => p.teamSlot === slot),
+            'cursor-move': inventory.team.find((p) => p.teamSlot === slot),
+            'border-cyan-500 bg-cyan-500/10': draggedSlot === slot || (draggedPokemon && !draggedSlot && !inventory.team.find((p) => p.teamSlot === slot))
+          }"
+          draggable="true"
+          @dragstart="onDragStartTeam(slot, $event)"
+          @dragover="onDragOverTeam($event)"
+          @drop.prevent="draggedSlot !== null ? onDropTeam(slot) : onDropInventoryToTeam(slot)"
+          @dragend="onDragEnd"
           @contextmenu.prevent="inventory.team.find((p) => p.teamSlot === slot) ? inventory.removeFromTeam(inventory.team.find((p) => p.teamSlot === slot)!.id) : null"
         >
           <template v-if="inventory.team.find((p) => p.teamSlot === slot)">
@@ -307,13 +328,17 @@ function getDetailStats(poke: OwnedPokemon) {
       </div>
 
       <!-- Sort -->
-      <button
-        class="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-gray-300 transition-colors hover:bg-gray-700"
-        @click="sortBy = sortBy === 'stars' ? 'level' : sortBy === 'level' ? 'name' : sortBy === 'name' ? 'dps' : sortBy === 'dps' ? 'pokedex' : sortBy === 'pokedex' ? 'rarity' : 'stars'"
+      <select
+        v-model="sortBy"
+        class="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-gray-300 outline-none transition-colors hover:bg-gray-700 focus:border-blue-500"
       >
-        <ArrowUpDown class="h-3.5 w-3.5" />
-        {{ sortBy === 'stars' ? '⭐' : sortBy === 'level' ? 'Lv' : sortBy === 'name' ? 'A-Z' : sortBy === 'dps' ? 'DPS' : sortBy === 'pokedex' ? '#' : '🎨' }}
-      </button>
+        <option value="stars">⭐ {{ t('Étoiles', 'Stars') }}</option>
+        <option value="level">Lv {{ t('Niveau', 'Level') }}</option>
+        <option value="name">A-Z {{ t('Nom', 'Name') }}</option>
+        <option value="dps">DPS</option>
+        <option value="pokedex"># {{ t('Pokédex', 'Pokédex') }}</option>
+        <option value="rarity">🎨 {{ t('Rareté', 'Rarity') }}</option>
+      </select>
 
       <!-- Shiny toggle -->
       <button
