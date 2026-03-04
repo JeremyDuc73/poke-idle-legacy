@@ -108,7 +108,7 @@ export function useCombatLoop() {
     const poke = randomWild()
     // HP scales exponentially per generation so later regions are much harder
     const genHpMult = Math.pow(2.5, genMult - 1)
-    const hp = Math.round(poke.baseHp * (1 + localDiff * 0.55) * genHpMult)
+    const hp = Math.round(poke.baseHp * (1 + localDiff * 1.0) * genHpMult)
     combat.setEnemy({
       nameFr: `${poke.nameFr} sauvage`,
       nameEn: `Wild ${poke.nameEn}`,
@@ -128,7 +128,7 @@ export function useCombatLoop() {
   function spawnBoss(boss: BossTrainer, localDiff: number, globalDiff: number, genMult: number) {
     const zone = player.activeCombatZone
     const genHpMult = Math.pow(2.5, genMult - 1)
-    const totalHp = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0) * (2 + localDiff * 0.8) * genHpMult
+    const totalHp = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0) * (1.5 + localDiff * 0.35) * genHpMult
     const bossTypes = getPokemonTypes(boss.team[0]?.slug ?? 'normal')
     combat.setEnemy({
       nameFr: `Boss : ${boss.nameFr}`,
