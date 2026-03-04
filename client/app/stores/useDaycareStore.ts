@@ -20,8 +20,8 @@ export const HATCH_DAMAGE: Record<number, number> = {
   1: 10_000,
   2: 50_000,
   3: 250_000,
-  4: 1_250_000,
-  5: 6_250_000,
+  4: 500_000,
+  5: 1_000_000,
 }
 
 // 5-star pokemon have a 1/50 chance to hatch shiny
