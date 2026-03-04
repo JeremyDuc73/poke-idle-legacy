@@ -803,7 +803,7 @@ function toggleGen(id: number) {
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
               <li>{{ t('5 slots de pension simultanés', '5 simultaneous daycare slots') }}</li>
               <li>{{ t('Éclosion basée sur les dégâts infligés en combat', 'Hatching based on combat damage dealt') }}</li>
-              <li>{{ t('Seuils évolutifs : 1★ (50k) → 5★ (250M dégâts)', 'Scaling thresholds: 1★ (50k) → 5★ (250M damage)') }}</li>
+              <li>{{ t('Seuils évolutifs : 1★ (10k), 2★ (50k), 3★ (250k), 4★ (500k), 5★ (1M dégâts)', 'Scaling thresholds: 1★ (10k), 2★ (50k), 3★ (250k), 4★ (500k), 5★ (1M damage)') }}</li>
               <li>{{ t('Pokémon 5★ en pension : 1/50 chance de shiny', '5★ Pokémon in daycare: 1/50 shiny chance') }}</li>
               <li>{{ t('Pokémon en pension retirés de l\'équipe automatiquement', 'Pokémon in daycare automatically removed from team') }}</li>
             </ul>
