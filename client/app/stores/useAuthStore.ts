@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { useApi } from '~/composables/useApi'
-import { useSpeciesCache } from '~/composables/useSpeciesCache'
+import { POKEDEX } from '~/data/pokedex'
 import { useLocalStorage } from '~/composables/useLocalStorage'
 import type { CandySize } from '~/stores/usePlayerStore'
 import { usePlayerStore } from '~/stores/usePlayerStore'
@@ -263,7 +263,6 @@ export const useAuthStore = defineStore('auth', {
       const api = useApi()
       const player = usePlayerStore()
       const inventory = useInventoryStore()
-      const { getSpeciesId, loaded: speciesLoaded } = useSpeciesCache()
 
       const fetchOpts = keepalive ? { keepalive: true } : undefined
 
@@ -296,24 +295,26 @@ export const useAuthStore = defineStore('auth', {
 
       // Save pokemons separately so player save failure doesn't block it
       try {
-        if (!speciesLoaded.value) {
-          console.warn('[SAVE] Species cache NOT loaded — Pokémon will NOT be saved!')
-          return
-        }
+        const pokedexMap = new Map(POKEDEX.map((p) => [p.slug, p]))
 
-        const pokemons = inventory.collection
-          .map((p) => ({
-            speciesId: getSpeciesId(p.slug),
+        const pokemons = inventory.collection.map((p) => {
+          const entry = pokedexMap.get(p.slug)
+          return {
+            slug: p.slug,
+            nameFr: p.nameFr ?? entry?.nameFr ?? p.slug,
+            nameEn: p.nameEn ?? entry?.nameEn ?? p.slug,
+            pokedexId: entry?.id ?? 0,
+            gen: entry?.gen ?? 1,
             level: p.level,
             xp: p.xp,
             stars: p.stars,
             isShiny: p.isShiny,
             rarity: p.rarity ?? 'common',
             teamSlot: p.teamSlot,
-          }))
-          .filter((p) => p.speciesId !== null)
+          }
+        })
 
-        console.log(`[SAVE] Species loaded. Collection: ${inventory.collection.length}, Mapped with speciesId: ${pokemons.length}`)
+        console.log(`[SAVE] Collection: ${inventory.collection.length}, Sending: ${pokemons.length}`)
 
         if (pokemons.length > 0 || inventory.collectionCount === 0) {
           const pokemonsPayload = { pokemons } as Record<string, unknown>
@@ -323,8 +324,6 @@ export const useAuthStore = defineStore('auth', {
             await api.post('/api/game/save-pokemons', pokemonsPayload)
           }
           console.log(`[SAVE] Pokémon saved: ${pokemons.length}`)
-        } else {
-          console.warn(`[SAVE] No Pokémon to save! Collection: ${inventory.collection.length}, matched: ${pokemons.length}`)
         }
       } catch (e) {
         console.error('[SAVE] Pokémon save failed:', e)
