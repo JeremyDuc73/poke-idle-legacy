@@ -18,7 +18,6 @@ interface User {
   email: string
   role: string
   gold: number
-  gems: number
   level: number
   badges: number
   created_at: string
@@ -48,7 +47,6 @@ const showUserModal = ref(false)
 const showDetailsModal = ref(false)
 const showGiveItemsModal = ref(false)
 const goldToGive = ref(0)
-const gemsToGive = ref(0)
 const searchQuery = ref('')
 const sortBy = ref<'username' | 'level' | 'gold' | 'badges'>('level')
 const sortOrder = ref<'asc' | 'desc'>('desc')
@@ -160,13 +158,11 @@ async function giveItems() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         gold: goldToGive.value,
-        gems: gemsToGive.value,
       }),
     })
     if (response.ok) {
       showGiveItemsModal.value = false
       goldToGive.value = 0
-      gemsToGive.value = 0
       await loadUsers()
     }
   } catch (error) {
@@ -233,34 +229,32 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 p-6">
+  <div class="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 p-3 sm:p-6">
     <div class="mx-auto max-w-7xl">
       <!-- Header -->
-      <div class="mb-8 flex items-center justify-between">
-        <div>
-          <h1 class="text-4xl font-bold text-white">Dashboard Admin</h1>
-          <p class="mt-1 text-sm text-slate-400">Gestion des utilisateurs et statistiques</p>
-        </div>
+      <div class="mb-6 sm:mb-8">
+        <h1 class="text-2xl font-bold text-white sm:text-4xl">Dashboard Admin</h1>
+        <p class="mt-1 text-xs text-slate-400 sm:text-sm">Gestion des utilisateurs et statistiques</p>
       </div>
 
       <!-- Stats Grid -->
-      <div v-if="stats" class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-blue-500/10 to-blue-600/5 p-6 shadow-lg">
+      <div v-if="stats" class="mb-6 grid grid-cols-2 gap-3 sm:mb-8 sm:gap-4 lg:grid-cols-4">
+        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-blue-500/10 to-blue-600/5 p-4 shadow-lg sm:p-6">
           <div class="flex items-center justify-between">
             <div>
-              <div class="text-xs font-medium uppercase tracking-wider text-blue-400">Utilisateurs</div>
-              <div class="mt-2 text-3xl font-bold text-white">{{ stats.totalUsers }}</div>
+              <div class="text-[10px] font-medium uppercase tracking-wider text-blue-400 sm:text-xs">Utilisateurs</div>
+              <div class="mt-1 text-2xl font-bold text-white sm:mt-2 sm:text-3xl">{{ stats.totalUsers }}</div>
             </div>
-            <Users class="h-12 w-12 text-blue-500/30" />
+            <Users class="hidden h-12 w-12 text-blue-500/30 sm:block" />
           </div>
         </div>
-        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-purple-500/10 to-purple-600/5 p-6 shadow-lg">
+        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-purple-500/10 to-purple-600/5 p-4 shadow-lg sm:p-6">
           <div class="flex items-center justify-between">
             <div>
-              <div class="text-xs font-medium uppercase tracking-wider text-purple-400">Pokémon</div>
-              <div class="mt-2 text-3xl font-bold text-white">{{ stats.totalPokemons }}</div>
+              <div class="text-[10px] font-medium uppercase tracking-wider text-purple-400 sm:text-xs">Pokémon</div>
+              <div class="mt-1 text-2xl font-bold text-white sm:mt-2 sm:text-3xl">{{ stats.totalPokemons }}</div>
             </div>
-            <Sparkles class="h-12 w-12 text-purple-500/30" />
+            <Sparkles class="hidden h-12 w-12 text-purple-500/30 sm:block" />
           </div>
         </div>
         <div v-if="statsComputed" class="rounded-xl border border-slate-700 bg-gradient-to-br from-green-500/10 to-green-600/5 p-6 shadow-lg">
@@ -285,9 +279,9 @@ onMounted(async () => {
       </div>
 
       <!-- Users Table -->
-      <div class="rounded-xl border border-slate-700 bg-slate-800/50 p-6 shadow-xl">
-        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 class="text-2xl font-bold text-white">Utilisateurs ({{ filteredUsers.length }})</h2>
+      <div class="rounded-xl border border-slate-700 bg-slate-800/50 p-3 shadow-xl sm:p-6">
+        <div class="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
+          <h2 class="text-lg font-bold text-white sm:text-2xl">Utilisateurs ({{ filteredUsers.length }})</h2>
           
           <!-- Search -->
           <div class="relative">
@@ -322,7 +316,6 @@ onMounted(async () => {
                     <ChevronUp v-else-if="sortBy === 'gold' && sortOrder === 'asc'" class="h-3 w-3" />
                   </div>
                 </th>
-                <th class="px-4 py-3">Gems</th>
                 <th class="cursor-pointer px-4 py-3 transition-colors hover:text-white" @click="toggleSort('level')">
                   <div class="flex items-center gap-1">
                     Level
@@ -362,7 +355,6 @@ onMounted(async () => {
                   </span>
                 </td>
                 <td class="px-4 py-3">{{ user.gold.toLocaleString() }}</td>
-                <td class="px-4 py-3">{{ user.gems }}</td>
                 <td class="px-4 py-3">{{ user.level }}</td>
                 <td class="px-4 py-3">
                   <div class="flex items-center gap-0.5">
@@ -446,14 +438,10 @@ onMounted(async () => {
 
           <div v-else class="space-y-6">
             <!-- Stats principales -->
-            <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div class="rounded-lg border border-slate-700 bg-slate-900/50 p-4">
                 <div class="text-xs font-medium text-slate-400">Gold</div>
                 <div class="mt-1 text-2xl font-bold text-yellow-400">{{ userDetails.gold.toLocaleString() }}</div>
-              </div>
-              <div class="rounded-lg border border-slate-700 bg-slate-900/50 p-4">
-                <div class="text-xs font-medium text-slate-400">Gems</div>
-                <div class="mt-1 text-2xl font-bold text-purple-400">{{ userDetails.gems }}</div>
               </div>
               <div class="rounded-lg border border-slate-700 bg-slate-900/50 p-4">
                 <div class="text-xs font-medium text-slate-400">Level</div>
@@ -664,15 +652,6 @@ onMounted(async () => {
               <label class="mb-1 block text-sm text-gray-400">Gold</label>
               <input
                 v-model.number="goldToGive"
-                type="number"
-                min="0"
-                class="w-full rounded border border-gray-600 bg-gray-700 px-3 py-2 text-white"
-              />
-            </div>
-            <div>
-              <label class="mb-1 block text-sm text-gray-400">Gems</label>
-              <input
-                v-model.number="gemsToGive"
                 type="number"
                 min="0"
                 class="w-full rounded border border-gray-600 bg-gray-700 px-3 py-2 text-white"

@@ -322,32 +322,32 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
     </div>
 
         <!-- Stats Row -->
-        <div class="flex gap-3">
-          <div class="flex items-center gap-3 rounded-xl border-2 border-orange-500/30 bg-gradient-to-br from-orange-950/50 to-slate-900 px-5 py-3 shadow-lg">
-            <div class="rounded-lg bg-orange-500/20 p-2">
-              <Swords class="h-5 w-5 text-orange-400" />
+        <div class="flex flex-wrap justify-center gap-2 sm:gap-3">
+          <div class="flex items-center gap-2 rounded-xl border-2 border-orange-500/30 bg-gradient-to-br from-orange-950/50 to-slate-900 px-3 py-2 shadow-lg sm:gap-3 sm:px-5 sm:py-3">
+            <div class="rounded-lg bg-orange-500/20 p-1.5 sm:p-2">
+              <Swords class="h-4 w-4 text-orange-400 sm:h-5 sm:w-5" />
             </div>
             <div class="text-left">
-              <p class="text-xs font-medium uppercase tracking-wider text-orange-300/70">{{ t('Click', 'Click') }}</p>
-              <p class="text-lg font-bold text-orange-400">{{ combat.clickDamage }}</p>
+              <p class="text-[10px] font-medium uppercase tracking-wider text-orange-300/70 sm:text-xs">{{ t('Click', 'Click') }}</p>
+              <p class="text-base font-bold text-orange-400 sm:text-lg">{{ combat.clickDamage }}</p>
             </div>
           </div>
-          <div class="flex items-center gap-3 rounded-xl border-2 border-cyan-500/30 bg-gradient-to-br from-cyan-950/50 to-slate-900 px-5 py-3 shadow-lg">
-            <div class="rounded-lg bg-cyan-500/20 p-2">
-              <Zap class="h-5 w-5 text-cyan-400" />
+          <div class="flex items-center gap-2 rounded-xl border-2 border-cyan-500/30 bg-gradient-to-br from-cyan-950/50 to-slate-900 px-3 py-2 shadow-lg sm:gap-3 sm:px-5 sm:py-3">
+            <div class="rounded-lg bg-cyan-500/20 p-1.5 sm:p-2">
+              <Zap class="h-4 w-4 text-cyan-400 sm:h-5 sm:w-5" />
             </div>
             <div class="text-left">
-              <p class="text-xs font-medium uppercase tracking-wider text-cyan-300/70">DPS</p>
-              <p class="text-lg font-bold text-cyan-400">{{ effectiveDps }}</p>
+              <p class="text-[10px] font-medium uppercase tracking-wider text-cyan-300/70 sm:text-xs">DPS</p>
+              <p class="text-base font-bold text-cyan-400 sm:text-lg">{{ effectiveDps }}</p>
             </div>
           </div>
-          <div class="flex items-center gap-3 rounded-xl border-2 border-red-500/30 bg-gradient-to-br from-red-950/50 to-slate-900 px-5 py-3 shadow-lg">
-            <div class="rounded-lg bg-red-500/20 p-2">
-              <Skull class="h-5 w-5 text-red-400" />
+          <div class="flex items-center gap-2 rounded-xl border-2 border-red-500/30 bg-gradient-to-br from-red-950/50 to-slate-900 px-3 py-2 shadow-lg sm:gap-3 sm:px-5 sm:py-3">
+            <div class="rounded-lg bg-red-500/20 p-1.5 sm:p-2">
+              <Skull class="h-4 w-4 text-red-400 sm:h-5 sm:w-5" />
             </div>
             <div class="text-left">
-              <p class="text-xs font-medium uppercase tracking-wider text-red-300/70">Kills</p>
-              <p class="text-lg font-bold text-red-400">{{ combat.totalKills }}</p>
+              <p class="text-[10px] font-medium uppercase tracking-wider text-red-300/70 sm:text-xs">Kills</p>
+              <p class="text-base font-bold text-red-400 sm:text-lg">{{ combat.totalKills }}</p>
             </div>
           </div>
         </div>

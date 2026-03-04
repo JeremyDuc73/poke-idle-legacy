@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { User, Trophy, Swords, Zap, Skull, Star, MapPin, Coins, Gem } from 'lucide-vue-next'
+import { User, Trophy, Swords, Zap, Skull, Star, MapPin, Coins } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useCombatStore } from '~/stores/useCombatStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
@@ -36,13 +36,6 @@ const stats = computed<StatItem[]>(() => [
     value: player.formattedGold,
     icon: Coins,
     color: 'text-yellow-400',
-  },
-  {
-    labelFr: 'Gemmes',
-    labelEn: 'Gems',
-    value: player.formattedGems,
-    icon: Gem,
-    color: 'text-purple-400',
   },
   {
     labelFr: 'Badges',
@@ -145,7 +138,7 @@ const stats = computed<StatItem[]>(() => [
     <!-- Team Overview -->
     <div v-if="inventory.team.length > 0">
       <h3 class="mb-3 text-sm font-semibold text-gray-400">{{ t('Équipe active', 'Active Team') }}</h3>
-      <div class="flex gap-3">
+      <div class="flex flex-wrap gap-3">
         <div
           v-for="pokemon in inventory.team"
           :key="pokemon.id"

@@ -229,13 +229,13 @@ function getDetailStats(poke: OwnedPokemon) {
 
     <!-- Team -->
     <div>
-      <div class="mb-2 flex items-center gap-2">
+      <div class="mb-2 flex flex-wrap items-center gap-2">
         <h3 class="flex items-center gap-2 text-sm font-semibold text-gray-400">
           <Shield class="h-4 w-4" />
           {{ t('Équipe active', 'Active Team') }} ({{ inventory.team.length }}/6)
           <span class="ml-2 text-xs text-cyan-400">DPS: {{ inventory.teamDps }}</span>
         </h3>
-        <div class="ml-auto flex gap-2">
+        <div class="flex gap-2 sm:ml-auto">
           <button
             v-if="inventory.team.length > 0"
             class="rounded-lg bg-red-600 px-3 py-1 text-xs font-bold text-white transition-colors hover:bg-red-500"
@@ -259,7 +259,7 @@ function getDetailStats(poke: OwnedPokemon) {
           </button>
         </div>
       </div>
-      <div class="grid grid-cols-6 gap-2">
+      <div class="grid grid-cols-3 gap-2 sm:grid-cols-6">
         <div
           v-for="slot in [1, 2, 3, 4, 5, 6]"
           :key="slot"
@@ -292,13 +292,13 @@ function getDetailStats(poke: OwnedPokemon) {
     <!-- Filters -->
     <div class="flex flex-wrap items-center gap-2">
       <!-- Search -->
-      <div class="relative">
+      <div class="relative w-full sm:w-auto">
         <Search class="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
         <input
           v-model="search"
           type="text"
           :placeholder="t('Rechercher...', 'Search...')"
-          class="rounded-lg border border-slate-700 bg-slate-800 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 outline-none focus:border-blue-500"
+          class="w-full rounded-lg border border-slate-700 bg-slate-800 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 outline-none focus:border-blue-500 sm:w-auto"
         />
       </div>
 
@@ -391,7 +391,7 @@ function getDetailStats(poke: OwnedPokemon) {
     </div>
 
     <!-- Collection Grid -->
-    <div v-else class="grid grid-cols-3 gap-2 xs:grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10">
+    <div v-else class="grid grid-cols-2 gap-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9">
       <button
         v-for="pokemon in filteredCollection"
         :key="pokemon.id"

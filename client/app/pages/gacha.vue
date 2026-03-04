@@ -342,7 +342,7 @@ function dismiss() {
       v-if="showResult && pullResults.length > 1"
       class="flex w-full max-w-2xl flex-col items-center gap-4"
     >
-      <div class="grid w-full gap-3" :class="pullResults.length <= 5 ? 'grid-cols-5' : 'grid-cols-5 sm:grid-cols-5'">
+      <div class="grid w-full gap-2 sm:gap-3" :class="pullResults.length <= 5 ? 'grid-cols-3 sm:grid-cols-5' : 'grid-cols-3 sm:grid-cols-5'">
         <div
           v-for="(r, i) in pullResults"
           :key="i"
@@ -463,7 +463,7 @@ function dismiss() {
       <h3 class="mb-3 text-sm font-semibold text-slate-400">
         {{ t('Pokémon disponibles', 'Available Pokémon') }}
       </h3>
-      <div class="grid grid-cols-6 gap-2 sm:grid-cols-8 md:grid-cols-10">
+      <div class="grid grid-cols-4 gap-1.5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
         <div
           v-for="p in activeBanner.pool"
           :key="p.slug"
