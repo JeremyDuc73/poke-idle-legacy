@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { canEvolveByLevel, canEvolveByItem, pokemonXpForLevel, getEvoStageMult } from '~/data/evolutions'
+import { canEvolveByLevel, canEvolveByItem, pokemonXpForLevel, getEvoStageMult, EVOLUTIONS } from '~/data/evolutions'
 import type { Evolution } from '~/data/evolutions'
 import { getRarityDpsMult, getStarDpsMult, getRarity } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
@@ -191,6 +191,9 @@ export const useInventoryStore = defineStore('inventory', {
     },
 
     applyEvolution(pokemon: OwnedPokemon, evo: Evolution) {
+      // Guard: if this pokemon was already evolved, skip
+      if (pokemon.hasEvolved) return
+      
       // Mark this pokemon as having evolved to prevent multiple evolutions
       pokemon.hasEvolved = true
       
@@ -281,6 +284,27 @@ export const useInventoryStore = defineStore('inventory', {
       if (toRemove.length > 0) {
         console.log(`[Inventory] Removing ${toRemove.length} duplicate Pokemon:`, toRemove)
         this.collection = this.collection.filter(p => !toRemove.includes(p.id))
+      }
+    },
+
+    // Rebuild hasEvolved flags after loading from server (not persisted)
+    rebuildHasEvolvedFlags() {
+      // Build set of all slug+shiny combos in collection
+      const existing = new Map<string, number>()
+      for (const p of this.collection) {
+        const key = `${p.slug}-${p.isShiny}`
+        existing.set(key, (existing.get(key) ?? 0) + 1)
+      }
+      for (const pokemon of this.collection) {
+        // Find all evolutions from this pokemon's slug
+        const evos = EVOLUTIONS.filter(e => e.fromSlug === pokemon.slug)
+        for (const evo of evos) {
+          const key = `${evo.toSlug}-${pokemon.isShiny}`
+          if (existing.has(key)) {
+            pokemon.hasEvolved = true
+            break
+          }
+        }
       }
     },
 

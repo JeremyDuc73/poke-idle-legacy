@@ -152,6 +152,7 @@ export const useAuthStore = defineStore('auth', {
       
       inventory.collection = guestData.inventory.collection
       inventory.nextId = guestData.inventory.nextId
+      inventory.rebuildHasEvolvedFlags()
       daycare.slots = guestData.daycare.slots
     },
 
@@ -208,6 +209,8 @@ export const useAuthStore = defineStore('auth', {
           teamSlot: p.teamSlot,
         }))
         inventory.nextId = data.pokemons.length + 1
+        // Rebuild hasEvolved flags so checkAllEvolutions doesn't re-create existing evolutions
+        inventory.rebuildHasEvolvedFlags()
 
         // Restore daycare
         const daycareStore = useDaycareStore()

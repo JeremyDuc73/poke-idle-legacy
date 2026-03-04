@@ -791,8 +791,8 @@ export function getEvolutionStage(slug: string): number {
   return _evoStageCache.get(slug) ?? 0
 }
 
-// Evolution multiplier: base=1.0, stage1=1.2, stage2=1.4
-export const EVO_STAGE_MULT = [1.0, 1.2, 1.4] as const
+// Evolution multiplier: base=1.0, stage1=1.3, stage2=1.5
+export const EVO_STAGE_MULT = [1.0, 1.3, 1.5] as const
 
 export function getEvoStageMult(slug: string): number {
   const stage = getEvolutionStage(slug)

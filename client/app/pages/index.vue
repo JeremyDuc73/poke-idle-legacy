@@ -27,13 +27,16 @@ const { spawnEnemy, checkEnemyDeath, getEffectiveDps, getPokeDps, currentZone } 
 const showGuestModal = ref(false)
 const showRouteSelector = ref(false)
 
-// Build list of all completed zones for the route selector (only zones whose boss was defeated)
+// Build list of all farmable zones (all zones before the player's current frontier)
 const completedRoutes = computed(() => {
   const routes: Array<{ gen: number; zone: number; genName: string; zoneName: string }> = []
   for (const g of GENERATIONS) {
+    // Skip generations beyond the player's current one
+    if (g.id > player.currentGeneration) break
     for (const z of g.zones) {
-      // Only include zones whose boss has been defeated
-      if (player.defeatedBosses.includes(z.boss.slug)) {
+      // For current generation: only zones before the current zone
+      // For previous generations: all zones
+      if (g.id < player.currentGeneration || z.id < player.currentZone) {
         routes.push({
           gen: g.id,
           zone: z.id,
