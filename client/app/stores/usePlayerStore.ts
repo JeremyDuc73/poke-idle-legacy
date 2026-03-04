@@ -63,6 +63,7 @@ interface PlayerState {
   regionUnlockMessage: string | null
   combatGeneration: number | null
   combatZone: number | null
+  adminVersion: number
 }
 
 export const usePlayerStore = defineStore('player', {
@@ -88,6 +89,7 @@ export const usePlayerStore = defineStore('player', {
       regionUnlockMessage: null,
       combatGeneration: null,
       combatZone: null,
+      adminVersion: 0,
     }
   },
 

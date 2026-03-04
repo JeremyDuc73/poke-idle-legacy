@@ -65,6 +65,7 @@ export default class GameController {
         defeatedBosses: (user as any).defeatedBosses ?? [],
         candies: user.candies ?? { S: 0, M: 0, L: 0, XL: 0 },
         daycare: user.daycare ?? [],
+        adminVersion: user.adminVersion ?? 0,
       },
       pokemons: user.pokemons.map((p) => ({
         id: p.id,
@@ -115,10 +116,19 @@ export default class GameController {
     if ((request.body() as any).defeatedBosses !== undefined) {
       ;(user as any).defeatedBosses = (request.body() as any).defeatedBosses
     }
+    // Check if admin modified this user since last client load
+    const clientAdminVersion = Number((request.body() as any).adminVersion ?? 0)
+    const serverAdminVersion = user.adminVersion ?? 0
+
+    if (clientAdminVersion < serverAdminVersion) {
+      // Admin made changes — tell client to reload fresh data
+      return response.ok({ message: 'Admin override', reload: true })
+    }
+
     user.lastLoginAt = DateTime.now()
     await user.save()
 
-    return response.ok({ message: 'Game state saved' })
+    return response.ok({ message: 'Game state saved', reload: false })
   }
 
   async savePokemons({ request, response, auth }: HttpContext) {

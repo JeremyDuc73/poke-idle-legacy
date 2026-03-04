@@ -182,6 +182,7 @@ export const useAuthStore = defineStore('auth', {
           teamDpsBonus: data.player.teamDpsBonus ?? 0,
           badges: data.player.badges,
           candies: (data.player as any).candies ?? { S: 0, M: 0, L: 0, XL: 0 },
+          adminVersion: (data.player as any).adminVersion ?? 0,
           isLoggedIn: true,
         })
 
@@ -279,6 +280,7 @@ export const useAuthStore = defineStore('auth', {
         badges: player.badges,
         candies: player.candies,
         daycare: useDaycareStore().slots,
+        adminVersion: player.adminVersion,
       } as Record<string, unknown>
 
       // Save player data
@@ -286,7 +288,12 @@ export const useAuthStore = defineStore('auth', {
         if (keepalive) {
           api.post('/api/game/save', playerPayload, fetchOpts)
         } else {
-          await api.post('/api/game/save', playerPayload)
+          const saveResult = await api.post<{ reload?: boolean }>('/api/game/save', playerPayload)
+          if (saveResult?.reload) {
+            console.log('[SAVE] Admin override detected — reloading game state')
+            await this.loadGameState()
+            return
+          }
         }
       } catch (e) {
         console.error('[SAVE] Player save failed:', e)

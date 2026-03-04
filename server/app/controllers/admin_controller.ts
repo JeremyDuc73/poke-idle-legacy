@@ -54,6 +54,7 @@ export default class AdminController {
     const data = request.only(['username', 'email', 'role', 'gold', 'gems', 'level', 'badges'])
 
     user.merge(data)
+    user.adminVersion = (user.adminVersion ?? 0) + 1
     await user.save()
 
     return response.ok(user)
@@ -81,6 +82,7 @@ export default class AdminController {
 
     if (goldAmount > 0) user.gold += goldAmount
     if (gemsAmount > 0) user.gems += gemsAmount
+    user.adminVersion = (user.adminVersion ?? 0) + 1
 
     await user.save()
 
@@ -112,6 +114,7 @@ export default class AdminController {
     user.badges = 0
     user.candies = {}
     user.daycare = []
+    user.adminVersion = (user.adminVersion ?? 0) + 1
 
     await user.save()
 

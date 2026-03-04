@@ -84,6 +84,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   })
   declare defeatedBosses: string[]
 
+  @column()
+  declare adminVersion: number
+
   @column.dateTime()
   declare lastLoginAt: DateTime | null
 
