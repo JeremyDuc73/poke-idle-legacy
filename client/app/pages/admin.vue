@@ -149,7 +149,7 @@ async function deleteUser(userId: number) {
 }
 
 async function giveItems() {
-  if (!selectedUser.value) return
+  if (!selectedUser.value || goldToGive.value <= 0) return
 
   try {
     const response = await fetch(`${API_BASE}/api/admin/users/${selectedUser.value.id}/give-items`, {
@@ -157,16 +157,21 @@ async function giveItems() {
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        gold: goldToGive.value,
+        gold: Number(goldToGive.value),
       }),
     })
     if (response.ok) {
+      const data = await response.json()
+      alert(data.message || 'Items donnés !')
       showGiveItemsModal.value = false
       goldToGive.value = 0
       await loadUsers()
+    } else {
+      const err = await response.json().catch(() => null)
+      alert(`Erreur: ${err?.message || response.statusText}`)
     }
   } catch (error) {
-    console.error('Failed to give items:', error)
+    alert(`Erreur réseau: ${error}`)
   }
 }
 

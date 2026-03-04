@@ -106,7 +106,7 @@ export function useCombatLoop() {
 
   function spawnWild(localDiff: number, globalDiff: number, genMult: number) {
     const poke = randomWild()
-    const hp = Math.round(poke.baseHp * (1 + localDiff * 0.35))
+    const hp = Math.round(poke.baseHp * (1 + localDiff * 0.55))
     combat.setEnemy({
       nameFr: `${poke.nameFr} sauvage`,
       nameEn: `Wild ${poke.nameEn}`,
@@ -116,16 +116,16 @@ export function useCombatLoop() {
       maxHp: hp,
       currentHp: hp,
       level: localDiff,
-      goldReward: 2 * globalDiff * genMult,
-      xpReward: 3 * globalDiff * genMult,
+      goldReward: (10 + 3 * globalDiff) * genMult,
+      xpReward: (5 + 4 * globalDiff) * genMult,
       isBoss: false,
       bossTimerSeconds: null,
     })
   }
 
   function spawnBoss(boss: BossTrainer, localDiff: number, globalDiff: number, genMult: number) {
-    const zone = player.currentZone
-    const totalHp = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0) * (1 + zone * 0.1)
+    const zone = player.activeCombatZone
+    const totalHp = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0) * (1 + zone * 0.15)
     const bossTypes = getPokemonTypes(boss.team[0]?.slug ?? 'normal')
     combat.setEnemy({
       nameFr: `Boss : ${boss.nameFr}`,
@@ -136,8 +136,8 @@ export function useCombatLoop() {
       maxHp: totalHp,
       currentHp: totalHp,
       level: Math.max(...boss.team.map((p) => p.level)),
-      goldReward: 20 * globalDiff * genMult,
-      xpReward: 20 * globalDiff * genMult,
+      goldReward: (100 + 25 * globalDiff) * genMult,
+      xpReward: (50 + 25 * globalDiff) * genMult,
       isBoss: true,
       bossTimerSeconds: boss.timerSeconds,
     })

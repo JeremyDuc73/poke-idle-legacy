@@ -76,12 +76,23 @@ export default class AdminController {
     const user = await User.findOrFail(params.id)
     const { gold, gems } = request.only(['gold', 'gems'])
 
-    if (gold) user.gold += gold
-    if (gems) user.gems += gems
+    const goldAmount = Number(gold) || 0
+    const gemsAmount = Number(gems) || 0
+
+    if (goldAmount > 0) user.gold += goldAmount
+    if (gemsAmount > 0) user.gems += gemsAmount
 
     await user.save()
 
-    return response.ok(user)
+    return response.ok({
+      message: `Donné ${goldAmount} gold, ${gemsAmount} gems à ${user.username}`,
+      user: {
+        id: user.id,
+        username: user.username,
+        gold: user.gold,
+        gems: user.gems,
+      },
+    })
   }
 
   /**
