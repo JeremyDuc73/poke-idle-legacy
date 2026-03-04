@@ -22,8 +22,9 @@ export function useSpeciesCache() {
       }
       cache.value = map
       loaded.value = true
+      console.log(`[SPECIES] Cache loaded: ${map.size} species`)
     } catch (e) {
-      console.error('Failed to load species cache:', e)
+      console.error('[SPECIES] Failed to load species cache:', e)
     }
   }
 

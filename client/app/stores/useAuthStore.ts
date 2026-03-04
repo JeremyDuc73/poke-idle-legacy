@@ -188,6 +188,7 @@ export const useAuthStore = defineStore('auth', {
         // Overwrite localStorage bonuses with server data to prevent guest mode leakage
         player.saveBonuses()
 
+        console.log(`[LOAD] Server returned ${data.pokemons.length} Pokémon`)
         inventory.collection = data.pokemons.map((p, i) => ({
           id: i + 1,
           slug: p.slug,
@@ -259,63 +260,74 @@ export const useAuthStore = defineStore('auth', {
         return
       }
 
+      const api = useApi()
+      const player = usePlayerStore()
+      const inventory = useInventoryStore()
+      const { getSpeciesId, loaded: speciesLoaded } = useSpeciesCache()
+
+      const fetchOpts = keepalive ? { keepalive: true } : undefined
+
+      const playerPayload = {
+        gold: player.gold,
+        gems: player.gems,
+        xp: player.xp,
+        level: player.level,
+        currentGeneration: player.currentGeneration,
+        currentZone: player.currentZone,
+        currentStage: player.currentStage,
+        clickDamage: player.clickDamage,
+        clickDamageBonus: player.clickDamageBonus,
+        teamDpsBonus: player.teamDpsBonus,
+        badges: player.badges,
+        candies: player.candies,
+        daycare: useDaycareStore().slots,
+      } as Record<string, unknown>
+
+      // Save player data
       try {
-        const api = useApi()
-        const player = usePlayerStore()
-        const inventory = useInventoryStore()
-        const { getSpeciesId, loaded: speciesLoaded } = useSpeciesCache()
-
-        const fetchOpts = keepalive ? { keepalive: true } : undefined
-
-        const playerPayload = {
-          gold: player.gold,
-          gems: player.gems,
-          xp: player.xp,
-          level: player.level,
-          currentGeneration: player.currentGeneration,
-          currentZone: player.currentZone,
-          currentStage: player.currentStage,
-          clickDamage: player.clickDamage,
-          clickDamageBonus: player.clickDamageBonus,
-          teamDpsBonus: player.teamDpsBonus,
-          badges: player.badges,
-          candies: player.candies,
-          daycare: useDaycareStore().slots,
-        } as Record<string, unknown>
-
-        let pokemonsPayload: Record<string, unknown> | null = null
-        if (speciesLoaded.value) {
-          const pokemons = inventory.collection
-            .map((p) => ({
-              speciesId: getSpeciesId(p.slug),
-              level: p.level,
-              xp: p.xp,
-              stars: p.stars,
-              isShiny: p.isShiny,
-              rarity: p.rarity ?? 'common',
-              teamSlot: p.teamSlot,
-            }))
-            .filter((p) => p.speciesId !== null)
-
-          if (pokemons.length > 0 || inventory.collectionCount === 0) {
-            pokemonsPayload = { pokemons } as Record<string, unknown>
-          }
-        }
-
         if (keepalive) {
-          // Fire both in parallel — don't await, page is closing
           api.post('/api/game/save', playerPayload, fetchOpts)
-          if (pokemonsPayload) {
-            api.post('/api/game/save-pokemons', pokemonsPayload, fetchOpts)
-          }
         } else {
           await api.post('/api/game/save', playerPayload)
-          if (pokemonsPayload) {
-            await api.post('/api/game/save-pokemons', pokemonsPayload)
-          }
         }
       } catch (e) {
-        console.error('Failed to save game state:', e)
+        console.error('[SAVE] Player save failed:', e)
+      }
+
+      // Save pokemons separately so player save failure doesn't block it
+      try {
+        if (!speciesLoaded.value) {
+          console.warn('[SAVE] Species cache NOT loaded — Pokémon will NOT be saved!')
+          return
+        }
+
+        const pokemons = inventory.collection
+          .map((p) => ({
+            speciesId: getSpeciesId(p.slug),
+            level: p.level,
+            xp: p.xp,
+            stars: p.stars,
+            isShiny: p.isShiny,
+            rarity: p.rarity ?? 'common',
+            teamSlot: p.teamSlot,
+          }))
+          .filter((p) => p.speciesId !== null)
+
+        console.log(`[SAVE] Species loaded. Collection: ${inventory.collection.length}, Mapped with speciesId: ${pokemons.length}`)
+
+        if (pokemons.length > 0 || inventory.collectionCount === 0) {
+          const pokemonsPayload = { pokemons } as Record<string, unknown>
+          if (keepalive) {
+            api.post('/api/game/save-pokemons', pokemonsPayload, fetchOpts)
+          } else {
+            await api.post('/api/game/save-pokemons', pokemonsPayload)
+          }
+          console.log(`[SAVE] Pokémon saved: ${pokemons.length}`)
+        } else {
+          console.warn(`[SAVE] No Pokémon to save! Collection: ${inventory.collection.length}, matched: ${pokemons.length}`)
+        }
+      } catch (e) {
+        console.error('[SAVE] Pokémon save failed:', e)
       }
     },
   },
