@@ -305,7 +305,7 @@ function getDetailStats(poke: OwnedPokemon) {
       <!-- Sort dropdown -->
       <select
         v-model="sortBy"
-        class="rounded-lg border border-slate-700 bg-gradient-to-br from-slate-800 to-slate-900 px-3 py-2 text-xs text-gray-300 shadow-md outline-none transition-all hover:border-slate-600 hover:shadow-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+        class="custom-select rounded-lg border border-slate-700 bg-gradient-to-br from-slate-800 to-slate-900 px-3 py-2 text-xs text-gray-300 shadow-md outline-none transition-all hover:border-slate-600 hover:shadow-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
       >
         <option value="stars">⭐ {{ t('Étoiles', 'Stars') }}</option>
         <option value="level">Lv {{ t('Niveau', 'Level') }}</option>
@@ -342,7 +342,7 @@ function getDetailStats(poke: OwnedPokemon) {
       <!-- Gen/Region filter -->
       <select
         v-model="filterGen"
-        class="rounded-lg border border-slate-700 bg-gradient-to-br from-slate-800 to-slate-900 px-3 py-2 text-xs text-gray-300 shadow-md outline-none transition-all hover:border-slate-600 hover:shadow-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+        class="custom-select rounded-lg border border-slate-700 bg-gradient-to-br from-slate-800 to-slate-900 px-3 py-2 text-xs text-gray-300 shadow-md outline-none transition-all hover:border-slate-600 hover:shadow-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
       >
         <option :value="null">{{ t('Toutes régions', 'All regions') }}</option>
         <option :value="1">Gen 1 - Kanto</option>
@@ -366,10 +366,10 @@ function getDetailStats(poke: OwnedPokemon) {
       <button
         v-for="tp in collectionTypes"
         :key="tp.id"
-        class="rounded-lg border px-2.5 py-1 text-[10px] font-medium transition-colors"
+        class="rounded-lg border px-2.5 py-1 text-[10px] font-medium shadow-sm transition-all hover:shadow-md"
         :class="filterType === tp.id
-          ? 'border-blue-500 bg-blue-500/20 text-blue-400'
-          : 'border-slate-700 bg-slate-800 text-slate-400 hover:text-white'"
+          ? 'border-blue-500 bg-gradient-to-br from-blue-500/20 to-blue-600/30 text-blue-400 shadow-blue-500/20'
+          : 'border-slate-700 bg-gradient-to-br from-slate-800 to-slate-900 text-slate-400 hover:border-slate-600 hover:text-white'"
         :style="filterType === tp.id ? { borderColor: tp.color, backgroundColor: tp.color + '20', color: tp.color } : {}"
         @click="filterType = filterType === tp.id ? null : tp.id"
       >
@@ -391,7 +391,7 @@ function getDetailStats(poke: OwnedPokemon) {
     </div>
 
     <!-- Collection Grid -->
-    <div v-else class="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8">
+    <div v-else class="grid grid-cols-3 gap-2 xs:grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10">
       <button
         v-for="pokemon in filteredCollection"
         :key="pokemon.id"

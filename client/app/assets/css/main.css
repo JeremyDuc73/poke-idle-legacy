@@ -106,3 +106,25 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #2563eb;
 }
+
+/* Custom select dropdown styling */
+.custom-select {
+  cursor: pointer;
+}
+
+.custom-select option {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.custom-select option:hover {
+  background-color: #334155;
+}
+
+.custom-select option:checked {
+  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  color: #60a5fa;
+  font-weight: 600;
+}

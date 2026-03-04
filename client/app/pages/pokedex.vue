@@ -202,7 +202,7 @@ watch(showShiny, () => {
     </div>
 
     <!-- Pokemon Grid -->
-    <div class="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12">
+    <div class="grid grid-cols-3 gap-2 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14">
       <button
         v-for="p in filtered"
         :key="p.id"
