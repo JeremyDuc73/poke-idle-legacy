@@ -78,5 +78,11 @@ jobs:
             # Run migrations
             docker compose -f docker-compose.prod.yml --env-file .env.production exec -T server node ace migration:run --force
 
+            # Seed species (idempotent - uses updateOrCreate)
+            docker compose -f docker-compose.prod.yml --env-file .env.production exec -T server node ace seed:pokedex 1
+            docker compose -f docker-compose.prod.yml --env-file .env.production exec -T server node ace seed:pokedex 2
+            docker compose -f docker-compose.prod.yml --env-file .env.production exec -T server node ace seed:pokedex 3
+            docker compose -f docker-compose.prod.yml --env-file .env.production exec -T server node ace seed:pokedex 4
+
             # Cleanup old images
             docker image prune -f
