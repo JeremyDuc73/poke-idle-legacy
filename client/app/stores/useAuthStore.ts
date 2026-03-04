@@ -76,7 +76,7 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
       try {
         const api = useApi()
-        const response = await api.post<LoginResponse>('/auth/register', { username, email, password })
+        const response = await api.post<LoginResponse>('/api/auth/register', { username, email, password })
         this.user = response
         this.isAuthenticated = true
         await this.loadGameState()
@@ -93,7 +93,7 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
       try {
         const api = useApi()
-        const response = await api.post<LoginResponse>('/auth/login', { email, password })
+        const response = await api.post<LoginResponse>('/api/auth/login', { email, password })
         this.user = response
         this.isAuthenticated = true
         await this.loadGameState()
@@ -109,7 +109,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const api = useApi()
         await this.saveGameState()
-        await api.post('/auth/logout')
+        await api.post('/api/auth/logout')
       } catch {
         // ignore logout errors
       }
@@ -123,7 +123,7 @@ export const useAuthStore = defineStore('auth', {
     async checkAuth() {
       try {
         const api = useApi()
-        const response = await api.get<LoginResponse>('/auth/me')
+        const response = await api.get<LoginResponse>('/api/auth/me')
         this.user = response
         this.isAuthenticated = true
         await this.loadGameState()
@@ -164,7 +164,7 @@ export const useAuthStore = defineStore('auth', {
       
       try {
         const api = useApi()
-        const data = await api.get<LoadGameResponse>('/game/load')
+        const data = await api.get<LoadGameResponse>('/api/game/load')
         const player = usePlayerStore()
         const inventory = useInventoryStore()
 
@@ -301,14 +301,14 @@ export const useAuthStore = defineStore('auth', {
 
         if (keepalive) {
           // Fire both in parallel — don't await, page is closing
-          api.post('/game/save', playerPayload, fetchOpts)
+          api.post('/api/game/save', playerPayload, fetchOpts)
           if (pokemonsPayload) {
-            api.post('/game/save-pokemons', pokemonsPayload, fetchOpts)
+            api.post('/api/game/save-pokemons', pokemonsPayload, fetchOpts)
           }
         } else {
-          await api.post('/game/save', playerPayload)
+          await api.post('/api/game/save', playerPayload)
           if (pokemonsPayload) {
-            await api.post('/game/save-pokemons', pokemonsPayload)
+            await api.post('/api/game/save-pokemons', pokemonsPayload)
           }
         }
       } catch (e) {
