@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon } from 'lucide-vue-next'
+import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon, Eye, Pencil, Gift, RotateCcw, Trash2 } from 'lucide-vue-next'
+
+definePageMeta({ layout: 'game' })
 
 const API_BASE = useRuntimeConfig().public.apiBase
 
@@ -264,8 +266,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 p-3 sm:p-6">
-    <div class="mx-auto max-w-7xl">
+  <div class="mx-auto max-w-7xl">
       <!-- Header -->
       <div class="mb-6 flex items-center justify-between sm:mb-8">
         <div>
@@ -474,39 +475,39 @@ onMounted(async () => {
                 <td class="px-4 py-3">
                   <div class="flex gap-1.5">
                     <button
-                      class="rounded-lg bg-gradient-to-br from-cyan-600 to-cyan-700 px-2.5 py-1.5 text-xs font-medium shadow-sm transition-all hover:shadow-md hover:brightness-110"
+                      class="rounded-lg bg-cyan-600/20 p-2 text-cyan-400 transition-all hover:bg-cyan-600/30"
                       @click="openDetailsModal(user)"
                       title="Voir détails"
                     >
-                      👁️
+                      <Eye class="h-3.5 w-3.5" />
                     </button>
                     <button
-                      class="rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 px-2.5 py-1.5 text-xs font-medium shadow-sm transition-all hover:shadow-md hover:brightness-110"
+                      class="rounded-lg bg-blue-600/20 p-2 text-blue-400 transition-all hover:bg-blue-600/30"
                       @click="openUserModal(user)"
                       title="Modifier"
                     >
-                      ✏️
+                      <Pencil class="h-3.5 w-3.5" />
                     </button>
                     <button
-                      class="rounded-lg bg-gradient-to-br from-green-600 to-green-700 px-2.5 py-1.5 text-xs font-medium shadow-sm transition-all hover:shadow-md hover:brightness-110"
+                      class="rounded-lg bg-green-600/20 p-2 text-green-400 transition-all hover:bg-green-600/30"
                       @click="openGiveItemsModal(user)"
                       title="Donner items"
                     >
-                      🎁
+                      <Gift class="h-3.5 w-3.5" />
                     </button>
                     <button
-                      class="rounded-lg bg-gradient-to-br from-yellow-600 to-yellow-700 px-2.5 py-1.5 text-xs font-medium shadow-sm transition-all hover:shadow-md hover:brightness-110"
+                      class="rounded-lg bg-amber-600/20 p-2 text-amber-400 transition-all hover:bg-amber-600/30"
                       @click="resetUser(user.id)"
                       title="Réinitialiser"
                     >
-                      🔄
+                      <RotateCcw class="h-3.5 w-3.5" />
                     </button>
                     <button
-                      class="rounded-lg bg-gradient-to-br from-red-600 to-red-700 px-2.5 py-1.5 text-xs font-medium shadow-sm transition-all hover:shadow-md hover:brightness-110"
+                      class="rounded-lg bg-red-600/20 p-2 text-red-400 transition-all hover:bg-red-600/30"
                       @click="deleteUser(user.id)"
                       title="Supprimer"
                     >
-                      🗑️
+                      <Trash2 class="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </td>
@@ -515,7 +516,6 @@ onMounted(async () => {
           </table>
         </div>
       </div>
-    </div>
 
     <!-- User Details Modal -->
     <teleport to="body">

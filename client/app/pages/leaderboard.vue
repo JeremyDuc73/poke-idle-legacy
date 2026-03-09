@@ -1,23 +1,18 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Trophy, Crown, ChevronDown } from 'lucide-vue-next'
 import { useLocale } from '~/composables/useLocale'
 import { useAuthStore } from '~/stores/useAuthStore'
+
+definePageMeta({ layout: 'game' })
 
 const { t } = useLocale()
 const auth = useAuthStore()
 const API_BASE = useRuntimeConfig().public.apiBase
 
 const GENERATION_NAMES: Record<number, string> = {
-  1: 'Kanto',
-  2: 'Johto',
-  3: 'Hoenn',
-  4: 'Sinnoh',
-  5: 'Unova',
-  6: 'Kalos',
-  7: 'Alola',
-  8: 'Galar',
-  9: 'Paldea',
+  1: 'Kanto', 2: 'Johto', 3: 'Hoenn', 4: 'Sinnoh', 5: 'Unova',
+  6: 'Kalos', 7: 'Alola', 8: 'Galar', 9: 'Paldea',
 }
 
 interface LeaderboardEntry {
@@ -34,6 +29,14 @@ interface LeaderboardEntry {
   shiny_legendary_count: number
 }
 
+interface GeneralEntry {
+  id: number
+  username: string
+  current_generation: number
+  level: number
+  avgRank: number
+}
+
 interface Category {
   id: string
   labelFr: string
@@ -46,106 +49,60 @@ interface Category {
 }
 
 const CATEGORIES: Category[] = [
-  {
-    id: 'level',
-    labelFr: 'Niveau Dresseur',
-    labelEn: 'Trainer Level',
-    icon: '⭐',
-    color: 'text-blue-400',
-    gradient: 'from-blue-500/20 to-cyan-500/10',
-    field: 'level',
-    format: (val) => `Lv. ${val}`,
-  },
-  {
-    id: 'gold',
-    labelFr: 'Richesse',
-    labelEn: 'Wealth',
-    icon: '🪙',
-    color: 'text-yellow-400',
-    gradient: 'from-yellow-500/20 to-amber-500/10',
-    field: 'gold',
-    format: (val) => val.toLocaleString(),
-  },
-  {
-    id: 'badges',
-    labelFr: 'Badges',
-    labelEn: 'Badges',
-    icon: '🏅',
-    color: 'text-amber-400',
-    gradient: 'from-amber-500/20 to-orange-500/10',
-    field: 'badges',
-    format: (val, entry) => `${val} · ${GENERATION_NAMES[entry.current_generation] ?? '???'}`,
-  },
-  {
-    id: 'unique_pokemon',
-    labelFr: 'Pokédex',
-    labelEn: 'Pokédex',
-    icon: '📖',
-    color: 'text-red-400',
-    gradient: 'from-red-500/20 to-pink-500/10',
-    field: 'unique_pokemon',
-    format: (val) => `${val}`,
-  },
-  {
-    id: 'total_pokemon',
-    labelFr: 'Invocations',
-    labelEn: 'Summons',
-    icon: '✨',
-    color: 'text-purple-400',
-    gradient: 'from-purple-500/20 to-fuchsia-500/10',
-    field: 'total_pokemon',
-    format: (val) => val.toLocaleString(),
-  },
-  {
-    id: 'shiny_count',
-    labelFr: 'Shiny',
-    labelEn: 'Shiny',
-    icon: '💎',
-    color: 'text-cyan-400',
-    gradient: 'from-cyan-500/20 to-teal-500/10',
-    field: 'shiny_count',
-    format: (val) => `${val}`,
-  },
-  {
-    id: 'legendary_count',
-    labelFr: 'Légendaires',
-    labelEn: 'Legendaries',
-    icon: '🐉',
-    color: 'text-orange-400',
-    gradient: 'from-orange-500/20 to-red-500/10',
-    field: 'legendary_count',
-    format: (val) => `${val}`,
-  },
-  {
-    id: 'shiny_legendary_count',
-    labelFr: 'Légendaires Shiny',
-    labelEn: 'Shiny Legendaries',
-    icon: '👑',
-    color: 'text-pink-400',
-    gradient: 'from-pink-500/20 to-rose-500/10',
-    field: 'shiny_legendary_count',
-    format: (val) => `${val}`,
-  },
+  { id: 'level', labelFr: 'Niveau', labelEn: 'Level', icon: '⭐', color: 'text-blue-400', gradient: 'from-blue-500/20 to-cyan-500/10', field: 'level', format: (val) => `Lv. ${val}` },
+  { id: 'gold', labelFr: 'Richesse', labelEn: 'Wealth', icon: '🪙', color: 'text-yellow-400', gradient: 'from-yellow-500/20 to-amber-500/10', field: 'gold', format: (val) => val.toLocaleString() },
+  { id: 'badges', labelFr: 'Badges', labelEn: 'Badges', icon: '🏅', color: 'text-amber-400', gradient: 'from-amber-500/20 to-orange-500/10', field: 'badges', format: (val, entry) => `${val} · ${GENERATION_NAMES[entry.current_generation] ?? '???'}` },
+  { id: 'unique_pokemon', labelFr: 'Pokédex', labelEn: 'Pokédex', icon: '📖', color: 'text-red-400', gradient: 'from-red-500/20 to-pink-500/10', field: 'unique_pokemon', format: (val) => `${val}` },
+  { id: 'total_pokemon', labelFr: 'Invocations', labelEn: 'Summons', icon: '✨', color: 'text-purple-400', gradient: 'from-purple-500/20 to-fuchsia-500/10', field: 'total_pokemon', format: (val) => val.toLocaleString() },
+  { id: 'shiny_count', labelFr: 'Shiny', labelEn: 'Shiny', icon: '💎', color: 'text-cyan-400', gradient: 'from-cyan-500/20 to-teal-500/10', field: 'shiny_count', format: (val) => `${val}` },
+  { id: 'legendary_count', labelFr: 'Légendaires', labelEn: 'Legendaries', icon: '🐉', color: 'text-orange-400', gradient: 'from-orange-500/20 to-red-500/10', field: 'legendary_count', format: (val) => `${val}` },
+  { id: 'shiny_legendary_count', labelFr: 'Légendaires Shiny', labelEn: 'Shiny Legendaries', icon: '👑', color: 'text-pink-400', gradient: 'from-pink-500/20 to-rose-500/10', field: 'shiny_legendary_count', format: (val) => `${val}` },
 ]
 
 const data = ref<LeaderboardEntry[]>([])
 const loading = ref(true)
 const error = ref(false)
-const activeCategory = ref('level')
+const activeCategory = ref('general')
 const expandedCategory = ref<string | null>(null)
+let refreshInterval: ReturnType<typeof setInterval> | null = null
 
-const currentCategory = computed(() => CATEGORIES.find(c => c.id === activeCategory.value)!)
+const currentCategory = computed(() => CATEGORIES.find(c => c.id === activeCategory.value))
 
 function getRanking(cat: Category): LeaderboardEntry[] {
   return [...data.value].sort((a, b) => (b[cat.field] as number) - (a[cat.field] as number))
 }
 
-const currentRanking = computed(() => getRanking(currentCategory.value))
+// General ranking: average position across all categories
+const generalRanking = computed<GeneralEntry[]>(() => {
+  if (data.value.length === 0) return []
+  const rankMaps: Map<number, number>[] = CATEGORIES.map(cat => {
+    const sorted = getRanking(cat)
+    const map = new Map<number, number>()
+    sorted.forEach((e, i) => map.set(e.id, i + 1))
+    return map
+  })
+  return data.value.map(entry => {
+    const ranks = rankMaps.map(m => m.get(entry.id) ?? data.value.length)
+    const avgRank = ranks.reduce((s, r) => s + r, 0) / ranks.length
+    return { id: entry.id, username: entry.username, current_generation: entry.current_generation, level: entry.level, avgRank }
+  }).sort((a, b) => a.avgRank - b.avgRank)
+})
 
-const podium = computed(() => {
+const currentRanking = computed(() => {
+  if (!currentCategory.value) return [] // general tab
+  return getRanking(currentCategory.value)
+})
+
+const podiumGeneral = computed<{ first: GeneralEntry; second: GeneralEntry; third: GeneralEntry } | null>(() => {
+  if (generalRanking.value.length < 3) return null
+  const r = generalRanking.value
+  return { first: r[0]!, second: r[1]!, third: r[2]! }
+})
+
+const podiumCategory = computed<{ first: LeaderboardEntry; second: LeaderboardEntry; third: LeaderboardEntry } | null>(() => {
+  if (currentRanking.value.length < 3) return null
   const r = currentRanking.value
-  if (r.length < 3) return null
-  return { first: r[0], second: r[1], third: r[2] } as { first: LeaderboardEntry; second: LeaderboardEntry; third: LeaderboardEntry }
+  return { first: r[0]!, second: r[1]!, third: r[2]! }
 })
 
 function getMedalClass(rank: number): string {
@@ -162,8 +119,8 @@ function getMedalEmoji(rank: number): string {
   return `${rank + 1}`
 }
 
-function isMe(entry: LeaderboardEntry): boolean {
-  return auth.user?.id === entry.id
+function isMeId(id: number): boolean {
+  return auth.user?.id === id
 }
 
 async function loadLeaderboard() {
@@ -183,16 +140,25 @@ async function loadLeaderboard() {
   }
 }
 
-function toggleMobileCategory(id: string) {
-  if (expandedCategory.value === id) {
-    expandedCategory.value = null
-  } else {
-    expandedCategory.value = id
-    activeCategory.value = id
-  }
+async function silentRefresh() {
+  try {
+    const response = await fetch(`${API_BASE}/api/leaderboard`, { credentials: 'include' })
+    if (response.ok) data.value = await response.json()
+  } catch { /* silent */ }
 }
 
-onMounted(loadLeaderboard)
+function toggleMobileCategory(id: string) {
+  expandedCategory.value = expandedCategory.value === id ? null : id
+}
+
+onMounted(() => {
+  loadLeaderboard()
+  refreshInterval = setInterval(silentRefresh, 5 * 60 * 1000)
+})
+
+onUnmounted(() => {
+  if (refreshInterval) clearInterval(refreshInterval)
+})
 </script>
 
 <template>
@@ -206,6 +172,9 @@ onMounted(loadLeaderboard)
       <h1 class="text-2xl font-bold text-white sm:text-3xl">{{ t('Hall of Fame', 'Hall of Fame') }}</h1>
       <p class="mt-1 text-xs text-slate-400">
         {{ t('Minimum 2 badges pour apparaître', 'Minimum 2 badges to appear') }}
+      </p>
+      <p class="mt-2 rounded-lg bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-500/10 px-4 py-2 text-xs font-medium italic text-amber-300/80">
+        {{ t('Chaque semaine, le top 3 sera récompensé par le comité de la Ligue Pokémon', 'Every week, the top 3 will be rewarded by the Pokémon League committee') }}
       </p>
     </div>
 
@@ -225,14 +194,25 @@ onMounted(loadLeaderboard)
 
     <!-- Empty -->
     <div v-else-if="data.length === 0" class="rounded-xl border border-slate-700 bg-slate-800/50 p-12 text-center">
-      <p class="text-4xl">🏆</p>
+      <Trophy class="mx-auto h-12 w-12 text-slate-600" />
       <p class="mt-3 text-slate-400">{{ t('Aucun joueur éligible pour le moment', 'No eligible players yet') }}</p>
     </div>
 
     <!-- Leaderboard Content -->
     <div v-else>
-      <!-- Desktop: Category tabs -->
-      <div class="mb-6 hidden flex-wrap justify-center gap-2 sm:flex">
+      <!-- Category tabs -->
+      <div class="mb-6 flex flex-wrap justify-center gap-2">
+        <!-- General tab -->
+        <button
+          class="flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all"
+          :class="activeCategory === 'general'
+            ? 'border-yellow-500/50 bg-gradient-to-r from-yellow-500/20 to-amber-500/10 text-yellow-400 shadow-lg'
+            : 'border-slate-700 bg-slate-800/50 text-slate-400 hover:border-slate-600 hover:text-slate-300'"
+          @click="activeCategory = 'general'"
+        >
+          <Trophy class="h-3.5 w-3.5" />
+          <span>{{ t('Général', 'Overall') }}</span>
+        </button>
         <button
           v-for="cat in CATEGORIES"
           :key="cat.id"
@@ -243,12 +223,92 @@ onMounted(loadLeaderboard)
           @click="activeCategory = cat.id"
         >
           <span>{{ cat.icon }}</span>
-          <span>{{ t(cat.labelFr, cat.labelEn) }}</span>
+          <span class="hidden sm:inline">{{ t(cat.labelFr, cat.labelEn) }}</span>
         </button>
       </div>
 
-      <!-- Desktop: Main ranking table -->
-      <div class="hidden sm:block">
+      <!-- ============ GENERAL RANKING ============ -->
+      <div v-if="activeCategory === 'general'">
+        <div class="overflow-hidden rounded-xl border border-yellow-500/20 bg-slate-800/50 shadow-xl">
+          <!-- Header -->
+          <div class="border-b border-yellow-500/20 bg-gradient-to-r from-yellow-500/15 via-amber-500/10 to-yellow-500/15 px-6 py-4">
+            <div class="flex items-center gap-3">
+              <Trophy class="h-6 w-6 text-yellow-400" />
+              <div>
+                <h2 class="text-lg font-bold text-white">{{ t('Classement Général', 'Overall Ranking') }}</h2>
+                <p class="text-xs text-slate-400">{{ t('Moyenne des positions sur tous les classements', 'Average position across all rankings') }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Podium -->
+          <div v-if="podiumGeneral" class="border-b border-slate-700/50 px-4 py-8 sm:px-6">
+            <div class="grid grid-cols-3 items-end gap-3 sm:gap-6">
+              <!-- 2nd -->
+              <div class="flex flex-col items-center gap-2">
+                <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-slate-400/50 sm:h-20 sm:w-20" :class="getMedalClass(1)">
+                  <span class="text-2xl sm:text-3xl">🥈</span>
+                </div>
+                <span class="text-center text-xs font-bold sm:text-sm" :class="isMeId(podiumGeneral.second.id) ? 'text-yellow-300' : 'text-white'">
+                  {{ podiumGeneral.second.username }}
+                </span>
+                <span class="text-[10px] text-slate-400">{{ t('Score', 'Score') }}: {{ podiumGeneral.second.avgRank.toFixed(1) }}</span>
+              </div>
+              <!-- 1st -->
+              <div class="flex flex-col items-center gap-2">
+                <Crown class="h-6 w-6 text-yellow-400 sm:h-7 sm:w-7" />
+                <div class="flex h-20 w-20 items-center justify-center rounded-full border-2 border-yellow-400/50 shadow-lg shadow-yellow-500/20 sm:h-24 sm:w-24" :class="getMedalClass(0)">
+                  <span class="text-3xl sm:text-4xl">🥇</span>
+                </div>
+                <span class="text-center text-sm font-bold sm:text-base" :class="isMeId(podiumGeneral.first.id) ? 'text-yellow-300' : 'text-white'">
+                  {{ podiumGeneral.first.username }}
+                </span>
+                <span class="text-[10px] text-yellow-400">{{ t('Score', 'Score') }}: {{ podiumGeneral.first.avgRank.toFixed(1) }}</span>
+              </div>
+              <!-- 3rd -->
+              <div class="flex flex-col items-center gap-2">
+                <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-amber-600/50 sm:h-20 sm:w-20" :class="getMedalClass(2)">
+                  <span class="text-2xl sm:text-3xl">🥉</span>
+                </div>
+                <span class="text-center text-xs font-bold sm:text-sm" :class="isMeId(podiumGeneral.third.id) ? 'text-yellow-300' : 'text-white'">
+                  {{ podiumGeneral.third.username }}
+                </span>
+                <span class="text-[10px] text-slate-400">{{ t('Score', 'Score') }}: {{ podiumGeneral.third.avgRank.toFixed(1) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Full list -->
+          <div class="divide-y divide-slate-700/30">
+            <div
+              v-for="(entry, idx) in generalRanking"
+              :key="entry.id"
+              class="flex items-center gap-4 px-4 py-3 transition-colors sm:px-6"
+              :class="[
+                isMeId(entry.id) ? 'bg-yellow-500/5' : 'hover:bg-slate-700/20',
+                idx < 3 && podiumGeneral ? 'hidden' : ''
+              ]"
+            >
+              <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold" :class="getMedalClass(idx)">
+                {{ getMedalEmoji(idx) }}
+              </div>
+              <div class="min-w-0 flex-1">
+                <span class="text-sm font-bold" :class="isMeId(entry.id) ? 'text-yellow-300' : 'text-white'">
+                  {{ entry.username }}
+                  <span v-if="isMeId(entry.id)" class="ml-1 text-[10px] text-yellow-500">({{ t('vous', 'you') }})</span>
+                </span>
+                <span class="ml-2 text-[10px] text-slate-500">
+                  {{ GENERATION_NAMES[entry.current_generation] ?? '???' }} · Lv.{{ entry.level }}
+                </span>
+              </div>
+              <span class="text-sm font-bold text-yellow-400">{{ entry.avgRank.toFixed(1) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ CATEGORY RANKING ============ -->
+      <div v-else-if="currentCategory">
         <div class="overflow-hidden rounded-xl border border-slate-700 bg-slate-800/50 shadow-xl">
           <!-- Category header -->
           <div class="border-b border-slate-700 bg-gradient-to-r px-6 py-4" :class="currentCategory.gradient">
@@ -261,38 +321,46 @@ onMounted(loadLeaderboard)
             </div>
           </div>
 
-          <!-- Podium (top 3) -->
-          <div v-if="podium" class="grid grid-cols-3 gap-4 border-b border-slate-700/50 px-6 py-6">
-            <!-- 2nd place -->
-            <div class="flex flex-col items-center gap-2 rounded-xl border border-slate-600/30 bg-slate-700/20 p-4">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full text-lg" :class="getMedalClass(1)">🥈</div>
-              <span class="text-sm font-bold" :class="isMe(podium.second) ? 'text-yellow-300' : 'text-white'">
-                {{ podium.second.username }}
-              </span>
-              <span class="text-lg font-bold" :class="currentCategory.color">
-                {{ currentCategory.format(podium.second[currentCategory.field] as number, podium.second) }}
-              </span>
-            </div>
-            <!-- 1st place -->
-            <div class="flex flex-col items-center gap-2 rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4 shadow-lg shadow-yellow-500/10">
-              <div class="flex h-12 w-12 items-center justify-center rounded-full text-xl" :class="getMedalClass(0)">🥇</div>
-              <Crown class="h-4 w-4 text-yellow-400" />
-              <span class="text-sm font-bold" :class="isMe(podium.first) ? 'text-yellow-300' : 'text-white'">
-                {{ podium.first.username }}
-              </span>
-              <span class="text-xl font-bold" :class="currentCategory.color">
-                {{ currentCategory.format(podium.first[currentCategory.field] as number, podium.first) }}
-              </span>
-            </div>
-            <!-- 3rd place -->
-            <div class="flex flex-col items-center gap-2 rounded-xl border border-slate-600/30 bg-slate-700/20 p-4">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full text-lg" :class="getMedalClass(2)">🥉</div>
-              <span class="text-sm font-bold" :class="isMe(podium.third) ? 'text-yellow-300' : 'text-white'">
-                {{ podium.third.username }}
-              </span>
-              <span class="text-lg font-bold" :class="currentCategory.color">
-                {{ currentCategory.format(podium.third[currentCategory.field] as number, podium.third) }}
-              </span>
+          <!-- Podium -->
+          <div v-if="podiumCategory" class="border-b border-slate-700/50 px-4 py-8 sm:px-6">
+            <div class="grid grid-cols-3 items-end gap-3 sm:gap-6">
+              <!-- 2nd -->
+              <div class="flex flex-col items-center gap-2">
+                <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-slate-400/50 sm:h-20 sm:w-20" :class="getMedalClass(1)">
+                  <span class="text-2xl sm:text-3xl">🥈</span>
+                </div>
+                <span class="text-center text-xs font-bold sm:text-sm" :class="isMeId(podiumCategory.second.id) ? 'text-yellow-300' : 'text-white'">
+                  {{ podiumCategory.second.username }}
+                </span>
+                <span class="text-sm font-bold sm:text-base" :class="currentCategory.color">
+                  {{ currentCategory.format(podiumCategory.second[currentCategory.field] as number, podiumCategory.second) }}
+                </span>
+              </div>
+              <!-- 1st -->
+              <div class="flex flex-col items-center gap-2">
+                <Crown class="h-6 w-6 text-yellow-400 sm:h-7 sm:w-7" />
+                <div class="flex h-20 w-20 items-center justify-center rounded-full border-2 border-yellow-400/50 shadow-lg shadow-yellow-500/20 sm:h-24 sm:w-24" :class="getMedalClass(0)">
+                  <span class="text-3xl sm:text-4xl">🥇</span>
+                </div>
+                <span class="text-center text-sm font-bold sm:text-base" :class="isMeId(podiumCategory.first.id) ? 'text-yellow-300' : 'text-white'">
+                  {{ podiumCategory.first.username }}
+                </span>
+                <span class="text-lg font-bold sm:text-xl" :class="currentCategory.color">
+                  {{ currentCategory.format(podiumCategory.first[currentCategory.field] as number, podiumCategory.first) }}
+                </span>
+              </div>
+              <!-- 3rd -->
+              <div class="flex flex-col items-center gap-2">
+                <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-amber-600/50 sm:h-20 sm:w-20" :class="getMedalClass(2)">
+                  <span class="text-2xl sm:text-3xl">🥉</span>
+                </div>
+                <span class="text-center text-xs font-bold sm:text-sm" :class="isMeId(podiumCategory.third.id) ? 'text-yellow-300' : 'text-white'">
+                  {{ podiumCategory.third.username }}
+                </span>
+                <span class="text-sm font-bold sm:text-base" :class="currentCategory.color">
+                  {{ currentCategory.format(podiumCategory.third[currentCategory.field] as number, podiumCategory.third) }}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -301,92 +369,29 @@ onMounted(loadLeaderboard)
             <div
               v-for="(entry, idx) in currentRanking"
               :key="entry.id"
-              class="flex items-center gap-4 px-6 py-3 transition-colors"
+              class="flex items-center gap-4 px-4 py-3 transition-colors sm:px-6"
               :class="[
-                isMe(entry) ? 'bg-yellow-500/5' : 'hover:bg-slate-700/20',
-                idx < 3 && podium ? 'sm:hidden' : ''
+                isMeId(entry.id) ? 'bg-yellow-500/5' : 'hover:bg-slate-700/20',
+                idx < 3 && podiumCategory ? 'hidden' : ''
               ]"
             >
-              <!-- Rank -->
-              <div
-                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold"
-                :class="getMedalClass(idx)"
-              >
+              <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold" :class="getMedalClass(idx)">
                 {{ getMedalEmoji(idx) }}
               </div>
-              <!-- Username -->
               <div class="min-w-0 flex-1">
-                <span
-                  class="text-sm font-bold"
-                  :class="isMe(entry) ? 'text-yellow-300' : 'text-white'"
-                >
+                <span class="text-sm font-bold" :class="isMeId(entry.id) ? 'text-yellow-300' : 'text-white'">
                   {{ entry.username }}
-                  <span v-if="isMe(entry)" class="ml-1 text-[10px] text-yellow-500">({{ t('vous', 'you') }})</span>
+                  <span v-if="isMeId(entry.id)" class="ml-1 text-[10px] text-yellow-500">({{ t('vous', 'you') }})</span>
                 </span>
                 <span class="ml-2 text-[10px] text-slate-500">
                   {{ GENERATION_NAMES[entry.current_generation] ?? '???' }} · Lv.{{ entry.level }}
                 </span>
               </div>
-              <!-- Value -->
               <span class="text-sm font-bold" :class="currentCategory.color">
                 {{ currentCategory.format(entry[currentCategory.field] as number, entry) }}
               </span>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Mobile: Accordion style -->
-      <div class="flex flex-col gap-3 sm:hidden">
-        <div v-for="cat in CATEGORIES" :key="cat.id">
-          <!-- Category header button -->
-          <button
-            class="flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all"
-            :class="expandedCategory === cat.id
-              ? `border-transparent bg-gradient-to-r ${cat.gradient} shadow-lg`
-              : 'border-slate-700 bg-slate-800/50'"
-            @click="toggleMobileCategory(cat.id)"
-          >
-            <span class="text-lg">{{ cat.icon }}</span>
-            <span class="flex-1 text-sm font-bold" :class="expandedCategory === cat.id ? cat.color : 'text-slate-300'">
-              {{ t(cat.labelFr, cat.labelEn) }}
-            </span>
-            <!-- Quick top 1 preview -->
-            <span v-if="getRanking(cat).length > 0 && expandedCategory !== cat.id" class="text-[10px] text-slate-500">
-              🥇 {{ getRanking(cat)[0].username }}
-            </span>
-            <ChevronDown
-              class="h-4 w-4 shrink-0 transition-transform"
-              :class="[expandedCategory === cat.id ? 'rotate-180' : '', expandedCategory === cat.id ? cat.color : 'text-slate-500']"
-            />
-          </button>
-
-          <!-- Expanded ranking -->
-          <Transition name="accordion">
-            <div v-if="expandedCategory === cat.id" class="mt-1 overflow-hidden rounded-xl border border-slate-700/50 bg-slate-800/30">
-              <div
-                v-for="(entry, idx) in getRanking(cat).slice(0, 20)"
-                :key="entry.id"
-                class="flex items-center gap-3 border-b border-slate-700/20 px-4 py-2.5 last:border-b-0"
-                :class="isMe(entry) ? 'bg-yellow-500/5' : ''"
-              >
-                <div
-                  class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
-                  :class="getMedalClass(idx)"
-                >
-                  {{ getMedalEmoji(idx) }}
-                </div>
-                <div class="min-w-0 flex-1">
-                  <span class="text-xs font-bold" :class="isMe(entry) ? 'text-yellow-300' : 'text-white'">
-                    {{ entry.username }}
-                  </span>
-                </div>
-                <span class="text-xs font-bold" :class="cat.color">
-                  {{ cat.format(entry[cat.field] as number, entry) }}
-                </span>
-              </div>
-            </div>
-          </Transition>
         </div>
       </div>
     </div>
