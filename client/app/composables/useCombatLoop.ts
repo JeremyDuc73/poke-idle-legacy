@@ -2,10 +2,10 @@ import { useCombatStore } from '~/stores/useCombatStore'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useDaycareStore } from '~/stores/useDaycareStore'
-import { getSpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
+import { getSpriteUrl, getShinySpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
 import { getZone, GENERATIONS } from '~/data/zones'
 import { getPokemonType, getPokemonTypes, getTypeEffectiveness } from '~/data/types'
-import { getRarityDpsMult, getStarDpsMult, getSlugGeneration, RARITY_DPS_MULT } from '~/data/gacha'
+import { getRarityDpsMult, getStarDpsMult, getSlugGeneration, RARITY_DPS_MULT, getShinyRate } from '~/data/gacha'
 import { getEvoStageMult } from '~/data/evolutions'
 import type { Rarity } from '~/data/gacha'
 import type { PokemonType } from '~/data/types'
@@ -21,13 +21,13 @@ export function useCombatLoop() {
 
   // New damage formula:
   // base = level (1 at lv1, 100 at lv100)
-  // permanent multipliers: evo stage (x1.2/x1.4), rarity (x1.1/x1.5/x2.0), shiny (x1.5)
+  // permanent multipliers: evo stage (x1.2/x1.4), rarity (x1.1/x1.5/x2.0), shiny (x4)
   // type-dependent: effectiveness table
   function getPokeDps(poke: { slug: string; level: number; stars: number; isShiny: boolean; rarity?: Rarity }, enemyTypes?: PokemonType[]) {
-    const baseDmg = poke.level
+    const baseDmg = poke.level * 2
     const evoMult = getEvoStageMult(poke.slug)
-    const rarityMult = poke.rarity ? (RARITY_DPS_MULT[poke.rarity] ?? 1.0) : getRarityDpsMult(poke.slug)
-    const shinyMult = poke.isShiny ? 1.5 : 1.0
+    const rarityMult = poke.rarity ? (RARITY_DPS_MULT[poke.rarity] ?? 1.0) : 1.0
+    const shinyMult = poke.isShiny ? 4.0 : 1.0
     const starMult = getStarDpsMult(poke.stars, poke.isShiny)
 
     // Region penalty: 50% damage if fighting outside native generation
@@ -106,29 +106,33 @@ export function useCombatLoop() {
 
   function spawnWild(localDiff: number, globalDiff: number, genMult: number) {
     const poke = randomWild()
-    // HP scales exponentially per generation so later regions are much harder
-    const genHpMult = Math.pow(2.5, genMult - 1)
-    const hp = Math.round(poke.baseHp * (1 + localDiff * 1.0) * genHpMult)
+    const isShiny = Math.random() < getShinyRate(player.shinyCharms)
+    // HP uses globalDiff for smooth continuous scaling across all regions
+    const hp = Math.round(poke.baseHp * (1 + globalDiff * 0.6))
+    // Shiny wild: ×5 gold, ×3 XP
+    const goldReward = Math.round((10 + 3 * globalDiff) * genMult * (isShiny ? 5 : 1))
+    const xpReward = Math.round((5 + 4 * globalDiff) * genMult * (isShiny ? 3 : 1))
     combat.setEnemy({
-      nameFr: `${poke.nameFr} sauvage`,
-      nameEn: `Wild ${poke.nameEn}`,
+      nameFr: isShiny ? `✨ ${poke.nameFr} sauvage ✨` : `${poke.nameFr} sauvage`,
+      nameEn: isShiny ? `✨ Wild ${poke.nameEn} ✨` : `Wild ${poke.nameEn}`,
       slug: poke.slug,
       types: getPokemonTypes(poke.slug),
-      spriteUrl: getSpriteUrl(poke.slug),
+      spriteUrl: isShiny ? getShinySpriteUrl(poke.slug) : getSpriteUrl(poke.slug),
       maxHp: hp,
       currentHp: hp,
       level: localDiff,
-      goldReward: (10 + 3 * globalDiff) * genMult,
-      xpReward: (5 + 4 * globalDiff) * genMult,
+      goldReward,
+      xpReward,
       isBoss: false,
       bossTimerSeconds: null,
+      isShiny,
     })
   }
 
   function spawnBoss(boss: BossTrainer, localDiff: number, globalDiff: number, genMult: number) {
-    const zone = player.activeCombatZone
-    const genHpMult = Math.pow(2.5, genMult - 1)
-    const totalHp = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0) * (1.5 + localDiff * 0.35) * genHpMult
+    // Boss HP: team base + globalDiff scaling for smooth progression
+    const teamBase = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0)
+    const totalHp = Math.round(teamBase * (1.5 + globalDiff * 0.2))
     const bossTypes = getPokemonTypes(boss.team[0]?.slug ?? 'normal')
     combat.setEnemy({
       nameFr: `Boss : ${boss.nameFr}`,
@@ -139,8 +143,8 @@ export function useCombatLoop() {
       maxHp: totalHp,
       currentHp: totalHp,
       level: Math.max(...boss.team.map((p) => p.level)),
-      goldReward: (100 + 25 * globalDiff) * genMult,
-      xpReward: (50 + 25 * globalDiff) * genMult,
+      goldReward: (200 + 50 * globalDiff) * genMult,
+      xpReward: (100 + 50 * globalDiff) * genMult,
       isBoss: true,
       bossTimerSeconds: boss.timerSeconds,
     })
@@ -192,6 +196,13 @@ export function useCombatLoop() {
     // Override autoAttackTick to use type-effective DPS + player level multiplier
     combat.overrideAutoAttack = () => {
       if (!combat.enemy || combat.enemy.currentHp <= 0) return
+      // Safety check: detect boss timeout directly in case watcher missed it
+      if (combat.bossTimeRemaining !== null && combat.bossTimeRemaining <= 0) {
+        combat.bossFailed()
+        player.retreatStage()
+        setTimeout(() => spawnEnemy(), 1000)
+        return
+      }
       const baseDps = getEffectiveDps(combat.enemy.types)
       if (baseDps <= 0) return
       const effectiveDps = baseDps
@@ -216,12 +227,28 @@ export function useCombatLoop() {
 
     // Pause/resume when page visibility changes
     if (import.meta.client) {
+      let hiddenAt: number | null = null
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
+          hiddenAt = Date.now()
           combat.clearTimers()
         } else {
+          // Deduct elapsed time from boss timer while tab was hidden
+          if (hiddenAt && combat.bossTimeRemaining !== null) {
+            const elapsedSeconds = Math.floor((Date.now() - hiddenAt) / 1000)
+            combat.bossTimeRemaining = Math.max(0, combat.bossTimeRemaining - elapsedSeconds)
+          }
+          hiddenAt = null
+
           if (combat.enemy && combat.enemy.currentHp > 0) {
-            combat.resumeTimers()
+            // Check if boss timed out while hidden
+            if (combat.bossTimeRemaining !== null && combat.bossTimeRemaining <= 0) {
+              combat.bossFailed()
+              player.retreatStage()
+              setTimeout(() => spawnEnemy(), 1000)
+            } else {
+              combat.resumeTimers()
+            }
           } else {
             spawnEnemy()
           }

@@ -206,7 +206,10 @@ watch(showShiny, () => {
       <button
         v-for="p in filtered"
         :key="p.id"
-        class="group relative flex flex-col items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 p-2 transition-all hover:scale-105 hover:border-slate-500 hover:bg-slate-700"
+        class="group relative flex flex-col items-center gap-1.5 rounded-xl border p-2 transition-all hover:scale-105"
+        :class="isOwned(p.slug)
+          ? 'border-green-500/50 bg-green-500/10 hover:border-green-400 hover:bg-green-500/20'
+          : 'border-slate-700 bg-slate-800 hover:border-slate-500 hover:bg-slate-700'"
         @click="openDetail(p)"
       >
         <!-- Dex number -->

@@ -14,6 +14,7 @@ export interface Enemy {
   xpReward: number
   isBoss: boolean
   bossTimerSeconds: number | null
+  isShiny?: boolean
 }
 
 interface CombatState {
@@ -29,6 +30,15 @@ interface CombatState {
   overrideAutoAttack: (() => void) | null
 }
 
+const TOTAL_KILLS_KEY = 'poke-idle-total-kos'
+
+function loadTotalKills(): number {
+  try {
+    const v = localStorage.getItem(TOTAL_KILLS_KEY)
+    return v ? Number(v) || 0 : 0
+  } catch { return 0 }
+}
+
 export const useCombatStore = defineStore('combat', {
   state: (): CombatState => ({
     enemy: null,
@@ -36,7 +46,7 @@ export const useCombatStore = defineStore('combat', {
     teamDps: 0,
     isFighting: false,
     totalClicks: 0,
-    totalKills: 0,
+    totalKills: typeof localStorage !== 'undefined' ? loadTotalKills() : 0,
     bossTimeRemaining: null,
     autoAttackInterval: null,
     bossTimerInterval: null,
@@ -95,6 +105,11 @@ export const useCombatStore = defineStore('combat', {
     },
 
     startBossTimer() {
+      // Guard: clear any existing timer to prevent leaks
+      if (this.bossTimerInterval) {
+        clearInterval(this.bossTimerInterval)
+        this.bossTimerInterval = null
+      }
       this.bossTimerInterval = setInterval(() => {
         if (this.bossTimeRemaining !== null) {
           this.bossTimeRemaining--
@@ -116,6 +131,7 @@ export const useCombatStore = defineStore('combat', {
     killEnemy() {
       this.clearTimers()
       this.totalKills++
+      try { localStorage.setItem(TOTAL_KILLS_KEY, String(this.totalKills)) } catch {}
       this.enemy = null
       this.isFighting = false
       this.bossTimeRemaining = null

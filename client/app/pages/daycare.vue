@@ -9,6 +9,7 @@ import { useLocale } from '~/composables/useLocale'
 import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
 import type { OwnedPokemon } from '~/stores/useInventoryStore'
+import { useAuthStore } from '~/stores/useAuthStore'
 
 definePageMeta({
   layout: 'game',
@@ -29,7 +30,7 @@ const eligiblePokemon = computed(() => {
   return inventory.collection.filter((p) => {
     if (p.level < MAX_LEVEL) return false
     if (p.isShiny) return false
-    if (daycare.hasSlug(p.slug)) return false
+    if (daycare.hasSlug(p.slug, p.isShiny)) return false
     if (seen.has(p.slug)) return false
     seen.add(p.slug)
     return true
@@ -54,9 +55,11 @@ function slotReady(slot: DaycareSlot): boolean {
   return slot.damageDealt >= slot.damageRequired
 }
 
+const auth = useAuthStore()
+
 function depositPokemon(poke: OwnedPokemon) {
   if (daycare.isFull) return
-  if (daycare.hasSlug(poke.slug)) return
+  if (daycare.hasSlug(poke.slug, poke.isShiny)) return
   if (!player.spendGold(DAYCARE_COST)) return
   // Remove from team before depositing
   if (poke.teamSlot !== null) {
@@ -70,10 +73,12 @@ function depositPokemon(poke: OwnedPokemon) {
     rarity: poke.rarity,
   })
   showPicker.value = false
+  auth.saveGameState()
 }
 
 function removeSlot(index: number) {
   daycare.remove(index)
+  auth.saveGameState()
 }
 
 function collectAll() {
@@ -100,6 +105,7 @@ function collectAll() {
   }
   if (results.length > 0) {
     hatchResults.value = results
+    auth.saveGameState()
   }
 }
 

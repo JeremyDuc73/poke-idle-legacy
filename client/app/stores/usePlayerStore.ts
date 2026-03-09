@@ -74,6 +74,8 @@ interface PlayerState {
   combatGeneration: number | null
   combatZone: number | null
   adminVersion: number
+  shinyCharms: number
+  completedPokedexGens: number[]
 }
 
 export const usePlayerStore = defineStore('player', {
@@ -100,6 +102,8 @@ export const usePlayerStore = defineStore('player', {
       combatGeneration: null,
       combatZone: null,
       adminVersion: 0,
+      shinyCharms: 0,
+      completedPokedexGens: [],
     }
   },
 
@@ -176,13 +180,17 @@ export const usePlayerStore = defineStore('player', {
       return true
     },
 
+    recalcClickDamage() {
+      // Clics: √(level) scaling — vise ~35% des dégâts totaux (30-40%)
+      this.clickDamage = Math.floor(5 + Math.sqrt(this.level) * 7 + this.badges * 3) + this.clickDamageBonus
+    },
+
     addXp(amount: number) {
       this.xp += amount
       while (this.xp >= xpForLevel(this.level + 1)) {
         this.level++
       }
-      // Réduction dégâts clics: niveau×2 → niveau×1, badges×10 → badges×5
-      this.clickDamage = Math.floor(1 + this.level * 1 + this.badges * 5) + this.clickDamageBonus
+      this.recalcClickDamage()
     },
 
     addStageKill(): boolean {
@@ -276,6 +284,10 @@ export const usePlayerStore = defineStore('player', {
       for (const k of ['S', 'M', 'L', 'XL'] as CandySize[]) {
         if (typeof this.candies[k] !== 'number' || isNaN(this.candies[k])) this.candies[k] = 0
       }
+      // Ensure new fields have safe defaults (old saves may not include them)
+      if (typeof this.shinyCharms !== 'number' || isNaN(this.shinyCharms)) this.shinyCharms = 0
+      if (!Array.isArray(this.completedPokedexGens)) this.completedPokedexGens = []
+      this.recalcClickDamage()
       this.saveBonuses()
     },
 

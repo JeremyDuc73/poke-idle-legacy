@@ -482,6 +482,10 @@ for (const b of BANNERS) {
   }
 }
 
+export function hasKnownRarity(slug: string): boolean {
+  return _slugRarity.has(slug)
+}
+
 export function getRarity(slug: string): Rarity {
   return _slugRarity.get(slug) ?? 'common'
 }
@@ -490,7 +494,15 @@ export function getRarityDpsMult(slug: string): number {
   return RARITY_DPS_MULT[getRarity(slug)]
 }
 
-export function pullFromBanner(banner: Banner): { pokemon: GachaPokemon; isShiny: boolean } {
+// Base shiny rate: 1/8192 (like the original games)
+export const BASE_SHINY_RATE = 1 / 8192
+
+// Each shiny charm adds +1/8192 to the shiny chance
+export function getShinyRate(shinyCharms: number): number {
+  return BASE_SHINY_RATE * (1 + shinyCharms)
+}
+
+export function pullFromBanner(banner: Banner, shinyCharms: number = 0): { pokemon: GachaPokemon; isShiny: boolean } {
   const byRarity = new Map<Rarity, GachaPokemon[]>()
   for (const p of banner.pool) {
     const arr = byRarity.get(p.rarity) ?? []
@@ -512,7 +524,7 @@ export function pullFromBanner(banner: Banner): { pokemon: GachaPokemon; isShiny
 
   const candidates = byRarity.get(selectedRarity) ?? byRarity.get('common') ?? banner.pool
   const pokemon = candidates[Math.floor(Math.random() * candidates.length)]!
-  const isShiny = Math.random() < 1 / 1000
+  const isShiny = Math.random() < getShinyRate(shinyCharms)
 
   return { pokemon, isShiny }
 }

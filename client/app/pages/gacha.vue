@@ -3,6 +3,7 @@ import { Star, Coins } from 'lucide-vue-next'
 import { getSpriteUrl, getShinySpriteUrl } from '~/utils/showdown'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore, MAX_STARS } from '~/stores/useInventoryStore'
+import { useAuthStore } from '~/stores/useAuthStore'
 import { useLocale } from '~/composables/useLocale'
 import { BANNERS, RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, pullFromBanner } from '~/data/gacha'
 import type { Banner, Rarity } from '~/data/gacha'
@@ -112,7 +113,7 @@ async function doPull() {
   // Do all pulls first (always from full pool — 5★ dupes refund gold)
   const rawPulls = []
   for (let i = 0; i < count; i++) {
-    rawPulls.push(pullFromBanner(banner))
+    rawPulls.push(pullFromBanner(banner, player.shinyCharms))
   }
 
   // Determine best rarity for ball color reveal
@@ -174,6 +175,10 @@ async function doPull() {
   animPhase.value = 'reveal'
   showResult.value = true
   isPulling.value = false
+
+  // Save immediately after pull to prevent data loss on F5
+  const auth = useAuthStore()
+  auth.saveGameState()
 }
 
 function sleep(ms: number): Promise<void> {

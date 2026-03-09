@@ -117,8 +117,8 @@ function toggleGen(id: number) {
             'Spend gold to summon Pokémon. 4 rarities: Common, Rare, Epic, Legendary.'
           ) }}</p>
           <p>{{ t(
-            'Les doublons augmentent les étoiles du Pokémon (max 5★). Chance de shiny : 1/1000.',
-            'Duplicates increase the Pokémon\'s stars (max 5★). Shiny chance: 1/1000.'
+            'Les doublons augmentent les étoiles du Pokémon (max 5★). Chance de shiny : 1/8192 (améliorable avec le Charme Chroma).',
+            'Duplicates increase the Pokémon\'s stars (max 5★). Shiny chance: 1/8192 (improvable with Shiny Charm).'
           ) }}</p>
         </div>
 
@@ -128,7 +128,7 @@ function toggleGen(id: number) {
           <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-blue-400">Rare</span> <span class="font-bold text-white">23%</span></span>
           <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-purple-400">Épique</span> <span class="font-bold text-white">6.5%</span></span>
           <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-amber-400">Légendaire</span> <span class="font-bold text-white">0.5%</span></span>
-          <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-yellow-400">✨ Shiny</span> <span class="font-bold text-white">0.1%</span></span>
+          <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-yellow-400">✨ Shiny</span> <span class="font-bold text-white">1/8192</span></span>
         </div>
 
         <h3 class="mt-3 mb-1 text-xs font-semibold text-gray-400 uppercase">{{ t('Multiplicateurs de rareté', 'Rarity multipliers') }}</h3>
@@ -511,6 +511,114 @@ function toggleGen(id: number) {
 
     <!-- ═══════════════ PATCH NOTES TAB ═══════════════ -->
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
+
+      <!-- v1.4.0 -->
+      <article class="rounded-xl border border-amber-500/50 bg-amber-900/20 p-5">
+        <h3 class="mb-3 text-lg font-bold text-amber-300">v1.4.0 — Shinys & Récompenses — 9 Mars 2026</h3>
+        
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Taux de shiny réalistes, Pokémon sauvages shinys, récompenses de complétion Pokédex et améliorations UX !', 'Realistic shiny rates, wild shiny encounters, Pokédex completion rewards and UX improvements!') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">✨ {{ t('Shinys', 'Shinies') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Taux de shiny au gacha passé de 1/1000 à 1/8192 (comme les vrais jeux)', 'Gacha shiny rate changed from 1/1000 to 1/8192 (like the real games)') }}</li>
+              <li>{{ t('Charme Chroma : obtenu en complétant le Pokédex d\'une région, augmente les chances de shiny', 'Shiny Charm: obtained by completing a region\'s Pokédex, increases shiny odds') }}</li>
+              <li>{{ t('Chaque Charme Chroma ajoute +1/8192 aux chances (2 charmes = 3/8192 ≈ 1/2731)', 'Each Shiny Charm adds +1/8192 to odds (2 charms = 3/8192 ≈ 1/2731)') }}</li>
+              <li>{{ t('Pokémon sauvages shinys en combat ! (×5 or, ×3 XP) avec notification toast', 'Wild shiny Pokémon in combat! (×5 gold, ×3 XP) with toast notification') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🏆 {{ t('Complétion Pokédex', 'Pokédex Completion') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Récompenses pour complétion du Pokédex d\'une génération : or + Charme Chroma', 'Rewards for completing a generation\'s Pokédex: gold + Shiny Charm') }}</li>
+              <li>{{ t('Kanto : 50 000 or | Johto : 100 000 or | Hoenn : 200 000 or | Sinnoh : 400 000 or', 'Kanto: 50,000 gold | Johto: 100,000 gold | Hoenn: 200,000 gold | Sinnoh: 400,000 gold') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🎨 {{ t('Interface', 'UI') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Drag & drop amélioré : opacité sur la source, glow sur la cible, bordure pointillée sur les slots vides', 'Improved drag & drop: opacity on source, glow on target, dashed border on empty slots') }}</li>
+              <li>{{ t('Types des Pokémon affichés dans les slots d\'équipe (inventaire)', 'Pokémon types displayed in team slots (inventory)') }}</li>
+              <li>{{ t('Système de toasts : notifications pour œufs prêts, évolutions, shinys sauvages, complétion Pokédex', 'Toast system: notifications for ready eggs, evolutions, wild shinies, Pokédex completion') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- v1.3.0 -->
+      <article class="rounded-xl border border-red-500/50 bg-red-900/20 p-5">
+        <h3 class="mb-3 text-lg font-bold text-red-300">v1.3.0 — Stabilité & Corrections — 9 Mars 2026</h3>
+        
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Grosse refonte du système de sauvegarde et correction de nombreux bugs critiques !', 'Major save system overhaul and many critical bug fixes!') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">💾 {{ t('Sauvegarde', 'Save System') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('CORRIGÉ: Perte de données après F5 (bonbons, achats, or) — sauvegarde immédiate après chaque action', 'FIXED: Data loss after F5 (candies, purchases, gold) — immediate save after every action') }}</li>
+              <li>{{ t('CORRIGÉ: Duplication de Pokémon lors de sauvegardes concurrentes — verrou client + transaction DB', 'FIXED: Pokémon duplication on concurrent saves — client lock + DB transaction') }}</li>
+              <li>{{ t('CORRIGÉ: Deadlock de sauvegarde après override admin — try/finally garantit la libération du verrou', 'FIXED: Save deadlock after admin override — try/finally guarantees lock release') }}</li>
+              <li>{{ t('NOUVEAU: Sauvegarde automatique quand l\'onglet perd le focus (visibilitychange)', 'NEW: Auto-save when tab loses focus (visibilitychange)') }}</li>
+              <li>{{ t('NOUVEAU: Sauvegarde réactive 2s après tout changement d\'état important', 'NEW: Reactive save 2s after any important state change') }}</li>
+              <li>{{ t('CORRIGÉ: Boss vaincus (defeatedBosses) maintenant persistés côté serveur', 'FIXED: Defeated bosses now persisted server-side') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">⚔️ {{ t('Combat', 'Combat') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('CORRIGÉ: Timer de boss infini quand on change d\'onglet — le temps s\'écoule correctement en arrière-plan', 'FIXED: Infinite boss timer on tab switch — time now elapses correctly in background') }}</li>
+              <li>{{ t('CORRIGÉ: Multiplicateur DPS shiny corrigé de ×1.5 à ×4', 'FIXED: Shiny DPS multiplier corrected from ×1.5 to ×4') }}</li>
+              <li>{{ t('CORRIGÉ: Scaling HP des boss lissé entre les régions (plus de saut brutal)', 'FIXED: Boss HP scaling smoothed across regions (no more abrupt jumps)') }}</li>
+              <li>{{ t('Compteur "Kills" renommé en "Mis KOs" et persisté entre les sessions', '"Kills" counter renamed to "KOs" and persisted across sessions') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">🧬 {{ t('Pokémon & Évolutions', 'Pokémon & Evolutions') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('CORRIGÉ: Rareté des évolutions — les formes évoluées héritent correctement de la rareté du parent', 'FIXED: Evolution rarity — evolved forms correctly inherit parent rarity') }}</li>
+              <li>{{ t('CORRIGÉ: Méga-Évolutions assignées à la bonne génération (celle de la forme de base)', 'FIXED: Mega Evolutions assigned to correct generation (base form\'s gen)') }}</li>
+              <li>{{ t('CORRIGÉ: Items d\'évolution vérifient maintenant par variante (normal/shiny séparément)', 'FIXED: Evolution items now check per variant (normal/shiny separately)') }}</li>
+              <li>{{ t('CORRIGÉ: Pension — un shiny n\'est plus bloqué si la version normale est déjà déposée', 'FIXED: Daycare — shiny no longer blocked if normal version is already deposited') }}</li>
+              <li>{{ t('Migration automatique des raretés pour tous les Pokémon existants', 'Automatic rarity migration for all existing Pokémon') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">🗑️ {{ t('Retraits', 'Removals') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('RETIRÉ: Récompenses AFK complètement supprimées (serveur + client)', 'REMOVED: AFK rewards completely removed (server + client)') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">⚖️ {{ t('Équilibrage', 'Balancing') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Dégâts clics: scaling √(niveau) — plus forts en early, plafonnés en late game', 'Click damage: √(level) scaling — stronger early, capped late game') }}</li>
+              <li>{{ t('DPS Pokémon de base doublé (niveau × 2) — les Pokémon sont le cœur du jeu', 'Base Pokémon DPS doubled (level × 2) — Pokémon are the core of the game') }}</li>
+              <li>{{ t('Boosts clics boutique réduits (total max: 183 au lieu de 1740)', 'Shop click boosts reduced (max total: 183 instead of 1740)') }}</li>
+              <li>{{ t('Récompenses boss de zone doublées (or et XP ×2)', 'Zone boss rewards doubled (gold and XP ×2)') }}</li>
+              <li>{{ t('Le jeu est désormais centré sur les Pokémon (~85% DPS) avec les clics en bonus (~15%)', 'Game is now Pokémon-centric (~85% DPS) with clicks as a bonus (~15%)') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">✨ {{ t('Nouveautés', 'New Features') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Clic sur un Pokémon de l\'équipe → résumé détaillé, bonbons XP, retrait d\'équipe', 'Click on a team Pokémon → detailed summary, XP candies, team removal') }}</li>
+              <li>{{ t('Image ennemie non déplaçable en combat (plus de drag accidentel)', 'Enemy image no longer draggable in combat (no more accidental drag)') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
 
       <!-- v1.2.0 -->
       <article class="rounded-xl border border-blue-500/50 bg-blue-900/20 p-5">

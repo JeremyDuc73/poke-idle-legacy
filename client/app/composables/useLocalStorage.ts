@@ -18,6 +18,8 @@ interface GuestSaveData {
     badges: number
     candies: Record<string, number>
     defeatedBosses: string[]
+    shinyCharms?: number
+    completedPokedexGens?: number[]
   }
   inventory: {
     collection: Array<{

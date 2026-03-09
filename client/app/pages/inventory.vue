@@ -10,8 +10,10 @@ import { getPokemonType, getPokemonTypes, getEffectiveness, TYPES } from '~/data
 import type { PokemonType } from '~/data/types'
 import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, getRarityDpsMult, getStarDpsMult, RARITY_DPS_MULT, getRarity } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
-import { getEvolutionStage, getEvoStageMult, EVO_STAGE_MULT } from '~/data/evolutions'
+import { getEvolutionStage, getEvoStageMult, EVO_STAGE_MULT, EVOLUTIONS } from '~/data/evolutions'
+import { getGenForSlug } from '~/data/pokedex'
 import { useDaycareStore } from '~/stores/useDaycareStore'
+import { useAuthStore } from '~/stores/useAuthStore'
 import { POKEDEX } from '~/data/pokedex'
 
 definePageMeta({
@@ -26,10 +28,13 @@ const { t } = useLocale()
 const candySizes: CandySize[] = ['S', 'M', 'L', 'XL']
 const CANDY_COLORS: Record<CandySize, string> = { S: '#4ade80', M: '#60a5fa', L: '#c084fc', XL: '#fbbf24' }
 
+const auth = useAuthStore()
+
 function useCandy(poke: OwnedPokemon, size: CandySize) {
   if (poke.level >= MAX_LEVEL) return
   if (!player.useCandy(size)) return
   inventory.addPokemonXp(poke.id, CANDY_XP[size], player.currentGeneration)
+  auth.saveGameState()
 }
 
 const sortBy = ref<'stars' | 'level' | 'name' | 'dps' | 'pokedex' | 'rarity'>('stars')
@@ -71,6 +76,7 @@ function saveCurrentTeam() {
 function loadSavedTeam(name: string) {
   inventory.loadTeam(name)
   showLoadTeamModal.value = false
+  auth.saveGameState()
 }
 
 function deleteSavedTeam(name: string) {
@@ -79,6 +85,7 @@ function deleteSavedTeam(name: string) {
 
 function clearTeam() {
   inventory.team.forEach(p => inventory.removeFromTeam(p.id))
+  auth.saveGameState()
 }
 
 function handlePokemonRightClick(event: MouseEvent, pokemon: OwnedPokemon) {
@@ -162,7 +169,30 @@ const collectionTypes = computed(() => {
 })
 
 function isInDaycare(pokemon: OwnedPokemon): boolean {
-  return daycare.hasSlug(pokemon.slug)
+  return daycare.hasSlug(pokemon.slug, pokemon.isShiny)
+}
+
+// Check if a pokemon can evolve with an item (stone/trade/happiness)
+const evoItemSlugs = computed(() => {
+  const ownedKeys = new Set(inventory.collection.map(p => `${p.slug}-${p.isShiny}`))
+  const result = new Set<string>()
+  for (const p of inventory.collection) {
+    const key = `${p.slug}-${p.isShiny}`
+    if (result.has(key)) continue
+    const evos = EVOLUTIONS.filter(e => e.fromSlug === p.slug)
+    const hasItemEvo = evos.some(e => {
+      if (!(e.method === 'stone' || e.method === 'trade' || e.method === 'happiness') || !e.itemRequired) return false
+      if (ownedKeys.has(`${e.toSlug}-${p.isShiny}`)) return false
+      if (getGenForSlug(e.toSlug) > player.currentGeneration) return false
+      return true
+    })
+    if (hasItemEvo) result.add(key)
+  }
+  return result
+})
+
+function canEvolveWithItem(poke: OwnedPokemon): boolean {
+  return evoItemSlugs.value.has(`${poke.slug}-${poke.isShiny}`)
 }
 
 function toggleTeam(pokemonId: number) {
@@ -180,14 +210,15 @@ function toggleTeam(pokemonId: number) {
       inventory.setTeamSlot(pokemonId, nextSlot)
     }
   }
+  auth.saveGameState()
 }
 
-// New damage formula: base=level, mults: evo, rarity, shiny, type
+// New damage formula: base=level×2, mults: evo, rarity, shiny, type
 function pokeDps(p: OwnedPokemon, enemyType?: PokemonType): number {
-  const baseDmg = p.level
+  const baseDmg = p.level * 2
   const evoMult = getEvoStageMult(p.slug)
-  const rarityMult = getRarityDpsMult(p.slug)
-  const shinyMult = p.isShiny ? 1.5 : 1.0
+  const rarityMult = RARITY_DPS_MULT[p.rarity] ?? 1.0
+  const shinyMult = p.isShiny ? 4.0 : 1.0
   const starMult = getStarDpsMult(p.stars, p.isShiny)
   const typeMult = enemyType ? getEffectiveness(getPokemonType(p.slug), enemyType) : 1
   return Math.round(Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult) * typeMult)
@@ -208,12 +239,66 @@ function closeDetail() {
   detailPokemon.value = null
 }
 
+// --- Drag & Drop Team ---
+const dragSlot = ref<number | null>(null)
+const dragOverSlot = ref<number | null>(null)
+const dragPokemonId = ref<number | null>(null)
+
+function onTeamDragStart(event: DragEvent, slot: number, pokeId: number) {
+  dragSlot.value = slot
+  dragPokemonId.value = pokeId
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', String(pokeId))
+  }
+}
+
+function onTeamDragOver(event: DragEvent, slot: number) {
+  event.preventDefault()
+  dragOverSlot.value = slot
+  if (event.dataTransfer) event.dataTransfer.dropEffect = 'move'
+}
+
+function onTeamDragLeave() {
+  dragOverSlot.value = null
+}
+
+function onTeamDrop(event: DragEvent, targetSlot: number) {
+  event.preventDefault()
+  dragOverSlot.value = null
+  const pokeId = dragPokemonId.value
+  if (pokeId === null) return
+
+  // If dropping on a team slot, swap/move
+  inventory.setTeamSlot(pokeId, targetSlot)
+  dragSlot.value = null
+  dragPokemonId.value = null
+  auth.saveGameState()
+}
+
+function onTeamDragEnd() {
+  dragSlot.value = null
+  dragOverSlot.value = null
+  dragPokemonId.value = null
+}
+
+// Drag from collection to team
+function onCollectionDragStart(event: DragEvent, poke: OwnedPokemon) {
+  if (poke.teamSlot !== null || isInDaycare(poke)) return
+  dragPokemonId.value = poke.id
+  dragSlot.value = null
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', String(poke.id))
+  }
+}
+
 function getDetailStats(poke: OwnedPokemon) {
-  const baseDmg = poke.level
+  const baseDmg = poke.level * 2
   const evoStage = getEvolutionStage(poke.slug)
   const evoMult = getEvoStageMult(poke.slug)
-  const rarityMult = getRarityDpsMult(poke.slug)
-  const shinyMult = poke.isShiny ? 1.5 : 1.0
+  const rarityMult = RARITY_DPS_MULT[poke.rarity] ?? 1.0
+  const shinyMult = poke.isShiny ? 4.0 : 1.0
   const starMult = getStarDpsMult(poke.stars, poke.isShiny)
   const permanentDps = Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult)
   
@@ -280,8 +365,20 @@ function getDetailStats(poke: OwnedPokemon) {
         <div
           v-for="slot in [1, 2, 3, 4, 5, 6]"
           :key="slot"
-          class="flex h-24 flex-col items-center justify-center rounded-xl border border-gray-700 bg-gray-800 transition-all"
-          :class="inventory.team.find((p) => p.teamSlot === slot) ? 'cursor-context-menu hover:border-red-500/50' : ''"
+          class="flex h-28 flex-col items-center justify-center gap-1 rounded-xl border bg-gray-800 py-1 transition-all duration-200"
+          :class="[
+            dragOverSlot === slot ? 'border-cyan-400 bg-cyan-500/20 scale-110 shadow-lg shadow-cyan-500/30 ring-2 ring-cyan-400/50' : 'border-gray-700',
+            dragSlot === slot ? 'opacity-40 scale-95' : '',
+            inventory.team.find((p) => p.teamSlot === slot) ? 'cursor-grab hover:border-blue-500/50' : '',
+            dragPokemonId !== null && !inventory.team.find((p) => p.teamSlot === slot) && dragOverSlot !== slot ? 'border-dashed border-cyan-600/40' : '',
+          ]"
+          :draggable="!!inventory.team.find((p) => p.teamSlot === slot)"
+          @dragstart="inventory.team.find((p) => p.teamSlot === slot) ? onTeamDragStart($event, slot, inventory.team.find((p) => p.teamSlot === slot)!.id) : null"
+          @dragover="onTeamDragOver($event, slot)"
+          @dragleave="onTeamDragLeave"
+          @drop="onTeamDrop($event, slot)"
+          @dragend="onTeamDragEnd"
+          @click="inventory.team.find((p) => p.teamSlot === slot) ? openDetail(inventory.team.find((p) => p.teamSlot === slot)!) : null"
           @contextmenu.prevent="inventory.team.find((p) => p.teamSlot === slot) ? inventory.removeFromTeam(inventory.team.find((p) => p.teamSlot === slot)!.id) : null"
         >
           <template v-if="inventory.team.find((p) => p.teamSlot === slot)">
@@ -289,13 +386,22 @@ function getDetailStats(poke: OwnedPokemon) {
               :src="inventory.team.find((p) => p.teamSlot === slot)!.isShiny
                 ? getShinySpriteUrl(inventory.team.find((p) => p.teamSlot === slot)!.slug)
                 : getSpriteUrl(inventory.team.find((p) => p.teamSlot === slot)!.slug)"
-              class="h-12 w-12 object-contain"
+              class="pointer-events-none h-10 w-10 select-none object-contain"
+              draggable="false"
             />
+            <div class="flex gap-0.5">
+              <TypeBadge
+                v-for="type in getPokemonTypes(inventory.team.find((p) => p.teamSlot === slot)!.slug)"
+                :key="type"
+                :type="type"
+                size="xs"
+              />
+            </div>
             <div class="flex gap-0.5">
               <Star
                 v-for="s in inventory.team.find((p) => p.teamSlot === slot)!.stars"
                 :key="s"
-                class="h-2.5 w-2.5 fill-yellow-400 text-yellow-400"
+                class="h-2 w-2 fill-yellow-400 text-yellow-400"
               />
             </div>
           </template>
@@ -401,12 +507,16 @@ function getDetailStats(poke: OwnedPokemon) {
       <button
         v-for="pokemon in filteredCollection"
         :key="pokemon.id"
+        :draggable="pokemon.teamSlot === null && !isInDaycare(pokemon)"
         class="group relative flex flex-col items-center gap-1 rounded-xl border p-2 transition-all hover:scale-105"
+        :style="dragPokemonId === pokemon.id ? { opacity: 0.4, transform: 'scale(0.95)' } : {}"
         :class="pokemon.teamSlot !== null
           ? 'border-cyan-500 bg-cyan-500/10 cursor-default'
           : isInDaycare(pokemon)
             ? 'border-purple-500/50 bg-purple-500/5 cursor-not-allowed'
             : 'border-gray-700 bg-gray-800 hover:border-blue-500'"
+        @dragstart="onCollectionDragStart($event, pokemon)"
+        @dragend="onTeamDragEnd"
         @click="openDetail(pokemon)"
         @contextmenu.prevent="handlePokemonRightClick($event, pokemon)"
       >
@@ -420,6 +530,12 @@ function getDetailStats(poke: OwnedPokemon) {
         >
           {{ pokemon.teamSlot }}
         </span>
+        <!-- Evo item indicator -->
+        <span
+          v-if="canEvolveWithItem(pokemon)"
+          class="absolute -left-1 bottom-0 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/90 text-[10px] shadow-lg"
+          :title="t('Peut évoluer avec un item !', 'Can evolve with an item!')"
+        >🔮</span>
         <!-- Rarity indicator -->
         <span
           class="absolute -right-1 top-4 h-2 w-2 rounded-full"
@@ -500,7 +616,7 @@ function getDetailStats(poke: OwnedPokemon) {
               <div class="rounded-lg bg-gray-800 px-3 py-2">
                 <p class="text-[10px] uppercase text-gray-500">{{ t('Dégâts de base', 'Base damage') }}</p>
                 <p class="text-lg font-bold text-white">{{ getDetailStats(detailPokemon).baseDmg }}</p>
-                <p class="text-[10px] text-gray-600">= {{ t('niveau', 'level') }}</p>
+                <p class="text-[10px] text-gray-600">= {{ t('niveau × 2', 'level × 2') }}</p>
               </div>
               <div class="rounded-lg bg-gray-800 px-3 py-2">
                 <p class="text-[10px] uppercase text-gray-500">{{ t('DPS permanent', 'Permanent DPS') }}</p>

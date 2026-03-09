@@ -55,12 +55,11 @@ interface LoadGameResponse {
     isShiny: boolean
     teamSlot: number | null
   }>
-  afkReward: {
-    hoursAway: number
-    goldEarned: number
-    enemiesDefeated: number
-  } | null
 }
+
+// Save lock to prevent concurrent server saves (race condition causes pokemon duplication)
+let _saveLock = false
+let _savePending = false
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
@@ -152,8 +151,9 @@ export const useAuthStore = defineStore('auth', {
       
       inventory.collection = guestData.inventory.collection
       inventory.nextId = guestData.inventory.nextId
+      inventory.migrateRarities()
       inventory.rebuildHasEvolvedFlags()
-      daycare.slots = guestData.daycare.slots
+      daycare.slots = (guestData.daycare.slots || []).map((s: any) => ({ ...s, isShiny: s.isShiny ?? false }))
     },
 
     async loadGameState() {
@@ -185,6 +185,8 @@ export const useAuthStore = defineStore('auth', {
           defeatedBosses: (data.player as any).defeatedBosses ?? [],
           candies: (data.player as any).candies ?? { S: 0, M: 0, L: 0, XL: 0 },
           adminVersion: (data.player as any).adminVersion ?? 0,
+          shinyCharms: (data.player as any).shinyCharms ?? 0,
+          completedPokedexGens: (data.player as any).completedPokedexGens ?? [],
           isLoggedIn: true,
         })
 
@@ -209,6 +211,8 @@ export const useAuthStore = defineStore('auth', {
           teamSlot: p.teamSlot,
         }))
         inventory.nextId = data.pokemons.length + 1
+        // Fix rarities for existing Pokemon that inherited wrong rarity from parent
+        inventory.migrateRarities()
         // Rebuild hasEvolved flags so checkAllEvolutions doesn't re-create existing evolutions
         inventory.rebuildHasEvolvedFlags()
 
@@ -216,10 +220,10 @@ export const useAuthStore = defineStore('auth', {
         const daycareStore = useDaycareStore()
         const daycareData = (data.player as any).daycare
         if (Array.isArray(daycareData)) {
-          daycareStore.slots = daycareData
+          daycareStore.slots = daycareData.map((s: any) => ({ ...s, isShiny: s.isShiny ?? false }))
         }
 
-        return data.afkReward
+        return null
       } catch (e) {
         console.error('Failed to load game state:', e)
         return null
@@ -250,6 +254,8 @@ export const useAuthStore = defineStore('auth', {
           badges: player.badges,
           candies: player.candies,
           defeatedBosses: player.defeatedBosses,
+          shinyCharms: player.shinyCharms,
+          completedPokedexGens: player.completedPokedexGens,
         },
         inventory: {
           collection: inventory.collection,
@@ -269,76 +275,98 @@ export const useAuthStore = defineStore('auth', {
         return
       }
 
-      const api = useApi()
-      const player = usePlayerStore()
-      const inventory = useInventoryStore()
+      // Prevent concurrent saves (race condition causes pokemon duplication)
+      if (_saveLock) {
+        _savePending = true
+        return
+      }
+      _saveLock = true
+      _savePending = false
 
-      const fetchOpts = keepalive ? { keepalive: true } : undefined
-
-      const playerPayload = {
-        gold: player.gold,
-        gems: player.gems,
-        xp: player.xp,
-        level: player.level,
-        currentGeneration: player.currentGeneration,
-        currentZone: player.currentZone,
-        currentStage: player.currentStage,
-        clickDamage: player.clickDamage,
-        clickDamageBonus: player.clickDamageBonus,
-        teamDpsBonus: player.teamDpsBonus,
-        badges: player.badges,
-        candies: player.candies,
-        daycare: useDaycareStore().slots,
-        adminVersion: player.adminVersion,
-      } as Record<string, unknown>
-
-      // Save player data
       try {
-        if (keepalive) {
-          api.post('/api/game/save', playerPayload, fetchOpts)
-        } else {
-          const saveResult = await api.post<{ reload?: boolean }>('/api/game/save', playerPayload)
-          if (saveResult?.reload) {
-            console.log('[SAVE] Admin override detected — reloading game state')
-            await this.loadGameState()
-            return
+        const api = useApi()
+        const player = usePlayerStore()
+        const inventory = useInventoryStore()
+
+        const fetchOpts = keepalive ? { keepalive: true } : undefined
+
+        const playerPayload = {
+          gold: player.gold,
+          gems: player.gems,
+          xp: player.xp,
+          level: player.level,
+          currentGeneration: player.currentGeneration,
+          currentZone: player.currentZone,
+          currentStage: player.currentStage,
+          clickDamage: player.clickDamage,
+          clickDamageBonus: player.clickDamageBonus,
+          teamDpsBonus: player.teamDpsBonus,
+          badges: player.badges,
+          candies: player.candies,
+          defeatedBosses: player.defeatedBosses,
+          daycare: useDaycareStore().slots,
+          adminVersion: player.adminVersion,
+          shinyCharms: player.shinyCharms,
+          completedPokedexGens: player.completedPokedexGens,
+        } as Record<string, unknown>
+
+        // Save player data
+        try {
+          if (keepalive) {
+            api.post('/api/game/save', playerPayload, fetchOpts)
+          } else {
+            const saveResult = await api.post<{ reload?: boolean }>('/api/game/save', playerPayload)
+            if (saveResult?.reload) {
+              console.log('[SAVE] Admin override detected — reloading game state')
+              await this.loadGameState()
+              return // lock released in finally
+            }
           }
+        } catch (e) {
+          console.error('[SAVE] Player save failed:', e)
         }
-      } catch (e) {
-        console.error('[SAVE] Player save failed:', e)
+
+        // Save pokemons separately so player save failure doesn't block it
+        try {
+          const pokedexMap = new Map(POKEDEX.map((p) => [p.slug, p]))
+
+          const pokemons = inventory.collection.map((p) => {
+            const entry = pokedexMap.get(p.slug)
+            return {
+              slug: p.slug,
+              nameFr: p.nameFr ?? entry?.nameFr ?? p.slug,
+              nameEn: p.nameEn ?? entry?.nameEn ?? p.slug,
+              pokedexId: entry?.id ?? 0,
+              gen: entry?.gen ?? 1,
+              level: p.level,
+              xp: p.xp,
+              stars: p.stars,
+              isShiny: p.isShiny,
+              rarity: p.rarity ?? 'common',
+              teamSlot: p.teamSlot,
+            }
+          })
+
+          if (pokemons.length > 0 || inventory.collectionCount === 0) {
+            const pokemonsPayload = { pokemons, adminVersion: player.adminVersion } as Record<string, unknown>
+            if (keepalive) {
+              api.post('/api/game/save-pokemons', pokemonsPayload, fetchOpts)
+            } else {
+              await api.post('/api/game/save-pokemons', pokemonsPayload)
+            }
+          }
+        } catch (e) {
+          console.error('[SAVE] Pokémon save failed:', e)
+        }
+      } finally {
+        // Always release lock, even on error or early return
+        _saveLock = false
       }
 
-      // Save pokemons separately so player save failure doesn't block it
-      try {
-        const pokedexMap = new Map(POKEDEX.map((p) => [p.slug, p]))
-
-        const pokemons = inventory.collection.map((p) => {
-          const entry = pokedexMap.get(p.slug)
-          return {
-            slug: p.slug,
-            nameFr: p.nameFr ?? entry?.nameFr ?? p.slug,
-            nameEn: p.nameEn ?? entry?.nameEn ?? p.slug,
-            pokedexId: entry?.id ?? 0,
-            gen: entry?.gen ?? 1,
-            level: p.level,
-            xp: p.xp,
-            stars: p.stars,
-            isShiny: p.isShiny,
-            rarity: p.rarity ?? 'common',
-            teamSlot: p.teamSlot,
-          }
-        })
-
-        if (pokemons.length > 0 || inventory.collectionCount === 0) {
-          const pokemonsPayload = { pokemons, adminVersion: player.adminVersion } as Record<string, unknown>
-          if (keepalive) {
-            api.post('/api/game/save-pokemons', pokemonsPayload, fetchOpts)
-          } else {
-            await api.post('/api/game/save-pokemons', pokemonsPayload)
-          }
-        }
-      } catch (e) {
-        console.error('[SAVE] Pokémon save failed:', e)
+      // Retry if a save was requested while we were saving
+      if (_savePending) {
+        _savePending = false
+        this.saveGameState()
       }
     },
   },

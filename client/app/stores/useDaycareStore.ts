@@ -7,6 +7,7 @@ export interface DaycareSlot {
   nameEn: string
   stars: number
   rarity: Rarity
+  isShiny: boolean
   damageDealt: number
   damageRequired: number
   isShinyResult?: boolean // Pre-determined shiny result (set when egg becomes ready)
@@ -42,13 +43,14 @@ export const useDaycareStore = defineStore('daycare', {
   },
 
   actions: {
-    hasSlug(slug: string): boolean {
-      return this.slots.some((s) => s.slug === slug)
+    hasSlug(slug: string, isShiny?: boolean): boolean {
+      if (isShiny === undefined) return this.slots.some((s) => s.slug === slug)
+      return this.slots.some((s) => s.slug === slug && s.isShiny === isShiny)
     },
 
-    deposit(pokemon: { slug: string; nameFr: string; nameEn: string; stars: number; rarity: Rarity }): boolean {
+    deposit(pokemon: { slug: string; nameFr: string; nameEn: string; stars: number; rarity: Rarity; isShiny?: boolean }): boolean {
       if (this.isFull) return false
-      if (this.hasSlug(pokemon.slug)) return false
+      if (this.hasSlug(pokemon.slug, pokemon.isShiny)) return false
       const dmgRequired = HATCH_DAMAGE[pokemon.stars] ?? HATCH_DAMAGE[5]!
       this.slots.push({
         slug: pokemon.slug,
@@ -56,6 +58,7 @@ export const useDaycareStore = defineStore('daycare', {
         nameEn: pokemon.nameEn,
         stars: pokemon.stars,
         rarity: pokemon.rarity,
+        isShiny: pokemon.isShiny ?? false,
         damageDealt: 0,
         damageRequired: dmgRequired,
       })

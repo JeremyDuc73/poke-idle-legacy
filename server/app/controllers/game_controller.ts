@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
+import db from '@adonisjs/lucid/services/db'
 import Species from '#models/species'
 import { saveGameStateValidator } from '#validators/game_state'
 import UserPokemon from '#models/user_pokemon'
@@ -15,36 +16,7 @@ export default class GameController {
       query.preload('species')
     })
 
-    const now = DateTime.now()
-    const lastLogin = user.lastLoginAt
-
-    let afkReward = null
-    if (lastLogin) {
-      const diffMs = now.diff(lastLogin, 'milliseconds').milliseconds
-      const diffMinutes = diffMs / (1000 * 60)
-
-      if (diffMinutes >= 5) {
-        const cappedHours = Math.min(diffMinutes / 60, 24)
-        const teamDps = user.pokemons
-          .filter((p) => p.teamSlot !== null)
-          .reduce((sum, p) => sum + Math.floor(p.level * (1 + 0.25)), 0)
-
-        if (teamDps > 0) {
-          const enemiesPerHour = (teamDps * 3600) / 50
-          const enemiesDefeated = Math.floor(enemiesPerHour * cappedHours)
-          const goldEarned = Math.floor(enemiesDefeated * 5 * user.level)
-
-          user.gold += goldEarned
-          afkReward = {
-            hoursAway: cappedHours,
-            goldEarned,
-            enemiesDefeated,
-          }
-        }
-      }
-    }
-
-    user.lastLoginAt = now
+    user.lastLoginAt = DateTime.now()
     await user.save()
 
     return response.ok({
@@ -80,7 +52,6 @@ export default class GameController {
         rarity: p.rarity ?? 'common',
         teamSlot: p.teamSlot,
       })),
-      afkReward,
     })
   }
 
@@ -203,9 +174,7 @@ export default class GameController {
       slugToId.set(slug, created.id)
     }
 
-    // Now save all pokemons
-    await UserPokemon.query().where('userId', user.id).delete()
-
+    // Now save all pokemons in a transaction to prevent duplication on concurrent saves
     const validPokemons = pokemons
       .map((p) => ({
         userId: user.id,
@@ -219,9 +188,12 @@ export default class GameController {
       }))
       .filter((p) => p.speciesId > 0)
 
-    if (validPokemons.length > 0) {
-      await UserPokemon.createMany(validPokemons)
-    }
+    await db.transaction(async (trx) => {
+      await UserPokemon.query({ client: trx }).where('userId', user.id).delete()
+      if (validPokemons.length > 0) {
+        await UserPokemon.createMany(validPokemons, { client: trx })
+      }
+    })
 
     return response.ok({ message: `${validPokemons.length} Pokémon saved` })
   }

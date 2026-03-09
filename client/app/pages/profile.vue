@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { User, Trophy, Swords, Zap, Skull, Star, MapPin, Coins } from 'lucide-vue-next'
+import { User, Trophy, Swords, Zap, Skull, Star, MapPin, Coins, Sparkles } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useCombatStore } from '~/stores/useCombatStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
@@ -78,6 +78,13 @@ const stats = computed<StatItem[]>(() => [
     value: player.regionName,
     icon: MapPin,
     color: 'text-indigo-400',
+  },
+  {
+    labelFr: 'Charmes Chroma',
+    labelEn: 'Shiny Charms',
+    value: player.shinyCharms,
+    icon: Sparkles,
+    color: 'text-amber-400',
   },
 ])
 </script>

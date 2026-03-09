@@ -3,6 +3,7 @@ import { Coins, FlaskConical, X, Candy, Zap } from 'lucide-vue-next'
 import { usePlayerStore, CANDY_XP, getCandyCost } from '~/stores/usePlayerStore'
 import type { CandySize } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
+import { useAuthStore } from '~/stores/useAuthStore'
 import { useLocale } from '~/composables/useLocale'
 import { EVO_ITEMS, getEvolutionsFor } from '~/data/evolutions'
 import { getGenForSlug } from '~/data/pokedex'
@@ -15,6 +16,7 @@ definePageMeta({
 
 const player = usePlayerStore()
 const inventory = useInventoryStore()
+const auth = useAuthStore()
 const { t } = useLocale()
 
 const purchaseFlash = ref<string | null>(null)
@@ -36,18 +38,21 @@ const pickerItemId = ref<string | null>(null)
 const pickerCandidates = ref<OwnedPokemon[]>([])
 
 function getEvoCandidates(itemId: string): OwnedPokemon[] {
-  const ownedSlugs = new Set(inventory.collection.map((p) => p.slug))
+  // Build slug+shiny keys for owned pokemon so we check per-variant
+  const ownedKeys = new Set(inventory.collection.map((p) => `${p.slug}-${p.isShiny}`))
   const seen = new Set<string>()
   return inventory.collection.filter((p) => {
-    if (seen.has(p.slug)) return false
+    const key = `${p.slug}-${p.isShiny}`
+    if (seen.has(key)) return false
     const evos = getEvolutionsFor(p.slug)
     const eligible = evos.some((e) => {
       if (!((e.method === 'stone' || e.method === 'trade' || e.method === 'happiness') && e.itemRequired === itemId)) return false
-      if (ownedSlugs.has(e.toSlug)) return false
+      // Check if this specific variant (same isShiny) already has the evolved form
+      if (ownedKeys.has(`${e.toSlug}-${p.isShiny}`)) return false
       if (getGenForSlug(e.toSlug) > player.currentGeneration) return false
       return true
     })
-    if (eligible) seen.add(p.slug)
+    if (eligible) seen.add(key)
     return eligible
   })
 }
@@ -82,6 +87,7 @@ function confirmEvolve(pokemon: OwnedPokemon) {
       `${pokemon.nameEn} evolved!`
     )
     setTimeout(() => (evoMessage.value = null), 3000)
+    auth.saveGameState()
   } else {
     player.addGold(cost) // Refund
   }
@@ -127,6 +133,7 @@ function buyCandy(size: CandySize) {
   if (!isCandyUnlocked(size)) return
   if (player.buyCandy(size)) {
     flash(`candy-${size}`)
+    auth.saveGameState()
   }
 }
 
@@ -142,21 +149,21 @@ interface ClickBoost {
 }
 
 const CLICK_BOOSTS: ClickBoost[] = [
-  { id: 'click-kanto-1', nameFr: 'Boost Clics Kanto I', nameEn: 'Kanto Click Boost I', generation: 1, unlockLevel: 10, cost: 1000, damage: 5 },
-  { id: 'click-kanto-2', nameFr: 'Boost Clics Kanto II', nameEn: 'Kanto Click Boost II', generation: 1, unlockLevel: 20, cost: 5000, damage: 10 },
-  { id: 'click-kanto-3', nameFr: 'Boost Clics Kanto III', nameEn: 'Kanto Click Boost III', generation: 1, unlockLevel: 30, cost: 15000, damage: 20 },
+  { id: 'click-kanto-1', nameFr: 'Kanto I', nameEn: 'Kanto I', generation: 1, unlockLevel: 10, cost: 200, damage: 5 },
+  { id: 'click-kanto-2', nameFr: 'Kanto II', nameEn: 'Kanto II', generation: 1, unlockLevel: 20, cost: 800, damage: 8 },
+  { id: 'click-kanto-3', nameFr: 'Kanto III', nameEn: 'Kanto III', generation: 1, unlockLevel: 30, cost: 2000, damage: 12 },
   
-  { id: 'click-johto-1', nameFr: 'Boost Clics Johto I', nameEn: 'Johto Click Boost I', generation: 2, unlockLevel: 35, cost: 25000, damage: 30 },
-  { id: 'click-johto-2', nameFr: 'Boost Clics Johto II', nameEn: 'Johto Click Boost II', generation: 2, unlockLevel: 45, cost: 50000, damage: 50 },
-  { id: 'click-johto-3', nameFr: 'Boost Clics Johto III', nameEn: 'Johto Click Boost III', generation: 2, unlockLevel: 55, cost: 100000, damage: 75 },
+  { id: 'click-johto-1', nameFr: 'Johto I', nameEn: 'Johto I', generation: 2, unlockLevel: 35, cost: 4000, damage: 15 },
+  { id: 'click-johto-2', nameFr: 'Johto II', nameEn: 'Johto II', generation: 2, unlockLevel: 45, cost: 10000, damage: 20 },
+  { id: 'click-johto-3', nameFr: 'Johto III', nameEn: 'Johto III', generation: 2, unlockLevel: 55, cost: 20000, damage: 30 },
   
-  { id: 'click-hoenn-1', nameFr: 'Boost Clics Hoenn I', nameEn: 'Hoenn Click Boost I', generation: 3, unlockLevel: 60, cost: 200000, damage: 100 },
-  { id: 'click-hoenn-2', nameFr: 'Boost Clics Hoenn II', nameEn: 'Hoenn Click Boost II', generation: 3, unlockLevel: 70, cost: 400000, damage: 150 },
-  { id: 'click-hoenn-3', nameFr: 'Boost Clics Hoenn III', nameEn: 'Hoenn Click Boost III', generation: 3, unlockLevel: 80, cost: 750000, damage: 200 },
+  { id: 'click-hoenn-1', nameFr: 'Hoenn I', nameEn: 'Hoenn I', generation: 3, unlockLevel: 60, cost: 40000, damage: 30 },
+  { id: 'click-hoenn-2', nameFr: 'Hoenn II', nameEn: 'Hoenn II', generation: 3, unlockLevel: 70, cost: 80000, damage: 40 },
+  { id: 'click-hoenn-3', nameFr: 'Hoenn III', nameEn: 'Hoenn III', generation: 3, unlockLevel: 80, cost: 150000, damage: 50 },
   
-  { id: 'click-sinnoh-1', nameFr: 'Boost Clics Sinnoh I', nameEn: 'Sinnoh Click Boost I', generation: 4, unlockLevel: 85, cost: 1000000, damage: 250 },
-  { id: 'click-sinnoh-2', nameFr: 'Boost Clics Sinnoh II', nameEn: 'Sinnoh Click Boost II', generation: 4, unlockLevel: 95, cost: 2000000, damage: 350 },
-  { id: 'click-sinnoh-3', nameFr: 'Boost Clics Sinnoh III', nameEn: 'Sinnoh Click Boost III', generation: 4, unlockLevel: 105, cost: 5000000, damage: 500 },
+  { id: 'click-sinnoh-1', nameFr: 'Sinnoh I', nameEn: 'Sinnoh I', generation: 4, unlockLevel: 85, cost: 200000, damage: 40 },
+  { id: 'click-sinnoh-2', nameFr: 'Sinnoh II', nameEn: 'Sinnoh II', generation: 4, unlockLevel: 95, cost: 400000, damage: 50 },
+  { id: 'click-sinnoh-3', nameFr: 'Sinnoh III', nameEn: 'Sinnoh III', generation: 4, unlockLevel: 105, cost: 800000, damage: 60 },
 ]
 
 const purchasedBoosts = ref<Set<string>>(new Set())
@@ -192,11 +199,13 @@ function buyClickBoost(boost: ClickBoost) {
   
   purchasedBoosts.value.add(boost.id)
   player.clickDamageBonus += boost.damage
+  player.recalcClickDamage()
   player.saveBonuses()
   
   // Save to localStorage
   localStorage.setItem('poke-idle-click-boosts', JSON.stringify([...purchasedBoosts.value]))
   flash(`boost-${boost.id}`)
+  auth.saveGameState()
 }
 
 const boostsByGen = computed(() => {
@@ -213,42 +222,32 @@ const boostsByGen = computed(() => {
   <div class="flex flex-col gap-8">
     <h2 class="text-2xl font-bold">{{ t('Boutique', 'Shop') }}</h2>
 
-    <!-- Click Damage Boosts -->
+    <!-- Click Damage Boosts (compact) -->
     <section>
-      <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-400">
+      <h3 class="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-400">
         <Zap class="h-4 w-4 text-yellow-400" />
-        {{ t('Améliorations Dégâts Clics', 'Click Damage Upgrades') }}
+        {{ t('Dégâts Clics', 'Click Damage') }}
+        <span class="ml-auto text-[10px] text-yellow-400/70">{{ t('Total', 'Total') }}: +{{ player.clickDamageBonus }}</span>
       </h3>
-      <div v-for="(boosts, gen) in boostsByGen" :key="gen" class="mb-4">
-        <p class="mb-2 text-xs font-bold text-slate-500">{{ t('Génération', 'Generation') }} {{ gen }}</p>
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <button
-            v-for="boost in boosts"
-            :key="boost.id"
-            class="flex flex-col gap-2 rounded-xl border border-gray-700 bg-gray-800 p-3 transition-all hover:border-yellow-500/30 active:scale-[0.98] disabled:opacity-40"
-            :class="{ 
-              'ring-2 ring-yellow-500/50': purchaseFlash === `boost-${boost.id}`,
-              'border-green-500/50 bg-green-500/10': isBoostPurchased(boost.id)
-            }"
-            :disabled="!isBoostUnlocked(boost) || isBoostPurchased(boost.id) || player.gold < boost.cost"
-            @click="buyClickBoost(boost)"
-          >
-            <div class="flex items-center gap-2">
-              <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-500/20">
-                <Zap class="h-4 w-4 text-yellow-400" />
-              </div>
-              <div class="flex-1 text-left">
-                <p class="text-xs font-bold text-white">{{ t(boost.nameFr, boost.nameEn) }}</p>
-                <p class="text-[10px] text-gray-500">+{{ boost.damage }} {{ t('dégâts', 'damage') }}</p>
-              </div>
-            </div>
-            <div class="flex items-center justify-between text-xs">
-              <span v-if="!isBoostUnlocked(boost)" class="text-orange-400">🔒 Niv. {{ boost.unlockLevel }}</span>
-              <span v-else-if="isBoostPurchased(boost.id)" class="text-green-400">✓ {{ t('Acheté', 'Purchased') }}</span>
-              <span v-else class="text-yellow-400">🪙 {{ boost.cost.toLocaleString() }}</span>
-            </div>
-          </button>
-        </div>
+      <div class="grid grid-cols-3 gap-1.5 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12">
+        <button
+          v-for="boost in CLICK_BOOSTS"
+          :key="boost.id"
+          class="flex flex-col items-center gap-0.5 rounded-lg border px-2 py-1.5 text-center transition-all active:scale-95 disabled:opacity-30"
+          :class="{
+            'border-green-500/50 bg-green-500/10': isBoostPurchased(boost.id),
+            'border-gray-700 bg-gray-800 hover:border-yellow-500/30': !isBoostPurchased(boost.id),
+            'ring-2 ring-yellow-500/50': purchaseFlash === `boost-${boost.id}`,
+          }"
+          :disabled="!isBoostUnlocked(boost) || isBoostPurchased(boost.id) || player.gold < boost.cost"
+          @click="buyClickBoost(boost)"
+        >
+          <span class="text-[10px] font-bold text-gray-400">{{ boost.nameFr }}</span>
+          <span class="text-xs font-bold text-yellow-400">+{{ boost.damage }}</span>
+          <span v-if="!isBoostUnlocked(boost)" class="text-[9px] text-orange-400">🔒 {{ boost.unlockLevel }}</span>
+          <span v-else-if="isBoostPurchased(boost.id)" class="text-[9px] text-green-400">✓</span>
+          <span v-else class="text-[9px] text-yellow-400/70">🪙 {{ boost.cost >= 1000 ? Math.round(boost.cost / 1000) + 'k' : boost.cost }}</span>
+        </button>
       </div>
     </section>
 

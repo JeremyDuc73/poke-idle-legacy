@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Swords, Zap, Timer, Skull, MapPin, ChevronDown, RotateCcw } from 'lucide-vue-next'
+import { Swords, Zap, Timer, Skull, MapPin, ChevronDown, RotateCcw, X } from 'lucide-vue-next'
 import { getSpriteUrl, getShinySpriteUrl } from '~/utils/showdown'
 import { useCombatStore } from '~/stores/useCombatStore'
 import { usePlayerStore } from '~/stores/usePlayerStore'
@@ -7,10 +7,16 @@ import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useLocale } from '~/composables/useLocale'
 import { useCombatLoop } from '~/composables/useCombatLoop'
-import { getPokemonType, getPokemonTypes, getTypeInfo } from '~/data/types'
-import { pokemonXpForLevel } from '~/data/evolutions'
+import { getPokemonType, getPokemonTypes, getTypeInfo, getEffectiveness, TYPES } from '~/data/types'
+import type { PokemonType } from '~/data/types'
+import { pokemonXpForLevel, getEvolutionStage, getEvoStageMult } from '~/data/evolutions'
 import { GENERATIONS } from '~/data/zones'
-import { getSlugGeneration } from '~/data/gacha'
+import { getSlugGeneration, RARITY_DPS_MULT, RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, getStarDpsMult } from '~/data/gacha'
+import type { Rarity } from '~/data/gacha'
+import { CANDY_XP } from '~/stores/usePlayerStore'
+import type { CandySize } from '~/stores/usePlayerStore'
+import { MAX_LEVEL } from '~/stores/useInventoryStore'
+import type { OwnedPokemon } from '~/stores/useInventoryStore'
 import GuestModeModal from '~/components/GuestModeModal.vue'
 
 definePageMeta({
@@ -143,6 +149,54 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
   const range = next - current
   if (range <= 0) return 0
   return Math.min(100, Math.max(0, ((poke.xp - current) / range) * 100))
+}
+
+// --- Team Detail Modal ---
+const detailPokemon = ref<OwnedPokemon | null>(null)
+const candySizes: CandySize[] = ['S', 'M', 'L', 'XL']
+const CANDY_COLORS: Record<CandySize, string> = { S: '#4ade80', M: '#60a5fa', L: '#c084fc', XL: '#fbbf24' }
+
+function openTeamDetail(poke: OwnedPokemon) {
+  detailPokemon.value = poke
+}
+
+function closeTeamDetail() {
+  detailPokemon.value = null
+}
+
+function useCandy(poke: OwnedPokemon, size: CandySize) {
+  if (poke.level >= MAX_LEVEL) return
+  if (!player.useCandy(size)) return
+  inventory.addPokemonXp(poke.id, CANDY_XP[size], player.currentGeneration)
+  auth.saveGameState()
+}
+
+function getTeamDetailStats(poke: OwnedPokemon) {
+  const baseDmg = poke.level * 2
+  const evoStage = getEvolutionStage(poke.slug)
+  const evoMult = getEvoStageMult(poke.slug)
+  const rarityMult = RARITY_DPS_MULT[poke.rarity ?? 'common'] ?? 1.0
+  const shinyMult = poke.isShiny ? 4.0 : 1.0
+  const starMult = getStarDpsMult(poke.stars, poke.isShiny)
+  const permanentDps = Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult)
+
+  const attackerTypes = getPokemonTypes(poke.slug)
+  const typeMatchups = TYPES.map((tp) => {
+    const mult = Math.max(...attackerTypes.map(atkType => getEffectiveness(atkType, tp.id)))
+    return { type: tp, mult }
+  })
+
+  return { baseDmg, evoStage, evoMult, rarityMult, shinyMult, starMult, permanentDps, typeMatchups }
+}
+
+function rarityLabel(r: Rarity): string {
+  return t(RARITY_LABELS_FR[r], RARITY_LABELS_EN[r])
+}
+
+function removeFromTeam(pokeId: number) {
+  inventory.removeFromTeam(pokeId)
+  closeTeamDetail()
+  auth.saveGameState()
 }
 </script>
 
@@ -385,12 +439,20 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
             @click="handleClick($event)"
             @contextmenu.prevent="handleClick($event)"
           >
+            <div v-if="combat.enemy.isShiny" class="absolute inset-0 animate-pulse rounded-full bg-yellow-400/20 blur-xl" />
             <img
               :src="combat.enemy.spriteUrl"
               :alt="t(combat.enemy.nameFr, combat.enemy.nameEn)"
-              class="relative h-40 w-40 object-contain transition-all group-hover:scale-110 group-hover:drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]"
-              style="image-rendering: pixelated; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));"
+              class="pointer-events-none relative h-40 w-40 select-none object-contain transition-all group-hover:scale-110"
+              :style="{
+                imageRendering: 'pixelated',
+                filter: combat.enemy.isShiny
+                  ? 'drop-shadow(0 4px 8px rgba(0,0,0,0.3)) drop-shadow(0 0 16px rgba(234,179,8,0.6))'
+                  : 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
+              }"
+              draggable="false"
             />
+            <span v-if="combat.enemy.isShiny" class="absolute -right-2 -top-2 text-xl animate-bounce">✨</span>
           </button>
         </div>
 
@@ -446,7 +508,7 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
               <Skull class="h-4 w-4 text-red-400 sm:h-5 sm:w-5" />
             </div>
             <div class="text-left">
-              <p class="text-[10px] font-medium uppercase tracking-wider text-red-300/70 sm:text-xs">Kills</p>
+              <p class="text-[10px] font-medium uppercase tracking-wider text-red-300/70 sm:text-xs">{{ t('Mis KOs', 'KOs') }}</p>
               <p class="text-base font-bold text-red-400 sm:text-lg">{{ combat.totalKills }}</p>
             </div>
           </div>
@@ -466,8 +528,9 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
         <div
           v-for="poke in teamBreakdown"
           :key="poke.id"
-          class="relative overflow-hidden rounded-xl border-2 bg-gradient-to-br from-slate-800/80 to-slate-900/80 shadow-lg transition-all hover:scale-[1.02]"
+          class="relative cursor-pointer overflow-hidden rounded-xl border-2 bg-gradient-to-br from-slate-800/80 to-slate-900/80 shadow-lg transition-all hover:scale-[1.02]"
           :class="poke.isShiny ? 'border-yellow-500/50' : 'border-slate-700/50'"
+          @click="openTeamDetail(poke)"
         >
           <!-- Background pattern -->
           <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px;" />
@@ -524,7 +587,7 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
                   </span>
                 </div>
                 <div v-if="poke.isShiny" class="flex items-center gap-1">
-                  <span class="font-bold text-yellow-400">Shiny x1.5</span>
+                  <span class="font-bold text-yellow-400">Shiny x4</span>
                 </div>
                 <div class="ml-auto flex items-center gap-1 rounded-md px-2 py-1" :class="poke.typeMult > 1 ? 'bg-green-500/20' : poke.typeMult < 1 ? 'bg-red-500/20' : 'bg-slate-700/50'">
                   <span class="text-[9px] font-medium text-slate-400">DPS</span>
@@ -539,6 +602,139 @@ function pokemonXpPercent(poke: { level: number; xp: number; rarity?: string }):
       </div>
       </div>
     </div>
+
+    <!-- Team Detail Modal -->
+    <Teleport to="body">
+      <div
+        v-if="detailPokemon"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+        @click.self="closeTeamDetail"
+      >
+        <div class="relative w-full max-w-lg rounded-2xl border border-gray-700 bg-gray-900 p-6 shadow-2xl mx-4">
+          <button class="absolute right-3 top-3 rounded-lg p-1 text-gray-500 hover:bg-gray-800 hover:text-white" @click="closeTeamDetail">
+            <X class="h-5 w-5" />
+          </button>
+
+          <!-- Header -->
+          <div class="mb-4 flex items-center gap-4">
+            <img
+              :src="detailPokemon.isShiny ? getShinySpriteUrl(detailPokemon.slug) : getSpriteUrl(detailPokemon.slug)"
+              class="h-20 w-20 object-contain"
+            />
+            <div>
+              <h3 class="text-xl font-bold text-white">
+                {{ t(detailPokemon.nameFr, detailPokemon.nameEn) }}
+                <span v-if="detailPokemon.isShiny" class="text-sm">✨</span>
+              </h3>
+              <div class="mt-1 flex items-center gap-2">
+                <div class="flex gap-1">
+                  <TypeBadge v-for="tp in getPokemonTypes(detailPokemon.slug)" :key="tp" :type="tp" />
+                </div>
+                <span class="text-xs font-bold" :style="{ color: RARITY_COLORS[detailPokemon.rarity ?? 'common'] }">
+                  {{ rarityLabel(detailPokemon.rarity ?? 'common') }}
+                </span>
+              </div>
+              <p class="mt-1 text-sm text-gray-400">
+                Lv.{{ detailPokemon.level }} —
+                <span class="text-yellow-400">★{{ detailPokemon.stars }}</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Damage breakdown -->
+          <div class="space-y-3">
+            <h4 class="text-sm font-semibold text-gray-300">{{ t('Détail des dégâts', 'Damage Breakdown') }}</h4>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <div class="rounded-lg bg-gray-800 px-3 py-2">
+                <p class="text-[10px] uppercase text-gray-500">{{ t('Dégâts de base', 'Base damage') }}</p>
+                <p class="text-lg font-bold text-white">{{ getTeamDetailStats(detailPokemon).baseDmg }}</p>
+                <p class="text-[10px] text-gray-600">= {{ t('niveau × 2', 'level × 2') }}</p>
+              </div>
+              <div class="rounded-lg bg-gray-800 px-3 py-2">
+                <p class="text-[10px] uppercase text-gray-500">{{ t('DPS permanent', 'Permanent DPS') }}</p>
+                <p class="text-lg font-bold text-cyan-400">{{ getTeamDetailStats(detailPokemon).permanentDps }}</p>
+              </div>
+            </div>
+
+            <!-- Multipliers -->
+            <h4 class="text-sm font-semibold text-gray-300">{{ t('Multiplicateurs', 'Multipliers') }}</h4>
+            <div class="flex flex-wrap gap-2">
+              <div class="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs">
+                <span class="text-gray-500">{{ t('Évolution', 'Evolution') }}</span>
+                <span class="ml-1 font-bold" :class="getTeamDetailStats(detailPokemon).evoMult > 1 ? 'text-green-400' : 'text-gray-400'">
+                  x{{ getTeamDetailStats(detailPokemon).evoMult }}
+                </span>
+                <span class="ml-1 text-[10px] text-gray-600">
+                  ({{ ['Base', 'Stade 1', 'Stade 2'][getTeamDetailStats(detailPokemon).evoStage] }})
+                </span>
+              </div>
+              <div class="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs">
+                <span class="text-gray-500">{{ t('Rareté', 'Rarity') }}</span>
+                <span class="ml-1 font-bold" :style="{ color: RARITY_COLORS[detailPokemon.rarity ?? 'common'] }">
+                  x{{ getTeamDetailStats(detailPokemon).rarityMult }}
+                </span>
+              </div>
+              <div class="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs">
+                <span class="text-gray-500">Shiny</span>
+                <span class="ml-1 font-bold" :class="detailPokemon.isShiny ? 'text-yellow-400' : 'text-gray-400'">
+                  x{{ getTeamDetailStats(detailPokemon).shinyMult }}
+                </span>
+              </div>
+              <div class="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs">
+                <span class="text-gray-500">★{{ detailPokemon.stars }}</span>
+                <span class="ml-1 font-bold" :class="getTeamDetailStats(detailPokemon).starMult > 1 ? 'text-amber-400' : 'text-gray-400'">
+                  x{{ getTeamDetailStats(detailPokemon).starMult }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Type matchups -->
+            <h4 class="text-sm font-semibold text-gray-300">{{ t('Table des types', 'Type Matchups') }}</h4>
+            <div class="flex flex-wrap gap-1">
+              <template v-for="m in getTeamDetailStats(detailPokemon).typeMatchups" :key="m.type.id">
+                <div
+                  v-if="m.mult !== 1"
+                  class="rounded px-2 py-0.5 text-[10px] font-bold"
+                  :class="m.mult > 1 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'"
+                >
+                  {{ t(m.type.nameFr, m.type.nameEn) }} x{{ m.mult }}
+                </div>
+              </template>
+            </div>
+
+            <!-- XP Candies -->
+            <h4 class="text-sm font-semibold text-gray-300">{{ t('Bonbons XP', 'XP Candies') }}</h4>
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="size in candySizes"
+                :key="size"
+                class="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs font-bold transition-all hover:bg-gray-800 active:scale-95 disabled:opacity-30"
+                :disabled="player.candies[size] <= 0 || detailPokemon.level >= MAX_LEVEL"
+                :style="{ color: CANDY_COLORS[size], borderColor: CANDY_COLORS[size] + '40' }"
+                @click="useCandy(detailPokemon, size)"
+              >
+                {{ size }}
+                <span class="text-[10px] text-gray-500">+{{ CANDY_XP[size].toLocaleString() }} XP</span>
+                <span class="rounded bg-gray-800 px-1 py-px text-[9px] text-gray-400">x{{ player.candies[size] }}</span>
+              </button>
+            </div>
+            <p v-if="detailPokemon.level >= MAX_LEVEL" class="text-[10px] text-amber-400">
+              {{ t('Niveau max atteint !', 'Max level reached!') }}
+            </p>
+
+            <!-- Remove from team -->
+            <div class="pt-2">
+              <button
+                class="w-full rounded-lg bg-red-500/20 py-2 text-sm font-bold text-red-400 hover:bg-red-500/30"
+                @click="removeFromTeam(detailPokemon.id)"
+              >
+                {{ t('Retirer de l\'équipe', 'Remove from Team') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- Floating Damage Numbers -->
     <FloatingDamage

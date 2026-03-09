@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { canEvolveByLevel, canEvolveByItem, pokemonXpForLevel, getEvoStageMult, EVOLUTIONS } from '~/data/evolutions'
 import type { Evolution } from '~/data/evolutions'
-import { getRarityDpsMult, getStarDpsMult, getRarity } from '~/data/gacha'
+import { getRarityDpsMult, getStarDpsMult, getRarity, hasKnownRarity, RARITY_DPS_MULT } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
 import { getGenForSlug } from '~/data/pokedex'
 
@@ -24,10 +24,20 @@ interface SavedTeam {
   pokemonIds: number[]
 }
 
+export interface EvolutionEvent {
+  fromNameFr: string
+  fromNameEn: string
+  toNameFr: string
+  toNameEn: string
+  wasInTeam: boolean
+  slot: number | null
+}
+
 interface InventoryState {
   collection: OwnedPokemon[]
   nextId: number
   savedTeams: SavedTeam[]
+  evolutionLog: EvolutionEvent[]
 }
 
 export const MAX_STARS = 5
@@ -38,6 +48,7 @@ export const useInventoryStore = defineStore('inventory', {
     collection: [],
     nextId: 1,
     savedTeams: [],
+    evolutionLog: [],
   }),
 
   getters: {
@@ -48,10 +59,10 @@ export const useInventoryStore = defineStore('inventory', {
     },
     teamDps(): number {
       return this.team.reduce((sum: number, p: OwnedPokemon) => {
-        const baseDmg = p.level
+        const baseDmg = p.level * 2
         const evoMult = getEvoStageMult(p.slug)
-        const rarityMult = getRarityDpsMult(p.slug)
-        const shinyMult = p.isShiny ? 1.5 : 1.0
+        const rarityMult = RARITY_DPS_MULT[p.rarity] ?? 1.0
+        const shinyMult = p.isShiny ? 4.0 : 1.0
         const starMult = getStarDpsMult(p.stars, p.isShiny)
         return sum + Math.floor(baseDmg * evoMult * rarityMult * shinyMult * starMult)
       }, 0)
@@ -77,6 +88,9 @@ export const useInventoryStore = defineStore('inventory', {
     // Migration: update rarity of existing Pokemon to match current gacha data
     migrateRarities() {
       for (const pokemon of this.collection) {
+        // Only update rarity for Pokemon that exist in gacha pools
+        // Evolved forms (Ivysaur, Charizard, etc.) are NOT in gacha - keep inherited rarity
+        if (!hasKnownRarity(pokemon.slug)) continue
         const currentRarity = getRarity(pokemon.slug)
         if (pokemon.rarity !== currentRarity) {
           pokemon.rarity = currentRarity
@@ -197,6 +211,9 @@ export const useInventoryStore = defineStore('inventory', {
       // Mark this pokemon as having evolved to prevent multiple evolutions
       pokemon.hasEvolved = true
       
+      const wasInTeam = pokemon.teamSlot !== null
+      const slot = pokemon.teamSlot
+      
       // Living dex: keep the original pokemon, add the evolution as a new entry at level 1
       const evolved: OwnedPokemon = {
         id: this.nextId++,
@@ -207,13 +224,23 @@ export const useInventoryStore = defineStore('inventory', {
         xp: 0,
         stars: 1,
         isShiny: pokemon.isShiny,
-        rarity: pokemon.rarity, // Inherit rarity from original pokemon
+        rarity: hasKnownRarity(evo.toSlug) ? getRarity(evo.toSlug) : pokemon.rarity,
         teamSlot: pokemon.teamSlot,
         hasEvolved: false,
       }
       // Remove original from team, put evolved in its slot
       pokemon.teamSlot = null
       this.collection.push(evolved)
+      
+      // Log evolution for toast notifications
+      this.evolutionLog.push({
+        fromNameFr: pokemon.nameFr,
+        fromNameEn: pokemon.nameEn,
+        toNameFr: evo.toNameFr,
+        toNameEn: evo.toNameEn,
+        wasInTeam,
+        slot,
+      })
     },
 
     // Team management

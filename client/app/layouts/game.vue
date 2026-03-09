@@ -4,23 +4,49 @@ import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
-import { useAfkReward } from '~/composables/useAfkReward'
 import { useSpeciesCache } from '~/composables/useSpeciesCache'
 import { useCombatLoop } from '~/composables/useCombatLoop'
+import { useDaycareStore } from '~/stores/useDaycareStore'
+import { EVOLUTIONS, EVO_ITEMS } from '~/data/evolutions'
+import { getGenForSlug, getPokedexByGen } from '~/data/pokedex'
+import { useToast } from '~/composables/useToast'
+import { useCombatStore } from '~/stores/useCombatStore'
 
 const player = usePlayerStore()
 const auth = useAuthStore()
 const inventory = useInventoryStore()
+const daycare = useDaycareStore()
+const combat = useCombatStore()
 const { locale, setLocale, t } = useLocale()
-const { showPopup, afkResult, checkAfkRewards, dismissPopup } = useAfkReward()
 const { loadSpecies } = useSpeciesCache()
 const { init: initCombat } = useCombatLoop()
+const { toasts, addToast, removeToast } = useToast()
 
 const mobileMenuOpen = ref(false)
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null
+let debouncedSaveTimer: ReturnType<typeof setTimeout> | null = null
 
 function saveOnUnload() {
+  // Guest mode: synchronous localStorage save (always reliable)
+  if (!auth.isAuthenticated) {
+    auth.saveGuestGameState()
+    return
+  }
   auth.saveGameState(true)
+}
+
+function saveOnVisibilityChange() {
+  if (document.hidden) {
+    auth.saveGameState()
+  }
+}
+
+// Debounced save: triggers 2s after any state change
+function debouncedSave() {
+  if (debouncedSaveTimer) clearTimeout(debouncedSaveTimer)
+  debouncedSaveTimer = setTimeout(() => {
+    auth.saveGameState()
+  }, 2000)
 }
 
 onMounted(() => {
@@ -39,13 +65,33 @@ onMounted(() => {
   // Check evolutions on mount
   inventory.checkAllEvolutions(player.currentGeneration)
 
-  // Auto-save every 10s (works for both authenticated and guest mode)
+  // Auto-save every 10s as safety net
   autoSaveInterval = setInterval(() => {
     auth.saveGameState()
   }, 10_000)
 
   window.addEventListener('beforeunload', saveOnUnload)
+  document.addEventListener('visibilitychange', saveOnVisibilityChange)
 })
+
+// Debounced reactive save: any important state change triggers save after 2s
+watch(
+  () => [
+    player.gold,
+    player.gems,
+    player.candies,
+    player.currentGeneration,
+    player.currentZone,
+    player.currentStage,
+    player.badges,
+    player.clickDamageBonus,
+    player.teamDpsBonus,
+    inventory.collectionCount,
+    inventory.team.map(p => `${p.id}-${p.teamSlot}-${p.level}-${p.xp}-${p.stars}`).join(','),
+  ],
+  () => { debouncedSave() },
+  { deep: true },
+)
 
 // Check evolutions on every page change
 const route = useRoute()
@@ -55,32 +101,166 @@ watch(() => route.path, () => {
 
 onUnmounted(() => {
   if (autoSaveInterval) clearInterval(autoSaveInterval)
+  if (debouncedSaveTimer) clearTimeout(debouncedSaveTimer)
   window.removeEventListener('beforeunload', saveOnUnload)
+  document.removeEventListener('visibilitychange', saveOnVisibilityChange)
 })
 
 function toggleLocale() {
   setLocale(locale.value === 'fr' ? 'en' : 'fr')
 }
 
+// Notification badges
+const readyEggs = computed(() => daycare.slots.filter(s => s.damageDealt >= s.damageRequired).length)
+
+const evolvableWithItem = computed(() => {
+  const ownedKeys = new Set(inventory.collection.map(p => `${p.slug}-${p.isShiny}`))
+  const seen = new Set<string>()
+  let count = 0
+  for (const p of inventory.collection) {
+    const key = `${p.slug}-${p.isShiny}`
+    if (seen.has(key)) continue
+    const evos = EVOLUTIONS.filter(e => e.fromSlug === p.slug)
+    const hasItemEvo = evos.some(e => {
+      if (!(e.method === 'stone' || e.method === 'trade' || e.method === 'happiness') || !e.itemRequired) return false
+      if (ownedKeys.has(`${e.toSlug}-${p.isShiny}`)) return false
+      if (getGenForSlug(e.toSlug) > player.currentGeneration) return false
+      return true
+    })
+    if (hasItemEvo) { count++; seen.add(key) }
+  }
+  return count
+})
+
 const navItems = computed(() => {
   const items = [
-    { label: t('Combat', 'Combat'), icon: Swords, to: '/' },
-    { label: t('Inventaire', 'Inventory'), icon: Package, to: '/inventory' },
-    { label: t('Invocation', 'Gacha'), icon: Sparkles, to: '/gacha' },
-    { label: t('Pension', 'Daycare'), icon: Egg, to: '/daycare' },
-    { label: t('Badges', 'Badges'), icon: Medal, to: '/badges' },
-    { label: t('Boutique', 'Shop'), icon: Store, to: '/shop' },
-    { label: t('Profil', 'Profile'), icon: User, to: '/profile' },
-    { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide' },
-    { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex' },
+    { label: t('Combat', 'Combat'), icon: Swords, to: '/', badge: 0 },
+    { label: t('Inventaire', 'Inventory'), icon: Package, to: '/inventory', badge: evolvableWithItem.value },
+    { label: t('Invocation', 'Gacha'), icon: Sparkles, to: '/gacha', badge: 0 },
+    { label: t('Pension', 'Daycare'), icon: Egg, to: '/daycare', badge: readyEggs.value },
+    { label: t('Badges', 'Badges'), icon: Medal, to: '/badges', badge: 0 },
+    { label: t('Boutique', 'Shop'), icon: Store, to: '/shop', badge: 0 },
+    { label: t('Profil', 'Profile'), icon: User, to: '/profile', badge: 0 },
+    { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide', badge: 0 },
+    { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex', badge: 0 },
   ]
   
   if (auth.user?.role === 'admin') {
-    items.push({ label: 'Admin', icon: Shield, to: '/admin' })
-    items.push({ label: 'Debug', icon: Bug, to: '/debug' })
+    items.push({ label: 'Admin', icon: Shield, to: '/admin', badge: 0 })
+    items.push({ label: 'Debug', icon: Bug, to: '/debug', badge: 0 })
   }
   
   return items
+})
+
+// Toast: daycare eggs ready
+watch(readyEggs, (newVal, oldVal) => {
+  if (newVal > oldVal) {
+    const diff = newVal - oldVal
+    addToast(
+      t(
+        `${diff} œuf${diff > 1 ? 's' : ''} prêt${diff > 1 ? 's' : ''} à éclore !`,
+        `${diff} egg${diff > 1 ? 's' : ''} ready to hatch!`
+      ),
+      '🥚',
+      'success',
+      5000,
+    )
+  }
+})
+
+// Toast: evolutions
+watch(() => inventory.evolutionLog.length, (newLen, oldLen) => {
+  if (newLen > oldLen) {
+    const newEvents = inventory.evolutionLog.slice(oldLen)
+    for (const ev of newEvents) {
+      const name = t(ev.toNameFr, ev.toNameEn)
+      const from = t(ev.fromNameFr, ev.fromNameEn)
+      if (ev.wasInTeam) {
+        addToast(
+          t(
+            `${from} a évolué en ${name} ! (remplacé slot ${ev.slot})`,
+            `${from} evolved into ${name}! (replaced slot ${ev.slot})`
+          ),
+          '✨',
+          'success',
+          6000,
+        )
+      } else {
+        addToast(
+          t(
+            `${from} a évolué en ${name} !`,
+            `${from} evolved into ${name}!`
+          ),
+          '🔄',
+          'success',
+          5000,
+        )
+      }
+    }
+  }
+})
+
+// Toast: wild shiny encounter
+watch(() => combat.enemy, (enemy) => {
+  if (enemy?.isShiny) {
+    addToast(
+      t(
+        `Un ${enemy.nameFr.replace('✨ ', '').replace(' ✨', '')} shiny apparaît ! (×5 or, ×3 XP)`,
+        `A shiny ${enemy.nameEn.replace('✨ ', '').replace(' ✨', '')} appeared! (×5 gold, ×3 XP)`
+      ),
+      '✨',
+      'warning',
+      5000,
+    )
+  }
+})
+
+// Gen completion rewards: shiny charm + gold bonus
+const GEN_COMPLETION_REWARDS: Record<number, { gold: number; label: string }> = {
+  1: { gold: 50000, label: 'Kanto' },
+  2: { gold: 100000, label: 'Johto' },
+  3: { gold: 200000, label: 'Hoenn' },
+  4: { gold: 400000, label: 'Sinnoh' },
+}
+
+const ownedSlugs = computed(() => new Set(inventory.collection.map(p => p.slug)))
+
+function checkGenCompletions() {
+  for (let gen = 1; gen <= player.currentGeneration; gen++) {
+    if (player.completedPokedexGens.includes(gen)) continue
+    const genPokemon = getPokedexByGen(gen)
+    const allOwned = genPokemon.every(p => ownedSlugs.value.has(p.slug))
+    if (allOwned && genPokemon.length > 0) {
+      // Mark as completed
+      player.completedPokedexGens.push(gen)
+      player.shinyCharms++
+      const reward = GEN_COMPLETION_REWARDS[gen]
+      const goldReward = reward?.gold ?? 100000
+      const regionName = reward?.label ?? `Gen ${gen}`
+      player.addGold(goldReward)
+      addToast(
+        t(
+          `Pokédex ${regionName} complété ! Charme Chroma obtenu + ${goldReward.toLocaleString()} or !`,
+          `${regionName} Pokédex completed! Shiny Charm obtained + ${goldReward.toLocaleString()} gold!`
+        ),
+        '🏆',
+        'warning',
+        8000,
+      )
+      auth.saveGameState()
+    }
+  }
+}
+
+// Check on collection changes
+watch(() => inventory.collectionCount, () => {
+  checkGenCompletions()
+})
+
+// Check on mount
+onMounted(() => {
+  nextTick(() => checkGenCompletions())
 })
 </script>
 
@@ -122,7 +302,13 @@ const navItems = computed(() => {
             ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg font-bold' 
             : 'text-slate-400 hover:bg-slate-800/60 hover:text-white'"
         >
-          <component :is="item.icon" class="h-5 w-5 shrink-0" />
+          <div class="relative">
+            <component :is="item.icon" class="h-5 w-5 shrink-0" />
+            <span
+              v-if="item.badge > 0"
+              class="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white shadow-lg"
+            >{{ item.badge }}</span>
+          </div>
           <span class="hidden lg:inline">{{ item.label }}</span>
         </NuxtLink>
       </nav>
@@ -208,7 +394,13 @@ const navItems = computed(() => {
             v-if="$route.path === item.to"
             class="absolute top-0 h-0.5 w-8 rounded-full bg-red-400"
           />
-          <component :is="item.icon" class="h-[18px] w-[18px]" :stroke-width="$route.path === item.to ? 2.5 : 1.5" />
+          <div class="relative">
+            <component :is="item.icon" class="h-[18px] w-[18px]" :stroke-width="$route.path === item.to ? 2.5 : 1.5" />
+            <span
+              v-if="item.badge > 0"
+              class="absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold text-white"
+            >{{ item.badge }}</span>
+          </div>
           <span>{{ item.label }}</span>
         </NuxtLink>
         <!-- More button -->
@@ -250,7 +442,13 @@ const navItems = computed(() => {
                 : 'bg-slate-800/80 text-slate-400 hover:bg-slate-700/80 hover:text-white'"
               @click="mobileMenuOpen = false"
             >
-              <component :is="item.icon" class="h-5 w-5" />
+              <div class="relative">
+                <component :is="item.icon" class="h-5 w-5" />
+                <span
+                  v-if="item.badge > 0"
+                  class="absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold text-white"
+                >{{ item.badge }}</span>
+              </div>
               <span>{{ item.label }}</span>
             </NuxtLink>
             <!-- Locale -->
@@ -283,6 +481,30 @@ const navItems = computed(() => {
         </div>
       </div>
     </Transition>
+    <!-- Toast container -->
+    <Teleport to="body">
+      <div class="fixed right-4 top-16 z-50 flex flex-col gap-2 md:top-4">
+        <TransitionGroup name="toast">
+          <div
+            v-for="toast in toasts"
+            :key="toast.id"
+            class="flex items-center gap-2 rounded-xl border border-slate-600/50 px-4 py-3 shadow-2xl backdrop-blur-md"
+            :class="{
+              'bg-slate-800/95 text-white': toast.type === 'info',
+              'bg-green-900/95 text-green-200 border-green-500/50': toast.type === 'success',
+              'bg-amber-900/95 text-amber-200 border-amber-500/50': toast.type === 'warning',
+            }"
+            style="min-width: 250px; max-width: 380px;"
+          >
+            <span class="text-lg">{{ toast.icon }}</span>
+            <p class="flex-1 text-sm font-medium">{{ toast.message }}</p>
+            <button class="ml-2 text-slate-400 hover:text-white" @click="removeToast(toast.id)">
+              <X class="h-4 w-4" />
+            </button>
+          </div>
+        </TransitionGroup>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -295,5 +517,23 @@ const navItems = computed(() => {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(100%);
+}
+
+.toast-enter-active {
+  transition: all 0.35s cubic-bezier(0.21, 1.02, 0.73, 1);
+}
+.toast-leave-active {
+  transition: all 0.25s ease;
+}
+.toast-enter-from {
+  opacity: 0;
+  transform: translateX(100px);
+}
+.toast-leave-to {
+  opacity: 0;
+  transform: translateX(100px);
+}
+.toast-move {
+  transition: transform 0.25s ease;
 }
 </style>
