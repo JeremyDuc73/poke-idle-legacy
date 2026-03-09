@@ -512,6 +512,65 @@ function toggleGen(id: number) {
     <!-- ═══════════════ PATCH NOTES TAB ═══════════════ -->
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
 
+      <!-- v1.5.0 -->
+      <article class="rounded-xl border border-amber-500/50 bg-amber-900/20 p-5">
+        <h3 class="mb-3 text-lg font-bold text-amber-300">v1.5.0 — Classement & Admin — 9 Mars 2026</h3>
+        
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Nouveau classement compétitif, interface admin améliorée, équilibrage régional et corrections !', 'New competitive leaderboard, improved admin interface, regional balancing and fixes!') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🏆 {{ t('Classement', 'Leaderboard') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Nouvelle page Classement accessible depuis le menu', 'New Leaderboard page accessible from the menu') }}</li>
+              <li>{{ t('Classement Général basé sur la moyenne des positions dans toutes les catégories', 'Overall Ranking based on average position across all categories') }}</li>
+              <li>{{ t('8 catégories : Niveau, Richesse, Badges, Pokédex, Invocations, Shiny, Légendaires, Légendaires Shiny', '8 categories: Level, Wealth, Badges, Pokédex, Summons, Shiny, Legendaries, Shiny Legendaries') }}</li>
+              <li>{{ t('Podium top 3 avec couronnes et médailles pour chaque classement', 'Top 3 podium with crowns and medals for each ranking') }}</li>
+              <li>{{ t('Minimum 2 badges pour apparaître dans le classement', 'Minimum 2 badges to appear in the ranking') }}</li>
+              <li>{{ t('Mise à jour automatique toutes les 5 minutes', 'Automatic refresh every 5 minutes') }}</li>
+              <li>{{ t('Chaque semaine, le top 3 sera récompensé par le comité de la Ligue Pokémon !', 'Every week, the top 3 will be rewarded by the Pokémon League committee!') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">⚙️ {{ t('Administration', 'Administration') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Dashboard enrichi : 8 cartes de statistiques (utilisateurs, actifs 24h, pokémon, shiny, légendaires, niveaux, badges, gold)', 'Enhanced dashboard: 8 stat cards (users, active 24h, pokémon, shiny, legendaries, levels, badges, gold)') }}</li>
+              <li>{{ t('Table utilisateurs : colonnes Région et Dernière connexion ajoutées', 'Users table: Region and Last login columns added') }}</li>
+              <li>{{ t('Filtre par rôle (Tous / Users / Admins)', 'Role filter (All / Users / Admins)') }}</li>
+              <li>{{ t('Icônes Lucide propres remplacent les anciens emojis', 'Clean Lucide icons replace old emojis') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">⚔️ {{ t('Équilibrage', 'Balancing') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Malus hors région augmenté de 50% à 90% — combattre avec des Pokémon de la bonne région est désormais crucial', 'Out-of-region penalty increased from 50% to 90% — fighting with region-matching Pokémon is now crucial') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🐛 {{ t('Corrections', 'Bug Fixes') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('CORRIGÉ : Évolutions par pierre d\'Évoli — plusieurs évolutions possibles grâce au reset du flag hasEvolved', 'FIXED: Eevee stone evolutions — multiple evolutions now possible thanks to hasEvolved flag reset') }}</li>
+              <li>{{ t('CORRIGÉ : Pages admin et classement intégrées dans le layout principal (sidebar et navigation)', 'FIXED: Admin and leaderboard pages integrated into main layout (sidebar and navigation)') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🎨 {{ t('Interface', 'UI') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Barre de progression XP ajoutée dans le détail Pokémon (inventaire)', 'XP progress bar added in Pokémon detail (inventory)') }}</li>
+              <li>{{ t('Achat de bonbons en lot (×1, ×5, ×10, ×50) dans la boutique', 'Bulk candy purchase (×1, ×5, ×10, ×50) in the shop') }}</li>
+              <li>{{ t('Icônes Lucide pour les boutons Vider/Sauvegarder/Charger d\'équipe dans l\'inventaire', 'Lucide icons for Clear/Save/Load team buttons in inventory') }}</li>
+              <li>{{ t('Menu contextuel désactivé sur la page de combat', 'Context menu disabled on combat page') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
       <!-- v1.4.0 -->
       <article class="rounded-xl border border-amber-500/50 bg-amber-900/20 p-5">
         <h3 class="mb-3 text-lg font-bold text-amber-300">v1.4.0 — Shinys & Récompenses — 9 Mars 2026</h3>
