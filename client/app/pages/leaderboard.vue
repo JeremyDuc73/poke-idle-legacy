@@ -53,7 +53,6 @@ const CATEGORIES: Category[] = [
   { id: 'gold', labelFr: 'Richesse', labelEn: 'Wealth', icon: '🪙', color: 'text-yellow-400', gradient: 'from-yellow-500/20 to-amber-500/10', field: 'gold', format: (val) => val.toLocaleString() },
   { id: 'badges', labelFr: 'Badges', labelEn: 'Badges', icon: '🏅', color: 'text-amber-400', gradient: 'from-amber-500/20 to-orange-500/10', field: 'badges', format: (val, entry) => `${val} · ${GENERATION_NAMES[entry.current_generation] ?? '???'}` },
   { id: 'unique_pokemon', labelFr: 'Pokédex', labelEn: 'Pokédex', icon: '📖', color: 'text-red-400', gradient: 'from-red-500/20 to-pink-500/10', field: 'unique_pokemon', format: (val) => `${val}` },
-  { id: 'total_pokemon', labelFr: 'Invocations', labelEn: 'Summons', icon: '✨', color: 'text-purple-400', gradient: 'from-purple-500/20 to-fuchsia-500/10', field: 'total_pokemon', format: (val) => val.toLocaleString() },
   { id: 'shiny_count', labelFr: 'Shiny', labelEn: 'Shiny', icon: '💎', color: 'text-cyan-400', gradient: 'from-cyan-500/20 to-teal-500/10', field: 'shiny_count', format: (val) => `${val}` },
   { id: 'legendary_count', labelFr: 'Légendaires', labelEn: 'Legendaries', icon: '🐉', color: 'text-orange-400', gradient: 'from-orange-500/20 to-red-500/10', field: 'legendary_count', format: (val) => `${val}` },
   { id: 'shiny_legendary_count', labelFr: 'Légendaires Shiny', labelEn: 'Shiny Legendaries', icon: '👑', color: 'text-pink-400', gradient: 'from-pink-500/20 to-rose-500/10', field: 'shiny_legendary_count', format: (val) => `${val}` },
