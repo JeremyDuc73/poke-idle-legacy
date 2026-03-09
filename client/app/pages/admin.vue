@@ -1,15 +1,26 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X } from 'lucide-vue-next'
-import { usePlayerStore } from '~/stores/usePlayerStore'
+import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon } from 'lucide-vue-next'
 
-const playerStore = usePlayerStore()
 const API_BASE = useRuntimeConfig().public.apiBase
+
+const GENERATION_NAMES: Record<number, string> = {
+  1: 'Kanto', 2: 'Johto', 3: 'Hoenn', 4: 'Sinnoh', 5: 'Unova',
+  6: 'Kalos', 7: 'Alola', 8: 'Galar', 9: 'Paldea',
+}
 
 interface DashboardStats {
   totalUsers: number
   totalPokemons: number
   adminUsers: number
+  totalShinys: number
+  totalLegendaries: number
+  activePlayers24h: number
+  avgLevel: number
+  avgBadges: number
+  totalGold: number
+  maxLevel: number
+  maxBadges: number
 }
 
 interface User {
@@ -20,6 +31,7 @@ interface User {
   gold: number
   level: number
   badges: number
+  current_generation: number
   created_at: string
   last_login_at: string | null
 }
@@ -47,15 +59,21 @@ const showUserModal = ref(false)
 const showDetailsModal = ref(false)
 const showGiveItemsModal = ref(false)
 const goldToGive = ref(0)
+const gemsToGive = ref(0)
+const levelToSet = ref(0)
 const searchQuery = ref('')
+const roleFilter = ref<'all' | 'user' | 'admin'>('all')
 const sortBy = ref<'username' | 'level' | 'gold' | 'badges'>('level')
 const sortOrder = ref<'asc' | 'desc'>('desc')
+const refreshing = ref(false)
 
 const filteredUsers = computed(() => {
-  let filtered = users.value.filter(u => 
-    u.username.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    u.email.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
+  let filtered = users.value.filter(u => {
+    const matchesSearch = u.username.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      u.email.toLowerCase().includes(searchQuery.value.toLowerCase())
+    const matchesRole = roleFilter.value === 'all' || u.role === roleFilter.value
+    return matchesSearch && matchesRole
+  })
   
   return filtered.sort((a, b) => {
     const multiplier = sortOrder.value === 'asc' ? 1 : -1
@@ -69,17 +87,18 @@ const filteredUsers = computed(() => {
   })
 })
 
-const statsComputed = computed(() => {
-  if (!users.value.length) return null
-  
-  const totalGold = users.value.reduce((sum, u) => sum + u.gold, 0)
-  const totalLevel = users.value.reduce((sum, u) => sum + u.level, 0)
-  const avgGold = Math.floor(totalGold / users.value.length)
-  const avgLevel = Math.floor(totalLevel / users.value.length)
-  const maxLevel = Math.max(...users.value.map(u => u.level))
-  
-  return { avgGold, avgLevel, maxLevel }
-})
+function relativeTime(dateStr: string | null): string {
+  if (!dateStr) return 'Jamais'
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const mins = Math.floor(diff / 60000)
+  if (mins < 1) return 'À l\'instant'
+  if (mins < 60) return `${mins}min`
+  const hours = Math.floor(mins / 60)
+  if (hours < 24) return `${hours}h`
+  const days = Math.floor(hours / 24)
+  if (days < 30) return `${days}j`
+  return `${Math.floor(days / 30)}mois`
+}
 
 async function loadDashboard() {
   loading.value = true
@@ -149,7 +168,8 @@ async function deleteUser(userId: number) {
 }
 
 async function giveItems() {
-  if (!selectedUser.value || goldToGive.value <= 0) return
+  if (!selectedUser.value) return
+  if (goldToGive.value <= 0 && gemsToGive.value <= 0) return
 
   try {
     const response = await fetch(`${API_BASE}/api/admin/users/${selectedUser.value.id}/give-items`, {
@@ -158,6 +178,7 @@ async function giveItems() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         gold: Number(goldToGive.value),
+        gems: Number(gemsToGive.value),
       }),
     })
     if (response.ok) {
@@ -165,6 +186,7 @@ async function giveItems() {
       alert(data.message || 'Items donnés !')
       showGiveItemsModal.value = false
       goldToGive.value = 0
+      gemsToGive.value = 0
       await loadUsers()
     } else {
       const err = await response.json().catch(() => null)
@@ -224,7 +246,15 @@ function toggleSort(field: 'username' | 'level' | 'gold' | 'badges') {
 
 function openGiveItemsModal(user: User) {
   selectedUser.value = user
+  goldToGive.value = 0
+  gemsToGive.value = 0
   showGiveItemsModal.value = true
+}
+
+async function refreshAll() {
+  refreshing.value = true
+  await Promise.all([loadDashboard(), loadUsers()])
+  refreshing.value = false
 }
 
 onMounted(async () => {
@@ -237,66 +267,130 @@ onMounted(async () => {
   <div class="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 p-3 sm:p-6">
     <div class="mx-auto max-w-7xl">
       <!-- Header -->
-      <div class="mb-6 sm:mb-8">
-        <h1 class="text-2xl font-bold text-white sm:text-4xl">Dashboard Admin</h1>
-        <p class="mt-1 text-xs text-slate-400 sm:text-sm">Gestion des utilisateurs et statistiques</p>
+      <div class="mb-6 flex items-center justify-between sm:mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-white sm:text-4xl">Dashboard Admin</h1>
+          <p class="mt-1 text-xs text-slate-400 sm:text-sm">Gestion des utilisateurs et statistiques</p>
+        </div>
+        <button
+          class="flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-xs font-medium text-slate-300 transition-all hover:border-slate-500 hover:text-white"
+          :class="{ 'animate-spin': refreshing }"
+          @click="refreshAll"
+        >
+          <RefreshCw class="h-4 w-4" />
+          <span class="hidden sm:inline">Actualiser</span>
+        </button>
       </div>
 
       <!-- Stats Grid -->
-      <div v-if="stats" class="mb-6 grid grid-cols-2 gap-3 sm:mb-8 sm:gap-4 lg:grid-cols-4">
-        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-blue-500/10 to-blue-600/5 p-4 shadow-lg sm:p-6">
+      <div v-if="stats" class="mb-6 grid grid-cols-2 gap-3 sm:mb-8 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-blue-500/10 to-blue-600/5 p-4 shadow-lg">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-[10px] font-medium uppercase tracking-wider text-blue-400 sm:text-xs">Utilisateurs</div>
-              <div class="mt-1 text-2xl font-bold text-white sm:mt-2 sm:text-3xl">{{ stats.totalUsers }}</div>
+              <div class="mt-1 text-2xl font-bold text-white">{{ stats.totalUsers }}</div>
+              <div class="mt-0.5 text-[10px] text-slate-500">{{ stats.adminUsers }} admin{{ Number(stats.adminUsers) > 1 ? 's' : '' }}</div>
             </div>
-            <Users class="hidden h-12 w-12 text-blue-500/30 sm:block" />
+            <Users class="hidden h-10 w-10 text-blue-500/30 sm:block" />
           </div>
         </div>
-        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-purple-500/10 to-purple-600/5 p-4 shadow-lg sm:p-6">
+        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-green-500/10 to-green-600/5 p-4 shadow-lg">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-medium uppercase tracking-wider text-green-400 sm:text-xs">Actifs (24h)</div>
+              <div class="mt-1 text-2xl font-bold text-white">{{ stats.activePlayers24h }}</div>
+            </div>
+            <Zap class="hidden h-10 w-10 text-green-500/30 sm:block" />
+          </div>
+        </div>
+        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-purple-500/10 to-purple-600/5 p-4 shadow-lg">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-[10px] font-medium uppercase tracking-wider text-purple-400 sm:text-xs">Pokémon</div>
-              <div class="mt-1 text-2xl font-bold text-white sm:mt-2 sm:text-3xl">{{ stats.totalPokemons }}</div>
+              <div class="mt-1 text-2xl font-bold text-white">{{ Number(stats.totalPokemons).toLocaleString() }}</div>
             </div>
-            <Sparkles class="hidden h-12 w-12 text-purple-500/30 sm:block" />
+            <Sparkles class="hidden h-10 w-10 text-purple-500/30 sm:block" />
           </div>
         </div>
-        <div v-if="statsComputed" class="rounded-xl border border-slate-700 bg-gradient-to-br from-green-500/10 to-green-600/5 p-4 shadow-lg sm:p-6">
+        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 p-4 shadow-lg">
           <div class="flex items-center justify-between">
             <div>
-              <div class="text-[10px] font-medium uppercase tracking-wider text-green-400 sm:text-xs">Niveau Moy.</div>
-              <div class="mt-1 text-2xl font-bold text-white sm:mt-2 sm:text-3xl">{{ statsComputed.avgLevel }}</div>
-              <div class="mt-1 text-[10px] text-slate-400 sm:text-xs">Max: {{ statsComputed.maxLevel }}</div>
+              <div class="text-[10px] font-medium uppercase tracking-wider text-cyan-400 sm:text-xs">Shiny</div>
+              <div class="mt-1 text-2xl font-bold text-white">{{ Number(stats.totalShinys).toLocaleString() }}</div>
             </div>
-            <TrendingUp class="hidden h-12 w-12 text-green-500/30 sm:block" />
+            <span class="hidden text-3xl sm:block">✨</span>
           </div>
         </div>
-        <div v-if="statsComputed" class="rounded-xl border border-slate-700 bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 p-4 shadow-lg sm:p-6">
+        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-orange-500/10 to-orange-600/5 p-4 shadow-lg">
           <div class="flex items-center justify-between">
             <div>
-              <div class="text-[10px] font-medium uppercase tracking-wider text-yellow-400 sm:text-xs">Gold Moy.</div>
-              <div class="mt-1 text-2xl font-bold text-white sm:mt-2 sm:text-3xl">{{ statsComputed.avgGold.toLocaleString() }}</div>
+              <div class="text-[10px] font-medium uppercase tracking-wider text-orange-400 sm:text-xs">Légendaires</div>
+              <div class="mt-1 text-2xl font-bold text-white">{{ Number(stats.totalLegendaries).toLocaleString() }}</div>
             </div>
-            <span class="hidden text-4xl sm:block">🪙</span>
+            <Crown class="hidden h-10 w-10 text-orange-500/30 sm:block" />
+          </div>
+        </div>
+        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 p-4 shadow-lg">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-medium uppercase tracking-wider text-emerald-400 sm:text-xs">Niveau Moy.</div>
+              <div class="mt-1 text-2xl font-bold text-white">{{ stats.avgLevel }}</div>
+              <div class="mt-0.5 text-[10px] text-slate-500">Max: {{ stats.maxLevel }}</div>
+            </div>
+            <TrendingUp class="hidden h-10 w-10 text-emerald-500/30 sm:block" />
+          </div>
+        </div>
+        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-amber-500/10 to-amber-600/5 p-4 shadow-lg">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-medium uppercase tracking-wider text-amber-400 sm:text-xs">Badges Moy.</div>
+              <div class="mt-1 text-2xl font-bold text-white">{{ stats.avgBadges }}</div>
+              <div class="mt-0.5 text-[10px] text-slate-500">Max: {{ stats.maxBadges }}</div>
+            </div>
+            <Award class="hidden h-10 w-10 text-amber-500/30 sm:block" />
+          </div>
+        </div>
+        <div class="rounded-xl border border-slate-700 bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 p-4 shadow-lg">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-medium uppercase tracking-wider text-yellow-400 sm:text-xs">Gold Total</div>
+              <div class="mt-1 text-2xl font-bold text-white">{{ Number(stats.totalGold).toLocaleString() }}</div>
+            </div>
+            <span class="hidden text-3xl sm:block">🪙</span>
           </div>
         </div>
       </div>
 
       <!-- Users Table -->
       <div class="rounded-xl border border-slate-700 bg-slate-800/50 p-3 shadow-xl sm:p-6">
-        <div class="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
-          <h2 class="text-lg font-bold text-white sm:text-2xl">Utilisateurs ({{ filteredUsers.length }})</h2>
-          
-          <!-- Search -->
-          <div class="relative">
-            <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Rechercher..."
-              class="w-full rounded-lg border border-slate-600 bg-slate-700 py-2 pl-10 pr-4 text-sm text-white placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 sm:w-64"
-            />
+        <div class="mb-4 flex flex-col gap-3 sm:mb-6">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 class="text-lg font-bold text-white sm:text-2xl">Utilisateurs ({{ filteredUsers.length }})</h2>
+            
+            <!-- Search -->
+            <div class="relative">
+              <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Rechercher..."
+                class="w-full rounded-lg border border-slate-600 bg-slate-700 py-2 pl-10 pr-4 text-sm text-white placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 sm:w-64"
+              />
+            </div>
+          </div>
+          <!-- Role filter -->
+          <div class="flex gap-2">
+            <button
+              v-for="rf in (['all', 'user', 'admin'] as const)"
+              :key="rf"
+              class="rounded-lg border px-3 py-1.5 text-xs font-bold transition-all"
+              :class="roleFilter === rf
+                ? 'border-blue-500 bg-blue-500/20 text-blue-400'
+                : 'border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600'"
+              @click="roleFilter = rf"
+            >
+              {{ rf === 'all' ? 'Tous' : rf === 'admin' ? 'Admins' : 'Users' }}
+            </button>
           </div>
         </div>
         
@@ -335,6 +429,8 @@ onMounted(async () => {
                     <ChevronUp v-else-if="sortBy === 'badges' && sortOrder === 'asc'" class="h-3 w-3" />
                   </div>
                 </th>
+                <th class="hidden px-4 py-3 lg:table-cell">Région</th>
+                <th class="hidden px-4 py-3 lg:table-cell">Dernière co.</th>
                 <th class="px-4 py-3">Actions</th>
               </tr>
             </thead>
@@ -366,6 +462,14 @@ onMounted(async () => {
                     <Award class="h-3 w-3 text-yellow-500" />
                     <span class="font-medium text-yellow-400">{{ user.badges }}</span>
                   </div>
+                </td>
+                <td class="hidden px-4 py-3 lg:table-cell">
+                  <span class="rounded bg-slate-700 px-2 py-0.5 text-[10px] font-medium text-slate-300">
+                    {{ GENERATION_NAMES[user.current_generation] ?? `Gen ${user.current_generation}` }}
+                  </span>
+                </td>
+                <td class="hidden px-4 py-3 text-xs text-slate-400 lg:table-cell">
+                  {{ relativeTime(user.last_login_at) }}
                 </td>
                 <td class="px-4 py-3">
                   <div class="flex gap-1.5">
@@ -654,13 +758,28 @@ onMounted(async () => {
           </h3>
           <div class="space-y-4">
             <div>
-              <label class="mb-1 block text-sm text-gray-400">Gold</label>
+              <label class="mb-1 block text-sm text-gray-400">🪙 Gold</label>
               <input
                 v-model.number="goldToGive"
                 type="number"
                 min="0"
                 class="w-full rounded border border-gray-600 bg-gray-700 px-3 py-2 text-white"
               />
+              <div class="mt-1 flex gap-1">
+                <button v-for="amt in [1000, 5000, 10000, 50000]" :key="amt" class="rounded bg-slate-700 px-2 py-0.5 text-[10px] text-yellow-400 hover:bg-slate-600" @click="goldToGive = amt">{{ amt.toLocaleString() }}</button>
+              </div>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm text-gray-400">💎 Gems</label>
+              <input
+                v-model.number="gemsToGive"
+                type="number"
+                min="0"
+                class="w-full rounded border border-gray-600 bg-gray-700 px-3 py-2 text-white"
+              />
+              <div class="mt-1 flex gap-1">
+                <button v-for="amt in [10, 50, 100, 500]" :key="amt" class="rounded bg-slate-700 px-2 py-0.5 text-[10px] text-purple-400 hover:bg-slate-600" @click="gemsToGive = amt">{{ amt }}</button>
+              </div>
             </div>
             <div class="flex gap-2">
               <button

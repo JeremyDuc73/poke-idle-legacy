@@ -1,4 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import { DateTime } from 'luxon'
+import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import UserPokemon from '#models/user_pokemon'
 
@@ -10,12 +12,34 @@ export default class AdminController {
     const totalUsers = await User.query().count('* as total')
     const totalPokemons = await UserPokemon.query().count('* as total')
     const adminUsers = await User.query().where('role', 'admin').count('* as total')
+    const totalShinys = await UserPokemon.query().where('isShiny', true).count('* as total')
+    const totalLegendaries = await UserPokemon.query().where('rarity', 'legendary').count('* as total')
+    const yesterday = DateTime.now().minus({ hours: 24 }).toISO()
+    const activePlayers = await User.query().where('lastLoginAt', '>=', yesterday!).count('* as total')
+    const aggregates = await db.rawQuery(`
+      SELECT
+        COALESCE(AVG(level), 0)::int AS avg_level,
+        COALESCE(AVG(badges), 0)::int AS avg_badges,
+        COALESCE(SUM(gold), 0)::bigint AS total_gold,
+        COALESCE(MAX(level), 0)::int AS max_level,
+        COALESCE(MAX(badges), 0)::int AS max_badges
+      FROM users
+    `)
+    const agg = aggregates.rows[0] || {}
 
     return response.ok({
       stats: {
         totalUsers: totalUsers[0].$extras.total,
         totalPokemons: totalPokemons[0].$extras.total,
         adminUsers: adminUsers[0].$extras.total,
+        totalShinys: totalShinys[0].$extras.total,
+        totalLegendaries: totalLegendaries[0].$extras.total,
+        activePlayers24h: activePlayers[0].$extras.total,
+        avgLevel: Number(agg.avg_level) || 0,
+        avgBadges: Number(agg.avg_badges) || 0,
+        totalGold: Number(agg.total_gold) || 0,
+        maxLevel: Number(agg.max_level) || 0,
+        maxBadges: Number(agg.max_badges) || 0,
       },
     })
   }
@@ -37,6 +61,7 @@ export default class AdminController {
         'gems',
         'level',
         'badges',
+        'current_generation',
         'created_at',
         'last_login_at'
       )
