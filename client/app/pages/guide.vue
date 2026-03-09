@@ -632,7 +632,7 @@ function toggleGen(id: number) {
           <div>
             <h4 class="mb-2 text-sm font-semibold text-blue-400">⚔️ {{ t('Combat', 'Combat') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
-              <li>{{ t('Malus régional : un Pokémon qui combat hors de sa région native inflige 50% de dégâts en moins', 'Region penalty: a Pokémon fighting outside its native region deals 50% less damage') }}</li>
+              <li>{{ t('Malus régional : un Pokémon qui combat hors de sa région native inflige 90% de dégâts en moins', 'Region penalty: a Pokémon fighting outside its native region deals 90% less damage') }}</li>
               <li>{{ t('Nouveau système de farm : retournez sur les anciennes routes pour gagner de l\'or et de l\'XP', 'New farming system: go back to old routes to earn gold and XP') }}</li>
               <li>{{ t('Sélecteur de route accessible depuis la page combat (icône ▼ à côté du nom de zone)', 'Route selector accessible from the combat page (▼ icon next to zone name)') }}</li>
               <li>{{ t('Difficulté des Pokémon sauvages augmentée (HP +57%)', 'Wild Pokémon difficulty increased (HP +57%)') }}</li>
