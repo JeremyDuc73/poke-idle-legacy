@@ -512,6 +512,45 @@ function toggleGen(id: number) {
     <!-- ═══════════════ PATCH NOTES TAB ═══════════════ -->
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
 
+      <!-- v1.6.0 -->
+      <article class="rounded-xl border border-amber-500/50 bg-amber-900/20 p-5">
+        <h3 class="mb-3 text-lg font-bold text-amber-300">v1.6.0 — Corrections & Équilibrage — 10 Mars 2026</h3>
+        
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Corrections majeures de gameplay, équilibrage des taux de drop et améliorations de l\'interface !', 'Major gameplay fixes, drop rate balancing and UI improvements!') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">⚔️ {{ t('Équilibrage', 'Balancing') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Taux de drop ajustés : Légendaire 0.2%, Épique 4.8%, Rare 25%, Commun 70%', 'Drop rates adjusted: Legendary 0.2%, Epic 4.8%, Rare 25%, Common 70%') }}</li>
+              <li>{{ t('Améliorations de dégâts clics verrouillées par génération (Johto requis pour boosts Johto, etc.)', 'Click damage upgrades locked by generation (Johto required for Johto boosts, etc.)') }}</li>
+              <li>{{ t('Les admins sont exclus des classements', 'Admins are excluded from leaderboards') }}</li>
+              <li>{{ t('Classement général : les catégories à 0 ne pénalisent plus le score moyen', 'Overall ranking: categories with 0 no longer penalize average score') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🐛 {{ t('Corrections', 'Bug Fixes') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('CORRIGÉ : Multi-évolution — Ramoloss peut désormais évoluer en Flagadoss ET Roigada depuis le même exemplaire', 'FIXED: Multi-evolution — Slowpoke can now evolve into both Slowbro AND Slowking from the same copy') }}</li>
+              <li>{{ t('CORRIGÉ : Même correction pour Kirlia (Gardevoir/Gallame), Stalgamin (Oniglali/Momartik), etc.', 'FIXED: Same fix for Kirlia (Gardevoir/Gallade), Snorunt (Glalie/Froslass), etc.') }}</li>
+              <li>{{ t('CORRIGÉ : Filtre par type dans l\'inventaire prend en compte les deux types du Pokémon', 'FIXED: Type filter in inventory now considers both of the Pokémon\'s types') }}</li>
+              <li>{{ t('CORRIGÉ : Dashboard admin — colonnes Région et Dernière connexion fonctionnelles', 'FIXED: Admin dashboard — Region and Last login columns now working') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🎨 {{ t('Interface', 'UI') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Doubles types ajoutés pour toutes les Méga-Évolutions (Dracaufeu Méga X = Feu/Dragon, etc.)', 'Dual types added for all Mega Evolutions (Mega Charizard X = Fire/Dragon, etc.)') }}</li>
+              <li>{{ t('Boutique : affichage du verrou par génération ou par niveau sur les boosts de clics', 'Shop: generation or level lock display on click boosts') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
       <!-- v1.5.0 -->
       <article class="rounded-xl border border-amber-500/50 bg-amber-900/20 p-5">
         <h3 class="mb-3 text-lg font-bold text-amber-300">v1.5.0 — Classement & Admin — 9 Mars 2026</h3>

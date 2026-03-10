@@ -352,20 +352,23 @@ export const useInventoryStore = defineStore('inventory', {
     },
 
     // Check all possible evolutions for all Pokemon
+    // Uses target existence check instead of hasEvolved to support multi-evolution (Slowpoke→Slowbro/Slowking)
     checkAllEvolutions(currentGeneration?: number) {
       const maxGen = currentGeneration ?? 9
+      // Build set of existing slug+shiny combos to avoid duplicates
+      const existingKeys = new Set<string>()
+      for (const p of this.collection) existingKeys.add(`${p.slug}-${p.isShiny}`)
+
       for (const pokemon of this.collection) {
-        // Skip if already evolved
-        if (pokemon.hasEvolved) continue
-        
-        // Check level-based evolution
         const evo = canEvolveByLevel(pokemon.slug, pokemon.level)
-        if (evo && evo.levelRequired && pokemon.level >= evo.levelRequired) {
-          const targetGen = getGenForSlug(evo.toSlug)
-          if (targetGen <= maxGen) {
-            this.applyEvolution(pokemon, evo)
-          }
-        }
+        if (!evo || !evo.levelRequired || pokemon.level < evo.levelRequired) continue
+        const targetKey = `${evo.toSlug}-${pokemon.isShiny}`
+        if (existingKeys.has(targetKey)) continue // Target already exists
+        const targetGen = getGenForSlug(evo.toSlug)
+        if (targetGen > maxGen) continue
+        pokemon.hasEvolved = false
+        this.applyEvolution(pokemon, evo)
+        existingKeys.add(targetKey)
       }
     },
 

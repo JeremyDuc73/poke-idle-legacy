@@ -25,6 +25,22 @@ interface DashboardStats {
   maxBadges: number
 }
 
+interface UserRaw {
+  id: number
+  username: string
+  email: string
+  role: string
+  gold: number
+  level: number
+  badges: number
+  current_generation?: number
+  currentGeneration?: number
+  created_at?: string
+  createdAt?: string
+  last_login_at?: string | null
+  lastLoginAt?: string | null
+}
+
 interface User {
   id: number
   username: string
@@ -34,8 +50,21 @@ interface User {
   level: number
   badges: number
   current_generation: number
-  created_at: string
   last_login_at: string | null
+}
+
+function normalizeUser(raw: UserRaw): User {
+  return {
+    id: raw.id,
+    username: raw.username,
+    email: raw.email,
+    role: raw.role,
+    gold: raw.gold,
+    level: raw.level,
+    badges: raw.badges,
+    current_generation: raw.current_generation ?? raw.currentGeneration ?? 1,
+    last_login_at: raw.last_login_at ?? raw.lastLoginAt ?? null,
+  }
 }
 
 interface UserDetails extends User {
@@ -50,6 +79,7 @@ interface UserDetails extends User {
   pokemonCount: number
   shinyCount: number
   teamPokemons: any[]
+  created_at: string
 }
 
 const stats = ref<DashboardStats | null>(null)
@@ -127,7 +157,7 @@ async function loadUsers() {
     })
     if (response.ok) {
       const data = await response.json()
-      users.value = data.data
+      users.value = (data.data as UserRaw[]).map(normalizeUser)
     }
   } catch (error) {
     console.error('Failed to load users:', error)
