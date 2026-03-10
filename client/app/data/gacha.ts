@@ -569,7 +569,8 @@ export const BANNERS: Banner[] = [
     nameFr: 'Bannière Kalos',
     nameEn: 'Kalos Banner',
     generation: 6,
-    costGold: 400000,
+    // Pricing formula: ~8000 × gen² (start gen ≈ 5 pulls/100 kills, end gen ≈ 10 pulls/100 kills)
+    costGold: 290000,
     pool: KALOS_POOL,
   },
 ]
