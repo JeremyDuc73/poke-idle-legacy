@@ -103,6 +103,14 @@ function toggleGen(id: number) {
             'Vaincre un boss débloque la zone suivante. Les boss ont un timer : si tu ne gagnes pas à temps, tu recules.',
             'Defeating a boss unlocks the next zone. Bosses have a timer: fail and you retreat.'
           ) }}</p>
+          <p>{{ t(
+            'Tu peux aussi cliquer sur l\'ennemi pour infliger des dégâts de clic. Ces dégâts augmentent avec ton niveau et tes améliorations de la Boutique.',
+            'You can also click the enemy to deal click damage. Click damage scales with your level and Shop upgrades.'
+          ) }}</p>
+          <p class="text-amber-400 font-medium">{{ t(
+            '⚠️ Malus hors-région : tes Pokémon infligent 90% de dégâts en moins s\'ils ne sont pas de la même génération que la zone de combat !',
+            '⚠️ Out-of-region penalty: your Pokémon deal 90% less damage if they\'re not from the same generation as the combat zone!'
+          ) }}</p>
         </div>
       </section>
 
@@ -125,9 +133,9 @@ function toggleGen(id: number) {
         <h3 class="mt-3 mb-1 text-xs font-semibold text-gray-400 uppercase">{{ t('Probabilités de drop', 'Drop rates') }}</h3>
         <div class="flex flex-wrap gap-2 mb-3">
           <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-gray-300">Commun</span> <span class="font-bold text-white">70%</span></span>
-          <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-blue-400">Rare</span> <span class="font-bold text-white">23%</span></span>
-          <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-purple-400">Épique</span> <span class="font-bold text-white">6.5%</span></span>
-          <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-amber-400">Légendaire</span> <span class="font-bold text-white">0.5%</span></span>
+          <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-blue-400">Rare</span> <span class="font-bold text-white">25%</span></span>
+          <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-purple-400">Épique</span> <span class="font-bold text-white">4.8%</span></span>
+          <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-amber-400">Légendaire</span> <span class="font-bold text-white">0.2%</span></span>
           <span class="rounded bg-gray-700 px-2 py-1 text-xs"><span class="text-yellow-400">✨ Shiny</span> <span class="font-bold text-white">1/8192</span></span>
         </div>
 
@@ -213,12 +221,16 @@ function toggleGen(id: number) {
             'Buy permanent upgrades (team DPS, click damage) and XP candies to quickly level up your Pokémon.'
           ) }}</p>
           <p>{{ t(
-            'Bonbons XP : S (+100), M (+500), L (+2000), XL (+10000). Attention : un bonbon peut déclencher une évolution !',
-            'XP Candies: S (+100), M (+500), L (+2000), XL (+10000). Warning: a candy can trigger evolution!'
+            'Bonbons XP : S (+100), M (+500), L (+2000), XL (+10000). Achat possible en lot (×1, ×5, ×10, ×50). Attention : un bonbon peut déclencher une évolution !',
+            'XP Candies: S (+100), M (+500), L (+2000), XL (+10000). Bulk buy available (×1, ×5, ×10, ×50). Warning: a candy can trigger evolution!'
           ) }}</p>
           <p>{{ t(
             'La boutique propose aussi des items d\'évolution (Pierre Feu, Pierre Eau, Pierre Plante, etc.) pour faire évoluer certains Pokémon.',
             'The shop also offers evolution items (Fire Stone, Water Stone, Leaf Stone, etc.) to evolve certain Pokémon.'
+          ) }}</p>
+          <p>{{ t(
+            'Dégâts de clic : 12 paliers d\'amélioration répartis en 4 régions (Kanto, Johto, Hoenn, Sinnoh). Les paliers d\'une région sont verrouillés tant que tu n\'as pas débloqué cette génération.',
+            'Click damage: 12 upgrade tiers spread across 4 regions (Kanto, Johto, Hoenn, Sinnoh). A region\'s tiers are locked until you unlock that generation.'
           ) }}</p>
         </div>
       </section>
@@ -233,6 +245,98 @@ function toggleGen(id: number) {
             'Certains Pokémon évoluent automatiquement en atteignant un niveau spécifique, d\'autres nécessitent un item d\'évolution (disponible dans la Boutique).',
             'Some Pokémon evolve automatically upon reaching a specific level, others require an evolution item (available in the Shop).'
           ) }}</p>
+          <p>{{ t(
+            'Living Dex : quand un Pokémon évolue, l\'original reste dans ta collection et la forme évoluée est ajoutée comme un nouveau Pokémon (niveau 1).',
+            'Living Dex: when a Pokémon evolves, the original stays in your collection and the evolved form is added as a new Pokémon (level 1).'
+          ) }}</p>
+          <p>{{ t(
+            'Multi-évolution : certains Pokémon ont plusieurs voies d\'évolution (ex : Ramoloss → Flagadoss par niveau ET Roigada par Pierre Royale). Le même exemplaire peut produire toutes ses évolutions !',
+            'Multi-evolution: some Pokémon have multiple evolution paths (e.g., Slowpoke → Slowbro by level AND Slowking by King\'s Rock). The same copy can produce all its evolutions!'
+          ) }}</p>
+          <p>{{ t(
+            'Méthodes : Niveau (automatique), Pierre (Feu, Eau, Plante, Foudre, Lune, Soleil, Aube), Échange (Câble Link, Pierre Royale, Peau Métal, etc.), Bonheur (Pierre Ovale).',
+            'Methods: Level (automatic), Stone (Fire, Water, Leaf, Thunder, Moon, Sun, Dawn), Trade (Link Cable, King\'s Rock, Metal Coat, etc.), Happiness (Oval Stone).'
+          ) }}</p>
+        </div>
+      </section>
+
+      <!-- ── Régions & Générations ── -->
+      <section class="rounded-xl border border-gray-700/50 bg-gray-800/40 p-5">
+        <h2 class="mb-3 flex items-center gap-2 text-lg font-bold text-emerald-400">
+          🌍 {{ t('Régions & Générations', 'Regions & Generations') }}
+        </h2>
+        <div class="space-y-2 text-sm text-gray-300">
+          <p>{{ t(
+            'Le jeu est divisé en générations (Kanto, Johto, Hoenn, Sinnoh…). Tu débloques la génération suivante en battant tous les boss de la région actuelle.',
+            'The game is divided into generations (Kanto, Johto, Hoenn, Sinnoh…). Unlock the next generation by defeating all bosses in the current region.'
+          ) }}</p>
+          <p>{{ t(
+            'Chaque génération débloque de nouveaux Pokémon à invoquer (bannière gacha dédiée), de nouvelles zones et de nouveaux boss.',
+            'Each generation unlocks new Pokémon to summon (dedicated gacha banner), new zones and new bosses.'
+          ) }}</p>
+          <p class="text-amber-400 font-medium">{{ t(
+            '⚠️ Utilise des Pokémon de la bonne région ! Un Pokémon hors-région subit un malus de 90% de dégâts. Compose ton équipe avec des Pokémon natifs de la zone que tu combats.',
+            '⚠️ Use Pokémon from the right region! An out-of-region Pokémon takes a 90% damage penalty. Build your team with Pokémon native to the zone you\'re fighting in.'
+          ) }}</p>
+        </div>
+      </section>
+
+      <!-- ── Équipes sauvegardées ── -->
+      <section class="rounded-xl border border-gray-700/50 bg-gray-800/40 p-5">
+        <h2 class="mb-3 flex items-center gap-2 text-lg font-bold text-cyan-400">
+          💾 {{ t('Équipes sauvegardées', 'Saved Teams') }}
+        </h2>
+        <div class="space-y-2 text-sm text-gray-300">
+          <p>{{ t(
+            'Tu peux sauvegarder ta composition d\'équipe actuelle (6 Pokémon) et la recharger plus tard. Pratique pour alterner entre une équipe Kanto et une équipe Johto !',
+            'You can save your current team composition (6 Pokémon) and reload it later. Handy for switching between a Kanto team and a Johto team!'
+          ) }}</p>
+          <p>{{ t(
+            'Utilise les boutons Sauvegarder / Charger dans l\'inventaire. Tu peux aussi vider ton équipe d\'un clic.',
+            'Use the Save / Load buttons in the inventory. You can also clear your team with one click.'
+          ) }}</p>
+        </div>
+      </section>
+
+      <!-- ── Charme Chroma ── -->
+      <section class="rounded-xl border border-gray-700/50 bg-gray-800/40 p-5">
+        <h2 class="mb-3 flex items-center gap-2 text-lg font-bold text-amber-300">
+          ✨ {{ t('Charme Chroma', 'Shiny Charm') }}
+        </h2>
+        <div class="space-y-2 text-sm text-gray-300">
+          <p>{{ t(
+            'Complète le Pokédex d\'une génération entière (possède au moins un exemplaire de chaque Pokémon de la région) pour recevoir un Charme Chroma + une récompense en or.',
+            'Complete an entire generation\'s Pokédex (own at least one of every Pokémon from the region) to receive a Shiny Charm + a gold reward.'
+          ) }}</p>
+          <p>{{ t(
+            'Chaque Charme Chroma double ta chance de shiny de base (1/8192 → 2/8192 → 3/8192, etc.). Tes chances de shiny apparaissent sur ta page Profil.',
+            'Each Shiny Charm doubles your base shiny chance (1/8192 → 2/8192 → 3/8192, etc.). Your shiny odds appear on your Profile page.'
+          ) }}</p>
+        </div>
+      </section>
+
+      <!-- ── Classement ── -->
+      <section class="rounded-xl border border-gray-700/50 bg-gray-800/40 p-5">
+        <h2 class="mb-3 flex items-center gap-2 text-lg font-bold text-yellow-400">
+          🏆 {{ t('Classement', 'Leaderboard') }}
+        </h2>
+        <div class="space-y-2 text-sm text-gray-300">
+          <p>{{ t(
+            'Le classement compare les joueurs sur 7 catégories : Niveau, Richesse, Badges, Pokédex, Shiny, Légendaires et Légendaires Shiny.',
+            'The leaderboard compares players across 7 categories: Level, Wealth, Badges, Pokédex, Shiny, Legendaries and Shiny Legendaries.'
+          ) }}</p>
+          <p>{{ t(
+            'Le Classement Général calcule la moyenne de tes positions dans chaque catégorie (les catégories où tu es à 0 ne comptent pas). Plus ta moyenne est basse, meilleur est ton rang.',
+            'The Overall Ranking averages your position in each category (categories where you have 0 don\'t count). The lower your average, the better your rank.'
+          ) }}</p>
+          <p>{{ t(
+            'Il faut au moins 2 badges pour apparaître dans le classement. Les données se mettent à jour automatiquement toutes les 5 minutes.',
+            'You need at least 2 badges to appear in the leaderboard. Data refreshes automatically every 5 minutes.'
+          ) }}</p>
+          <p class="text-yellow-400 font-medium">{{ t(
+            '🏅 Chaque semaine, le top 3 du classement général sera récompensé par le comité de la Ligue Pokémon !',
+            '🏅 Every week, the top 3 of the overall ranking will be rewarded by the Pokémon League committee!'
+          ) }}</p>
         </div>
       </section>
 
@@ -241,10 +345,14 @@ function toggleGen(id: number) {
         <h2 class="mb-3 flex items-center gap-2 text-lg font-bold text-indigo-400">
           <Award class="h-5 w-5" /> {{ t('Badges', 'Badges') }}
         </h2>
-        <div class="text-sm text-gray-300">
+        <div class="space-y-2 text-sm text-gray-300">
           <p>{{ t(
             'Chaque boss vaincu te donne un badge. Collectionne-les tous pour prouver ta maîtrise !',
             'Every boss defeated gives you a badge. Collect them all to prove your mastery!'
+          ) }}</p>
+          <p>{{ t(
+            'Les badges contribuent aussi à tes dégâts de clic (+3 par badge) et sont nécessaires pour apparaître dans le classement (minimum 2).',
+            'Badges also contribute to your click damage (+3 per badge) and are required to appear in the leaderboard (minimum 2).'
           ) }}</p>
         </div>
       </section>
