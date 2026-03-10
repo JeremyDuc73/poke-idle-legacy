@@ -2563,7 +2563,7 @@ export const GENERATIONS: Generation[] = [
     zones: [
       {
         id: 1,
-        nameFr: 'Arène — Érable',
+        nameFr: 'Arène — Éra',
         nameEn: 'Gym — Katy',
         types: ['bug'],
         wild: [
@@ -2572,7 +2572,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Gourmelet', nameEn: 'Lechonk', slug: 'lechonk', type: 'normal', baseHp: 52, baseAtk: 10 },
         ],
         boss: {
-          nameFr: 'Érable',
+          nameFr: 'Éra',
           nameEn: 'Katy',
           slug: 'katy',
           team: [
@@ -2607,7 +2607,7 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 3,
-        nameFr: 'Arène — Voltage',
+        nameFr: 'Arène — Mashynn',
         nameEn: 'Gym — Iono',
         types: ['electric'],
         wild: [
@@ -2616,7 +2616,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Compagnol', nameEn: 'Tandemaus', slug: 'tandemaus', type: 'normal', baseHp: 54, baseAtk: 11 },
         ],
         boss: {
-          nameFr: 'Voltage',
+          nameFr: 'Mashynn',
           nameEn: 'Iono',
           slug: 'iono',
           team: [
@@ -2651,7 +2651,7 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 5,
-        nameFr: 'Arène — Hassa',
+        nameFr: 'Arène — Okuba',
         nameEn: 'Gym — Larry',
         types: ['normal'],
         wild: [
@@ -2660,7 +2660,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Gribouraigne', nameEn: 'Shroodle', slug: 'shroodle', type: 'poison', baseHp: 58, baseAtk: 12 },
         ],
         boss: {
-          nameFr: 'Hassa',
+          nameFr: 'Okuba',
           nameEn: 'Larry',
           slug: 'larry',
           team: [
@@ -2673,7 +2673,7 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 6,
-        nameFr: 'Arène — Rime',
+        nameFr: 'Arène — Laïm',
         nameEn: 'Gym — Ryme',
         types: ['ghost'],
         wild: [
@@ -2682,7 +2682,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Germéclat', nameEn: 'Glimmet', slug: 'glimmet', type: 'rock', baseHp: 64, baseAtk: 13 },
         ],
         boss: {
-          nameFr: 'Rime',
+          nameFr: 'Laïm',
           nameEn: 'Ryme',
           slug: 'ryme',
           team: [
@@ -2695,7 +2695,7 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 7,
-        nameFr: 'Arène — Tulipe',
+        nameFr: 'Arène — Tully',
         nameEn: 'Gym — Tulip',
         types: ['psychic'],
         wild: [
@@ -2704,7 +2704,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Charbambin', nameEn: 'Charcadet', slug: 'charcadet', type: 'fire', baseHp: 60, baseAtk: 13 },
         ],
         boss: {
-          nameFr: 'Tulipe',
+          nameFr: 'Tully',
           nameEn: 'Tulip',
           slug: 'tulip',
           team: [
@@ -2740,7 +2740,7 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 9,
-        nameFr: 'Conseil 4 — Rika',
+        nameFr: 'Conseil 4 — Cayenn',
         nameEn: 'E4 — Rika',
         types: ['ground'],
         wild: [
@@ -2749,7 +2749,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Mordudor', nameEn: 'Gimmighoul', slug: 'gimmighoul', type: 'ghost', baseHp: 64, baseAtk: 14 },
         ],
         boss: {
-          nameFr: 'Rika',
+          nameFr: 'Cayenn',
           nameEn: 'Rika',
           slug: 'rika',
           team: [
@@ -2762,7 +2762,7 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 10,
-        nameFr: 'Conseil 4 — Poppy',
+        nameFr: 'Conseil 4 — Popi',
         nameEn: 'E4 — Poppy',
         types: ['steel'],
         wild: [
@@ -2771,7 +2771,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Craparoi', nameEn: 'Klawf', slug: 'klawf', type: 'rock', baseHp: 66, baseAtk: 14 },
         ],
         boss: {
-          nameFr: 'Poppy',
+          nameFr: 'Popi',
           nameEn: 'Poppy',
           slug: 'poppy',
           team: [
@@ -2784,7 +2784,7 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 11,
-        nameFr: 'Conseil 4 — Hassa',
+        nameFr: 'Conseil 4 — Okuba',
         nameEn: 'E4 — Larry',
         types: ['flying'],
         wild: [
@@ -2793,7 +2793,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Tapatoès', nameEn: 'Squawkabilly', slug: 'squawkabilly', type: 'normal', baseHp: 68, baseAtk: 15 },
         ],
         boss: {
-          nameFr: 'Hassa',
+          nameFr: 'Okuba',
           nameEn: 'Larry',
           slug: 'larry-e4',
           team: [
@@ -2807,7 +2807,7 @@ export const GENERATIONS: Generation[] = [
       },
       {
         id: 12,
-        nameFr: 'Conseil 4 — Hassoul',
+        nameFr: 'Conseil 4 — Hassa',
         nameEn: 'E4 — Hassel',
         types: ['dragon'],
         wild: [
@@ -2816,7 +2816,7 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Délestin', nameEn: 'Veluza', slug: 'veluza', type: 'water', baseHp: 70, baseAtk: 15 },
         ],
         boss: {
-          nameFr: 'Hassoul',
+          nameFr: 'Hassa',
           nameEn: 'Hassel',
           slug: 'hassel',
           team: [
