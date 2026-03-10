@@ -359,12 +359,12 @@ function removeFromTeam(pokeId: number) {
 
     <!-- Boss Team Preview (ligne au-dessus de la carte) -->
     <div v-if="combat.enemy && combat.isBossFight && zone?.boss" class="flex items-center justify-center gap-2">
-      <img
+      <PokemonSprite
         v-for="(p, i) in zone.boss.team"
         :key="i"
-        :src="getSpriteUrl(p.slug)"
+        :slug="p.slug"
         :alt="t(p.nameFr, p.nameEn)"
-        class="h-14 w-14 rounded-xl border-2 border-slate-700 bg-slate-800/90 object-contain p-2 shadow-lg transition-transform hover:scale-110"
+        class="h-14 w-14 rounded-xl border-2 border-slate-700 bg-slate-800/90 p-2 shadow-lg transition-transform hover:scale-110"
         :title="t(p.nameFr, p.nameEn)"
       />
     </div>
@@ -539,11 +539,12 @@ function removeFromTeam(pokeId: number) {
             <!-- Sprite avec fond -->
             <div class="relative shrink-0">
               <div class="absolute inset-0 rounded-lg" :class="poke.isShiny ? 'bg-gradient-to-br from-yellow-500/20 to-amber-500/20' : 'bg-slate-700/30'" />
-              <img
-                :src="poke.isShiny ? getShinySpriteUrl(poke.slug) : getSpriteUrl(poke.slug)"
+              <PokemonSprite
+                :slug="poke.slug"
+                :shiny="poke.isShiny"
                 :alt="t(poke.nameFr, poke.nameEn)"
-                class="relative h-14 w-14 object-contain"
-                style="image-rendering: pixelated; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"
+                class="relative h-14 w-14"
+                style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"
               />
               <div v-if="poke.isShiny" class="absolute -right-1 -top-1 text-lg">✨</div>
             </div>
@@ -617,9 +618,10 @@ function removeFromTeam(pokeId: number) {
 
           <!-- Header -->
           <div class="mb-4 flex items-center gap-4">
-            <img
-              :src="detailPokemon.isShiny ? getShinySpriteUrl(detailPokemon.slug) : getSpriteUrl(detailPokemon.slug)"
-              class="h-20 w-20 object-contain"
+            <PokemonSprite
+              :slug="detailPokemon.slug"
+              :shiny="detailPokemon.isShiny"
+              class="h-20 w-20"
             />
             <div>
               <h3 class="text-xl font-bold text-white">

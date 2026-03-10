@@ -287,10 +287,11 @@ function dismiss() {
         class="flex flex-col items-center gap-2 animate-in fade-in zoom-in duration-500"
       >
         <div class="relative">
-          <img
-            :src="singleResult.isShiny ? getShinySpriteUrl(singleResult.slug) : getSpriteUrl(singleResult.slug)"
+          <PokemonSprite
+            :slug="singleResult.slug"
+            :shiny="singleResult.isShiny"
             :alt="t(singleResult.nameFr, singleResult.nameEn)"
-            class="h-32 w-32 object-contain drop-shadow-lg"
+            class="h-32 w-32 drop-shadow-lg"
             :style="{ filter: `drop-shadow(0 0 16px ${RARITY_COLORS[singleResult.rarity]})` }"
           />
           <span
@@ -403,10 +404,11 @@ function dismiss() {
             }"
           >
             <div class="relative">
-              <img
-                :src="r.isShiny ? getShinySpriteUrl(r.slug) : getSpriteUrl(r.slug)"
+              <PokemonSprite
+                :slug="r.slug"
+                :shiny="r.isShiny"
                 :alt="t(r.nameFr, r.nameEn)"
-                class="h-10 w-10 object-contain"
+                class="h-10 w-10"
               />
               <span v-if="r.isShiny" class="absolute -right-1 -top-1 text-[8px]">✨</span>
             </div>
@@ -452,10 +454,11 @@ function dismiss() {
           </span>
 
           <!-- Sprite -->
-          <img
-            :src="r.isShiny ? getShinySpriteUrl(r.slug) : getSpriteUrl(r.slug)"
+          <PokemonSprite
+            :slug="r.slug"
+            :shiny="r.isShiny"
             :alt="t(r.nameFr, r.nameEn)"
-            class="h-14 w-14 object-contain"
+            class="h-14 w-14"
             :style="{ filter: `drop-shadow(0 0 8px ${RARITY_COLORS[r.rarity]})` }"
           />
 
@@ -558,10 +561,10 @@ function dismiss() {
               ? 'border-slate-600 bg-slate-800/80'
               : 'border-slate-700 bg-slate-800 hover:border-slate-500'"
         >
-          <img
-            :src="getSpriteUrl(p.slug)"
+          <PokemonSprite
+            :slug="p.slug"
             :alt="t(p.nameFr, p.nameEn)"
-            class="h-10 w-10 object-contain"
+            class="h-10 w-10"
             :class="{ grayscale: inventory.maxedSlugs.has(p.slug) }"
           />
           <div v-if="inventory.ownedSlugStars.has(p.slug)" class="flex items-center justify-center gap-px">

@@ -2721,7 +2721,7 @@ export const GENERATIONS: Generation[] = [
         nameEn: 'Gym — Grusha',
         types: ['ice'],
         wild: [
-          { nameFr: 'Pilarctique', nameEn: 'Cetoddle', slug: 'cetoddle', type: 'ice', baseHp: 66, baseAtk: 14 },
+          { nameFr: 'Piétacé', nameEn: 'Cetoddle', slug: 'cetoddle', type: 'ice', baseHp: 66, baseAtk: 14 },
           { nameFr: 'Frigodo', nameEn: 'Frigibax', slug: 'frigibax', type: 'dragon', baseHp: 64, baseAtk: 14 },
           { nameFr: 'Selutin', nameEn: 'Nacli', slug: 'nacli', type: 'rock', baseHp: 62, baseAtk: 13 },
         ],
@@ -2789,7 +2789,7 @@ export const GENERATIONS: Generation[] = [
         types: ['flying'],
         wild: [
           { nameFr: 'Lestombaile', nameEn: 'Bombirdier', slug: 'bombirdier', type: 'flying', baseHp: 70, baseAtk: 15 },
-          { nameFr: 'Flamigo', nameEn: 'Flamigo', slug: 'flamigo', type: 'flying', baseHp: 72, baseAtk: 16 },
+          { nameFr: 'Flamenroule', nameEn: 'Flamigo', slug: 'flamigo', type: 'flying', baseHp: 72, baseAtk: 16 },
           { nameFr: 'Tapatoès', nameEn: 'Squawkabilly', slug: 'squawkabilly', type: 'normal', baseHp: 68, baseAtk: 15 },
         ],
         boss: {
@@ -2797,7 +2797,7 @@ export const GENERATIONS: Generation[] = [
           nameEn: 'Larry',
           slug: 'larry-e4',
           team: [
-            { nameFr: 'Flamigo', nameEn: 'Flamigo', slug: 'flamigo', level: 49 },
+            { nameFr: 'Flamenroule', nameEn: 'Flamigo', slug: 'flamigo', level: 49 },
             { nameFr: 'Fulgulairo', nameEn: 'Kilowattrel', slug: 'kilowattrel', level: 50 },
             { nameFr: 'Lestombaile', nameEn: 'Bombirdier', slug: 'bombirdier', level: 51 },
             { nameFr: 'Tapatoès', nameEn: 'Squawkabilly', slug: 'squawkabilly', level: 52 },
@@ -2843,7 +2843,7 @@ export const GENERATIONS: Generation[] = [
           nameEn: 'Geeta',
           slug: 'geeta',
           team: [
-            { nameFr: 'Trésor-doré', nameEn: 'Gholdengo', slug: 'gholdengo', level: 55 },
+            { nameFr: 'Gromago', nameEn: 'Gholdengo', slug: 'gholdengo', level: 55 },
             { nameFr: 'Miascarade', nameEn: 'Meowscarada', slug: 'meowscarada', level: 56 },
             { nameFr: 'Flâmigator', nameEn: 'Skeledirge', slug: 'skeledirge', level: 57 },
             { nameFr: 'Palmaval', nameEn: 'Quaquaval', slug: 'quaquaval', level: 58 },

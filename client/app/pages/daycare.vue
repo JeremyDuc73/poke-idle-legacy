@@ -146,10 +146,10 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
         :class="slotReady(slot) ? 'border-green-500/70 bg-green-500/10' : 'border-gray-700'"
       >
         <!-- Sprite -->
-        <img
-          :src="getSpriteUrl(slot.slug)"
+        <PokemonSprite
+          :slug="slot.slug"
           :alt="t(slot.nameFr, slot.nameEn)"
-          class="h-14 w-14 flex-shrink-0 object-contain"
+          class="h-14 w-14 flex-shrink-0"
         />
 
         <!-- Info + progress -->
@@ -237,10 +237,11 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
               :key="i"
               class="flex items-center gap-3 rounded-xl border border-gray-700 bg-gray-800 p-3"
             >
-              <img
-                :src="r.isShiny ? getShinySpriteUrl(r.slug) : getSpriteUrl(r.slug)"
+              <PokemonSprite
+                :slug="r.slug"
+                :shiny="r.isShiny"
                 :alt="t(r.nameFr, r.nameEn)"
-                class="h-14 w-14 object-contain"
+                class="h-14 w-14"
                 :style="{ filter: r.isShiny ? 'drop-shadow(0 0 12px #fbbf24)' : 'none' }"
               />
               <div class="flex-1">
@@ -316,10 +317,10 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
               class="flex flex-col items-center gap-1 rounded-xl border border-gray-700 bg-gray-800 p-2 transition-all hover:border-green-500/50 hover:bg-gray-750 active:scale-95"
               @click="depositPokemon(poke)"
             >
-              <img
-                :src="getSpriteUrl(poke.slug)"
+              <PokemonSprite
+                :slug="poke.slug"
                 :alt="t(poke.nameFr, poke.nameEn)"
-                class="h-12 w-12 object-contain"
+                class="h-12 w-12"
               />
               <p class="w-full truncate text-center text-[9px] text-gray-300">
                 {{ t(poke.nameFr, poke.nameEn) }}

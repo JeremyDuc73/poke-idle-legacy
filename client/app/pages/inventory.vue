@@ -389,12 +389,10 @@ function getDetailStats(poke: OwnedPokemon) {
           @contextmenu.prevent="inventory.team.find((p) => p.teamSlot === slot) ? inventory.removeFromTeam(inventory.team.find((p) => p.teamSlot === slot)!.id) : null"
         >
           <template v-if="inventory.team.find((p) => p.teamSlot === slot)">
-            <img
-              :src="inventory.team.find((p) => p.teamSlot === slot)!.isShiny
-                ? getShinySpriteUrl(inventory.team.find((p) => p.teamSlot === slot)!.slug)
-                : getSpriteUrl(inventory.team.find((p) => p.teamSlot === slot)!.slug)"
-              class="pointer-events-none h-10 w-10 select-none object-contain"
-              draggable="false"
+            <PokemonSprite
+              :slug="inventory.team.find((p) => p.teamSlot === slot)!.slug"
+              :shiny="inventory.team.find((p) => p.teamSlot === slot)!.isShiny"
+              class="pointer-events-none h-10 w-10 select-none"
             />
             <div class="flex gap-0.5">
               <TypeBadge
@@ -548,10 +546,11 @@ function getDetailStats(poke: OwnedPokemon) {
           class="absolute -right-1 top-4 h-2 w-2 rounded-full"
           :style="{ backgroundColor: RARITY_COLORS[pokemon.rarity ?? 'common'] }"
         />
-        <img
-          :src="pokemon.isShiny ? getShinySpriteUrl(pokemon.slug) : getSpriteUrl(pokemon.slug)"
+        <PokemonSprite
+          :slug="pokemon.slug"
+          :shiny="pokemon.isShiny"
           :alt="t(pokemon.nameFr, pokemon.nameEn)"
-          class="h-14 w-14 object-contain"
+          class="h-14 w-14"
         />
         <div class="flex w-full flex-wrap justify-center gap-0.5">
           <TypeBadge v-for="type in getPokemonTypes(pokemon.slug)" :key="type" :type="type" size="xs" />
@@ -592,9 +591,10 @@ function getDetailStats(poke: OwnedPokemon) {
 
           <!-- Header -->
           <div class="mb-4 flex items-center gap-4">
-            <img
-              :src="detailPokemon.isShiny ? getShinySpriteUrl(detailPokemon.slug) : getSpriteUrl(detailPokemon.slug)"
-              class="h-20 w-20 object-contain"
+            <PokemonSprite
+              :slug="detailPokemon.slug"
+              :shiny="detailPokemon.isShiny"
+              class="h-20 w-20"
             />
             <div>
               <h3 class="text-xl font-bold text-white">

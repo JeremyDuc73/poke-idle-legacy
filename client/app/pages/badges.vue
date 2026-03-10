@@ -112,12 +112,11 @@ const bossGroups = computed(() => {
             @error="onTrainerError(boss.boss.slug)"
           />
           <div v-else class="relative flex h-20 w-20 items-center justify-center">
-            <img
-              :src="getSpriteUrl(boss.boss.team[boss.boss.team.length - 1]?.slug ?? '')"
+            <PokemonSprite
+              :slug="boss.boss.team[boss.boss.team.length - 1]?.slug ?? ''"
               :alt="t(boss.boss.nameFr, boss.boss.nameEn)"
-              class="h-16 w-16 object-contain"
+              class="h-16 w-16"
               :class="{ grayscale: !isBossDefeated(boss) && !isBossCurrent(boss) }"
-              style="image-rendering: pixelated;"
             />
             <span class="absolute bottom-0 right-0 rounded-full bg-slate-700 px-1 text-[8px] font-bold text-slate-300">👤</span>
           </div>
@@ -134,12 +133,12 @@ const bossGroups = computed(() => {
 
           <!-- Boss Team Preview -->
           <div class="flex gap-1">
-            <img
+            <PokemonSprite
               v-for="(p, i) in boss.boss.team"
               :key="i"
-              :src="getSpriteUrl(p.slug)"
+              :slug="p.slug"
               :alt="t(p.nameFr, p.nameEn)"
-              class="h-6 w-6 object-contain"
+              class="h-6 w-6"
               :class="{ grayscale: !isBossDefeated(boss) && !isBossCurrent(boss) }"
               :title="t(p.nameFr, p.nameEn)"
             />

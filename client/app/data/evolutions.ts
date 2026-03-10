@@ -1048,17 +1048,17 @@ export const EVOLUTIONS: Evolution[] = [
   { fromSlug: 'arctibax', toSlug: 'baxcalibur', toNameFr: 'Glaivodo', toNameEn: 'Baxcalibur', method: 'level', levelRequired: 54 },
 
   // Coin ghost
-  { fromSlug: 'gimmighoul', toSlug: 'gholdengo', toNameFr: 'Trésor-doré', toNameEn: 'Gholdengo', method: 'level', levelRequired: 40 },
+  { fromSlug: 'gimmighoul', toSlug: 'gholdengo', toNameFr: 'Gromago', toNameEn: 'Gholdengo', method: 'level', levelRequired: 40 },
 
   // Paldean form evolutions
   { fromSlug: 'wooper-paldea', toSlug: 'clodsire', toNameFr: 'Terraiste', toNameEn: 'Clodsire', method: 'level', levelRequired: 20 },
 
   // DLC: Applin → Dipplin → Hydrapple
-  { fromSlug: 'applin', toSlug: 'dipplin', toNameFr: 'Pomdormus', toNameEn: 'Dipplin', method: 'stone', itemRequired: 'syrup-apple' },
+  { fromSlug: 'applin', toSlug: 'dipplin', toNameFr: 'Pomdorochi', toNameEn: 'Dipplin', method: 'stone', itemRequired: 'syrup-apple' },
   { fromSlug: 'dipplin', toSlug: 'hydrapple', toNameFr: 'Pomdramour', toNameEn: 'Hydrapple', method: 'level', levelRequired: 50 },
 
   // DLC: Poltchageist → Sinistcha
-  { fromSlug: 'poltchageist', toSlug: 'sinistcha', toNameFr: 'Sinistcha', toNameEn: 'Sinistcha', method: 'stone', itemRequired: 'link-cable' },
+  { fromSlug: 'poltchageist', toSlug: 'sinistcha', toNameFr: 'Théffroyable', toNameEn: 'Sinistcha', method: 'stone', itemRequired: 'link-cable' },
 
   // DLC: Duraludon → Archaludon (cross-gen)
   { fromSlug: 'duraludon', toSlug: 'archaludon', toNameFr: 'Pondralugon', toNameEn: 'Archaludon', method: 'stone', itemRequired: 'paldea-stone' },
@@ -1355,7 +1355,7 @@ export const EVO_ITEMS: EvoItem[] = [
     id: 'syrup-apple',
     nameFr: 'Pomme Sirupeuse',
     nameEn: 'Syrup Apple',
-    descFr: 'Verpom → Pomdormus',
+    descFr: 'Verpom → Pomdorochi',
     descEn: 'Applin → Dipplin',
     icon: '🍯',
     applicableTo: ['applin'],

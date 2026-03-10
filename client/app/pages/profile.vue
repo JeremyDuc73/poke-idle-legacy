@@ -164,12 +164,11 @@ const shinyChance = computed(() => {
           :key="pokemon.id"
           class="flex flex-col items-center gap-1 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-3"
         >
-          <img
-            :src="pokemon.isShiny
-              ? `https://play.pokemonshowdown.com/sprites/ani-shiny/${pokemon.slug}.gif`
-              : `https://play.pokemonshowdown.com/sprites/ani/${pokemon.slug}.gif`"
+          <PokemonSprite
+            :slug="pokemon.slug"
+            :shiny="pokemon.isShiny"
             :alt="t(pokemon.nameFr, pokemon.nameEn)"
-            class="h-12 w-12 object-contain"
+            class="h-12 w-12"
           />
           <span class="text-[10px] font-medium text-gray-300">{{ t(pokemon.nameFr, pokemon.nameEn) }}</span>
           <div class="flex gap-0.5">

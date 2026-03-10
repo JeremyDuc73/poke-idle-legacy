@@ -604,7 +604,7 @@ function toggleGen(id: number) {
                 <p class="text-sm font-bold text-red-400">{{ t(zone.boss.nameFr, zone.boss.nameEn) }}</p>
                 <div class="flex flex-wrap gap-1 mt-1">
                   <div v-for="(poke, pi) in zone.boss.team" :key="pi" class="flex items-center gap-1 rounded bg-gray-800 px-1.5 py-0.5">
-                    <img :src="getSpriteUrl(poke.slug)" :alt="t(poke.nameFr, poke.nameEn)" class="h-5 w-5 object-contain" />
+                    <PokemonSprite :slug="poke.slug" :alt="t(poke.nameFr, poke.nameEn)" class="h-5 w-5" />
                     <span class="text-[10px] text-gray-300">{{ t(poke.nameFr, poke.nameEn) }}</span>
                     <span class="text-[9px] text-gray-500">Lv.{{ poke.level }}</span>
                   </div>

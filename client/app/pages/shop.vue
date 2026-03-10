@@ -399,7 +399,7 @@ const boostsByGen = computed(() => {
               class="flex items-center gap-3 rounded-xl border border-gray-700 bg-gray-800 p-3 text-left transition-all hover:border-green-500/50 hover:bg-gray-750 active:scale-[0.98]"
               @click="confirmEvolve(poke)"
             >
-              <img :src="getSpriteUrl(poke.slug)" :alt="t(poke.nameFr, poke.nameEn)" class="h-12 w-12 object-contain" />
+              <PokemonSprite :slug="poke.slug" :alt="t(poke.nameFr, poke.nameEn)" class="h-12 w-12" />
               <div class="flex-1">
                 <p class="font-bold text-white">{{ t(poke.nameFr, poke.nameEn) }}</p>
                 <p class="text-xs text-gray-500">Lv.{{ poke.level }} — ★{{ poke.stars }}</p>
