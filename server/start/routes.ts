@@ -15,6 +15,7 @@ const GoogleAuthController = () => import('#controllers/google_auth_controller')
 const GameController = () => import('#controllers/game_controller')
 const AdminController = () => import('#controllers/admin_controller')
 const LeaderboardController = () => import('#controllers/leaderboard_controller')
+const PvpController = () => import('#controllers/pvp_controller')
 
 router.get('/', async () => {
   return { status: 'ok', name: 'Poke-Idle Legacy API' }
@@ -47,6 +48,21 @@ router
       .use(middleware.auth())
 
     router.get('/avatars/:filename', [GameController, 'serveAvatar'])
+
+    router
+      .group(() => {
+        router.get('/players', [PvpController, 'listPlayers'])
+        router.get('/all-players', [PvpController, 'listAllPlayers'])
+        router.get('/challenges', [PvpController, 'listChallenges'])
+        router.post('/challenge', [PvpController, 'sendChallenge'])
+        router.post('/challenge/:id/accept', [PvpController, 'acceptChallenge'])
+        router.post('/challenge/:id/decline', [PvpController, 'declineChallenge'])
+        router.get('/match/:id', [PvpController, 'getMatch'])
+        router.get('/history', [PvpController, 'history'])
+        router.get('/leaderboard', [PvpController, 'leaderboard'])
+      })
+      .prefix('/pvp')
+      .use(middleware.auth())
 
     router.get('/pokedex', [GameController, 'pokedex'])
     router.get('/leaderboard', [LeaderboardController, 'index'])

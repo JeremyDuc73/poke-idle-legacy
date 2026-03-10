@@ -29,8 +29,21 @@ const { init: initCombat } = useCombatLoop()
 const { toasts, addToast, removeToast } = useToast()
 
 const mobileMenuOpen = ref(false)
+const receivedPvpChallenges = ref(0)
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null
 let debouncedSaveTimer: ReturnType<typeof setTimeout> | null = null
+let pvpPollInterval: ReturnType<typeof setInterval> | null = null
+
+async function pollPvpChallenges() {
+  if (!auth.isAuthenticated || player.badges < 8) return
+  try {
+    const res = await fetch(`${config.public.apiBase}/api/pvp/challenges`, { credentials: 'include' })
+    if (res.ok) {
+      const data = await res.json()
+      receivedPvpChallenges.value = data.received?.length ?? 0
+    }
+  } catch { /* ignore */ }
+}
 
 function saveOnUnload() {
   if (!auth.isAuthenticated) return
@@ -76,6 +89,10 @@ onMounted(() => {
       auth.saveGameState()
     }, 10_000)
 
+    // PvP challenge polling every 20s
+    pollPvpChallenges()
+    pvpPollInterval = setInterval(pollPvpChallenges, 20_000)
+
     window.addEventListener('beforeunload', saveOnUnload)
     document.addEventListener('visibilitychange', saveOnVisibilityChange)
   }
@@ -109,6 +126,7 @@ watch(() => route.path, () => {
 onUnmounted(() => {
   if (autoSaveInterval) clearInterval(autoSaveInterval)
   if (debouncedSaveTimer) clearTimeout(debouncedSaveTimer)
+  if (pvpPollInterval) clearInterval(pvpPollInterval)
   window.removeEventListener('beforeunload', saveOnUnload)
   document.removeEventListener('visibilitychange', saveOnVisibilityChange)
 })
@@ -155,6 +173,7 @@ const navItems = computed(() => {
     { label: t('Pension', 'Daycare'), icon: Egg, to: '/daycare', badge: readyEggs.value },
     { label: t('Badges', 'Badges'), icon: Medal, to: '/badges', badge: 0 },
     { label: t('Boutique', 'Shop'), icon: Store, to: '/shop', badge: 0 },
+    { label: t('PvP', 'PvP'), icon: Swords, to: '/pvp', badge: receivedPvpChallenges.value },
     { label: t('Profil', 'Profile'), icon: User, to: '/profile', badge: 0 },
     { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide', badge: 0 },
     { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex', badge: 0 },

@@ -344,6 +344,63 @@ function toggleGen(id: number) {
         </div>
       </section>
 
+      <!-- ── PvP Arena ── -->
+      <section class="rounded-xl border border-gray-700/50 bg-gray-800/40 p-5">
+        <h2 class="mb-3 flex items-center gap-2 text-lg font-bold text-red-400">
+          <Swords class="h-5 w-5" /> {{ t('Arène PvP (Multijoueur)', 'PvP Arena (Multiplayer)') }}
+        </h2>
+        <div class="space-y-2 text-sm text-gray-300">
+          <p class="text-amber-400 font-medium">{{ t(
+            '🔒 Prérequis : avoir complété Kanto (8 badges minimum) pour débloquer le PvP.',
+            '🔒 Requirement: complete Kanto (8 badges minimum) to unlock PvP.'
+          ) }}</p>
+          <p>{{ t(
+            'Le PvP te permet d\'affronter d\'autres joueurs dans un duel 1v1 avec paris de PokéDollars ! Le principe : les deux joueurs combattent simultanément un Boss aléatoire invincible, et celui qui inflige le plus de dégâts remporte la mise.',
+            'PvP lets you face other players in a 1v1 duel with PokéDollar bets! The concept: both players simultaneously fight a random invincible Boss, and whoever deals the most damage wins the pot.'
+          ) }}</p>
+        </div>
+
+        <h3 class="mt-4 mb-1 text-xs font-semibold text-gray-400 uppercase">{{ t('Comment ça marche ?', 'How does it work?') }}</h3>
+        <div class="space-y-2 text-sm text-gray-300">
+          <p>{{ t(
+            '1. Envoyer un défi : choisis un adversaire en ligne, fixe ta mise (min 100, max 50% de ton or) et sélectionne 6 Pokémon.',
+            '1. Send a challenge: pick an online opponent, set your bet (min 100, max 50% of your gold) and select 6 Pokémon.'
+          ) }}</p>
+          <p>{{ t(
+            '2. Accepter un défi : ton adversaire reçoit ta demande et choisit ses 6 Pokémon pour accepter. Il a 10 minutes avant expiration.',
+            '2. Accept a challenge: your opponent receives the request and picks their 6 Pokémon to accept. They have 10 minutes before it expires.'
+          ) }}</p>
+          <p>{{ t(
+            '3. Combat : un Boss aléatoire (légendaire ou épique) est choisi parmi les générations débloquées par les DEUX joueurs. Les DPS de chaque équipe sont calculés pendant 60 secondes contre les types du boss.',
+            '3. Combat: a random Boss (legendary or epic) is picked from generations unlocked by BOTH players. Each team\'s DPS is calculated over 60 seconds against the boss\'s types.'
+          ) }}</p>
+          <p>{{ t(
+            '4. Résultat : le joueur avec le plus de dégâts totaux gagne la mise de l\'adversaire ! En cas d\'égalité, personne ne perd d\'or.',
+            '4. Result: the player with the most total damage wins the opponent\'s bet! In case of a draw, nobody loses gold.'
+          ) }}</p>
+        </div>
+
+        <h3 class="mt-4 mb-1 text-xs font-semibold text-gray-400 uppercase">{{ t('Calcul des dégâts', 'Damage calculation') }}</h3>
+        <div class="space-y-2 text-sm text-gray-300">
+          <p>{{ t(
+            'Chaque Pokémon inflige des DPS basés sur : Niveau × Rareté × Shiny (×4) × Étoiles × Efficacité de type. Le meilleur type offensif est utilisé automatiquement contre le Boss.',
+            'Each Pokémon deals DPS based on: Level × Rarity × Shiny (×4) × Stars × Type effectiveness. The best offensive type is automatically used against the Boss.'
+          ) }}</p>
+          <p class="text-amber-400 font-medium">{{ t(
+            '💡 Astuce : compose une équipe polyvalente avec des types variés pour couvrir un maximum de Boss possibles !',
+            '💡 Tip: build a versatile team with diverse types to cover as many possible Bosses as you can!'
+          ) }}</p>
+        </div>
+
+        <h3 class="mt-4 mb-1 text-xs font-semibold text-gray-400 uppercase">{{ t('Classement PvP', 'PvP Leaderboard') }}</h3>
+        <div class="text-sm text-gray-300">
+          <p>{{ t(
+            'Un classement PvP dédié montre les meilleurs joueurs avec leur ratio victoires/défaites et le total de PokéDollars gagnés. Accessible depuis l\'onglet Classement de la page PvP.',
+            'A dedicated PvP leaderboard shows the best players with their win/loss ratio and total PokéDollars won. Accessible from the Leaderboard tab on the PvP page.'
+          ) }}</p>
+        </div>
+      </section>
+
       <!-- ── Badges ── -->
       <section class="rounded-xl border border-gray-700/50 bg-gray-800/40 p-5">
         <h2 class="mb-3 flex items-center gap-2 text-lg font-bold text-indigo-400">
@@ -623,6 +680,77 @@ function toggleGen(id: number) {
 
     <!-- ═══════════════ PATCH NOTES TAB ═══════════════ -->
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
+
+      <!-- v2.0.0 -->
+      <article class="rounded-xl border-2 border-red-500/60 bg-gradient-to-br from-red-900/30 to-amber-900/20 p-5">
+        <div class="mb-1 flex items-center gap-2">
+          <span class="rounded bg-red-500 px-2 py-0.5 text-xs font-black text-white">MAJEURE</span>
+          <span class="rounded bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-400">BETA</span>
+        </div>
+        <h3 class="mb-3 text-xl font-black text-red-300">v2.0.0 — Générations 5-9, PvP Multijoueur & Avatars — 10 Mars 2026</h3>
+
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Mise à jour massive ! 5 nouvelles régions (Unys → Paldea), mode PvP 1v1 avec paris, photos de profil, récompense Maître Pokédex et bien plus !', 'Massive update! 5 new regions (Unova → Paldea), PvP 1v1 mode with betting, profile avatars, Pokédex Master reward and much more!') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">⚔️ {{ t('PvP Multijoueur (Beta)', 'Multiplayer PvP (Beta)') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Nouveau mode 1v1 : affronte d\'autres joueurs avec des paris de PokéDollars !', 'New 1v1 mode: fight other players with PokéDollar bets!') }}</li>
+              <li>{{ t('Sélectionne 6 Pokémon et combat un Boss légendaire aléatoire — le meilleur DPS gagne', 'Select 6 Pokémon and fight a random legendary Boss — best DPS wins') }}</li>
+              <li>{{ t('Boss choisi parmi les générations débloquées par les deux joueurs', 'Boss picked from generations unlocked by both players') }}</li>
+              <li>{{ t('Mise : min 100, max 50% de ton or — le gagnant remporte la mise adverse', 'Bet: min 100, max 50% of your gold — winner takes opponent\'s bet') }}</li>
+              <li>{{ t('Animation de combat hybride : résolution serveur + barres de dégâts animées', 'Hybrid combat animation: server resolution + animated damage bars') }}</li>
+              <li>{{ t('Classement PvP dédié avec ratio victoires/défaites', 'Dedicated PvP leaderboard with win/loss ratio') }}</li>
+              <li>{{ t('Historique complet de tous tes matchs', 'Full history of all your matches') }}</li>
+              <li>{{ t('Notification de défis reçus dans la sidebar', 'Challenge notifications in the sidebar') }}</li>
+              <li>{{ t('🔒 Requiert 8 badges (Kanto complet) pour débloquer', '🔒 Requires 8 badges (Kanto complete) to unlock') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">🌍 {{ t('5 Nouvelles Régions', '5 New Regions') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Génération 5 — Unys (Unova) : 13 zones, 156 Pokémon, champions + Ligue', 'Generation 5 — Unova: 13 zones, 156 Pokémon, gym leaders + League') }}</li>
+              <li>{{ t('Génération 6 — Kalos : 13 zones, 72 Pokémon, champions + Ligue', 'Generation 6 — Kalos: 13 zones, 72 Pokémon, gym leaders + League') }}</li>
+              <li>{{ t('Génération 7 — Alola : 13 zones, 86 Pokémon, capitaines + Ligue', 'Generation 7 — Alola: 13 zones, 86 Pokémon, captains + League') }}</li>
+              <li>{{ t('Génération 8 — Galar : 13 zones, 89 Pokémon, champions + Ligue', 'Generation 8 — Galar: 13 zones, 89 Pokémon, gym leaders + League') }}</li>
+              <li>{{ t('Génération 9 — Paldea : 13 zones, 103 Pokémon, champions + Ligue', 'Generation 9 — Paldea: 13 zones, 103 Pokémon, gym leaders + League') }}</li>
+              <li>{{ t('Chaque région a ses bannières gacha, items d\'évolution, boss thématiques et légendaires exclusifs', 'Each region has its gacha banners, evolution items, themed bosses and exclusive legendaries') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">📸 {{ t('Avatars de profil', 'Profile Avatars') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Upload ta photo de profil depuis la page Profil', 'Upload your profile picture from the Profile page') }}</li>
+              <li>{{ t('Visible partout : sidebar, classements, PvP, admin', 'Visible everywhere: sidebar, leaderboards, PvP, admin') }}</li>
+              <li>{{ t('Suppression et réinitialisation possibles (admin aussi)', 'Deletion and reset available (admin too)') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">🏆 {{ t('Maître Pokédex', 'Pokédex Master') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Complète le Pokédex de TOUTES les régions pour devenir Maître Pokédex', 'Complete the Pokédex of ALL regions to become Pokédex Master') }}</li>
+              <li>{{ t('Récompense : multiplicateur shiny ×3 permanent + 50M PokéDollars + titre Crown', 'Reward: permanent ×3 shiny multiplier + 50M PokéDollars + Crown title') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-red-400">⚙️ {{ t('Autres ajouts', 'Other additions') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Malus admin : pénalités DPS ou or applicables aux joueurs (anti-triche)', 'Admin penalties: DPS or gold penalties for players (anti-cheat)') }}</li>
+              <li>{{ t('Prix des items d\'évolution adaptés par génération (5k Gen 1 → 1M Gen 9)', 'Evolution item prices scaled by generation (5k Gen 1 → 1M Gen 9)') }}</li>
+              <li>{{ t('Click boosts étendus aux 9 régions (27 paliers)', 'Click boosts extended to all 9 regions (27 tiers)') }}</li>
+              <li>{{ t('Mode invité supprimé — compte requis pour jouer', 'Guest mode removed — account required to play') }}</li>
+              <li>{{ t('Sprites équipe agrandis dans l\'inventaire', 'Enlarged team sprites in inventory') }}</li>
+              <li>{{ t('Migration automatique des noms FR/EN pour Pokémon existants', 'Automatic FR/EN name migration for existing Pokémon') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
 
       <!-- v1.7.0 -->
       <article class="rounded-xl border border-amber-500/50 bg-amber-900/20 p-5">
