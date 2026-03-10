@@ -15,7 +15,7 @@ definePageMeta({
 })
 
 const GENERATION_NAMES: Record<number, string> = {
-  1: 'Kanto', 2: 'Johto', 3: 'Hoenn', 4: 'Sinnoh',
+  1: 'Kanto', 2: 'Johto', 3: 'Hoenn', 4: 'Sinnoh', 5: 'Unys',
 }
 
 const player = usePlayerStore()
@@ -174,6 +174,10 @@ const CLICK_BOOSTS: ClickBoost[] = [
   { id: 'click-sinnoh-1', nameFr: 'Sinnoh I', nameEn: 'Sinnoh I', generation: 4, unlockLevel: 85, cost: 200000, damage: 40 },
   { id: 'click-sinnoh-2', nameFr: 'Sinnoh II', nameEn: 'Sinnoh II', generation: 4, unlockLevel: 95, cost: 400000, damage: 50 },
   { id: 'click-sinnoh-3', nameFr: 'Sinnoh III', nameEn: 'Sinnoh III', generation: 4, unlockLevel: 105, cost: 800000, damage: 60 },
+  
+  { id: 'click-unova-1', nameFr: 'Unys I', nameEn: 'Unova I', generation: 5, unlockLevel: 110, cost: 1000000, damage: 50 },
+  { id: 'click-unova-2', nameFr: 'Unys II', nameEn: 'Unova II', generation: 5, unlockLevel: 120, cost: 2000000, damage: 60 },
+  { id: 'click-unova-3', nameFr: 'Unys III', nameEn: 'Unova III', generation: 5, unlockLevel: 130, cost: 4000000, damage: 70 },
 ]
 
 const purchasedBoosts = ref<Set<string>>(new Set())
