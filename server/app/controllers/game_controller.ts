@@ -229,7 +229,9 @@ export default class GameController {
       try {
         const oldPath = join(app.makePath('storage'), user.avatarUrl)
         await unlink(oldPath)
-      } catch { /* ignore missing file */ }
+      } catch {
+        /* ignore missing file */
+      }
     }
 
     const dir = join(app.makePath('storage'), 'uploads', 'avatars')
@@ -254,7 +256,9 @@ export default class GameController {
       try {
         const oldPath = join(app.makePath('storage'), user.avatarUrl)
         await unlink(oldPath)
-      } catch { /* ignore missing file */ }
+      } catch {
+        /* ignore missing file */
+      }
     }
 
     user.avatarUrl = null

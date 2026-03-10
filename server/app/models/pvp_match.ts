@@ -44,8 +44,7 @@ export default class PvpMatch extends BaseModel {
 
   @column({
     prepare: (value: string[]) => JSON.stringify(value),
-    consume: (value: string | string[]) =>
-      typeof value === 'string' ? JSON.parse(value) : value,
+    consume: (value: string | string[]) => (typeof value === 'string' ? JSON.parse(value) : value),
   })
   declare bossTypes: string[]
 

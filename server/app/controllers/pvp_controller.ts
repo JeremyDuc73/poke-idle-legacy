@@ -58,7 +58,9 @@ export default class PvpController {
     const user = auth.use('web').user
     if (!user) return response.unauthorized({ message: 'Not authenticated' })
     if (user.badges < MIN_BADGES) {
-      return response.forbidden({ message: 'Vous devez avoir au moins 8 badges pour accéder au PvP' })
+      return response.forbidden({
+        message: 'Vous devez avoir au moins 8 badges pour accéder au PvP',
+      })
     }
 
     const { challengedId, betAmount, team } = request.body() as {
@@ -68,7 +70,9 @@ export default class PvpController {
     }
 
     if (!challengedId || !betAmount || !team || team.length !== 6) {
-      return response.badRequest({ message: 'Données invalides: challengedId, betAmount et 6 pokémon requis' })
+      return response.badRequest({
+        message: 'Données invalides: challengedId, betAmount et 6 pokémon requis',
+      })
     }
 
     if (betAmount < MIN_BET) {
@@ -77,7 +81,9 @@ export default class PvpController {
 
     const maxBet = Math.floor(user.gold * MAX_BET_PERCENT)
     if (betAmount > maxBet) {
-      return response.badRequest({ message: `Mise maximum: ${maxBet} pokédollars (50% de votre or)` })
+      return response.badRequest({
+        message: `Mise maximum: ${maxBet} pokédollars (50% de votre or)`,
+      })
     }
 
     if (user.gold < betAmount) {
@@ -87,10 +93,10 @@ export default class PvpController {
     const challenged = await User.find(challengedId)
     if (!challenged) return response.notFound({ message: 'Joueur introuvable' })
     if (challenged.badges < MIN_BADGES) {
-      return response.badRequest({ message: 'Ce joueur n\'a pas encore débloqué le PvP' })
+      return response.badRequest({ message: "Ce joueur n'a pas encore débloqué le PvP" })
     }
     if (challenged.gold < betAmount) {
-      return response.badRequest({ message: 'Ce joueur n\'a pas assez de pokédollars pour ce pari' })
+      return response.badRequest({ message: "Ce joueur n'a pas assez de pokédollars pour ce pari" })
     }
 
     // Check no pending challenge between these two
@@ -186,7 +192,7 @@ export default class PvpController {
       return response.forbidden({ message: 'Ce défi ne vous est pas adressé' })
     }
     if (challenge.status !== 'pending') {
-      return response.badRequest({ message: 'Ce défi n\'est plus disponible' })
+      return response.badRequest({ message: "Ce défi n'est plus disponible" })
     }
     if (challenge.expiresAt && challenge.expiresAt < DateTime.now()) {
       challenge.status = 'expired'
@@ -204,10 +210,10 @@ export default class PvpController {
     if (challenger.gold < challenge.betAmount) {
       challenge.status = 'expired'
       await challenge.save()
-      return response.badRequest({ message: 'Le challenger n\'a plus assez de pokédollars' })
+      return response.badRequest({ message: "Le challenger n'a plus assez de pokédollars" })
     }
     if (user.gold < challenge.betAmount) {
-      return response.badRequest({ message: 'Vous n\'avez pas assez de pokédollars' })
+      return response.badRequest({ message: "Vous n'avez pas assez de pokédollars" })
     }
 
     // Determine common generations
@@ -278,7 +284,7 @@ export default class PvpController {
       return response.forbidden({ message: 'Ce défi ne vous est pas adressé' })
     }
     if (challenge.status !== 'pending') {
-      return response.badRequest({ message: 'Ce défi n\'est plus disponible' })
+      return response.badRequest({ message: "Ce défi n'est plus disponible" })
     }
 
     challenge.status = 'declined'

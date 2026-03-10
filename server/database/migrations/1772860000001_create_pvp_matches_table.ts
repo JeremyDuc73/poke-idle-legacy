@@ -6,9 +6,27 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('challenge_id').unsigned().notNullable().references('id').inTable('pvp_challenges').onDelete('CASCADE')
-      table.integer('player1_id').unsigned().notNullable().references('id').inTable('users').onDelete('CASCADE')
-      table.integer('player2_id').unsigned().notNullable().references('id').inTable('users').onDelete('CASCADE')
+      table
+        .integer('challenge_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('pvp_challenges')
+        .onDelete('CASCADE')
+      table
+        .integer('player1_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
+      table
+        .integer('player2_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
       table.string('boss_slug', 100).notNullable()
       table.string('boss_name_fr', 100).notNullable()
       table.string('boss_name_en', 100).notNullable()
@@ -19,7 +37,13 @@ export default class extends BaseSchema {
       table.bigInteger('player2_damage').notNullable().defaultTo(0)
       table.jsonb('player1_team_snapshot').notNullable()
       table.jsonb('player2_team_snapshot').notNullable()
-      table.integer('winner_id').unsigned().nullable().references('id').inTable('users').onDelete('SET NULL')
+      table
+        .integer('winner_id')
+        .unsigned()
+        .nullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('SET NULL')
       table.integer('bet_amount').notNullable().defaultTo(0)
       table.timestamp('created_at').notNullable()
 

@@ -258,7 +258,9 @@ export default class AdminController {
       try {
         const oldPath = join(app.makePath('storage'), user.avatarUrl)
         await unlink(oldPath)
-      } catch { /* ignore missing file */ }
+      } catch {
+        /* ignore missing file */
+      }
     }
 
     user.avatarUrl = null

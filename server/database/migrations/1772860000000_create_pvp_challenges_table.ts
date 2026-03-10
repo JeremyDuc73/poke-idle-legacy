@@ -6,8 +6,20 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('challenger_id').unsigned().notNullable().references('id').inTable('users').onDelete('CASCADE')
-      table.integer('challenged_id').unsigned().notNullable().references('id').inTable('users').onDelete('CASCADE')
+      table
+        .integer('challenger_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
+      table
+        .integer('challenged_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
       table.integer('bet_amount').notNullable().defaultTo(0)
       table.jsonb('challenger_team').nullable()
       table.jsonb('challenged_team').nullable()
