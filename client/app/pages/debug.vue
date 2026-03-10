@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Bug, Zap, Coins, Gem, MapPin, Star, Package, Trash2 } from 'lucide-vue-next'
+import { Bug, Zap, Coins, MapPin, Star, Package, BookOpen } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useAuthStore } from '~/stores/useAuthStore'
@@ -16,8 +16,30 @@ const { t } = useLocale()
 
 // ── Quick actions ──
 function giveGold(amount: number) { player.addGold(amount) }
-function giveGems(amount: number) { player.addGems(amount) }
 function setLevel(lv: number) { player.level = lv; player.xp = 0 }
+
+const selectedBanner = ref<string>(BANNERS[0]?.id ?? '')
+
+function giveAllFromBanner(bannerId: string) {
+  const banner = BANNERS.find(b => b.id === bannerId)
+  if (!banner) return
+  let added = 0
+  for (const poke of banner.pool) {
+    const already = inventory.collection.some(p => p.slug === poke.slug)
+    if (!already) {
+      inventory.addPokemon({
+        slug: poke.slug,
+        nameFr: poke.nameFr,
+        nameEn: poke.nameEn,
+        isShiny: false,
+        rarity: poke.rarity,
+        stars: 1,
+      })
+      added++
+    }
+  }
+  alert(`${added} pokémon ajoutés depuis la bannière ${banner.nameFr}`)
+}
 
 function setGenZone(genId: number, zoneId: number) {
   player.currentGeneration = genId
@@ -58,11 +80,11 @@ function forceSave() {
         <Coins class="h-4 w-4" /> {{ t('Monnaie', 'Currency') }}
       </h2>
       <div class="flex flex-wrap gap-2">
-        <button class="rounded bg-yellow-600/20 px-3 py-1.5 text-xs font-bold text-yellow-400 hover:bg-yellow-600/30" @click="giveGold(1000)">+1K Gold</button>
         <button class="rounded bg-yellow-600/20 px-3 py-1.5 text-xs font-bold text-yellow-400 hover:bg-yellow-600/30" @click="giveGold(10000)">+10K Gold</button>
         <button class="rounded bg-yellow-600/20 px-3 py-1.5 text-xs font-bold text-yellow-400 hover:bg-yellow-600/30" @click="giveGold(100000)">+100K Gold</button>
-        <button class="rounded bg-purple-600/20 px-3 py-1.5 text-xs font-bold text-purple-400 hover:bg-purple-600/30" @click="giveGems(100)">+100 Gems</button>
-        <button class="rounded bg-purple-600/20 px-3 py-1.5 text-xs font-bold text-purple-400 hover:bg-purple-600/30" @click="giveGems(1000)">+1K Gems</button>
+        <button class="rounded bg-yellow-600/20 px-3 py-1.5 text-xs font-bold text-yellow-400 hover:bg-yellow-600/30" @click="giveGold(500000)">+500K Gold</button>
+        <button class="rounded bg-yellow-600/20 px-3 py-1.5 text-xs font-bold text-yellow-400 hover:bg-yellow-600/30" @click="giveGold(1000000)">+1M Gold</button>
+        <button class="rounded bg-yellow-600/20 px-3 py-1.5 text-xs font-bold text-yellow-400 hover:bg-yellow-600/30" @click="giveGold(10000000)">+10M Gold</button>
       </div>
     </section>
 
@@ -125,13 +147,18 @@ function forceSave() {
       </div>
     </section>
 
-    <!-- Banners info -->
+    <!-- Banners — obtain all pokémon -->
     <section class="mb-4 rounded-xl border border-gray-700/50 bg-gray-800/40 p-4">
-      <h2 class="mb-3 text-sm font-bold text-pink-400">{{ t('Bannières Gacha', 'Gacha Banners') }}</h2>
-      <div class="flex flex-wrap gap-2">
-        <span v-for="b in BANNERS" :key="b.id" class="rounded bg-gray-700 px-2 py-1 text-xs text-gray-300">
-          {{ b.nameFr }} ({{ b.pool.length }} pokémon)
-        </span>
+      <h2 class="mb-3 flex items-center gap-2 text-sm font-bold text-pink-400">
+        <BookOpen class="h-4 w-4" /> {{ t('Obtenir tous les Pokémon d\'une bannière', 'Get all Pokémon from a banner') }}
+      </h2>
+      <div class="flex flex-wrap items-center gap-2">
+        <select v-model="selectedBanner" class="rounded border border-gray-600 bg-gray-700 px-3 py-1.5 text-xs text-white">
+          <option v-for="b in BANNERS" :key="b.id" :value="b.id">{{ b.nameFr }} ({{ b.pool.length }})</option>
+        </select>
+        <button class="rounded bg-pink-600/20 px-3 py-1.5 text-xs font-bold text-pink-400 hover:bg-pink-600/30" @click="giveAllFromBanner(selectedBanner)">
+          {{ t('Tout obtenir', 'Get all') }}
+        </button>
       </div>
     </section>
 

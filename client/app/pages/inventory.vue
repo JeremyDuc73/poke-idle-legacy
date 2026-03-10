@@ -59,6 +59,7 @@ const genOptions = computed(() => [
   { value: 2, label: 'Gen 2 - Johto' },
   { value: 3, label: 'Gen 3 - Hoenn' },
   { value: 4, label: 'Gen 4 - Sinnoh' },
+  { value: 5, label: 'Gen 5 - Unys' },
 ])
 
 // Team save/load

@@ -3,7 +3,7 @@ import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useDaycareStore } from '~/stores/useDaycareStore'
 import { getSpriteUrl, getShinySpriteUrl, getTrainerSpriteUrl } from '~/utils/showdown'
-import { getZone, GENERATIONS } from '~/data/zones'
+import { getZone } from '~/data/zones'
 import { getPokemonType, getPokemonTypes, getTypeEffectiveness } from '~/data/types'
 import { getRarityDpsMult, getStarDpsMult, getSlugGeneration, RARITY_DPS_MULT, getShinyRate } from '~/data/gacha'
 import { getEvoStageMult } from '~/data/evolutions'
@@ -84,34 +84,30 @@ export function useCombatLoop() {
     const zone = player.activeCombatZone
     const stage = player.isFarming ? 5 : player.currentStage
 
-    // Local difficulty for HP/level (resets per gen so new regions feel fresh)
+    // Local difficulty resets per generation so each region feels fresh
     const localDifficulty = (zone - 1) * 10 + stage
 
-    // Continuous difficulty for gold/XP (accumulates across all gens)
-    const prevZones = GENERATIONS
-      .filter((g) => g.id < gen)
-      .reduce((sum, g) => sum + g.zones.length, 0)
-    const globalDifficulty = (prevZones + zone - 1) * 10 + stage
-
-    // Generation multiplier so gold/XP keeps up with banner cost increases
-    const genMultiplier = gen
+    // Gentle generation difficulty multiplier: x1.0, x1.2, x1.3, x1.4, x1.5…
+    const genDiffMult = gen === 1 ? 1.0 : 1.0 + gen * 0.1
 
     if (player.isBossStage) {
       const boss = currentZone()?.boss
-      if (boss) spawnBoss(boss, localDifficulty, globalDifficulty, genMultiplier)
+      if (boss) spawnBoss(boss, localDifficulty, genDiffMult, gen)
     } else {
-      spawnWild(localDifficulty, globalDifficulty, genMultiplier)
+      spawnWild(localDifficulty, genDiffMult, gen)
     }
   }
 
-  function spawnWild(localDiff: number, globalDiff: number, genMult: number) {
+  function spawnWild(localDiff: number, genDiffMult: number, gen: number) {
     const poke = randomWild()
     const isShiny = Math.random() < getShinyRate(player.shinyCharms)
-    // HP uses globalDiff for smooth continuous scaling across all regions
-    const hp = Math.round(poke.baseHp * (1 + globalDiff * 0.6))
-    // Shiny wild: ×5 gold, ×3 XP
-    const goldReward = Math.round((10 + 3 * globalDiff) * genMult * (isShiny ? 5 : 1))
-    const xpReward = Math.round((5 + 4 * globalDiff) * genMult * (isShiny ? 3 : 1))
+    // HP scales with local difficulty (resets per gen) × gentle gen multiplier
+    const hp = Math.round(poke.baseHp * (1 + localDiff * 0.6) * genDiffMult)
+    // Gold: 400 × gen² × (1 + localDiff × 0.008) — matches banner cost scaling
+    // End-gen ≈ 10 pulls/100 kills, start-gen ≈ 5 pulls/100 kills
+    const diffScale = 1 + localDiff * 0.008
+    const goldReward = Math.round(400 * gen * gen * diffScale * (isShiny ? 5 : 1))
+    const xpReward = Math.round(200 * gen * gen * diffScale * (isShiny ? 3 : 1))
     combat.setEnemy({
       nameFr: isShiny ? `✨ ${poke.nameFr} sauvage ✨` : `${poke.nameFr} sauvage`,
       nameEn: isShiny ? `✨ Wild ${poke.nameEn} ✨` : `Wild ${poke.nameEn}`,
@@ -120,7 +116,7 @@ export function useCombatLoop() {
       spriteUrl: isShiny ? getShinySpriteUrl(poke.slug) : getSpriteUrl(poke.slug),
       maxHp: hp,
       currentHp: hp,
-      level: localDiff,
+      level: Math.max(1, Math.ceil(localDiff * 100 / 130)),
       goldReward,
       xpReward,
       isBoss: false,
@@ -129,10 +125,12 @@ export function useCombatLoop() {
     })
   }
 
-  function spawnBoss(boss: BossTrainer, localDiff: number, globalDiff: number, genMult: number) {
-    // Boss HP: team base + globalDiff scaling for smooth progression
+  function spawnBoss(boss: BossTrainer, localDiff: number, genDiffMult: number, gen: number) {
+    // Boss HP: team base × local scaling × gentle gen multiplier
     const teamBase = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0)
-    const totalHp = Math.round(teamBase * (1.5 + globalDiff * 0.2))
+    const totalHp = Math.round(teamBase * (1.5 + localDiff * 0.2) * genDiffMult)
+    // Boss rewards ≈ 10× wild rewards
+    const diffScale = 1 + localDiff * 0.008
     const bossTypes = getPokemonTypes(boss.team[0]?.slug ?? 'normal')
     combat.setEnemy({
       nameFr: `Boss : ${boss.nameFr}`,
@@ -142,9 +140,9 @@ export function useCombatLoop() {
       spriteUrl: getTrainerSpriteUrl(boss.slug),
       maxHp: totalHp,
       currentHp: totalHp,
-      level: Math.max(...boss.team.map((p) => p.level)),
-      goldReward: (200 + 50 * globalDiff) * genMult,
-      xpReward: (100 + 50 * globalDiff) * genMult,
+      level: Math.max(1, Math.ceil(localDiff * 100 / 130)),
+      goldReward: Math.round(4000 * gen * gen * diffScale),
+      xpReward: Math.round(2000 * gen * gen * diffScale),
       isBoss: true,
       bossTimerSeconds: boss.timerSeconds,
     })

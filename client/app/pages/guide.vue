@@ -620,6 +620,44 @@ function toggleGen(id: number) {
     <!-- ═══════════════ PATCH NOTES TAB ═══════════════ -->
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
 
+      <!-- v1.7.0 -->
+      <article class="rounded-xl border border-amber-500/50 bg-amber-900/20 p-5">
+        <h3 class="mb-3 text-lg font-bold text-amber-300">v1.7.0 — Équilibrage Difficulté & Économie — 10 Mars 2026</h3>
+        
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Refonte complète du scaling de difficulté et de l\'économie d\'or pour un gameplay plus équilibré à travers les générations !', 'Complete overhaul of difficulty scaling and gold economy for more balanced gameplay across generations!') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">⚔️ {{ t('Difficulté', 'Difficulty') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Chaque génération a désormais une progression de niveau 1 → 100 indépendante', 'Each generation now has an independent level 1 → 100 progression') }}</li>
+              <li>{{ t('Difficulté locale : les HP et la puissance des ennemis se réinitialisent à chaque nouvelle région', 'Local difficulty: enemy HP and power reset at each new region') }}</li>
+              <li>{{ t('Multiplicateur de génération doux : Gen 1 ×1.0, Gen 2 ×1.2, Gen 3 ×1.3, Gen 4 ×1.4, Gen 5 ×1.5', 'Gentle generation multiplier: Gen 1 ×1.0, Gen 2 ×1.2, Gen 3 ×1.3, Gen 4 ×1.4, Gen 5 ×1.5') }}</li>
+              <li>{{ t('Niveaux des boss Gen 4-5 corrigés : suivent désormais le même pattern que Gen 1-3', 'Gen 4-5 boss levels fixed: now follow the same pattern as Gen 1-3') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">💰 {{ t('Économie', 'Economy') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Nouvelle formule d\'or : les gains s\'adaptent automatiquement au coût des bannières de chaque génération', 'New gold formula: earnings automatically scale with each generation\'s banner costs') }}</li>
+              <li>{{ t('Fin de génération : ~10 invocations pour 100 kills', 'End of generation: ~10 pulls per 100 kills') }}</li>
+              <li>{{ t('Début de génération : ~5 invocations pour 100 kills', 'Start of generation: ~5 pulls per 100 kills') }}</li>
+              <li>{{ t('Récompenses de boss augmentées (~10× les sauvages)', 'Boss rewards increased (~10× wilds)') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🐛 {{ t('Corrections', 'Bug Fixes') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('CORRIGÉ : La notification de Pokédex complété ne s\'affiche plus à chaque rechargement de page', 'FIXED: Pokédex completion notification no longer shows on every page reload') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
       <!-- v1.6.0 -->
       <article class="rounded-xl border border-amber-500/50 bg-amber-900/20 p-5">
         <h3 class="mb-3 text-lg font-bold text-amber-300">v1.6.0 — Corrections & Équilibrage — 10 Mars 2026</h3>

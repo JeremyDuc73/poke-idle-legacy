@@ -183,16 +183,13 @@ const JOHTO_POOL: GachaPokemon[] = [
   { nameFr: 'Debugant', nameEn: 'Tyrogue', slug: 'tyrogue', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Airmure', nameEn: 'Skarmory', slug: 'skarmory', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Corniaud', nameEn: 'Houndour', slug: 'houndour', rarity: 'rare', shinyRate: 0.02 },
-  { nameFr: 'Porygon2', nameEn: 'Porygon2', slug: 'porygon2', rarity: 'rare', shinyRate: 0.02 },
-  { nameFr: 'Steelix', nameEn: 'Steelix', slug: 'steelix', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Scorplane', nameEn: 'Gligar', slug: 'gligar', rarity: 'rare', shinyRate: 0.02 },
   { nameFr: 'Embrylex', nameEn: 'Larvitar', slug: 'larvitar', rarity: 'epic', shinyRate: 0.03 },
   // EPIC STARTERS GEN 2
   { nameFr: 'Germignon', nameEn: 'Chikorita', slug: 'chikorita', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Héricendre', nameEn: 'Cyndaquil', slug: 'cyndaquil', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Kaiminus', nameEn: 'Totodile', slug: 'totodile', rarity: 'epic', shinyRate: 0.03 },
-  // LEGENDARY
-  { nameFr: 'Évoli', nameEn: 'Eevee', slug: 'eevee', rarity: 'epic', shinyRate: 0.03 },
+  // EPIC
   { nameFr: 'Écremeuh', nameEn: 'Miltank', slug: 'miltank', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Leuphorie', nameEn: 'Blissey', slug: 'blissey', rarity: 'epic', shinyRate: 0.03 },
   { nameFr: 'Scarhino', nameEn: 'Heracross', slug: 'heracross', rarity: 'epic', shinyRate: 0.03 },
@@ -381,6 +378,9 @@ const SINNOH_POOL: GachaPokemon[] = [
   // Mega Evolutions Gen 4
   { nameFr: 'Méga-Lucario', nameEn: 'Mega Lucario', slug: 'lucario-mega', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Méga-Carchacrok', nameEn: 'Mega Garchomp', slug: 'garchomp-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Lockpin', nameEn: 'Mega Lopunny', slug: 'lopunny-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Blizzaroi', nameEn: 'Mega Abomasnow', slug: 'abomasnow-mega', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Méga-Gallame', nameEn: 'Mega Gallade', slug: 'gallade-mega', rarity: 'legendary', shinyRate: 0.05 },
 ]
 
 // === Gen 5 Unova Pool ===
@@ -471,6 +471,8 @@ const UNOVA_POOL: GachaPokemon[] = [
   { nameFr: 'Keldeo', nameEn: 'Keldeo', slug: 'keldeo', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Meloetta', nameEn: 'Meloetta', slug: 'meloetta', rarity: 'legendary', shinyRate: 0.05 },
   { nameFr: 'Genesect', nameEn: 'Genesect', slug: 'genesect', rarity: 'legendary', shinyRate: 0.05 },
+  // Mega Evolution Gen 5
+  { nameFr: 'Méga-Nanméouïe', nameEn: 'Mega Audino', slug: 'audino-mega', rarity: 'legendary', shinyRate: 0.05 },
 ]
 
 export const BANNERS: Banner[] = [

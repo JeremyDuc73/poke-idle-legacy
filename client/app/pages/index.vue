@@ -578,7 +578,7 @@ function removeFromTeam(pokeId: number) {
                   <span class="font-bold text-slate-200">{{ poke.permanentDps }}</span>
                 </div>
                 <div v-if="poke.regionMult < 1" class="flex items-center gap-1">
-                  <span class="font-bold text-orange-400">{{ t('Hors région', 'Off-region') }} x0.5</span>
+                  <span class="font-bold text-orange-400">{{ t('Hors région', 'Off-region') }} x{{ poke.regionMult }}</span>
                 </div>
                 <div v-if="poke.typeMult !== 1" class="flex items-center gap-1">
                   <span class="text-slate-400">{{ t('Type', 'Type') }}:</span>

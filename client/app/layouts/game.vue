@@ -254,14 +254,14 @@ function checkGenCompletions() {
   }
 }
 
-// Check on collection changes
+// Check on collection changes — skip the first trigger (initial load from save)
+let _initialLoadDone = false
 watch(() => inventory.collectionCount, () => {
+  if (!_initialLoadDone) {
+    _initialLoadDone = true
+    return
+  }
   checkGenCompletions()
-})
-
-// Check on mount
-onMounted(() => {
-  nextTick(() => checkGenCompletions())
 })
 </script>
 

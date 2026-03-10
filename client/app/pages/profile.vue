@@ -4,6 +4,7 @@ import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useCombatStore } from '~/stores/useCombatStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 import { useLocale } from '~/composables/useLocale'
+import { BASE_SHINY_RATE, getShinyRate } from '~/data/gacha'
 
 definePageMeta({
   layout: 'game',
@@ -87,6 +88,12 @@ const stats = computed<StatItem[]>(() => [
     color: 'text-amber-400',
   },
 ])
+
+const shinyChance = computed(() => {
+  const rate = getShinyRate(player.shinyCharms)
+  const denom = Math.round(1 / rate)
+  return `1/${denom}`
+})
 </script>
 
 <template>
@@ -139,6 +146,9 @@ const stats = computed<StatItem[]>(() => [
           <span class="text-xs text-gray-400">{{ t(stat.labelFr, stat.labelEn) }}</span>
         </div>
         <p class="text-xl font-bold text-white">{{ stat.value }}</p>
+        <p v-if="stat.labelEn === 'Shiny Charms'" class="text-[10px] text-amber-400/80">
+          ✨ {{ t('Chance shiny', 'Shiny chance') }}: <span class="font-bold text-amber-300">{{ shinyChance }}</span>
+        </p>
       </div>
     </div>
 
