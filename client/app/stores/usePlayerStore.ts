@@ -79,6 +79,7 @@ interface PlayerState {
   pokedexMaster: boolean
   penaltyType: 'dps' | 'gold' | null
   penaltyPercent: number
+  avatarUrl: string | null
 }
 
 export const usePlayerStore = defineStore('player', {
@@ -110,6 +111,7 @@ export const usePlayerStore = defineStore('player', {
       pokedexMaster: false,
       penaltyType: null,
       penaltyPercent: 0,
+      avatarUrl: null,
     }
   },
 

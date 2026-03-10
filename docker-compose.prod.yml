@@ -40,6 +40,8 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-https://poke-idle.jeremyduc.dev/api/auth/google/callback}
       FRONTEND_URL: ${FRONTEND_URL:-https://poke-idle.jeremyduc.dev}
+    volumes:
+      - server_storage:/app/storage
     depends_on:
       postgres:
         condition: service_healthy
@@ -62,6 +64,7 @@ services:
 
 volumes:
   postgres_data:
+  server_storage:
 
 networks:
   internal:

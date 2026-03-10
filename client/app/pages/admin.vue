@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon, Eye, Pencil, Gift, RotateCcw, Trash2, Ban } from 'lucide-vue-next'
+import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon, Eye, Pencil, Gift, RotateCcw, Trash2, Ban, ImageOff } from 'lucide-vue-next'
 
 definePageMeta({ layout: 'game' })
 
@@ -79,7 +79,13 @@ interface UserDetails extends User {
   pokemonCount: number
   shinyCount: number
   teamPokemons: any[]
+  avatarUrl: string | null
   created_at: string
+}
+
+function getAvatarUrl(path: string | null | undefined): string | null {
+  if (!path) return null
+  return `${API_BASE}/api/avatars/${path.split('/').pop()}`
 }
 
 const stats = ref<DashboardStats | null>(null)
@@ -245,6 +251,24 @@ async function resetUser(userId: number) {
     }
   } catch (error) {
     console.error('Failed to reset user:', error)
+  }
+}
+
+async function resetAvatar(userId: number) {
+  if (!confirm('Réinitialiser la photo de profil de cet utilisateur ?')) return
+  try {
+    const response = await fetch(`${API_BASE}/api/admin/users/${userId}/avatar`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
+    if (response.ok) {
+      if (userDetails.value && userDetails.value.id === userId) {
+        userDetails.value.avatarUrl = null
+      }
+      alert('Avatar réinitialisé')
+    }
+  } catch (error) {
+    console.error('Failed to reset avatar:', error)
   }
 }
 
@@ -614,9 +638,23 @@ onMounted(async () => {
           @click.stop
         >
           <div class="mb-6 flex items-center justify-between">
-            <div>
-              <h3 class="text-2xl font-bold text-white">{{ selectedUser.username }}</h3>
-              <p class="text-sm text-slate-400">{{ selectedUser.email }}</p>
+            <div class="flex items-center gap-3">
+              <div class="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-slate-700">
+                <img v-if="userDetails?.avatarUrl" :src="getAvatarUrl(userDetails.avatarUrl)!" alt="" class="h-full w-full object-cover" />
+                <Users v-else class="h-6 w-6 text-slate-400" />
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-white">{{ selectedUser.username }}</h3>
+                <p class="text-sm text-slate-400">{{ selectedUser.email }}</p>
+              </div>
+              <button
+                v-if="userDetails?.avatarUrl"
+                class="ml-2 flex items-center gap-1 rounded-lg bg-red-600/20 px-2 py-1 text-xs font-medium text-red-400 transition-colors hover:bg-red-600/30"
+                @click="resetAvatar(selectedUser.id)"
+              >
+                <ImageOff class="h-3 w-3" />
+                Reset avatar
+              </button>
             </div>
             <button
               class="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white"

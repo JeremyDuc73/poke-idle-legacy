@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { User, Trophy, Swords, Zap, Skull, Star, MapPin, Coins, Sparkles, Crown } from 'lucide-vue-next'
+import { User, Trophy, Swords, Zap, Skull, Star, MapPin, Coins, Sparkles, Crown, Camera, Trash2 } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useCombatStore } from '~/stores/useCombatStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
+import { useAuthStore } from '~/stores/useAuthStore'
 import { useLocale } from '~/composables/useLocale'
 import { BASE_SHINY_RATE, getShinyRate } from '~/data/gacha'
 
@@ -13,7 +14,57 @@ definePageMeta({
 const player = usePlayerStore()
 const combat = useCombatStore()
 const inventory = useInventoryStore()
+const auth = useAuthStore()
 const { t } = useLocale()
+const config = useRuntimeConfig()
+
+const uploading = ref(false)
+const avatarError = ref('')
+
+function getAvatarUrl(path: string | null): string | null {
+  if (!path) return null
+  return `${config.public.apiBase}/api/avatars/${path.split('/').pop()}`
+}
+
+async function uploadAvatar(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  avatarError.value = ''
+  uploading.value = true
+  try {
+    const formData = new FormData()
+    formData.append('avatar', file)
+    const res = await fetch(`${config.public.apiBase}/api/game/avatar`, {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    })
+    if (!res.ok) {
+      const err = await res.json()
+      avatarError.value = err.message || 'Upload failed'
+      return
+    }
+    const data = await res.json()
+    player.avatarUrl = data.avatarUrl
+  } catch {
+    avatarError.value = t('Erreur lors de l\'upload', 'Upload error')
+  } finally {
+    uploading.value = false
+    input.value = ''
+  }
+}
+
+async function deleteAvatar() {
+  try {
+    await fetch(`${config.public.apiBase}/api/game/avatar`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
+    player.avatarUrl = null
+  } catch { /* ignore */ }
+}
 
 interface StatItem {
   labelFr: string
@@ -100,11 +151,26 @@ const shinyChance = computed(() => {
   <div class="flex flex-col gap-8">
     <!-- Header -->
     <div class="flex items-center gap-4">
-      <div class="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-500/20">
-        <User class="h-8 w-8 text-indigo-400" />
+      <div class="group relative">
+        <div class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-indigo-500/20">
+          <img v-if="player.avatarUrl" :src="getAvatarUrl(player.avatarUrl)!" alt="Avatar" class="h-full w-full object-cover" />
+          <User v-else class="h-8 w-8 text-indigo-400" />
+        </div>
+        <label class="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+          <Camera class="h-5 w-5 text-white" />
+          <input type="file" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden" @change="uploadAvatar" :disabled="uploading" />
+        </label>
+        <button
+          v-if="player.avatarUrl"
+          class="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity hover:bg-red-400 group-hover:opacity-100"
+          @click="deleteAvatar"
+        >
+          <Trash2 class="h-3 w-3" />
+        </button>
       </div>
       <div>
         <h2 class="text-2xl font-bold">{{ player.username || t('Dresseur', 'Trainer') }}</h2>
+        <p v-if="avatarError" class="text-xs text-red-400">{{ avatarError }}</p>
         <p v-if="player.pokedexMaster" class="flex items-center gap-1 text-sm font-bold text-amber-400">
           <Crown class="h-4 w-4" /> {{ t('Maître Pokédex', 'Pokédex Master') }}
         </p>

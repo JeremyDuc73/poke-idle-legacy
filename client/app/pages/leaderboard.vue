@@ -8,7 +8,13 @@ definePageMeta({ layout: 'game' })
 
 const { t } = useLocale()
 const auth = useAuthStore()
-const API_BASE = useRuntimeConfig().public.apiBase
+const config = useRuntimeConfig()
+const API_BASE = config.public.apiBase
+
+function getAvatarUrl(path: string | null | undefined): string | null {
+  if (!path) return null
+  return `${API_BASE}/api/avatars/${path.split('/').pop()}`
+}
 
 const GENERATION_NAMES: Record<number, string> = {
   1: 'Kanto', 2: 'Johto', 3: 'Hoenn', 4: 'Sinnoh', 5: 'Unova',
@@ -22,6 +28,7 @@ interface LeaderboardEntry {
   badges: number
   gold: number
   current_generation: number
+  avatar_url: string | null
   total_pokemon: number
   unique_pokemon: number
   shiny_count: number
@@ -34,6 +41,7 @@ interface GeneralEntry {
   username: string
   current_generation: number
   level: number
+  avatar_url: string | null
   avgRank: number
 }
 
@@ -92,7 +100,7 @@ const generalRanking = computed<GeneralEntry[]>(() => {
     const avgRank = validRanks.length > 0
       ? validRanks.reduce((s, r) => s + r, 0) / validRanks.length
       : data.value.length
-    return { id: entry.id, username: entry.username, current_generation: entry.current_generation, level: entry.level, avgRank }
+    return { id: entry.id, username: entry.username, current_generation: entry.current_generation, level: entry.level, avatar_url: entry.avatar_url, avgRank }
   }).sort((a, b) => a.avgRank - b.avgRank)
 })
 
@@ -251,8 +259,9 @@ onUnmounted(() => {
             <div class="grid grid-cols-3 items-end gap-3 sm:gap-6">
               <!-- 2nd -->
               <div class="flex flex-col items-center gap-2">
-                <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-slate-400/50 sm:h-20 sm:w-20" :class="getMedalClass(1)">
-                  <span class="text-2xl font-black sm:text-3xl">2</span>
+                <div class="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-slate-400/50 sm:h-20 sm:w-20" :class="getMedalClass(1)">
+                  <img v-if="podiumGeneral.second.avatar_url" :src="getAvatarUrl(podiumGeneral.second.avatar_url)!" alt="" class="h-full w-full object-cover" />
+                  <span v-else class="text-2xl font-black sm:text-3xl">2</span>
                 </div>
                 <span class="text-center text-xs font-bold sm:text-sm" :class="isMeId(podiumGeneral.second.id) ? 'text-yellow-300' : 'text-white'">
                   {{ podiumGeneral.second.username }}
@@ -262,8 +271,9 @@ onUnmounted(() => {
               <!-- 1st -->
               <div class="flex flex-col items-center gap-2">
                 <Crown class="h-6 w-6 text-yellow-400 sm:h-7 sm:w-7" />
-                <div class="flex h-20 w-20 items-center justify-center rounded-full border-2 border-yellow-400/50 shadow-lg shadow-yellow-500/20 sm:h-24 sm:w-24" :class="getMedalClass(0)">
-                  <span class="text-3xl font-black sm:text-4xl">1</span>
+                <div class="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-2 border-yellow-400/50 shadow-lg shadow-yellow-500/20 sm:h-24 sm:w-24" :class="getMedalClass(0)">
+                  <img v-if="podiumGeneral.first.avatar_url" :src="getAvatarUrl(podiumGeneral.first.avatar_url)!" alt="" class="h-full w-full object-cover" />
+                  <span v-else class="text-3xl font-black sm:text-4xl">1</span>
                 </div>
                 <span class="text-center text-sm font-bold sm:text-base" :class="isMeId(podiumGeneral.first.id) ? 'text-yellow-300' : 'text-white'">
                   {{ podiumGeneral.first.username }}
@@ -272,8 +282,9 @@ onUnmounted(() => {
               </div>
               <!-- 3rd -->
               <div class="flex flex-col items-center gap-2">
-                <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-amber-600/50 sm:h-20 sm:w-20" :class="getMedalClass(2)">
-                  <span class="text-2xl font-black sm:text-3xl">3</span>
+                <div class="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-amber-600/50 sm:h-20 sm:w-20" :class="getMedalClass(2)">
+                  <img v-if="podiumGeneral.third.avatar_url" :src="getAvatarUrl(podiumGeneral.third.avatar_url)!" alt="" class="h-full w-full object-cover" />
+                  <span v-else class="text-2xl font-black sm:text-3xl">3</span>
                 </div>
                 <span class="text-center text-xs font-bold sm:text-sm" :class="isMeId(podiumGeneral.third.id) ? 'text-yellow-300' : 'text-white'">
                   {{ podiumGeneral.third.username }}
@@ -294,8 +305,9 @@ onUnmounted(() => {
                 idx < 3 && podiumGeneral ? 'hidden' : ''
               ]"
             >
-              <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-black" :class="getMedalClass(idx)">
-                {{ getRankLabel(idx) }}
+              <div class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full text-xs font-black" :class="getMedalClass(idx)">
+                <img v-if="entry.avatar_url" :src="getAvatarUrl(entry.avatar_url)!" alt="" class="h-full w-full object-cover" />
+                <template v-else>{{ getRankLabel(idx) }}</template>
               </div>
               <div class="min-w-0 flex-1">
                 <span class="text-sm font-bold" :class="isMeId(entry.id) ? 'text-yellow-300' : 'text-white'">
@@ -331,8 +343,9 @@ onUnmounted(() => {
             <div class="grid grid-cols-3 items-end gap-3 sm:gap-6">
               <!-- 2nd -->
               <div class="flex flex-col items-center gap-2">
-                <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-slate-400/50 sm:h-20 sm:w-20" :class="getMedalClass(1)">
-                  <span class="text-2xl font-black sm:text-3xl">2</span>
+                <div class="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-slate-400/50 sm:h-20 sm:w-20" :class="getMedalClass(1)">
+                  <img v-if="podiumCategory.second.avatar_url" :src="getAvatarUrl(podiumCategory.second.avatar_url)!" alt="" class="h-full w-full object-cover" />
+                  <span v-else class="text-2xl font-black sm:text-3xl">2</span>
                 </div>
                 <span class="text-center text-xs font-bold sm:text-sm" :class="isMeId(podiumCategory.second.id) ? 'text-yellow-300' : 'text-white'">
                   {{ podiumCategory.second.username }}
@@ -344,8 +357,9 @@ onUnmounted(() => {
               <!-- 1st -->
               <div class="flex flex-col items-center gap-2">
                 <Crown class="h-6 w-6 text-yellow-400 sm:h-7 sm:w-7" />
-                <div class="flex h-20 w-20 items-center justify-center rounded-full border-2 border-yellow-400/50 shadow-lg shadow-yellow-500/20 sm:h-24 sm:w-24" :class="getMedalClass(0)">
-                  <span class="text-3xl font-black sm:text-4xl">1</span>
+                <div class="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-2 border-yellow-400/50 shadow-lg shadow-yellow-500/20 sm:h-24 sm:w-24" :class="getMedalClass(0)">
+                  <img v-if="podiumCategory.first.avatar_url" :src="getAvatarUrl(podiumCategory.first.avatar_url)!" alt="" class="h-full w-full object-cover" />
+                  <span v-else class="text-3xl font-black sm:text-4xl">1</span>
                 </div>
                 <span class="text-center text-sm font-bold sm:text-base" :class="isMeId(podiumCategory.first.id) ? 'text-yellow-300' : 'text-white'">
                   {{ podiumCategory.first.username }}
@@ -356,8 +370,9 @@ onUnmounted(() => {
               </div>
               <!-- 3rd -->
               <div class="flex flex-col items-center gap-2">
-                <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-amber-600/50 sm:h-20 sm:w-20" :class="getMedalClass(2)">
-                  <span class="text-2xl font-black sm:text-3xl">3</span>
+                <div class="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-amber-600/50 sm:h-20 sm:w-20" :class="getMedalClass(2)">
+                  <img v-if="podiumCategory.third.avatar_url" :src="getAvatarUrl(podiumCategory.third.avatar_url)!" alt="" class="h-full w-full object-cover" />
+                  <span v-else class="text-2xl font-black sm:text-3xl">3</span>
                 </div>
                 <span class="text-center text-xs font-bold sm:text-sm" :class="isMeId(podiumCategory.third.id) ? 'text-yellow-300' : 'text-white'">
                   {{ podiumCategory.third.username }}
@@ -380,8 +395,9 @@ onUnmounted(() => {
                 idx < 3 && podiumCategory ? 'hidden' : ''
               ]"
             >
-              <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-black" :class="getMedalClass(idx)">
-                {{ getRankLabel(idx) }}
+              <div class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full text-xs font-black" :class="getMedalClass(idx)">
+                <img v-if="entry.avatar_url" :src="getAvatarUrl(entry.avatar_url)!" alt="" class="h-full w-full object-cover" />
+                <template v-else>{{ getRankLabel(idx) }}</template>
               </div>
               <div class="min-w-0 flex-1">
                 <span class="text-sm font-bold" :class="isMeId(entry.id) ? 'text-yellow-300' : 'text-white'">

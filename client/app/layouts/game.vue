@@ -18,6 +18,12 @@ const inventory = useInventoryStore()
 const daycare = useDaycareStore()
 const combat = useCombatStore()
 const { locale, setLocale, t } = useLocale()
+const config = useRuntimeConfig()
+
+function getAvatarUrl(path: string | null): string | null {
+  if (!path) return null
+  return `${config.public.apiBase}/api/avatars/${path.split('/').pop()}`
+}
 const { loadSpecies } = useSpeciesCache()
 const { init: initCombat } = useCombatLoop()
 const { toasts, addToast, removeToast } = useToast()
@@ -422,6 +428,10 @@ watch(() => inventory.collectionCount, () => {
             <span class="text-sm md:text-base">🪙</span>
             <span class="text-xs font-bold md:text-sm" style="color: #ffcc00">{{ player.formattedGold }}</span>
           </div>
+          <NuxtLink to="/profile" class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-500/20 transition-opacity hover:opacity-80">
+            <img v-if="player.avatarUrl" :src="getAvatarUrl(player.avatarUrl)!" alt="" class="h-full w-full object-cover" />
+            <User v-else class="h-4 w-4 text-indigo-400" />
+          </NuxtLink>
         </div>
       </header>
 

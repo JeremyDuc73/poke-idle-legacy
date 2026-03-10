@@ -1,6 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
+import { cuid } from '@adonisjs/core/helpers'
+import { join } from 'node:path'
+import { mkdir, unlink } from 'node:fs/promises'
 import db from '@adonisjs/lucid/services/db'
+import app from '@adonisjs/core/services/app'
 import Species from '#models/species'
 import { saveGameStateValidator } from '#validators/game_state'
 import UserPokemon from '#models/user_pokemon'
@@ -40,6 +44,7 @@ export default class GameController {
         adminVersion: user.adminVersion ?? 0,
         penaltyType: user.penaltyType ?? null,
         penaltyPercent: user.penaltyPercent ?? 0,
+        avatarUrl: user.avatarUrl ?? null,
       },
       pokemons: user.pokemons.map((p) => ({
         id: p.id,
@@ -198,6 +203,69 @@ export default class GameController {
     })
 
     return response.ok({ message: `${validPokemons.length} Pokémon saved` })
+  }
+
+  async uploadAvatar({ request, response, auth }: HttpContext) {
+    const user = auth.use('web').user
+    if (!user) {
+      return response.unauthorized({ message: 'Not authenticated' })
+    }
+
+    const avatar = request.file('avatar', {
+      size: '2mb',
+      extnames: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+    })
+
+    if (!avatar) {
+      return response.badRequest({ message: 'No file uploaded' })
+    }
+
+    if (!avatar.isValid) {
+      return response.badRequest({ message: avatar.errors[0]?.message ?? 'Invalid file' })
+    }
+
+    // Delete old avatar if exists
+    if (user.avatarUrl) {
+      try {
+        const oldPath = join(app.makePath('storage'), user.avatarUrl)
+        await unlink(oldPath)
+      } catch { /* ignore missing file */ }
+    }
+
+    const dir = join(app.makePath('storage'), 'uploads', 'avatars')
+    await mkdir(dir, { recursive: true })
+
+    const fileName = `${user.id}-${cuid()}.${avatar.extname}`
+    await avatar.move(dir, { name: fileName, overwrite: true })
+
+    user.avatarUrl = `uploads/avatars/${fileName}`
+    await user.save()
+
+    return response.ok({ avatarUrl: user.avatarUrl })
+  }
+
+  async deleteAvatar({ response, auth }: HttpContext) {
+    const user = auth.use('web').user
+    if (!user) {
+      return response.unauthorized({ message: 'Not authenticated' })
+    }
+
+    if (user.avatarUrl) {
+      try {
+        const oldPath = join(app.makePath('storage'), user.avatarUrl)
+        await unlink(oldPath)
+      } catch { /* ignore missing file */ }
+    }
+
+    user.avatarUrl = null
+    await user.save()
+
+    return response.ok({ message: 'Avatar removed' })
+  }
+
+  async serveAvatar({ params, response }: HttpContext) {
+    const filePath = join(app.makePath('storage'), 'uploads', 'avatars', params.filename)
+    return response.download(filePath)
   }
 
   async pokedex({ response }: HttpContext) {

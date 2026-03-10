@@ -40,9 +40,13 @@ router
         router.get('/load', [GameController, 'loadState'])
         router.post('/save', [GameController, 'saveState'])
         router.post('/save-pokemons', [GameController, 'savePokemons'])
+        router.post('/avatar', [GameController, 'uploadAvatar'])
+        router.delete('/avatar', [GameController, 'deleteAvatar'])
       })
       .prefix('/game')
       .use(middleware.auth())
+
+    router.get('/avatars/:filename', [GameController, 'serveAvatar'])
 
     router.get('/pokedex', [GameController, 'pokedex'])
     router.get('/leaderboard', [LeaderboardController, 'index'])
@@ -58,6 +62,7 @@ router
         router.post('/users/:id/reset', [AdminController, 'resetUser'])
         router.post('/users/:id/penalty', [AdminController, 'setPenalty'])
         router.delete('/users/:id/penalty', [AdminController, 'removePenalty'])
+        router.delete('/users/:id/avatar', [AdminController, 'resetAvatar'])
         router.get('/users/:id/pokemons', [AdminController, 'listUserPokemons'])
       })
       .prefix('/admin')

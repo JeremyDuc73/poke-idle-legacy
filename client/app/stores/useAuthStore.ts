@@ -160,6 +160,7 @@ export const useAuthStore = defineStore('auth', {
           completedPokedexGens: (data.player as any).completedPokedexGens ?? [],
           penaltyType: (data.player as any).penaltyType ?? null,
           penaltyPercent: (data.player as any).penaltyPercent ?? 0,
+          avatarUrl: (data.player as any).avatarUrl ?? null,
           isLoggedIn: true,
         })
 

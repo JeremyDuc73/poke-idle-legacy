@@ -93,6 +93,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare penaltyPercent: number
 
+  @column()
+  declare avatarUrl: string | null
+
   @column.dateTime()
   declare lastLoginAt: DateTime | null
 

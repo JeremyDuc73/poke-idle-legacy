@@ -1,6 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
+import { join } from 'node:path'
+import { unlink } from 'node:fs/promises'
 import db from '@adonisjs/lucid/services/db'
+import app from '@adonisjs/core/services/app'
 import User from '#models/user'
 import UserPokemon from '#models/user_pokemon'
 
@@ -195,6 +198,7 @@ export default class AdminController {
       })),
       penaltyType: user.penaltyType,
       penaltyPercent: user.penaltyPercent,
+      avatarUrl: user.avatarUrl ?? null,
       created_at: user.createdAt,
       last_login_at: user.lastLoginAt,
     })
@@ -242,6 +246,25 @@ export default class AdminController {
     return response.ok({
       message: `Malus retiré de ${user.username}`,
     })
+  }
+
+  /**
+   * Reset avatar for a user (admin)
+   */
+  async resetAvatar({ params, response }: HttpContext) {
+    const user = await User.findOrFail(params.id)
+
+    if (user.avatarUrl) {
+      try {
+        const oldPath = join(app.makePath('storage'), user.avatarUrl)
+        await unlink(oldPath)
+      } catch { /* ignore missing file */ }
+    }
+
+    user.avatarUrl = null
+    await user.save()
+
+    return response.ok({ message: `Avatar de ${user.username} réinitialisé` })
   }
 
   /**
