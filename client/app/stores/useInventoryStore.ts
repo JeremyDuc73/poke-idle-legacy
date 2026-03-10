@@ -3,7 +3,7 @@ import { canEvolveByLevel, canEvolveByItem, pokemonXpForLevel, getEvoStageMult, 
 import type { Evolution } from '~/data/evolutions'
 import { getRarityDpsMult, getStarDpsMult, getRarity, hasKnownRarity, RARITY_DPS_MULT } from '~/data/gacha'
 import type { Rarity } from '~/data/gacha'
-import { getGenForSlug } from '~/data/pokedex'
+import { getGenForSlug, POKEDEX } from '~/data/pokedex'
 
 export interface OwnedPokemon {
   id: number
@@ -95,6 +95,17 @@ export const useInventoryStore = defineStore('inventory', {
         if (pokemon.rarity !== currentRarity) {
           pokemon.rarity = currentRarity
         }
+      }
+    },
+
+    // Migration: sync nameFr/nameEn from POKEDEX (fixes stale names from older saves)
+    migrateNames() {
+      const pokedexMap = new Map(POKEDEX.map(p => [p.slug, p]))
+      for (const pokemon of this.collection) {
+        const entry = pokedexMap.get(pokemon.slug)
+        if (!entry) continue
+        if (pokemon.nameFr !== entry.nameFr) pokemon.nameFr = entry.nameFr
+        if (pokemon.nameEn !== entry.nameEn) pokemon.nameEn = entry.nameEn
       }
     },
 

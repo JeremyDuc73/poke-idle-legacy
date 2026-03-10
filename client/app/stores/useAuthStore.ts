@@ -152,6 +152,7 @@ export const useAuthStore = defineStore('auth', {
       inventory.collection = guestData.inventory.collection
       inventory.nextId = guestData.inventory.nextId
       inventory.migrateRarities()
+      inventory.migrateNames()
       inventory.rebuildHasEvolvedFlags()
       daycare.slots = (guestData.daycare.slots || []).map((s: any) => ({ ...s, isShiny: s.isShiny ?? false }))
     },
@@ -213,6 +214,8 @@ export const useAuthStore = defineStore('auth', {
         inventory.nextId = data.pokemons.length + 1
         // Fix rarities for existing Pokemon that inherited wrong rarity from parent
         inventory.migrateRarities()
+        // Fix stale FR/EN names
+        inventory.migrateNames()
         // Rebuild hasEvolved flags so checkAllEvolutions doesn't re-create existing evolutions
         inventory.rebuildHasEvolvedFlags()
 

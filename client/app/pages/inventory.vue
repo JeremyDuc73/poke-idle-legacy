@@ -23,7 +23,7 @@ definePageMeta({
 const inventory = useInventoryStore()
 const player = usePlayerStore()
 const daycare = useDaycareStore()
-const { t } = useLocale()
+const { t, locale } = useLocale()
 
 const candySizes: CandySize[] = ['S', 'M', 'L', 'XL']
 const CANDY_COLORS: Record<CandySize, string> = { S: '#4ade80', M: '#60a5fa', L: '#c084fc', XL: '#fbbf24' }
@@ -106,10 +106,14 @@ function getPokemonGen(slug: string): number {
 const filteredCollection = computed(() => {
   let list = [...inventory.collection]
 
-  // Search
+  // Search (filter by active locale name only)
   if (search.value) {
     const q = search.value.toLowerCase()
-    list = list.filter((p) => p.nameFr.toLowerCase().includes(q) || p.nameEn.toLowerCase().includes(q) || p.slug.includes(q))
+    const isFr = locale.value === 'fr'
+    list = list.filter((p) => {
+      const name = isFr ? p.nameFr : p.nameEn
+      return name.toLowerCase().includes(q) || p.slug.includes(q)
+    })
   }
 
   // Type filter (match any of the pokemon's types)

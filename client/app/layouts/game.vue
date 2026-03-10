@@ -56,6 +56,9 @@ onMounted(() => {
   // Migrate rarities for existing Pokemon (starters Gen 2/3 rare → epic)
   inventory.migrateRarities()
 
+  // Migrate names from POKEDEX (fixes stale FR/EN names from older saves)
+  inventory.migrateNames()
+
   // Migrate starter evolutions to epic (fix for existing Pokemon)
   inventory.migrateStarterRarities()
 
