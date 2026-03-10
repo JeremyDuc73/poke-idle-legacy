@@ -35,7 +35,7 @@ let debouncedSaveTimer: ReturnType<typeof setTimeout> | null = null
 let pvpPollInterval: ReturnType<typeof setInterval> | null = null
 
 async function pollPvpChallenges() {
-  if (!auth.isAuthenticated || player.badges < 8) return
+  if (!auth.isAuthenticated || player.badges < 13) return
   try {
     const res = await fetch(`${config.public.apiBase}/api/pvp/challenges`, { credentials: 'include' })
     if (res.ok) {

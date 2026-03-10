@@ -9,7 +9,7 @@ import { resolveMatch } from '#services/pvp_combat_service'
 const MIN_BET = 100
 const MAX_BET_PERCENT = 0.5
 const CHALLENGE_EXPIRE_MINUTES = 10
-const MIN_BADGES = 8 // Kanto complet
+const MIN_BADGES = 13 // Kanto complet (8 champions + 4 conseil + 1 maître)
 
 export default class PvpController {
   /**
@@ -59,7 +59,7 @@ export default class PvpController {
     if (!user) return response.unauthorized({ message: 'Not authenticated' })
     if (user.badges < MIN_BADGES) {
       return response.forbidden({
-        message: 'Vous devez avoir au moins 8 badges pour accéder au PvP',
+        message: 'Vous devez avoir au moins 13 badges pour accéder au PvP',
       })
     }
 

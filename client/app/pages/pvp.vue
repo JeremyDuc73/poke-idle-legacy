@@ -231,7 +231,7 @@ const filteredPlayers = computed(() => {
 
 const maxBet = computed(() => Math.floor(player.gold * 0.5))
 
-const pvpUnlocked = computed(() => player.badges >= 8)
+const pvpUnlocked = computed(() => player.badges >= 13)
 
 const sortedCollection = computed(() => {
   return [...inventory.collection]
@@ -302,11 +302,11 @@ onUnmounted(() => {
       <Shield class="h-16 w-16 text-slate-600" />
       <h2 class="text-xl font-bold text-slate-300">{{ t('PvP verrouillé', 'PvP Locked') }}</h2>
       <p class="max-w-md text-sm text-slate-400">
-        {{ t('Complétez Kanto (8 badges) pour débloquer l\'arène PvP !', 'Complete Kanto (8 badges) to unlock the PvP arena!') }}
+        {{ t('Complétez Kanto (13 badges) pour débloquer l\'arène PvP !', 'Complete Kanto (13 badges) to unlock the PvP arena!') }}
       </p>
       <div class="flex items-center gap-2 text-sm text-slate-500">
         <Trophy class="h-4 w-4" />
-        {{ player.badges }}/8 {{ t('badges', 'badges') }}
+        {{ player.badges }}/13 {{ t('badges', 'badges') }}
       </div>
     </div>
 

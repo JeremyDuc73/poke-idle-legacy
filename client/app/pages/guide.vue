@@ -351,8 +351,8 @@ function toggleGen(id: number) {
         </h2>
         <div class="space-y-2 text-sm text-gray-300">
           <p class="text-amber-400 font-medium">{{ t(
-            '🔒 Prérequis : avoir complété Kanto (8 badges minimum) pour débloquer le PvP.',
-            '🔒 Requirement: complete Kanto (8 badges minimum) to unlock PvP.'
+            '🔒 Prérequis : avoir complété Kanto (13 badges) pour débloquer le PvP.',
+            '🔒 Requirement: complete Kanto (13 badges) to unlock PvP.'
           ) }}</p>
           <p>{{ t(
             'Le PvP te permet d\'affronter d\'autres joueurs dans un duel 1v1 avec paris de PokéDollars ! Le principe : les deux joueurs combattent simultanément un Boss aléatoire invincible, et celui qui inflige le plus de dégâts remporte la mise.',
@@ -705,7 +705,7 @@ function toggleGen(id: number) {
               <li>{{ t('Classement PvP dédié avec ratio victoires/défaites', 'Dedicated PvP leaderboard with win/loss ratio') }}</li>
               <li>{{ t('Historique complet de tous tes matchs', 'Full history of all your matches') }}</li>
               <li>{{ t('Notification de défis reçus dans la sidebar', 'Challenge notifications in the sidebar') }}</li>
-              <li>{{ t('🔒 Requiert 8 badges (Kanto complet) pour débloquer', '🔒 Requires 8 badges (Kanto complete) to unlock') }}</li>
+              <li>{{ t('🔒 Requiert 13 badges (Kanto complet) pour débloquer', '🔒 Requires 13 badges (Kanto complete) to unlock') }}</li>
             </ul>
           </div>
 
