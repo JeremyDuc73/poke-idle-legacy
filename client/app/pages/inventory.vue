@@ -63,6 +63,7 @@ const genOptions = computed(() => [
   { value: 6, label: 'Gen 6 - Kalos' },
   { value: 7, label: 'Gen 7 - Alola' },
   { value: 8, label: 'Gen 8 - Galar' },
+  { value: 9, label: 'Gen 9 - Paldea' },
 ])
 
 // Team save/load

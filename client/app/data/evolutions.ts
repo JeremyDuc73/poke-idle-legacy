@@ -952,6 +952,122 @@ export const EVOLUTIONS: Evolution[] = [
   { fromSlug: 'rufflet', toSlug: 'braviary-hisui', toNameFr: 'Gueriaigle (Hisui)', toNameEn: 'Braviary (Hisui)', method: 'stone', itemRequired: 'hisui-stone' },
   { fromSlug: 'sliggoo', toSlug: 'sliggoo-hisui', toNameFr: 'Colimucus (Hisui)', toNameEn: 'Sliggoo (Hisui)', method: 'stone', itemRequired: 'hisui-stone' },
   { fromSlug: 'bergmite', toSlug: 'avalugg-hisui', toNameFr: 'Séracrawl (Hisui)', toNameEn: 'Avalugg (Hisui)', method: 'stone', itemRequired: 'hisui-stone' },
+
+  // ══════════════ Gen 9 (Paldea) ══════════════
+
+  // Starters
+  { fromSlug: 'sprigatito', toSlug: 'floragato', toNameFr: 'Matourgeon', toNameEn: 'Floragato', method: 'level', levelRequired: 16 },
+  { fromSlug: 'floragato', toSlug: 'meowscarada', toNameFr: 'Miascarade', toNameEn: 'Meowscarada', method: 'level', levelRequired: 36 },
+  { fromSlug: 'fuecoco', toSlug: 'crocalor', toNameFr: 'Crocogril', toNameEn: 'Crocalor', method: 'level', levelRequired: 16 },
+  { fromSlug: 'crocalor', toSlug: 'skeledirge', toNameFr: 'Flâmigator', toNameEn: 'Skeledirge', method: 'level', levelRequired: 36 },
+  { fromSlug: 'quaxly', toSlug: 'quaxwell', toNameFr: 'Canarbello', toNameEn: 'Quaxwell', method: 'level', levelRequired: 16 },
+  { fromSlug: 'quaxwell', toSlug: 'quaquaval', toNameFr: 'Palmaval', toNameEn: 'Quaquaval', method: 'level', levelRequired: 36 },
+
+  // Pig
+  { fromSlug: 'lechonk', toSlug: 'oinkologne', toNameFr: 'Fragroin', toNameEn: 'Oinkologne', method: 'level', levelRequired: 18 },
+
+  // Spider
+  { fromSlug: 'tarountula', toSlug: 'spidops', toNameFr: 'Filentrappe', toNameEn: 'Spidops', method: 'level', levelRequired: 15 },
+
+  // Cricket
+  { fromSlug: 'nymble', toSlug: 'lokix', toNameFr: 'Gambex', toNameEn: 'Lokix', method: 'level', levelRequired: 24 },
+
+  // Electric mouse
+  { fromSlug: 'pawmi', toSlug: 'pawmo', toNameFr: 'Pohmotte', toNameEn: 'Pawmo', method: 'level', levelRequired: 18 },
+  { fromSlug: 'pawmo', toSlug: 'pawmot', toNameFr: 'Pohmarmotte', toNameEn: 'Pawmot', method: 'level', levelRequired: 32 },
+
+  // Mouse
+  { fromSlug: 'tandemaus', toSlug: 'maushold', toNameFr: 'Famignol', toNameEn: 'Maushold', method: 'level', levelRequired: 25 },
+
+  // Dog bread
+  { fromSlug: 'fidough', toSlug: 'dachsbun', toNameFr: 'Briochien', toNameEn: 'Dachsbun', method: 'level', levelRequired: 26 },
+
+  // Olive
+  { fromSlug: 'smoliv', toSlug: 'dolliv', toNameFr: 'Olivado', toNameEn: 'Dolliv', method: 'level', levelRequired: 25 },
+  { fromSlug: 'dolliv', toSlug: 'arboliva', toNameFr: 'Arboliva', toNameEn: 'Arboliva', method: 'level', levelRequired: 35 },
+
+  // Salt
+  { fromSlug: 'nacli', toSlug: 'naclstack', toNameFr: 'Amassel', toNameEn: 'Naclstack', method: 'level', levelRequired: 24 },
+  { fromSlug: 'naclstack', toSlug: 'garganacl', toNameFr: 'Gigansel', toNameEn: 'Garganacl', method: 'level', levelRequired: 38 },
+
+  // Fire warrior (multi-evo)
+  { fromSlug: 'charcadet', toSlug: 'armarouge', toNameFr: 'Carmadura', toNameEn: 'Armarouge', method: 'stone', itemRequired: 'auspicious-armor' },
+  { fromSlug: 'charcadet', toSlug: 'ceruledge', toNameFr: 'Malvalame', toNameEn: 'Ceruledge', method: 'stone', itemRequired: 'malicious-armor' },
+
+  // Electric bulb
+  { fromSlug: 'tadbulb', toSlug: 'bellibolt', toNameFr: 'Ampibidou', toNameEn: 'Bellibolt', method: 'level', levelRequired: 30 },
+
+  // Electric bird
+  { fromSlug: 'wattrel', toSlug: 'kilowattrel', toNameFr: 'Fulgulairo', toNameEn: 'Kilowattrel', method: 'level', levelRequired: 25 },
+
+  // Dark dog
+  { fromSlug: 'maschiff', toSlug: 'mabosstiff', toNameFr: 'Dogrino', toNameEn: 'Mabosstiff', method: 'level', levelRequired: 30 },
+
+  // Poison
+  { fromSlug: 'shroodle', toSlug: 'grafaiai', toNameFr: 'Tag-Tag', toNameEn: 'Grafaiai', method: 'level', levelRequired: 28 },
+
+  // Ghost grass
+  { fromSlug: 'bramblin', toSlug: 'brambleghast', toNameFr: 'Virevorreur', toNameEn: 'Brambleghast', method: 'level', levelRequired: 30 },
+
+  // Mushroom
+  { fromSlug: 'toedscool', toSlug: 'toedscruel', toNameFr: 'Terracruel', toNameEn: 'Toedscruel', method: 'level', levelRequired: 30 },
+
+  // Pepper
+  { fromSlug: 'capsakid', toSlug: 'scovillain', toNameFr: 'Scovilain', toNameEn: 'Scovillain', method: 'stone', itemRequired: 'fire-stone' },
+
+  // Scarab
+  { fromSlug: 'rellor', toSlug: 'rabsca', toNameFr: 'Bérasca', toNameEn: 'Rabsca', method: 'level', levelRequired: 29 },
+
+  // Psychic bird
+  { fromSlug: 'flittle', toSlug: 'espathra', toNameFr: 'Cléopsytra', toNameEn: 'Espathra', method: 'level', levelRequired: 35 },
+
+  // Fairy steel
+  { fromSlug: 'tinkatink', toSlug: 'tinkatuff', toNameFr: 'Forgella', toNameEn: 'Tinkatuff', method: 'level', levelRequired: 24 },
+  { fromSlug: 'tinkatuff', toSlug: 'tinkaton', toNameFr: 'Forgelina', toNameEn: 'Tinkaton', method: 'level', levelRequired: 38 },
+
+  // Eel
+  { fromSlug: 'wiglett', toSlug: 'wugtrio', toNameFr: 'Triopikeau', toNameEn: 'Wugtrio', method: 'level', levelRequired: 26 },
+
+  // Dolphin
+  { fromSlug: 'finizen', toSlug: 'palafin', toNameFr: 'Superdofin', toNameEn: 'Palafin', method: 'level', levelRequired: 38 },
+
+  // Car
+  { fromSlug: 'varoom', toSlug: 'revavroom', toNameFr: 'Vrombotor', toNameEn: 'Revavroom', method: 'level', levelRequired: 40 },
+
+  // Crystal
+  { fromSlug: 'glimmet', toSlug: 'glimmora', toNameFr: 'Floréclat', toNameEn: 'Glimmora', method: 'level', levelRequired: 35 },
+
+  // Ghost dog
+  { fromSlug: 'greavard', toSlug: 'houndstone', toNameFr: 'Tomberro', toNameEn: 'Houndstone', method: 'level', levelRequired: 30 },
+
+  // Ice whale
+  { fromSlug: 'cetoddle', toSlug: 'cetitan', toNameFr: 'Balbalèze', toNameEn: 'Cetitan', method: 'stone', itemRequired: 'ice-stone' },
+
+  // Pseudo-legendary (Dragon/Ice)
+  { fromSlug: 'frigibax', toSlug: 'arctibax', toNameFr: 'Cryodo', toNameEn: 'Arctibax', method: 'level', levelRequired: 35 },
+  { fromSlug: 'arctibax', toSlug: 'baxcalibur', toNameFr: 'Glaivodo', toNameEn: 'Baxcalibur', method: 'level', levelRequired: 54 },
+
+  // Coin ghost
+  { fromSlug: 'gimmighoul', toSlug: 'gholdengo', toNameFr: 'Trésor-doré', toNameEn: 'Gholdengo', method: 'level', levelRequired: 40 },
+
+  // Paldean form evolutions
+  { fromSlug: 'wooper-paldea', toSlug: 'clodsire', toNameFr: 'Terraiste', toNameEn: 'Clodsire', method: 'level', levelRequired: 20 },
+
+  // DLC: Applin → Dipplin → Hydrapple
+  { fromSlug: 'applin', toSlug: 'dipplin', toNameFr: 'Pomdormus', toNameEn: 'Dipplin', method: 'stone', itemRequired: 'syrup-apple' },
+  { fromSlug: 'dipplin', toSlug: 'hydrapple', toNameFr: 'Pomdramour', toNameEn: 'Hydrapple', method: 'level', levelRequired: 50 },
+
+  // DLC: Poltchageist → Sinistcha
+  { fromSlug: 'poltchageist', toSlug: 'sinistcha', toNameFr: 'Sinistcha', toNameEn: 'Sinistcha', method: 'stone', itemRequired: 'link-cable' },
+
+  // DLC: Duraludon → Archaludon (cross-gen)
+  { fromSlug: 'duraludon', toSlug: 'archaludon', toNameFr: 'Pondralugon', toNameEn: 'Archaludon', method: 'stone', itemRequired: 'paldea-stone' },
+
+  // === Cross-gen Paldean Evolutions (paldea-stone) ===
+  { fromSlug: 'primeape', toSlug: 'annihilape', toNameFr: 'Courrousinge', toNameEn: 'Annihilape', method: 'stone', itemRequired: 'paldea-stone' },
+  { fromSlug: 'girafarig', toSlug: 'farigiraf', toNameFr: 'Farigiraf', toNameEn: 'Farigiraf', method: 'stone', itemRequired: 'paldea-stone' },
+  { fromSlug: 'dunsparce', toSlug: 'dudunsparce', toNameFr: 'Deusolourdo', toNameEn: 'Dudunsparce', method: 'stone', itemRequired: 'paldea-stone' },
+  { fromSlug: 'bisharp', toSlug: 'kingambit', toNameFr: 'Scalpereur', toNameEn: 'Kingambit', method: 'stone', itemRequired: 'paldea-stone' },
 ]
 
 // Evolution items available for Gen 1
@@ -963,7 +1079,7 @@ export const EVO_ITEMS: EvoItem[] = [
     descFr: 'Fait évoluer certains Pokémon de type Feu',
     descEn: 'Evolves certain Fire-type Pokémon',
     icon: '🔥',
-    applicableTo: ['vulpix', 'growlithe', 'eevee', 'pansear', 'growlithe-hisui'],
+    applicableTo: ['vulpix', 'growlithe', 'eevee', 'pansear', 'growlithe-hisui', 'capsakid'],
   },
   {
     id: 'water-stone',
@@ -1008,7 +1124,7 @@ export const EVO_ITEMS: EvoItem[] = [
     descFr: 'Simule un échange pour faire évoluer un Pokémon',
     descEn: 'Simulates a trade to evolve a Pokémon',
     icon: '🔗',
-    applicableTo: ['kadabra', 'machoke', 'graveler', 'haunter', 'porygon', 'onix', 'scyther', 'seadra', 'boldore', 'gurdurr', 'karrablast', 'shelmet', 'spritzee', 'swirlix', 'phantump', 'pumpkaboo', 'graveler-alola', 'sinistea'],
+    applicableTo: ['kadabra', 'machoke', 'graveler', 'haunter', 'porygon', 'onix', 'scyther', 'seadra', 'boldore', 'gurdurr', 'karrablast', 'shelmet', 'spritzee', 'swirlix', 'phantump', 'pumpkaboo', 'graveler-alola', 'sinistea', 'poltchageist'],
   },
   {
     id: 'kings-rock',
@@ -1116,7 +1232,7 @@ export const EVO_ITEMS: EvoItem[] = [
     descFr: 'Fait évoluer certains Pokémon de type Glace',
     descEn: 'Evolves certain Ice-type Pokémon',
     icon: '❄️',
-    applicableTo: ['eevee', 'sandshrew-alola', 'vulpix-alola', 'darumaka-galar'],
+    applicableTo: ['eevee', 'sandshrew-alola', 'vulpix-alola', 'darumaka-galar', 'cetoddle'],
   },
   {
     id: 'protector',
@@ -1207,6 +1323,42 @@ export const EVO_ITEMS: EvoItem[] = [
     descEn: 'Applin → Appletun / Milcery → Alcremie',
     icon: '🍎',
     applicableTo: ['applin', 'milcery'],
+  },
+  {
+    id: 'paldea-stone',
+    nameFr: 'Pierre Paldea',
+    nameEn: 'Paldea Stone',
+    descFr: 'Fait évoluer un Pokémon en sa forme de Paldea',
+    descEn: 'Evolves a Pokémon into its Paldean form',
+    icon: '🏜️',
+    applicableTo: ['primeape', 'girafarig', 'dunsparce', 'bisharp', 'duraludon'],
+  },
+  {
+    id: 'auspicious-armor',
+    nameFr: 'Armure de la Fortune',
+    nameEn: 'Auspicious Armor',
+    descFr: 'Charbambin → Carmadura',
+    descEn: 'Charcadet → Armarouge',
+    icon: '🛡️',
+    applicableTo: ['charcadet'],
+  },
+  {
+    id: 'malicious-armor',
+    nameFr: 'Armure du Malin',
+    nameEn: 'Malicious Armor',
+    descFr: 'Charbambin → Malvalame',
+    descEn: 'Charcadet → Ceruledge',
+    icon: '⚔️',
+    applicableTo: ['charcadet'],
+  },
+  {
+    id: 'syrup-apple',
+    nameFr: 'Pomme Sirupeuse',
+    nameEn: 'Syrup Apple',
+    descFr: 'Verpom → Pomdormus',
+    descEn: 'Applin → Dipplin',
+    icon: '🍯',
+    applicableTo: ['applin'],
   },
 ]
 

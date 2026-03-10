@@ -677,6 +677,96 @@ const GALAR_POOL: GachaPokemon[] = [
   { nameFr: 'Sulfura (Galar)', nameEn: 'Moltres (Galar)', slug: 'moltres-galar', rarity: 'legendary', shinyRate: 0.05 },
 ]
 
+// === Gen 9 Paldea Pool ===
+const PALDEA_POOL: GachaPokemon[] = [
+  // --- COMMON (early routes, base forms) ---
+  { nameFr: 'Gourmelet', nameEn: 'Lechonk', slug: 'lechonk', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Tissenboule', nameEn: 'Tarountula', slug: 'tarountula', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Lilliterelle', nameEn: 'Nymble', slug: 'nymble', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Pohm', nameEn: 'Pawmi', slug: 'pawmi', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Compagnol', nameEn: 'Tandemaus', slug: 'tandemaus', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Pâtachiot', nameEn: 'Fidough', slug: 'fidough', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Olivini', nameEn: 'Smoliv', slug: 'smoliv', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Selutin', nameEn: 'Nacli', slug: 'nacli', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Charbambin', nameEn: 'Charcadet', slug: 'charcadet', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Têtampoule', nameEn: 'Tadbulb', slug: 'tadbulb', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Zapétrel', nameEn: 'Wattrel', slug: 'wattrel', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Grondogue', nameEn: 'Maschiff', slug: 'maschiff', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Gribouraigne', nameEn: 'Shroodle', slug: 'shroodle', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Virovent', nameEn: 'Bramblin', slug: 'bramblin', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Terracool', nameEn: 'Toedscool', slug: 'toedscool', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Pimito', nameEn: 'Capsakid', slug: 'capsakid', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Léboulérou', nameEn: 'Rellor', slug: 'rellor', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Flotillon', nameEn: 'Flittle', slug: 'flittle', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Forgerette', nameEn: 'Tinkatink', slug: 'tinkatink', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Taupikeau', nameEn: 'Wiglett', slug: 'wiglett', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Dofin', nameEn: 'Finizen', slug: 'finizen', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Vrombi', nameEn: 'Varoom', slug: 'varoom', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Germéclat', nameEn: 'Glimmet', slug: 'glimmet', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Toutombe', nameEn: 'Greavard', slug: 'greavard', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Pilarctique', nameEn: 'Cetoddle', slug: 'cetoddle', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Mordudor', nameEn: 'Gimmighoul', slug: 'gimmighoul', rarity: 'common', shinyRate: 0.01 },
+  // Paldean base forms
+  { nameFr: 'Axoloto (Paldea)', nameEn: 'Wooper (Paldea)', slug: 'wooper-paldea', rarity: 'common', shinyRate: 0.01 },
+  // --- RARE (mid-game, standalone, useful) ---
+  { nameFr: 'Tapatoès', nameEn: 'Squawkabilly', slug: 'squawkabilly', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Craparoi', nameEn: 'Klawf', slug: 'klawf', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Lestombaile', nameEn: 'Bombirdier', slug: 'bombirdier', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Motorizard', nameEn: 'Cyclizar', slug: 'cyclizar', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Ferdeter', nameEn: 'Orthworm', slug: 'orthworm', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Flamigo', nameEn: 'Flamigo', slug: 'flamigo', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Délestin', nameEn: 'Veluza', slug: 'veluza', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Oyacata', nameEn: 'Dondozo', slug: 'dondozo', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Nigirigon', nameEn: 'Tatsugiri', slug: 'tatsugiri', rarity: 'rare', shinyRate: 0.02 },
+  // Paldean Tauros
+  { nameFr: 'Tauros (Paldea)', nameEn: 'Tauros (Paldea)', slug: 'tauros-paldea', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Tauros Flamboyant (Paldea)', nameEn: 'Tauros Blaze (Paldea)', slug: 'tauros-paldeablaze', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Tauros Aquatique (Paldea)', nameEn: 'Tauros Aqua (Paldea)', slug: 'tauros-paldeaaqua', rarity: 'rare', shinyRate: 0.02 },
+  // DLC rare
+  { nameFr: 'Poltchageist', nameEn: 'Poltchageist', slug: 'poltchageist', rarity: 'rare', shinyRate: 0.02 },
+  // --- EPIC (starters, pseudo-legendaries) ---
+  { nameFr: 'Poussacha', nameEn: 'Sprigatito', slug: 'sprigatito', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Chochodile', nameEn: 'Fuecoco', slug: 'fuecoco', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Coiffeton', nameEn: 'Quaxly', slug: 'quaxly', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Frigodo', nameEn: 'Frigibax', slug: 'frigibax', rarity: 'epic', shinyRate: 0.03 },
+  // --- LEGENDARY ---
+  { nameFr: 'Chongjian', nameEn: 'Wo-Chien', slug: 'wochien', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Baojian', nameEn: 'Chien-Pao', slug: 'chienpao', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Dinglu', nameEn: 'Ting-Lu', slug: 'tinglu', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Yuyu', nameEn: 'Chi-Yu', slug: 'chiyu', rarity: 'legendary', shinyRate: 0.05 },
+  // Paradox Past
+  { nameFr: 'Fort-Ivoire', nameEn: 'Great Tusk', slug: 'greattusk', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Hurle-Queue', nameEn: 'Scream Tail', slug: 'screamtail', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Fongus-Furie', nameEn: 'Brute Bonnet', slug: 'brutebonnet', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Flotte-Mèche', nameEn: 'Flutter Mane', slug: 'fluttermane', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Rampe-Ailes', nameEn: 'Slither Wing', slug: 'slitherwing', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Pelage-Sablé', nameEn: 'Sandy Shocks', slug: 'sandyshocks', rarity: 'legendary', shinyRate: 0.05 },
+  // Paradox Future
+  { nameFr: 'Roue-de-Fer', nameEn: 'Iron Treads', slug: 'irontreads', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Hotte-de-Fer', nameEn: 'Iron Bundle', slug: 'ironbundle', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Paume-de-Fer', nameEn: 'Iron Hands', slug: 'ironhands', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Tête-de-Fer', nameEn: 'Iron Jugulis', slug: 'ironjugulis', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Mite-de-Fer', nameEn: 'Iron Moth', slug: 'ironmoth', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Épine-de-Fer', nameEn: 'Iron Thorns', slug: 'ironthorns', rarity: 'legendary', shinyRate: 0.05 },
+  // Box legendaries & DLC
+  { nameFr: 'Rugit-Lune', nameEn: 'Roaring Moon', slug: 'roaringmoon', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Garde-de-Fer', nameEn: 'Iron Valiant', slug: 'ironvaliant', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Koraidon', nameEn: 'Koraidon', slug: 'koraidon', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Miraidon', nameEn: 'Miraidon', slug: 'miraidon', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Marcheur-du-Vide', nameEn: 'Walking Wake', slug: 'walkingwake', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Vert-de-Fer', nameEn: 'Iron Leaves', slug: 'ironleaves', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Félicanis', nameEn: 'Okidogi', slug: 'okidogi', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Fortusimia', nameEn: 'Munkidori', slug: 'munkidori', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Favianos', nameEn: 'Fezandipiti', slug: 'fezandipiti', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Ogerpon', nameEn: 'Ogerpon', slug: 'ogerpon', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Feu-Perçant', nameEn: 'Gouging Fire', slug: 'gougingfire', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Éclair-Furieux', nameEn: 'Raging Bolt', slug: 'ragingbolt', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Roc-de-Fer', nameEn: 'Iron Boulder', slug: 'ironboulder', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Chef-de-Fer', nameEn: 'Iron Crown', slug: 'ironcrown', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Térapagos', nameEn: 'Terapagos', slug: 'terapagos', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Pêchaminus', nameEn: 'Pecharunt', slug: 'pecharunt', rarity: 'legendary', shinyRate: 0.05 },
+]
+
 export const BANNERS: Banner[] = [
   {
     id: 'kanto',
@@ -744,6 +834,15 @@ export const BANNERS: Banner[] = [
     // Pricing formula: ~8000 × gen² = 8000 × 64 = 512k → 510k
     costGold: 510000,
     pool: GALAR_POOL,
+  },
+  {
+    id: 'paldea',
+    nameFr: 'Bannière Paldea',
+    nameEn: 'Paldea Banner',
+    generation: 9,
+    // Pricing formula: ~8000 × gen² = 8000 × 81 = 648k → 650k
+    costGold: 650000,
+    pool: PALDEA_POOL,
   },
 ]
 
