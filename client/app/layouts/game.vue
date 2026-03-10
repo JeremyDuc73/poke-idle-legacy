@@ -134,6 +134,14 @@ const evolvableWithItem = computed(() => {
 })
 
 const navItems = computed(() => {
+  if (!auth.isAuthenticated) {
+    return [
+      { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide', badge: 0 },
+      { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex', badge: 0 },
+      { label: t('Classement', 'Leaderboard'), icon: Trophy, to: '/leaderboard', badge: 0 },
+    ]
+  }
+
   const items = [
     { label: t('Combat', 'Combat'), icon: Swords, to: '/', badge: 0 },
     { label: t('Inventaire', 'Inventory'), icon: Package, to: '/inventory', badge: evolvableWithItem.value },
