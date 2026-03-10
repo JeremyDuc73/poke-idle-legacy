@@ -280,7 +280,7 @@ const boostsByGen = computed(() => {
           <span v-if="player.currentGeneration < boost.generation" class="text-[9px] text-orange-400">🔒 {{ GENERATION_NAMES[boost.generation] }}</span>
           <span v-else-if="player.level < boost.unlockLevel" class="text-[9px] text-orange-400">🔒 Lv.{{ boost.unlockLevel }}</span>
           <span v-else-if="isBoostPurchased(boost.id)" class="text-[9px] text-green-400">✓</span>
-          <span v-else class="text-[9px] text-yellow-400/70">🪙 {{ boost.cost >= 1000 ? Math.round(boost.cost / 1000) + 'k' : boost.cost }}</span>
+          <span v-else class="text-[9px] text-yellow-400/70">🪙 {{ boost.cost >= 1000000 ? (boost.cost / 1000000).toFixed(1).replace('.0', '') + 'M' : boost.cost >= 1000 ? Math.round(boost.cost / 1000) + 'k' : boost.cost }}</span>
         </button>
       </div>
     </section>
