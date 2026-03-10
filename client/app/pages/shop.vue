@@ -163,40 +163,40 @@ interface ClickBoost {
 
 const CLICK_BOOSTS: ClickBoost[] = [
   { id: 'click-kanto-1', nameFr: 'Kanto I', nameEn: 'Kanto I', generation: 1, unlockLevel: 10, cost: 200, damage: 5 },
-  { id: 'click-kanto-2', nameFr: 'Kanto II', nameEn: 'Kanto II', generation: 1, unlockLevel: 20, cost: 800, damage: 8 },
-  { id: 'click-kanto-3', nameFr: 'Kanto III', nameEn: 'Kanto III', generation: 1, unlockLevel: 30, cost: 2000, damage: 12 },
+  { id: 'click-kanto-2', nameFr: 'Kanto II', nameEn: 'Kanto II', generation: 1, unlockLevel: 20, cost: 500, damage: 8 },
+  { id: 'click-kanto-3', nameFr: 'Kanto III', nameEn: 'Kanto III', generation: 1, unlockLevel: 30, cost: 1500, damage: 12 },
   
-  { id: 'click-johto-1', nameFr: 'Johto I', nameEn: 'Johto I', generation: 2, unlockLevel: 35, cost: 4000, damage: 15 },
-  { id: 'click-johto-2', nameFr: 'Johto II', nameEn: 'Johto II', generation: 2, unlockLevel: 45, cost: 10000, damage: 20 },
-  { id: 'click-johto-3', nameFr: 'Johto III', nameEn: 'Johto III', generation: 2, unlockLevel: 55, cost: 20000, damage: 30 },
+  { id: 'click-johto-1', nameFr: 'Johto I', nameEn: 'Johto I', generation: 2, unlockLevel: 35, cost: 3000, damage: 15 },
+  { id: 'click-johto-2', nameFr: 'Johto II', nameEn: 'Johto II', generation: 2, unlockLevel: 45, cost: 6000, damage: 20 },
+  { id: 'click-johto-3', nameFr: 'Johto III', nameEn: 'Johto III', generation: 2, unlockLevel: 55, cost: 12000, damage: 30 },
   
-  { id: 'click-hoenn-1', nameFr: 'Hoenn I', nameEn: 'Hoenn I', generation: 3, unlockLevel: 60, cost: 40000, damage: 30 },
-  { id: 'click-hoenn-2', nameFr: 'Hoenn II', nameEn: 'Hoenn II', generation: 3, unlockLevel: 70, cost: 80000, damage: 40 },
-  { id: 'click-hoenn-3', nameFr: 'Hoenn III', nameEn: 'Hoenn III', generation: 3, unlockLevel: 80, cost: 150000, damage: 50 },
+  { id: 'click-hoenn-1', nameFr: 'Hoenn I', nameEn: 'Hoenn I', generation: 3, unlockLevel: 60, cost: 25000, damage: 30 },
+  { id: 'click-hoenn-2', nameFr: 'Hoenn II', nameEn: 'Hoenn II', generation: 3, unlockLevel: 70, cost: 50000, damage: 40 },
+  { id: 'click-hoenn-3', nameFr: 'Hoenn III', nameEn: 'Hoenn III', generation: 3, unlockLevel: 80, cost: 100000, damage: 50 },
   
-  { id: 'click-sinnoh-1', nameFr: 'Sinnoh I', nameEn: 'Sinnoh I', generation: 4, unlockLevel: 85, cost: 200000, damage: 40 },
-  { id: 'click-sinnoh-2', nameFr: 'Sinnoh II', nameEn: 'Sinnoh II', generation: 4, unlockLevel: 95, cost: 400000, damage: 50 },
-  { id: 'click-sinnoh-3', nameFr: 'Sinnoh III', nameEn: 'Sinnoh III', generation: 4, unlockLevel: 105, cost: 800000, damage: 60 },
+  { id: 'click-sinnoh-1', nameFr: 'Sinnoh I', nameEn: 'Sinnoh I', generation: 4, unlockLevel: 85, cost: 150000, damage: 40 },
+  { id: 'click-sinnoh-2', nameFr: 'Sinnoh II', nameEn: 'Sinnoh II', generation: 4, unlockLevel: 95, cost: 250000, damage: 50 },
+  { id: 'click-sinnoh-3', nameFr: 'Sinnoh III', nameEn: 'Sinnoh III', generation: 4, unlockLevel: 105, cost: 400000, damage: 60 },
   
-  { id: 'click-unova-1', nameFr: 'Unys I', nameEn: 'Unova I', generation: 5, unlockLevel: 110, cost: 1000000, damage: 50 },
-  { id: 'click-unova-2', nameFr: 'Unys II', nameEn: 'Unova II', generation: 5, unlockLevel: 120, cost: 2000000, damage: 60 },
-  { id: 'click-unova-3', nameFr: 'Unys III', nameEn: 'Unova III', generation: 5, unlockLevel: 130, cost: 4000000, damage: 70 },
+  { id: 'click-unova-1', nameFr: 'Unys I', nameEn: 'Unova I', generation: 5, unlockLevel: 110, cost: 500000, damage: 50 },
+  { id: 'click-unova-2', nameFr: 'Unys II', nameEn: 'Unova II', generation: 5, unlockLevel: 120, cost: 700000, damage: 60 },
+  { id: 'click-unova-3', nameFr: 'Unys III', nameEn: 'Unova III', generation: 5, unlockLevel: 130, cost: 1000000, damage: 70 },
   
-  { id: 'click-kalos-1', nameFr: 'Kalos I', nameEn: 'Kalos I', generation: 6, unlockLevel: 135, cost: 5000000, damage: 60 },
-  { id: 'click-kalos-2', nameFr: 'Kalos II', nameEn: 'Kalos II', generation: 6, unlockLevel: 145, cost: 8000000, damage: 75 },
-  { id: 'click-kalos-3', nameFr: 'Kalos III', nameEn: 'Kalos III', generation: 6, unlockLevel: 155, cost: 12000000, damage: 90 },
+  { id: 'click-kalos-1', nameFr: 'Kalos I', nameEn: 'Kalos I', generation: 6, unlockLevel: 135, cost: 1200000, damage: 60 },
+  { id: 'click-kalos-2', nameFr: 'Kalos II', nameEn: 'Kalos II', generation: 6, unlockLevel: 145, cost: 1500000, damage: 75 },
+  { id: 'click-kalos-3', nameFr: 'Kalos III', nameEn: 'Kalos III', generation: 6, unlockLevel: 155, cost: 1800000, damage: 90 },
   
-  { id: 'click-alola-1', nameFr: 'Alola I', nameEn: 'Alola I', generation: 7, unlockLevel: 160, cost: 15000000, damage: 75 },
-  { id: 'click-alola-2', nameFr: 'Alola II', nameEn: 'Alola II', generation: 7, unlockLevel: 170, cost: 25000000, damage: 90 },
-  { id: 'click-alola-3', nameFr: 'Alola III', nameEn: 'Alola III', generation: 7, unlockLevel: 180, cost: 40000000, damage: 110 },
+  { id: 'click-alola-1', nameFr: 'Alola I', nameEn: 'Alola I', generation: 7, unlockLevel: 160, cost: 2000000, damage: 75 },
+  { id: 'click-alola-2', nameFr: 'Alola II', nameEn: 'Alola II', generation: 7, unlockLevel: 170, cost: 2500000, damage: 90 },
+  { id: 'click-alola-3', nameFr: 'Alola III', nameEn: 'Alola III', generation: 7, unlockLevel: 180, cost: 3000000, damage: 110 },
   
-  { id: 'click-galar-1', nameFr: 'Galar I', nameEn: 'Galar I', generation: 8, unlockLevel: 185, cost: 50000000, damage: 90 },
-  { id: 'click-galar-2', nameFr: 'Galar II', nameEn: 'Galar II', generation: 8, unlockLevel: 195, cost: 80000000, damage: 110 },
-  { id: 'click-galar-3', nameFr: 'Galar III', nameEn: 'Galar III', generation: 8, unlockLevel: 205, cost: 120000000, damage: 130 },
+  { id: 'click-galar-1', nameFr: 'Galar I', nameEn: 'Galar I', generation: 8, unlockLevel: 185, cost: 3200000, damage: 90 },
+  { id: 'click-galar-2', nameFr: 'Galar II', nameEn: 'Galar II', generation: 8, unlockLevel: 195, cost: 3500000, damage: 110 },
+  { id: 'click-galar-3', nameFr: 'Galar III', nameEn: 'Galar III', generation: 8, unlockLevel: 205, cost: 4000000, damage: 130 },
   
-  { id: 'click-paldea-1', nameFr: 'Paldea I', nameEn: 'Paldea I', generation: 9, unlockLevel: 210, cost: 150000000, damage: 110 },
-  { id: 'click-paldea-2', nameFr: 'Paldea II', nameEn: 'Paldea II', generation: 9, unlockLevel: 220, cost: 250000000, damage: 130 },
-  { id: 'click-paldea-3', nameFr: 'Paldea III', nameEn: 'Paldea III', generation: 9, unlockLevel: 230, cost: 400000000, damage: 150 },
+  { id: 'click-paldea-1', nameFr: 'Paldea I', nameEn: 'Paldea I', generation: 9, unlockLevel: 210, cost: 4200000, damage: 110 },
+  { id: 'click-paldea-2', nameFr: 'Paldea II', nameEn: 'Paldea II', generation: 9, unlockLevel: 220, cost: 4600000, damage: 130 },
+  { id: 'click-paldea-3', nameFr: 'Paldea III', nameEn: 'Paldea III', generation: 9, unlockLevel: 230, cost: 5000000, damage: 150 },
 ]
 
 const purchasedBoosts = ref<Set<string>>(new Set())
