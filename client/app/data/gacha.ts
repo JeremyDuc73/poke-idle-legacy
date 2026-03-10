@@ -598,6 +598,85 @@ const ALOLA_POOL: GachaPokemon[] = [
   { nameFr: 'Meltan', nameEn: 'Meltan', slug: 'meltan', rarity: 'legendary', shinyRate: 0.05 },
 ]
 
+// === Gen 8 Galar Pool ===
+// Cross-gen Galarian/Hisuian evos EXCLUDED (use galar-stone/hisui-stone)
+const GALAR_POOL: GachaPokemon[] = [
+  // --- COMMON (early routes, common encounters) ---
+  { nameFr: 'Rongourmand', nameEn: 'Skwovet', slug: 'skwovet', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Minisange', nameEn: 'Rookidee', slug: 'rookidee', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Larvadar', nameEn: 'Blipbug', slug: 'blipbug', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Goupilou', nameEn: 'Nickit', slug: 'nickit', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Tournicoton', nameEn: 'Gossifleur', slug: 'gossifleur', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Moumouton', nameEn: 'Wooloo', slug: 'wooloo', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Khélocrok', nameEn: 'Chewtle', slug: 'chewtle', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Voltoutou', nameEn: 'Yamper', slug: 'yamper', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Charbi', nameEn: 'Rolycoly', slug: 'rolycoly', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Dunaja', nameEn: 'Silicobra', slug: 'silicobra', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Embrochet', nameEn: 'Arrokuda', slug: 'arrokuda', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Toxizap', nameEn: 'Toxel', slug: 'toxel', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Grillepattes', nameEn: 'Sizzlipede', slug: 'sizzlipede', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Poulpaf', nameEn: 'Clobbopus', slug: 'clobbopus', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Bibichut', nameEn: 'Hatenna', slug: 'hatenna', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Grimalin', nameEn: 'Impidimp', slug: 'impidimp', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Crèmy', nameEn: 'Milcery', slug: 'milcery', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Frissonille', nameEn: 'Snom', slug: 'snom', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Charibari', nameEn: 'Cufant', slug: 'cufant', rarity: 'common', shinyRate: 0.01 },
+  // Galarian base forms
+  { nameFr: 'Miaouss (Galar)', nameEn: 'Meowth (Galar)', slug: 'meowth-galar', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Ponyta (Galar)', nameEn: 'Ponyta (Galar)', slug: 'ponyta-galar', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Ramoloss (Galar)', nameEn: 'Slowpoke (Galar)', slug: 'slowpoke-galar', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Canarticho (Galar)', nameEn: "Farfetch'd (Galar)", slug: 'farfetchd-galar', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Corayon (Galar)', nameEn: 'Corsola (Galar)', slug: 'corsola-galar', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Zigzaton (Galar)', nameEn: 'Zigzagoon (Galar)', slug: 'zigzagoon-galar', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Darumarond (Galar)', nameEn: 'Darumaka (Galar)', slug: 'darumaka-galar', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Tutafeh (Galar)', nameEn: 'Yamask (Galar)', slug: 'yamask-galar', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Limonde (Galar)', nameEn: 'Stunfisk (Galar)', slug: 'stunfisk-galar', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'M. Mime (Galar)', nameEn: 'Mr. Mime (Galar)', slug: 'mrmime-galar', rarity: 'common', shinyRate: 0.01 },
+  // Hisuian base forms
+  { nameFr: 'Caninos (Hisui)', nameEn: 'Growlithe (Hisui)', slug: 'growlithe-hisui', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Voltorbe (Hisui)', nameEn: 'Voltorb (Hisui)', slug: 'voltorb-hisui', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Qwilfish (Hisui)', nameEn: 'Qwilfish (Hisui)', slug: 'qwilfish-hisui', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Farfuret (Hisui)', nameEn: 'Sneasel (Hisui)', slug: 'sneasel-hisui', rarity: 'common', shinyRate: 0.01 },
+  { nameFr: 'Zorua (Hisui)', nameEn: 'Zorua (Hisui)', slug: 'zorua-hisui', rarity: 'common', shinyRate: 0.01 },
+  // --- RARE (mid-game, useful) ---
+  { nameFr: 'Verpom', nameEn: 'Applin', slug: 'applin', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Nigosier', nameEn: 'Cramorant', slug: 'cramorant', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Théffroi', nameEn: 'Sinistea', slug: 'sinistea', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Hexadron', nameEn: 'Falinks', slug: 'falinks', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Wattapik', nameEn: 'Pincurchin', slug: 'pincurchin', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Dolman', nameEn: 'Stonjourner', slug: 'stonjourner', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Bekaglaçon', nameEn: 'Eiscue', slug: 'eiscue', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Wimessir', nameEn: 'Indeedee', slug: 'indeedee', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Morpeko', nameEn: 'Morpeko', slug: 'morpeko', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Duralugon', nameEn: 'Duraludon', slug: 'duraludon', rarity: 'rare', shinyRate: 0.02 },
+  // Fossils
+  { nameFr: 'Galvagon', nameEn: 'Dracozolt', slug: 'dracozolt', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Galvagla', nameEn: 'Arctozolt', slug: 'arctozolt', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Hydragon', nameEn: 'Dracovish', slug: 'dracovish', rarity: 'rare', shinyRate: 0.02 },
+  { nameFr: 'Hydragla', nameEn: 'Arctovish', slug: 'arctovish', rarity: 'rare', shinyRate: 0.02 },
+  // --- EPIC (starters, pseudo-legendaries) ---
+  { nameFr: 'Ouistempo', nameEn: 'Grookey', slug: 'grookey', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Flambino', nameEn: 'Scorbunny', slug: 'scorbunny', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Larméléon', nameEn: 'Sobble', slug: 'sobble', rarity: 'epic', shinyRate: 0.03 },
+  { nameFr: 'Fantyrm', nameEn: 'Dreepy', slug: 'dreepy', rarity: 'epic', shinyRate: 0.03 },
+  // --- LEGENDARY ---
+  { nameFr: 'Zacian', nameEn: 'Zacian', slug: 'zacian', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Zamazenta', nameEn: 'Zamazenta', slug: 'zamazenta', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Éthernatos', nameEn: 'Eternatus', slug: 'eternatus', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Wushours', nameEn: 'Kubfu', slug: 'kubfu', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Zarude', nameEn: 'Zarude', slug: 'zarude', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Regieleki', nameEn: 'Regieleki', slug: 'regieleki', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Regidrago', nameEn: 'Regidrago', slug: 'regidrago', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Blizzeval', nameEn: 'Glastrier', slug: 'glastrier', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Spectreval', nameEn: 'Spectrier', slug: 'spectrier', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Sylveroy', nameEn: 'Calyrex', slug: 'calyrex', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Amovénus', nameEn: 'Enamorus', slug: 'enamorus', rarity: 'legendary', shinyRate: 0.05 },
+  // Galarian legendary birds
+  { nameFr: 'Artikodin (Galar)', nameEn: 'Articuno (Galar)', slug: 'articuno-galar', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Électhor (Galar)', nameEn: 'Zapdos (Galar)', slug: 'zapdos-galar', rarity: 'legendary', shinyRate: 0.05 },
+  { nameFr: 'Sulfura (Galar)', nameEn: 'Moltres (Galar)', slug: 'moltres-galar', rarity: 'legendary', shinyRate: 0.05 },
+]
+
 export const BANNERS: Banner[] = [
   {
     id: 'kanto',
@@ -656,6 +735,15 @@ export const BANNERS: Banner[] = [
     // Pricing formula: ~8000 × gen² = 8000 × 49 = 392k → 390k
     costGold: 390000,
     pool: ALOLA_POOL,
+  },
+  {
+    id: 'galar',
+    nameFr: 'Bannière Galar',
+    nameEn: 'Galar Banner',
+    generation: 8,
+    // Pricing formula: ~8000 × gen² = 8000 × 64 = 512k → 510k
+    costGold: 510000,
+    pool: GALAR_POOL,
   },
 ]
 

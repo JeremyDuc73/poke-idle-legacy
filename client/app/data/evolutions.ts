@@ -829,6 +829,129 @@ export const EVOLUTIONS: Evolution[] = [
   { fromSlug: 'pikachu', toSlug: 'raichu-alola', toNameFr: 'Raichu (Alola)', toNameEn: 'Raichu (Alola)', method: 'stone', itemRequired: 'alola-stone' },
   { fromSlug: 'exeggcute', toSlug: 'exeggutor-alola', toNameFr: 'Noadkoko (Alola)', toNameEn: 'Exeggutor (Alola)', method: 'stone', itemRequired: 'alola-stone' },
   { fromSlug: 'cubone', toSlug: 'marowak-alola', toNameFr: 'Ossatueur (Alola)', toNameEn: 'Marowak (Alola)', method: 'stone', itemRequired: 'alola-stone' },
+
+  // ══════════════ Gen 8 (Galar) ══════════════
+
+  // Starters
+  { fromSlug: 'grookey', toSlug: 'thwackey', toNameFr: 'Badabouin', toNameEn: 'Thwackey', method: 'level', levelRequired: 16 },
+  { fromSlug: 'thwackey', toSlug: 'rillaboom', toNameFr: 'Gorythmic', toNameEn: 'Rillaboom', method: 'level', levelRequired: 35 },
+  { fromSlug: 'scorbunny', toSlug: 'raboot', toNameFr: 'Lapyro', toNameEn: 'Raboot', method: 'level', levelRequired: 16 },
+  { fromSlug: 'raboot', toSlug: 'cinderace', toNameFr: 'Pyrobut', toNameEn: 'Cinderace', method: 'level', levelRequired: 35 },
+  { fromSlug: 'sobble', toSlug: 'drizzile', toNameFr: 'Arrozard', toNameEn: 'Drizzile', method: 'level', levelRequired: 16 },
+  { fromSlug: 'drizzile', toSlug: 'inteleon', toNameFr: 'Lézargus', toNameEn: 'Inteleon', method: 'level', levelRequired: 35 },
+
+  // Normal
+  { fromSlug: 'skwovet', toSlug: 'greedent', toNameFr: 'Rongrigou', toNameEn: 'Greedent', method: 'level', levelRequired: 24 },
+
+  // Bird line
+  { fromSlug: 'rookidee', toSlug: 'corvisquire', toNameFr: 'Bleuseille', toNameEn: 'Corvisquire', method: 'level', levelRequired: 18 },
+  { fromSlug: 'corvisquire', toSlug: 'corviknight', toNameFr: 'Corvaillus', toNameEn: 'Corviknight', method: 'level', levelRequired: 38 },
+
+  // Bug line
+  { fromSlug: 'blipbug', toSlug: 'dottler', toNameFr: 'Coléodôme', toNameEn: 'Dottler', method: 'level', levelRequired: 10 },
+  { fromSlug: 'dottler', toSlug: 'orbeetle', toNameFr: 'Astronelle', toNameEn: 'Orbeetle', method: 'level', levelRequired: 30 },
+
+  // Fox
+  { fromSlug: 'nickit', toSlug: 'thievul', toNameFr: 'Roublenard', toNameEn: 'Thievul', method: 'level', levelRequired: 18 },
+
+  // Cotton
+  { fromSlug: 'gossifleur', toSlug: 'eldegoss', toNameFr: 'Blancoton', toNameEn: 'Eldegoss', method: 'level', levelRequired: 20 },
+
+  // Sheep
+  { fromSlug: 'wooloo', toSlug: 'dubwool', toNameFr: 'Moumouflon', toNameEn: 'Dubwool', method: 'level', levelRequired: 24 },
+
+  // Turtle
+  { fromSlug: 'chewtle', toSlug: 'drednaw', toNameFr: 'Torgamord', toNameEn: 'Drednaw', method: 'level', levelRequired: 22 },
+
+  // Dog
+  { fromSlug: 'yamper', toSlug: 'boltund', toNameFr: 'Fulgudog', toNameEn: 'Boltund', method: 'level', levelRequired: 25 },
+
+  // Coal line
+  { fromSlug: 'rolycoly', toSlug: 'carkol', toNameFr: 'Wagomine', toNameEn: 'Carkol', method: 'level', levelRequired: 18 },
+  { fromSlug: 'carkol', toSlug: 'coalossal', toNameFr: 'Monthracite', toNameEn: 'Coalossal', method: 'level', levelRequired: 34 },
+
+  // Apple (multi-evo)
+  { fromSlug: 'applin', toSlug: 'flapple', toNameFr: 'Pomdrapi', toNameEn: 'Flapple', method: 'stone', itemRequired: 'tart-apple' },
+  { fromSlug: 'applin', toSlug: 'appletun', toNameFr: 'Dratatin', toNameEn: 'Appletun', method: 'stone', itemRequired: 'sweet-apple' },
+
+  // Snake
+  { fromSlug: 'silicobra', toSlug: 'sandaconda', toNameFr: 'Dunaconda', toNameEn: 'Sandaconda', method: 'level', levelRequired: 36 },
+
+  // Fish
+  { fromSlug: 'arrokuda', toSlug: 'barraskewda', toNameFr: 'Hastacuda', toNameEn: 'Barraskewda', method: 'level', levelRequired: 26 },
+
+  // Electric/Poison
+  { fromSlug: 'toxel', toSlug: 'toxtricity', toNameFr: 'Salarsen', toNameEn: 'Toxtricity', method: 'level', levelRequired: 30 },
+
+  // Fire/Bug
+  { fromSlug: 'sizzlipede', toSlug: 'centiskorch', toNameFr: 'Scolocendre', toNameEn: 'Centiskorch', method: 'level', levelRequired: 28 },
+
+  // Fighting
+  { fromSlug: 'clobbopus', toSlug: 'grapploct', toNameFr: 'Krakos', toNameEn: 'Grapploct', method: 'level', levelRequired: 35 },
+
+  // Ghost tea
+  { fromSlug: 'sinistea', toSlug: 'polteageist', toNameFr: 'Polthégeist', toNameEn: 'Polteageist', method: 'stone', itemRequired: 'link-cable' },
+
+  // Psychic/Fairy
+  { fromSlug: 'hatenna', toSlug: 'hattrem', toNameFr: 'Chapotus', toNameEn: 'Hattrem', method: 'level', levelRequired: 32 },
+  { fromSlug: 'hattrem', toSlug: 'hatterene', toNameFr: 'Sorcilence', toNameEn: 'Hatterene', method: 'level', levelRequired: 42 },
+
+  // Dark/Fairy
+  { fromSlug: 'impidimp', toSlug: 'morgrem', toNameFr: 'Fourbelin', toNameEn: 'Morgrem', method: 'level', levelRequired: 32 },
+  { fromSlug: 'morgrem', toSlug: 'grimmsnarl', toNameFr: 'Angoliath', toNameEn: 'Grimmsnarl', method: 'level', levelRequired: 42 },
+
+  // Cream
+  { fromSlug: 'milcery', toSlug: 'alcremie', toNameFr: 'Charmilly', toNameEn: 'Alcremie', method: 'stone', itemRequired: 'sweet-apple' },
+
+  // Ice/Bug
+  { fromSlug: 'snom', toSlug: 'frosmoth', toNameFr: 'Beldeneige', toNameEn: 'Frosmoth', method: 'happiness', itemRequired: 'soothe-bell' },
+
+  // Steel elephant
+  { fromSlug: 'cufant', toSlug: 'copperajah', toNameFr: 'Pachyradjah', toNameEn: 'Copperajah', method: 'level', levelRequired: 34 },
+
+  // Dragon/Ghost pseudo-legendary
+  { fromSlug: 'dreepy', toSlug: 'drakloak', toNameFr: 'Dispareptil', toNameEn: 'Drakloak', method: 'level', levelRequired: 50 },
+  { fromSlug: 'drakloak', toSlug: 'dragapult', toNameFr: 'Lanssorien', toNameEn: 'Dragapult', method: 'level', levelRequired: 60 },
+
+  // Kubfu → Urshifu
+  { fromSlug: 'kubfu', toSlug: 'urshifu', toNameFr: 'Shifours', toNameEn: 'Urshifu', method: 'level', levelRequired: 50 },
+
+  // === Galarian Form Evolutions (base → evo) ===
+  { fromSlug: 'meowth-galar', toSlug: 'perrserker', toNameFr: 'Berserkatt', toNameEn: 'Perrserker', method: 'level', levelRequired: 28 },
+  { fromSlug: 'ponyta-galar', toSlug: 'rapidash-galar', toNameFr: 'Galopa (Galar)', toNameEn: 'Rapidash (Galar)', method: 'level', levelRequired: 40 },
+  { fromSlug: 'slowpoke-galar', toSlug: 'slowbro-galar', toNameFr: 'Flagadoss (Galar)', toNameEn: 'Slowbro (Galar)', method: 'stone', itemRequired: 'galar-stone' },
+  { fromSlug: 'slowpoke-galar', toSlug: 'slowking-galar', toNameFr: 'Roigada (Galar)', toNameEn: 'Slowking (Galar)', method: 'stone', itemRequired: 'kings-rock' },
+  { fromSlug: 'farfetchd-galar', toSlug: 'sirfetchd', toNameFr: 'Palarticho', toNameEn: "Sirfetch'd", method: 'level', levelRequired: 35 },
+  { fromSlug: 'corsola-galar', toSlug: 'cursola', toNameFr: 'Corayôme', toNameEn: 'Cursola', method: 'level', levelRequired: 38 },
+  { fromSlug: 'zigzagoon-galar', toSlug: 'linoone-galar', toNameFr: 'Linéon (Galar)', toNameEn: 'Linoone (Galar)', method: 'level', levelRequired: 20 },
+  { fromSlug: 'linoone-galar', toSlug: 'obstagoon', toNameFr: 'Ixon', toNameEn: 'Obstagoon', method: 'level', levelRequired: 35 },
+  { fromSlug: 'darumaka-galar', toSlug: 'darmanitan-galar', toNameFr: 'Darumacho (Galar)', toNameEn: 'Darmanitan (Galar)', method: 'stone', itemRequired: 'ice-stone' },
+  { fromSlug: 'yamask-galar', toSlug: 'runerigus', toNameFr: 'Tutétékri', toNameEn: 'Runerigus', method: 'level', levelRequired: 34 },
+  { fromSlug: 'mrmime-galar', toSlug: 'mrrime', toNameFr: 'M. Glaquette', toNameEn: 'Mr. Rime', method: 'level', levelRequired: 42 },
+
+  // === Cross-gen Galarian (galar-stone) ===
+  { fromSlug: 'koffing', toSlug: 'weezing-galar', toNameFr: 'Smogogo (Galar)', toNameEn: 'Weezing (Galar)', method: 'stone', itemRequired: 'galar-stone' },
+
+  // === Hisuian Form Evolutions (base → evo) ===
+  { fromSlug: 'growlithe-hisui', toSlug: 'arcanine-hisui', toNameFr: 'Arcanin (Hisui)', toNameEn: 'Arcanine (Hisui)', method: 'stone', itemRequired: 'fire-stone' },
+  { fromSlug: 'voltorb-hisui', toSlug: 'electrode-hisui', toNameFr: 'Électrode (Hisui)', toNameEn: 'Electrode (Hisui)', method: 'stone', itemRequired: 'leaf-stone' },
+  { fromSlug: 'qwilfish-hisui', toSlug: 'overqwil', toNameFr: 'Qwilpik', toNameEn: 'Overqwil', method: 'level', levelRequired: 38 },
+  { fromSlug: 'sneasel-hisui', toSlug: 'sneasler', toNameFr: 'Farfurex', toNameEn: 'Sneasler', method: 'stone', itemRequired: 'razor-claw' },
+  { fromSlug: 'zorua-hisui', toSlug: 'zoroark-hisui', toNameFr: 'Zoroark (Hisui)', toNameEn: 'Zoroark (Hisui)', method: 'level', levelRequired: 30 },
+  { fromSlug: 'sliggoo-hisui', toSlug: 'goodra-hisui', toNameFr: 'Muplodocus (Hisui)', toNameEn: 'Goodra (Hisui)', method: 'level', levelRequired: 50 },
+
+  // === Cross-gen Hisuian Evolutions (hisui-stone) ===
+  { fromSlug: 'stantler', toSlug: 'wyrdeer', toNameFr: 'Cerbyllin', toNameEn: 'Wyrdeer', method: 'stone', itemRequired: 'hisui-stone' },
+  { fromSlug: 'scyther', toSlug: 'kleavor', toNameFr: 'Hachécateur', toNameEn: 'Kleavor', method: 'stone', itemRequired: 'hisui-stone' },
+  { fromSlug: 'ursaring', toSlug: 'ursaluna', toNameFr: 'Ursaking', toNameEn: 'Ursaluna', method: 'stone', itemRequired: 'hisui-stone' },
+  { fromSlug: 'basculin', toSlug: 'basculegion', toNameFr: 'Paragruel', toNameEn: 'Basculegion', method: 'stone', itemRequired: 'hisui-stone' },
+  { fromSlug: 'quilava', toSlug: 'typhlosion-hisui', toNameFr: 'Typhlosion (Hisui)', toNameEn: 'Typhlosion (Hisui)', method: 'stone', itemRequired: 'hisui-stone' },
+  { fromSlug: 'dewott', toSlug: 'samurott-hisui', toNameFr: 'Clamiral (Hisui)', toNameEn: 'Samurott (Hisui)', method: 'stone', itemRequired: 'hisui-stone' },
+  { fromSlug: 'dartrix', toSlug: 'decidueye-hisui', toNameFr: 'Archéduc (Hisui)', toNameEn: 'Decidueye (Hisui)', method: 'stone', itemRequired: 'hisui-stone' },
+  { fromSlug: 'petilil', toSlug: 'lilligant-hisui', toNameFr: 'Fragilady (Hisui)', toNameEn: 'Lilligant (Hisui)', method: 'stone', itemRequired: 'hisui-stone' },
+  { fromSlug: 'rufflet', toSlug: 'braviary-hisui', toNameFr: 'Gueriaigle (Hisui)', toNameEn: 'Braviary (Hisui)', method: 'stone', itemRequired: 'hisui-stone' },
+  { fromSlug: 'sliggoo', toSlug: 'sliggoo-hisui', toNameFr: 'Colimucus (Hisui)', toNameEn: 'Sliggoo (Hisui)', method: 'stone', itemRequired: 'hisui-stone' },
+  { fromSlug: 'bergmite', toSlug: 'avalugg-hisui', toNameFr: 'Séracrawl (Hisui)', toNameEn: 'Avalugg (Hisui)', method: 'stone', itemRequired: 'hisui-stone' },
 ]
 
 // Evolution items available for Gen 1
@@ -840,7 +963,7 @@ export const EVO_ITEMS: EvoItem[] = [
     descFr: 'Fait évoluer certains Pokémon de type Feu',
     descEn: 'Evolves certain Fire-type Pokémon',
     icon: '🔥',
-    applicableTo: ['vulpix', 'growlithe', 'eevee', 'pansear'],
+    applicableTo: ['vulpix', 'growlithe', 'eevee', 'pansear', 'growlithe-hisui'],
   },
   {
     id: 'water-stone',
@@ -867,7 +990,7 @@ export const EVO_ITEMS: EvoItem[] = [
     descFr: 'Fait évoluer certains Pokémon de type Plante',
     descEn: 'Evolves certain Grass-type Pokémon',
     icon: '🍃',
-    applicableTo: ['gloom', 'weepinbell', 'exeggcute', 'burmy', 'eevee', 'pansage'],
+    applicableTo: ['gloom', 'weepinbell', 'exeggcute', 'burmy', 'eevee', 'pansage', 'voltorb-hisui'],
   },
   {
     id: 'moon-stone',
@@ -885,7 +1008,7 @@ export const EVO_ITEMS: EvoItem[] = [
     descFr: 'Simule un échange pour faire évoluer un Pokémon',
     descEn: 'Simulates a trade to evolve a Pokémon',
     icon: '🔗',
-    applicableTo: ['kadabra', 'machoke', 'graveler', 'haunter', 'porygon', 'onix', 'scyther', 'seadra', 'boldore', 'gurdurr', 'karrablast', 'shelmet', 'spritzee', 'swirlix', 'phantump', 'pumpkaboo', 'graveler-alola'],
+    applicableTo: ['kadabra', 'machoke', 'graveler', 'haunter', 'porygon', 'onix', 'scyther', 'seadra', 'boldore', 'gurdurr', 'karrablast', 'shelmet', 'spritzee', 'swirlix', 'phantump', 'pumpkaboo', 'graveler-alola', 'sinistea'],
   },
   {
     id: 'kings-rock',
@@ -894,7 +1017,7 @@ export const EVO_ITEMS: EvoItem[] = [
     descFr: 'Ramoloss → Roigada / Têtarte → Tarpaud (échange)',
     descEn: 'Slowpoke → Slowking / Poliwhirl → Politoed (trade)',
     icon: '👑',
-    applicableTo: ['slowpoke', 'poliwhirl'],
+    applicableTo: ['slowpoke', 'poliwhirl', 'slowpoke-galar'],
   },
   {
     id: 'prism-scale',
@@ -909,10 +1032,10 @@ export const EVO_ITEMS: EvoItem[] = [
     id: 'razor-claw',
     nameFr: 'Griffe Rasoir',
     nameEn: 'Razor Claw',
-    descFr: 'Chenipotte → Blindalys (papillon de nuit)',
-    descEn: 'Wurmple → Cascoon (night moth)',
+    descFr: 'Chenipotte → Blindalys / Farfuret (Hisui) → Farfurex',
+    descEn: 'Wurmple → Cascoon / Sneasel (Hisui) → Sneasler',
     icon: '🦗',
-    applicableTo: ['wurmple'],
+    applicableTo: ['wurmple', 'sneasel-hisui'],
   },
   {
     id: 'deep-sea-tooth',
@@ -948,7 +1071,7 @@ export const EVO_ITEMS: EvoItem[] = [
     descFr: 'Fait évoluer un Pokémon lié par le bonheur',
     descEn: 'Evolves a Pokémon that evolves through happiness',
     icon: '🔔',
-    applicableTo: ['pichu', 'cleffa', 'igglybuff', 'togepi', 'golbat', 'chansey', 'tyrogue', 'smoochum', 'elekid', 'magby', 'feebas', 'azurill', 'budew', 'woobat', 'swadloon', 'eevee', 'meowth-alola', 'typenull'],
+    applicableTo: ['pichu', 'cleffa', 'igglybuff', 'togepi', 'golbat', 'chansey', 'tyrogue', 'smoochum', 'elekid', 'magby', 'feebas', 'azurill', 'budew', 'woobat', 'swadloon', 'eevee', 'meowth-alola', 'typenull', 'snom'],
   },
   {
     id: 'sun-stone',
@@ -993,7 +1116,7 @@ export const EVO_ITEMS: EvoItem[] = [
     descFr: 'Fait évoluer certains Pokémon de type Glace',
     descEn: 'Evolves certain Ice-type Pokémon',
     icon: '❄️',
-    applicableTo: ['eevee', 'sandshrew-alola', 'vulpix-alola'],
+    applicableTo: ['eevee', 'sandshrew-alola', 'vulpix-alola', 'darumaka-galar'],
   },
   {
     id: 'protector',
@@ -1048,6 +1171,42 @@ export const EVO_ITEMS: EvoItem[] = [
     descEn: 'Evolves a Pokémon into its Alolan form',
     icon: '🌺',
     applicableTo: ['pikachu', 'exeggcute', 'cubone'],
+  },
+  {
+    id: 'galar-stone',
+    nameFr: 'Pierre Galar',
+    nameEn: 'Galar Stone',
+    descFr: 'Fait évoluer un Pokémon en sa forme de Galar',
+    descEn: 'Evolves a Pokémon into its Galarian form',
+    icon: '🏰',
+    applicableTo: ['koffing', 'slowpoke-galar'],
+  },
+  {
+    id: 'hisui-stone',
+    nameFr: 'Pierre Hisui',
+    nameEn: 'Hisui Stone',
+    descFr: 'Fait évoluer un Pokémon en sa forme de Hisui',
+    descEn: 'Evolves a Pokémon into its Hisuian form',
+    icon: '⛰️',
+    applicableTo: ['stantler', 'scyther', 'ursaring', 'basculin', 'quilava', 'dewott', 'dartrix', 'petilil', 'rufflet', 'sliggoo', 'bergmite'],
+  },
+  {
+    id: 'tart-apple',
+    nameFr: 'Pomme Acidulée',
+    nameEn: 'Tart Apple',
+    descFr: 'Verpom → Pomdrapi (pomme acide)',
+    descEn: 'Applin → Flapple (tart apple)',
+    icon: '🍏',
+    applicableTo: ['applin'],
+  },
+  {
+    id: 'sweet-apple',
+    nameFr: 'Pomme Sucrée',
+    nameEn: 'Sweet Apple',
+    descFr: 'Verpom → Dratatin / Crèmy → Charmilly',
+    descEn: 'Applin → Appletun / Milcery → Alcremie',
+    icon: '🍎',
+    applicableTo: ['applin', 'milcery'],
   },
 ]
 
