@@ -681,6 +681,57 @@ function toggleGen(id: number) {
     <!-- ═══════════════ PATCH NOTES TAB ═══════════════ -->
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
 
+      <!-- v2.1.0 -->
+      <article class="rounded-xl border-2 border-amber-500/60 bg-gradient-to-br from-amber-900/30 to-yellow-900/20 p-5">
+        <div class="mb-1 flex items-center gap-2">
+          <span class="rounded bg-amber-500 px-2 py-0.5 text-xs font-black text-black">ÉQUILIBRAGE</span>
+        </div>
+        <h3 class="mb-3 text-xl font-black text-amber-300">v2.1.0 — Rééquilibrage Combat & Anti-AFK — 11 Mars 2026</h3>
+
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Refonte complète de l\'équilibrage : les clics sont utiles mais ne remplacent plus une bonne équipe, les boss suivent une courbe de difficulté lisse et la progression AFK est désormais bloquée aux boss.', 'Complete balance overhaul: clicks are useful but no longer replace a good team, bosses follow a smooth difficulty curve, and AFK progression is now blocked at bosses.') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">⚔️ {{ t('Boss — Progression lisse', 'Bosses — Smooth Progression') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Les HP des boss suivent désormais une courbe lisse (facteur 2.0 → 6.0 sur 13 zones) — plus de sauts brutaux liés à la taille de l\'équipe du champion', 'Boss HP now follows a smooth curve (factor 2.0 → 6.0 across 13 zones) — no more brutal spikes from trainer team size') }}</li>
+              <li>{{ t('Les équipes des champions restent visibles (lore) mais n\'influencent plus les HP', 'Trainer teams remain visible (lore) but no longer affect HP') }}</li>
+              <li>{{ t('Le Maître (zone 13) reçoit un bonus ×1.2 — il est toujours le boss le plus dur de la région', 'The Champion (zone 13) gets a ×1.2 bonus — always the hardest boss in the region') }}</li>
+              <li>{{ t('L\'écart de DPS requis entre chaque boss est désormais régulier (~15-30%)', 'DPS requirement gap between bosses is now consistent (~15-30%)') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🖱️ {{ t('Clics — Utiles mais pas broken', 'Clicks — Useful but not broken') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Les clics infligent désormais 25% de dégâts contre les boss — impossible de battre un boss au clic seul', 'Clicks now deal 25% damage against bosses — impossible to beat a boss by clicking alone') }}</li>
+              <li>{{ t('Dégâts pleins conservés contre les Pokémon sauvages (~1.5s par wild en mid-game)', 'Full damage kept against wild Pokémon (~1.5s per wild in mid-game)') }}</li>
+              <li>{{ t('Les dégâts réduits s\'affichent visuellement en combat contre les boss', 'Reduced damage is shown visually in combat against bosses') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🛑 {{ t('Anti-AFK — Bouton Boss', 'Anti-AFK — Boss Gate') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Un bouton "Combattre" apparaît avant chaque combat de boss — la progression est bloquée sans interaction', 'A "Fight" button appears before each boss fight — progression is blocked without interaction') }}</li>
+              <li>{{ t('Le farm AFK de Pokémon sauvages reste possible (or + XP) mais ne permet plus de franchir les boss', 'AFK wild farming still works (gold + XP) but no longer lets you clear bosses') }}</li>
+              <li>{{ t('Le mode Entraînement n\'est pas affecté — farm libre sur les routes déjà complétées', 'Training mode is unaffected — free farming on already completed routes') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-amber-400">🗑️ {{ t('Retraits', 'Removals') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Les améliorations de dégâts clics ont été retirées de la boutique (27 paliers supprimés)', 'Click damage upgrades have been removed from the shop (27 tiers removed)') }}</li>
+              <li>{{ t('Les bonus achetés par les joueurs existants sont réinitialisés automatiquement', 'Existing player purchased bonuses are automatically reset') }}</li>
+              <li>{{ t('Formule de clics simplifiée : dépend uniquement du niveau et des badges', 'Click formula simplified: depends only on level and badges') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
       <!-- v2.0.0 -->
       <article class="rounded-xl border-2 border-red-500/60 bg-gradient-to-br from-red-900/30 to-amber-900/20 p-5">
         <div class="mb-1 flex items-center gap-2">
@@ -743,7 +794,7 @@ function toggleGen(id: number) {
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
               <li>{{ t('Malus admin : pénalités DPS ou or applicables aux joueurs (anti-triche)', 'Admin penalties: DPS or gold penalties for players (anti-cheat)') }}</li>
               <li>{{ t('Prix des items d\'évolution adaptés par génération (5k Gen 1 → 1M Gen 9)', 'Evolution item prices scaled by generation (5k Gen 1 → 1M Gen 9)') }}</li>
-              <li>{{ t('Click boosts étendus aux 9 régions (27 paliers)', 'Click boosts extended to all 9 regions (27 tiers)') }}</li>
+              <li>{{ t('Click boosts étendus aux 9 régions (retirés en v2.1.0)', 'Click boosts extended to all 9 regions (removed in v2.1.0)') }}</li>
               <li>{{ t('Mode invité supprimé — compte requis pour jouer', 'Guest mode removed — account required to play') }}</li>
               <li>{{ t('Sprites équipe agrandis dans l\'inventaire', 'Enlarged team sprites in inventory') }}</li>
               <li>{{ t('Migration automatique des noms FR/EN pour Pokémon existants', 'Automatic FR/EN name migration for existing Pokémon') }}</li>
