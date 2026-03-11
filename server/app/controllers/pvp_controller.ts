@@ -232,11 +232,15 @@ export default class PvpController {
       )
     } catch (err) {
       console.error('[PVP] resolveMatch threw:', err)
-      return response.internalServerError({ message: `Erreur combat: ${err instanceof Error ? err.message : String(err)}` })
+      return response.internalServerError({
+        message: `Erreur combat: ${err instanceof Error ? err.message : String(err)}`,
+      })
     }
 
     if (!result) {
-      return response.internalServerError({ message: 'Impossible de résoudre le combat (voir logs serveur [PVP])' })
+      return response.internalServerError({
+        message: 'Impossible de résoudre le combat (voir logs serveur [PVP])',
+      })
     }
 
     // Update challenge

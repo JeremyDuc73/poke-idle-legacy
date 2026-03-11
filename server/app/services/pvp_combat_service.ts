@@ -333,7 +333,9 @@ export async function resolveMatch(
   commonGenerations: number[]
 ): Promise<PvpResolution | null> {
   // Load pokemon with species
-  console.log(`[PVP] resolveMatch: p1=${player1Id} ids=${JSON.stringify(player1PokemonIds)}, p2=${player2Id} ids=${JSON.stringify(player2PokemonIds)}, gens=${JSON.stringify(commonGenerations)}`)
+  console.log(
+    `[PVP] resolveMatch: p1=${player1Id} ids=${JSON.stringify(player1PokemonIds)}, p2=${player2Id} ids=${JSON.stringify(player2PokemonIds)}, gens=${JSON.stringify(commonGenerations)}`
+  )
 
   const p1Pokemon = await UserPokemon.query()
     .whereIn('id', player1PokemonIds)
@@ -355,7 +357,9 @@ export async function resolveMatch(
   const boss = await pickBoss(commonGenerations)
   console.log(`[PVP] pickBoss result: ${boss ? boss.slug : 'NULL'}`)
   if (!boss) {
-    console.error(`[PVP] FAIL: pickBoss returned null for gens=${JSON.stringify(commonGenerations)}`)
+    console.error(
+      `[PVP] FAIL: pickBoss returned null for gens=${JSON.stringify(commonGenerations)}`
+    )
     return null
   }
 

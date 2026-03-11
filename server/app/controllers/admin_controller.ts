@@ -311,7 +311,9 @@ export default class AdminController {
   async clearBanner({ response }: HttpContext) {
     try {
       await unlink(BANNER_FILE())
-    } catch { /* file may not exist */ }
+    } catch {
+      /* file may not exist */
+    }
     return response.ok({ message: null })
   }
 }
