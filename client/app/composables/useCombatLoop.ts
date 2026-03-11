@@ -132,7 +132,9 @@ export function useCombatLoop() {
     // Boss HP: smooth team factor 2.0 (z1) → 6.0 (z13) — boss trainer teams are visual/lore only
     const zoneIdx = player.activeCombatZone - 1
     const smoothTeam = 2 + (zoneIdx / 12) * 4
-    const totalHp = Math.round(smoothTeam * 140 * Math.pow(localDiff, 1.21) * genDiffMult)
+    // Champion (z13) gets ×1.2 HP to stay hardest despite longer timer
+    const championMult = zoneIdx === 12 ? 1.2 : 1.0
+    const totalHp = Math.round(smoothTeam * 140 * Math.pow(localDiff, 1.21) * genDiffMult * championMult)
     // Boss rewards ≈ 10× wild rewards
     const diffScale = 1 + localDiff * 0.02
     const goldBase = gen === 1 ? 500 : 4000 * gen * gen
