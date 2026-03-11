@@ -96,7 +96,12 @@ export default class PvpController {
       })
     }
 
-    const { challengedId, betAmount, team, bossSlug: requestedBossSlug } = request.body() as {
+    const {
+      challengedId,
+      betAmount,
+      team,
+      bossSlug: requestedBossSlug,
+    } = request.body() as {
       challengedId: number
       betAmount: number
       team: string[]
@@ -154,7 +159,8 @@ export default class PvpController {
     const commonGens = Array.from({ length: minGen }, (_, i) => i + 1)
     let boss: Awaited<ReturnType<typeof pickBoss>> = null
     if (requestedBossSlug) {
-      const Species = (await import('#models/species')).default
+      const speciesModule = await import('#models/species')
+      const Species = speciesModule.default
       boss = await Species.query().where('slug', requestedBossSlug).first()
     }
     if (!boss) {
