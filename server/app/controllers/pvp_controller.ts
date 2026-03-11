@@ -185,7 +185,15 @@ export default class PvpController {
         challengerAvatarUrl: c.challenger.avatarUrl,
         betAmount: c.betAmount,
         expiresAt: c.expiresAt?.toISO(),
-        boss: c.bossSlug ? { slug: c.bossSlug, nameFr: c.bossNameFr, nameEn: c.bossNameEn, types: c.bossTypes, generation: c.bossGeneration } : null,
+        boss: c.bossSlug
+          ? {
+              slug: c.bossSlug,
+              nameFr: c.bossNameFr,
+              nameEn: c.bossNameEn,
+              types: c.bossTypes,
+              generation: c.bossGeneration,
+            }
+          : null,
       })),
       sent: sent.map((c) => ({
         id: c.id,
@@ -195,7 +203,15 @@ export default class PvpController {
         challengedAvatarUrl: c.challenged.avatarUrl,
         betAmount: c.betAmount,
         expiresAt: c.expiresAt?.toISO(),
-        boss: c.bossSlug ? { slug: c.bossSlug, nameFr: c.bossNameFr, nameEn: c.bossNameEn, types: c.bossTypes, generation: c.bossGeneration } : null,
+        boss: c.bossSlug
+          ? {
+              slug: c.bossSlug,
+              nameFr: c.bossNameFr,
+              nameEn: c.bossNameEn,
+              types: c.bossTypes,
+              generation: c.bossGeneration,
+            }
+          : null,
       })),
     })
   }
