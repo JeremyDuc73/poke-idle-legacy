@@ -168,12 +168,8 @@ export const useAuthStore = defineStore('auth', {
         // Overwrite localStorage bonuses with server data
         player.saveBonuses()
 
-        // If clickDamageBonus is 0 (e.g. after admin reset), clear purchased click boosts + KO counter
-        if ((data.player.clickDamageBonus ?? 0) === 0) {
-          localStorage.removeItem('poke-idle-click-boosts')
-          localStorage.removeItem('poke-idle-total-kos')
-          useCombatStore().totalKills = 0
-        }
+        // Click boosts removed — always clear legacy data
+        localStorage.removeItem('poke-idle-click-boosts')
 
         inventory.collection = data.pokemons.map((p, i) => ({
           id: i + 1,

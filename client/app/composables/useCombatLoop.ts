@@ -129,8 +129,10 @@ export function useCombatLoop() {
   }
 
   function spawnBoss(boss: BossTrainer, localDiff: number, genDiffMult: number, gen: number) {
-    // Boss HP: Pierre~4.5K, Blue~300K — flatter curve
-    const totalHp = Math.round(boss.team.length * 140 * Math.pow(localDiff, 1.21) * genDiffMult)
+    // Boss HP: smooth team factor 2.0 (z1) → 6.0 (z13) — boss trainer teams are visual/lore only
+    const zoneIdx = player.activeCombatZone - 1
+    const smoothTeam = 2 + (zoneIdx / 12) * 4
+    const totalHp = Math.round(smoothTeam * 140 * Math.pow(localDiff, 1.21) * genDiffMult)
     // Boss rewards ≈ 10× wild rewards
     const diffScale = 1 + localDiff * 0.02
     const goldBase = gen === 1 ? 500 : 4000 * gen * gen

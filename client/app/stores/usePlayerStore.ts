@@ -189,8 +189,8 @@ export const usePlayerStore = defineStore('player', {
     },
 
     recalcClickDamage() {
-      // Clics: √(level) scaling — vise ~35% des dégâts totaux (30-40%)
-      this.clickDamage = Math.floor(3 + Math.sqrt(this.level) * 3 + this.badges * 3) + this.clickDamageBonus
+      // Clics: √(level) + badges scaling — utiles (~20-30% des dégâts) mais jamais dominants
+      this.clickDamage = Math.floor(3 + Math.sqrt(this.level) * 3 + this.badges * 1.5)
     },
 
     addXp(amount: number) {
@@ -295,6 +295,8 @@ export const usePlayerStore = defineStore('player', {
       // Ensure new fields have safe defaults (old saves may not include them)
       if (typeof this.shinyCharms !== 'number' || isNaN(this.shinyCharms)) this.shinyCharms = 0
       if (!Array.isArray(this.completedPokedexGens)) this.completedPokedexGens = []
+      // Click boosts removed — reset legacy bonus
+      this.clickDamageBonus = 0
       this.recalcClickDamage()
       this.saveBonuses()
     },
