@@ -4,7 +4,7 @@ import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import PvpChallenge from '#models/pvp_challenge'
 import PvpMatch from '#models/pvp_match'
-import { resolveMatch } from '#services/pvp_combat_service'
+import { resolveMatch, pickBoss } from '#services/pvp_combat_service'
 
 const MIN_BET = 100
 const MAX_BET_PERCENT = 0.5
@@ -113,6 +113,18 @@ export default class PvpController {
       return response.badRequest({ message: 'Un défi est déjà en attente entre vous deux' })
     }
 
+    // Pre-pick the PvP boss so both players can see it before choosing their team
+    const minGen = Math.min(user.currentGeneration, challenged.currentGeneration)
+    const commonGens = Array.from({ length: minGen }, (_, i) => i + 1)
+    const boss = await pickBoss(commonGens)
+    if (!boss) {
+      return response.internalServerError({ message: 'Impossible de choisir un boss PvP' })
+    }
+    const bossType1 = (boss.type1 ?? '').toLowerCase().trim()
+    const bossType2 = (boss.type2 ?? '').toLowerCase().trim()
+    const bossTypes = [bossType1, bossType2].filter(Boolean)
+    if (bossTypes.length === 0) bossTypes.push('normal')
+
     // Deduct gold from challenger immediately
     user.gold -= betAmount
     await user.save()
@@ -123,6 +135,11 @@ export default class PvpController {
       betAmount,
       challengerTeam: team,
       challengedTeam: null,
+      bossSlug: boss.slug,
+      bossNameFr: boss.nameFr,
+      bossNameEn: boss.nameEn,
+      bossTypes,
+      bossGeneration: boss.generation,
       status: 'pending',
       expiresAt: DateTime.now().plus({ minutes: CHALLENGE_EXPIRE_MINUTES }),
     })
@@ -168,6 +185,7 @@ export default class PvpController {
         challengerAvatarUrl: c.challenger.avatarUrl,
         betAmount: c.betAmount,
         expiresAt: c.expiresAt?.toISO(),
+        boss: c.bossSlug ? { slug: c.bossSlug, nameFr: c.bossNameFr, nameEn: c.bossNameEn, types: c.bossTypes, generation: c.bossGeneration } : null,
       })),
       sent: sent.map((c) => ({
         id: c.id,
@@ -177,6 +195,7 @@ export default class PvpController {
         challengedAvatarUrl: c.challenged.avatarUrl,
         betAmount: c.betAmount,
         expiresAt: c.expiresAt?.toISO(),
+        boss: c.bossSlug ? { slug: c.bossSlug, nameFr: c.bossNameFr, nameEn: c.bossNameEn, types: c.bossTypes, generation: c.bossGeneration } : null,
       })),
     })
   }
@@ -220,11 +239,7 @@ export default class PvpController {
     user.gold -= challenge.betAmount
     await user.save()
 
-    // Determine common generations
-    const minGen = Math.min(challenger.currentGeneration, user.currentGeneration)
-    const commonGens = Array.from({ length: minGen }, (_, i) => i + 1)
-
-    // Resolve combat
+    // Resolve combat using the pre-picked boss from the challenge
     let result
     try {
       result = await resolveMatch(
@@ -232,7 +247,8 @@ export default class PvpController {
         user.id,
         challenge.challengerTeam!,
         team,
-        commonGens
+        [],
+        challenge.bossSlug ?? undefined
       )
     } catch (err) {
       console.error('[PVP] resolveMatch threw:', err)

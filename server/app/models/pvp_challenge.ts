@@ -35,6 +35,25 @@ export default class PvpChallenge extends BaseModel {
   declare challengedTeam: string[] | null
 
   @column()
+  declare bossSlug: string | null
+
+  @column()
+  declare bossNameFr: string | null
+
+  @column()
+  declare bossNameEn: string | null
+
+  @column({
+    prepare: (value: string[] | null) => (value ? JSON.stringify(value) : null),
+    consume: (value: string | string[] | null) =>
+      typeof value === 'string' ? JSON.parse(value) : value,
+  })
+  declare bossTypes: string[] | null
+
+  @column()
+  declare bossGeneration: number | null
+
+  @column()
   declare status: PvpChallengeStatus
 
   @column.dateTime()

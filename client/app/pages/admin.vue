@@ -457,6 +457,27 @@ async function setProgression() {
   }
 }
 
+async function resetAllPlayers() {
+  if (!confirm('⚠️ RESET GLOBAL — Tous les joueurs seront réinitialisés (progression, pokémon, PvP, classements). Cette action est IRRÉVERSIBLE. Continuer ?')) return
+  if (!confirm('Dernière confirmation : TOUT sera supprimé. Êtes-vous absolument sûr ?')) return
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/reset-all`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    if (res.ok) {
+      const data = await res.json()
+      alert(data.message)
+      await refreshAll()
+    } else {
+      const err = await res.json().catch(() => null)
+      alert(`Erreur: ${err?.message || res.statusText}`)
+    }
+  } catch (e) {
+    alert(`Erreur réseau: ${e}`)
+  }
+}
+
 async function refreshAll() {
   refreshing.value = true
   await Promise.all([loadDashboard(), loadUsers(), loadBanner()])
@@ -524,6 +545,22 @@ onMounted(async () => {
             Retirer
           </button>
         </div>
+      </section>
+
+      <!-- Global Reset -->
+      <section class="mb-6 rounded-xl border border-red-500/30 bg-red-500/5 p-4 sm:mb-8">
+        <h2 class="mb-3 flex items-center gap-2 text-sm font-bold text-red-400">
+          <RotateCcw class="h-4 w-4" /> Reset global
+        </h2>
+        <p class="mb-3 text-xs text-slate-400">
+          Réinitialiser TOUS les joueurs : progression, pokémon, classements classiques et PvP. Les comptes (email, mot de passe) sont conservés.
+        </p>
+        <button
+          class="rounded-lg bg-red-600 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-red-500"
+          @click="resetAllPlayers"
+        >
+          Réinitialiser tous les joueurs
+        </button>
       </section>
 
       <!-- Admin Progression -->

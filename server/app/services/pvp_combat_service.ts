@@ -330,7 +330,8 @@ export async function resolveMatch(
   player2Id: number,
   player1Slugs: string[],
   player2Slugs: string[],
-  commonGenerations: number[]
+  commonGenerations: number[],
+  prePickedBossSlug?: string
 ): Promise<PvpResolution | null> {
   // Load pokemon by slug via species relation
   console.log(
@@ -369,8 +370,14 @@ export async function resolveMatch(
     return null
   }
 
-  // Pick boss
-  const boss = await pickBoss(commonGenerations)
+  // Pick boss (use pre-picked slug if available, otherwise random)
+  let boss: Species | null = null
+  if (prePickedBossSlug) {
+    boss = await Species.query().where('slug', prePickedBossSlug).first()
+  }
+  if (!boss) {
+    boss = await pickBoss(commonGenerations)
+  }
   console.log(`[PVP] pickBoss result: ${boss ? boss.slug : 'NULL'}`)
   if (!boss) {
     console.error(

@@ -6,6 +6,8 @@ import db from '@adonisjs/lucid/services/db'
 import app from '@adonisjs/core/services/app'
 import User from '#models/user'
 import UserPokemon from '#models/user_pokemon'
+import PvpChallenge from '#models/pvp_challenge'
+import PvpMatch from '#models/pvp_match'
 
 const BANNER_FILE = () => join(app.makePath('storage'), 'banner.json')
 
@@ -137,6 +139,35 @@ export default class AdminController {
   async resetUser({ params, response }: HttpContext) {
     const user = await User.findOrFail(params.id)
 
+    // Refund pending challenges where this user is involved
+    const pendingChallenges = await PvpChallenge.query()
+      .where('status', 'pending')
+      .where((q) => {
+        q.where('challengerId', user.id).orWhere('challengedId', user.id)
+      })
+    for (const ch of pendingChallenges) {
+      // Refund the challenger's bet
+      if (ch.challengerId !== user.id) {
+        await User.query().where('id', ch.challengerId).increment('gold', ch.betAmount)
+      }
+      ch.status = 'expired'
+      await ch.save()
+    }
+
+    // Delete all PvP matches involving this user
+    await PvpMatch.query()
+      .where((q) => {
+        q.where('player1Id', user.id).orWhere('player2Id', user.id)
+      })
+      .delete()
+
+    // Delete all PvP challenges involving this user (pending already handled)
+    await PvpChallenge.query()
+      .where((q) => {
+        q.where('challengerId', user.id).orWhere('challengedId', user.id)
+      })
+      .delete()
+
     user.gold = 0
     user.gems = 0
     user.currentGeneration = 1
@@ -158,7 +189,45 @@ export default class AdminController {
     // Delete all user's pokemon
     await UserPokemon.query().where('user_id', user.id).delete()
 
-    return response.ok({ message: 'User progress reset successfully' })
+    return response.ok({ message: 'User progress reset successfully (including PvP)' })
+  }
+
+  /**
+   * Reset ALL players globally (progression + PvP)
+   */
+  async resetAllPlayers({ response }: HttpContext) {
+    // Delete all PvP data first (FK constraints)
+    await PvpMatch.query().delete()
+    await PvpChallenge.query().delete()
+
+    // Delete all pokemon
+    await UserPokemon.query().delete()
+
+    // Reset all users (keep accounts, role, email, password)
+    await User.query().update({
+      gold: 0,
+      gems: 0,
+      currentGeneration: 1,
+      currentZone: 1,
+      currentStage: 1,
+      clickDamage: 1,
+      clickDamageBonus: 0,
+      teamDpsBonus: 0,
+      xp: 0,
+      level: 1,
+      badges: 0,
+      candies: JSON.stringify({}),
+      daycare: JSON.stringify([]),
+      defeatedBosses: JSON.stringify([]),
+      penaltyType: null,
+      penaltyPercent: 0,
+      adminVersion: db.raw('COALESCE(admin_version, 0) + 1'),
+    })
+
+    const totalUsers = await User.query().count('* as total')
+    return response.ok({
+      message: `Reset global effectué — ${totalUsers[0].$extras.total} joueurs réinitialisés, PvP purgé`,
+    })
   }
 
   /**

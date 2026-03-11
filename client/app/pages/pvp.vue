@@ -45,6 +45,7 @@ const betAmount = ref(1000)
 const showTeamModal = ref(false)
 const teamModalMode = ref<'challenge' | 'accept'>('challenge')
 const acceptingChallengeId = ref<number | null>(null)
+const acceptingChallengeBoss = ref<{ slug: string; nameFr: string; nameEn: string; types: string[]; generation: number } | null>(null)
 const selectedTeam = ref<number[]>([])
 const teamSearch = ref('')
 const teamSort = ref<'level' | 'stars' | 'name'>('level')
@@ -157,6 +158,7 @@ async function sendChallenge() {
 
 function openAcceptModal(challenge: any) {
   acceptingChallengeId.value = challenge.id
+  acceptingChallengeBoss.value = challenge.boss ?? null
   teamModalMode.value = 'accept'
   selectedTeam.value = []
   showTeamModal.value = true
@@ -386,6 +388,10 @@ onUnmounted(() => {
                 </div>
               </div>
               <div class="flex items-center gap-3">
+                <div v-if="c.boss" class="flex items-center gap-1.5">
+                  <img :src="getSpriteUrl(c.boss.slug)" class="h-8 w-8 object-contain" alt="" />
+                  <span class="text-xs font-bold text-slate-300">{{ t(c.boss.nameFr, c.boss.nameEn) }}</span>
+                </div>
                 <span class="text-sm font-bold text-yellow-400">🪙 {{ formatGold(c.betAmount) }}</span>
                 <button
                   class="rounded-lg bg-green-600/20 px-3 py-1.5 text-xs font-bold text-green-400 transition-colors hover:bg-green-600/30"
@@ -425,6 +431,10 @@ onUnmounted(() => {
                 <span class="text-xs text-slate-400">Lv.{{ c.challengedLevel }}</span>
               </div>
               <div class="flex items-center gap-2">
+                <div v-if="c.boss" class="flex items-center gap-1.5">
+                  <img :src="getSpriteUrl(c.boss.slug)" class="h-8 w-8 object-contain" alt="" />
+                  <span class="text-xs font-bold text-slate-300">{{ t(c.boss.nameFr, c.boss.nameEn) }}</span>
+                </div>
                 <span class="text-sm font-bold text-yellow-400">🪙 {{ formatGold(c.betAmount) }}</span>
                 <span class="rounded-full bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-400">{{ t('En attente', 'Pending') }}</span>
               </div>
@@ -643,6 +653,32 @@ onUnmounted(() => {
             </span>
           </div>
 
+          <!-- Boss preview (when accepting a challenge) -->
+          <div
+            v-if="teamModalMode === 'accept' && acceptingChallengeBoss"
+            class="mb-4 flex items-center gap-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3"
+          >
+            <img :src="getSpriteUrl(acceptingChallengeBoss.slug)" class="h-14 w-14 object-contain" alt="" />
+            <div>
+              <p class="text-sm font-bold text-amber-300">
+                {{ t('Boss :', 'Boss:') }} {{ t(acceptingChallengeBoss.nameFr, acceptingChallengeBoss.nameEn) }}
+              </p>
+              <div class="mt-0.5 flex items-center gap-1">
+                <span
+                  v-for="btype in (acceptingChallengeBoss.types || [])"
+                  :key="btype"
+                  class="rounded bg-slate-700 px-1.5 py-0.5 text-[10px] font-bold uppercase text-slate-300"
+                >
+                  {{ btype }}
+                </span>
+                <span class="ml-1 text-[10px] text-slate-500">Gen {{ acceptingChallengeBoss.generation }}</span>
+              </div>
+              <p class="mt-1 text-[10px] text-amber-400/70">
+                {{ t('Choisissez des types efficaces contre ce boss !', 'Pick types that are effective against this boss!') }}
+              </p>
+            </div>
+          </div>
+
           <!-- Selected team preview -->
           <div class="mb-4 flex gap-2">
             <div
@@ -755,8 +791,17 @@ onUnmounted(() => {
           <!-- Boss info -->
           <div class="mb-6 text-center">
             <img :src="getSpriteUrl(matchResult.boss.slug)" class="mx-auto h-24 w-24 object-contain" alt="" />
-            <h3 class="mt-2 text-lg font-bold text-white">{{ matchResult.boss.nameFr }}</h3>
-            <p class="text-xs text-slate-400">{{ t('Boss imbattable', 'Unbeatable boss') }} · Gen {{ matchResult.boss.generation }}</p>
+            <h3 class="mt-2 text-lg font-bold text-white">{{ t(matchResult.boss.nameFr, matchResult.boss.nameEn) }}</h3>
+            <div class="mt-1 flex items-center justify-center gap-1.5">
+              <span
+                v-for="btype in (matchResult.boss.types || [])"
+                :key="btype"
+                class="rounded bg-slate-700 px-2 py-0.5 text-[10px] font-bold uppercase text-slate-300"
+              >
+                {{ btype }}
+              </span>
+              <span class="text-xs text-slate-500">· Gen {{ matchResult.boss.generation }}</span>
+            </div>
           </div>
 
           <!-- Damage bars -->
@@ -838,15 +883,21 @@ onUnmounted(() => {
                   <div
                     v-for="poke in side.team"
                     :key="poke.pokemonId"
-                    class="flex flex-col items-center rounded bg-slate-800 p-1"
-                    :title="`${poke.nameFr} — DPS: ${poke.effectiveDps} (x${poke.typeMult})`"
+                    class="flex flex-col items-center rounded p-1.5"
+                    :class="poke.typeMult > 1 ? 'bg-green-900/30 border border-green-500/20' : poke.typeMult < 1 ? 'bg-red-900/30 border border-red-500/20' : 'bg-slate-800'"
+                    :title="`${poke.nameFr} — Base: ${poke.dps} × ${poke.typeMult} = ${poke.effectiveDps} DPS`"
                   >
                     <img
                       :src="poke.isShiny ? getShinySpriteUrl(poke.slug) : getSpriteUrl(poke.slug)"
                       class="h-8 w-8 object-contain"
                       alt=""
                     />
-                    <span class="text-[8px] text-slate-400">{{ poke.effectiveDps }}</span>
+                    <span class="text-[8px] font-bold" :class="poke.typeMult > 1 ? 'text-green-400' : poke.typeMult < 1 ? 'text-red-400' : 'text-slate-400'">
+                      {{ poke.effectiveDps }}
+                    </span>
+                    <span v-if="poke.typeMult !== 1" class="text-[7px]" :class="poke.typeMult > 1 ? 'text-green-500' : 'text-red-500'">
+                      ×{{ poke.typeMult }}
+                    </span>
                   </div>
                 </div>
               </div>
