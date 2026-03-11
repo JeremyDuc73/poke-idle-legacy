@@ -107,7 +107,7 @@ export function useCombatLoop() {
     // Gold scales with banner cost: ~5 pulls/100 kills at start, ~10 at end
     // Gen 1 uses lower base (25) to match cheap Kanto banner (500g)
     const diffScale = 1 + localDiff * 0.02
-    const goldBase = gen === 1 ? 25 : 400 * gen * gen
+    const goldBase = gen === 1 ? 50 : 400 * gen * gen
     const xpBase = gen === 1 ? 50 : 200 * gen * gen
     const goldReward = Math.round(goldBase * diffScale * (isShiny ? 5 : 1))
     const xpReward = Math.round(xpBase * diffScale * (isShiny ? 3 : 1))
@@ -129,11 +129,11 @@ export function useCombatLoop() {
   }
 
   function spawnBoss(boss: BossTrainer, localDiff: number, genDiffMult: number, gen: number) {
-    // Boss HP: calibrated so Pierre~2K, Blue~400K, gen9-z1~15K, gen9-z13~1M
-    const totalHp = Math.round(boss.team.length * 23 * Math.pow(localDiff, 1.637) * genDiffMult)
+    // Boss HP: flattened curve — early bosses slightly tougher, late bosses easier
+    const totalHp = Math.round(boss.team.length * 35 * Math.pow(localDiff, 1.5) * genDiffMult)
     // Boss rewards ≈ 10× wild rewards
     const diffScale = 1 + localDiff * 0.02
-    const goldBase = gen === 1 ? 250 : 4000 * gen * gen
+    const goldBase = gen === 1 ? 500 : 4000 * gen * gen
     const xpBase = gen === 1 ? 500 : 2000 * gen * gen
     const bossTypes = getPokemonTypes(boss.team[0]?.slug ?? 'normal')
     combat.setEnemy({
