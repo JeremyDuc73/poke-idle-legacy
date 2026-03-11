@@ -1,9 +1,10 @@
 # ---- Dev Stage (no build, just deps) ----
 FROM node:20-alpine AS dev
 WORKDIR /app
-COPY package*.json ./
+COPY server/package*.json ./
 RUN npm ci
-COPY . .
+COPY server/ .
+COPY shared/ /shared/
 EXPOSE 3333
 CMD ["node", "ace", "serve", "--hmr"]
 
@@ -16,6 +17,7 @@ FROM node:20-alpine AS production
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/build ./
+COPY --from=builder /shared/ /shared/
 RUN npm ci --omit=dev
 EXPOSE 3333
 CMD ["node", "bin/server.js"]

@@ -27,7 +27,8 @@ jobs:
       - name: Build & push server image
         uses: docker/build-push-action@v6
         with:
-          context: ./server
+          context: .
+          file: ./server/Dockerfile
           push: true
           tags: |
             ghcr.io/jeremyduc73/poke-idle-legacy/server:latest
@@ -36,7 +37,8 @@ jobs:
       - name: Build & push client image
         uses: docker/build-push-action@v6
         with:
-          context: ./client
+          context: .
+          file: ./client/Dockerfile
           push: true
           tags: |
             ghcr.io/jeremyduc73/poke-idle-legacy/client:latest
