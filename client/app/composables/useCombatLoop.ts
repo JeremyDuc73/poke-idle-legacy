@@ -118,7 +118,7 @@ export function useCombatLoop() {
       spriteUrl: isShiny ? getShinySpriteUrl(poke.slug) : getSpriteUrl(poke.slug),
       maxHp: hp,
       currentHp: hp,
-      level: Math.max(1, Math.ceil(localDiff * 100 / 130)),
+      level: Math.max(3, Math.min(95, Math.round(3 + localDiff * 92 / 130))),
       goldReward,
       xpReward,
       isBoss: false,
@@ -128,8 +128,8 @@ export function useCombatLoop() {
   }
 
   function spawnBoss(boss: BossTrainer, localDiff: number, genDiffMult: number, gen: number) {
-    // Boss HP: team base × local scaling × gentle gen multiplier
-    const teamBase = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0)
+    // Boss HP: controlled scaling — team size × difficulty curve, independent of visual levels
+    const teamBase = Math.round(boss.team.length * Math.pow(localDiff, 1.6) * 1.4)
     const totalHp = Math.round(teamBase * (1.5 + localDiff * 0.05) * genDiffMult * 2.3)
     // Boss rewards ≈ 10× wild rewards
     const diffScale = 1 + localDiff * 0.02
@@ -144,7 +144,7 @@ export function useCombatLoop() {
       spriteUrl: getTrainerSpriteUrl(boss.slug),
       maxHp: totalHp,
       currentHp: totalHp,
-      level: Math.max(1, Math.ceil(localDiff * 100 / 130)),
+      level: Math.max(5, Math.min(100, Math.round(5 + localDiff * 95 / 130))),
       goldReward: Math.round(goldBase * diffScale),
       xpReward: Math.round(xpBase * diffScale),
       isBoss: true,
