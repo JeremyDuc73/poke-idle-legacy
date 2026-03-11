@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Swords, Package, User, Sparkles, Store, Globe, Trophy, LogOut, LogIn, BookOpen, Medal, Egg, HelpCircle, Bug, Shield, X, MoreHorizontal } from 'lucide-vue-next'
+import { Swords, Package, User, Sparkles, Store, Globe, Trophy, LogOut, LogIn, BookOpen, Medal, Egg, HelpCircle, Bug, Shield, X, MoreHorizontal, Megaphone } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
@@ -30,9 +30,21 @@ const { toasts, addToast, removeToast } = useToast()
 
 const mobileMenuOpen = ref(false)
 const receivedPvpChallenges = ref(0)
+const adminBanner = ref<string | null>(null)
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null
 let debouncedSaveTimer: ReturnType<typeof setTimeout> | null = null
 let pvpPollInterval: ReturnType<typeof setInterval> | null = null
+let bannerPollInterval: ReturnType<typeof setInterval> | null = null
+
+async function fetchBanner() {
+  try {
+    const res = await fetch(`${config.public.apiBase}/api/banner`)
+    if (res.ok) {
+      const data = await res.json()
+      adminBanner.value = data.message ?? null
+    }
+  } catch { /* ignore */ }
+}
 
 async function pollPvpChallenges() {
   if (!auth.isAuthenticated || player.badges < 13) return
@@ -96,6 +108,10 @@ onMounted(() => {
     window.addEventListener('beforeunload', saveOnUnload)
     document.addEventListener('visibilitychange', saveOnVisibilityChange)
   }
+
+  // Fetch banner for all users (including visitors)
+  fetchBanner()
+  bannerPollInterval = setInterval(fetchBanner, 30_000)
 })
 
 // Debounced reactive save: any important state change triggers save after 2s
@@ -127,6 +143,7 @@ onUnmounted(() => {
   if (autoSaveInterval) clearInterval(autoSaveInterval)
   if (debouncedSaveTimer) clearTimeout(debouncedSaveTimer)
   if (pvpPollInterval) clearInterval(pvpPollInterval)
+  if (bannerPollInterval) clearInterval(bannerPollInterval)
   window.removeEventListener('beforeunload', saveOnUnload)
   document.removeEventListener('visibilitychange', saveOnVisibilityChange)
 })
@@ -453,6 +470,12 @@ watch(() => inventory.collectionCount, () => {
           </NuxtLink>
         </div>
       </header>
+
+      <!-- Admin Banner -->
+      <div v-if="adminBanner" class="flex items-center gap-2 border-b border-amber-500/30 bg-amber-500/10 px-4 py-2 text-center">
+        <Megaphone class="h-4 w-4 shrink-0 text-amber-400" />
+        <p class="flex-1 text-sm font-medium text-amber-200">{{ adminBanner }}</p>
+      </div>
 
       <!-- Login Banner (visitors) -->
       <div v-if="!auth.isAuthenticated" class="mx-3 mt-3 flex items-center justify-between gap-3 rounded-xl border border-indigo-500/30 bg-indigo-500/10 px-4 py-3 md:mx-6 md:mt-4">

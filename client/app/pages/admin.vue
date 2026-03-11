@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon, Eye, Pencil, Gift, RotateCcw, Trash2, Ban, ImageOff } from 'lucide-vue-next'
+import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon, Eye, Pencil, Gift, RotateCcw, Trash2, Ban, ImageOff, Megaphone } from 'lucide-vue-next'
 
 definePageMeta({ layout: 'game' })
 
@@ -107,6 +107,9 @@ const roleFilter = ref<'all' | 'user' | 'admin'>('all')
 const sortBy = ref<'username' | 'level' | 'gold' | 'badges'>('level')
 const sortOrder = ref<'asc' | 'desc'>('desc')
 const refreshing = ref(false)
+const bannerMessage = ref('')
+const currentBanner = ref<string | null>(null)
+const bannerLoading = ref(false)
 
 const filteredUsers = computed(() => {
   let filtered = users.value.filter(u => {
@@ -355,15 +358,64 @@ async function removePenalty(userId: number) {
   }
 }
 
+async function loadBanner() {
+  try {
+    const res = await fetch(`${API_BASE}/api/banner`, { credentials: 'include' })
+    if (res.ok) {
+      const data = await res.json()
+      currentBanner.value = data.message ?? null
+      if (data.message) bannerMessage.value = data.message
+    }
+  } catch { /* ignore */ }
+}
+
+async function setBanner() {
+  if (!bannerMessage.value.trim()) return
+  bannerLoading.value = true
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/banner`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: bannerMessage.value.trim() }),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      currentBanner.value = data.message
+      alert('Bandeau publié !')
+    }
+  } catch (e) {
+    alert(`Erreur: ${e}`)
+  } finally {
+    bannerLoading.value = false
+  }
+}
+
+async function clearBanner() {
+  if (!confirm('Retirer le bandeau ?')) return
+  bannerLoading.value = true
+  try {
+    await fetch(`${API_BASE}/api/admin/banner`, { method: 'DELETE', credentials: 'include' })
+    currentBanner.value = null
+    bannerMessage.value = ''
+    alert('Bandeau retiré')
+  } catch (e) {
+    alert(`Erreur: ${e}`)
+  } finally {
+    bannerLoading.value = false
+  }
+}
+
 async function refreshAll() {
   refreshing.value = true
-  await Promise.all([loadDashboard(), loadUsers()])
+  await Promise.all([loadDashboard(), loadUsers(), loadBanner()])
   refreshing.value = false
 }
 
 onMounted(async () => {
   await loadDashboard()
   await loadUsers()
+  await loadBanner()
 })
 </script>
 
@@ -384,6 +436,44 @@ onMounted(async () => {
           <span class="hidden sm:inline">Actualiser</span>
         </button>
       </div>
+
+      <!-- Banner Management -->
+      <section class="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 sm:mb-8">
+        <h2 class="mb-3 flex items-center gap-2 text-sm font-bold text-amber-400">
+          <Megaphone class="h-4 w-4" /> Bandeau d'annonce
+        </h2>
+        <div v-if="currentBanner" class="mb-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-sm text-amber-200">
+          <span class="font-bold">Actif :</span> {{ currentBanner }}
+        </div>
+        <div v-else class="mb-3 text-xs text-slate-500">Aucun bandeau actif</div>
+        <div class="flex flex-wrap items-end gap-2">
+          <div class="flex-1">
+            <label class="mb-1 block text-[10px] font-medium text-slate-400">Message</label>
+            <input
+              v-model="bannerMessage"
+              type="text"
+              maxlength="200"
+              placeholder="Ex: Maintenance prévue à 22h..."
+              class="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none"
+            />
+          </div>
+          <button
+            class="rounded-lg bg-amber-600 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-amber-500 disabled:opacity-50"
+            :disabled="bannerLoading || !bannerMessage.trim()"
+            @click="setBanner"
+          >
+            Publier
+          </button>
+          <button
+            v-if="currentBanner"
+            class="rounded-lg bg-red-600/20 px-4 py-2 text-xs font-bold text-red-400 transition-colors hover:bg-red-600/30 disabled:opacity-50"
+            :disabled="bannerLoading"
+            @click="clearBanner"
+          >
+            Retirer
+          </button>
+        </div>
+      </section>
 
       <!-- Stats Grid -->
       <div v-if="stats" class="mb-6 grid grid-cols-2 gap-3 sm:mb-8 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">

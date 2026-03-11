@@ -1,11 +1,13 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import { join } from 'node:path'
-import { unlink } from 'node:fs/promises'
+import { unlink, readFile, writeFile } from 'node:fs/promises'
 import db from '@adonisjs/lucid/services/db'
 import app from '@adonisjs/core/services/app'
 import User from '#models/user'
 import UserPokemon from '#models/user_pokemon'
+
+const BANNER_FILE = () => join(app.makePath('storage'), 'banner.json')
 
 export default class AdminController {
   /**
@@ -276,5 +278,40 @@ export default class AdminController {
     const pokemons = await UserPokemon.query().where('user_id', params.id).orderBy('id', 'desc')
 
     return response.ok(pokemons)
+  }
+
+  /**
+   * Get current banner message
+   */
+  async getBanner({ response }: HttpContext) {
+    try {
+      const data = await readFile(BANNER_FILE(), 'utf-8')
+      return response.ok(JSON.parse(data))
+    } catch {
+      return response.ok({ message: null })
+    }
+  }
+
+  /**
+   * Set banner message
+   */
+  async setBanner({ request, response }: HttpContext) {
+    const { message } = request.only(['message'])
+    if (!message || typeof message !== 'string' || message.trim().length === 0) {
+      return response.badRequest({ message: 'Le message ne peut pas être vide' })
+    }
+    const banner = { message: message.trim(), createdAt: new Date().toISOString() }
+    await writeFile(BANNER_FILE(), JSON.stringify(banner), 'utf-8')
+    return response.ok(banner)
+  }
+
+  /**
+   * Clear banner message
+   */
+  async clearBanner({ response }: HttpContext) {
+    try {
+      await unlink(BANNER_FILE())
+    } catch { /* file may not exist */ }
+    return response.ok({ message: null })
   }
 }

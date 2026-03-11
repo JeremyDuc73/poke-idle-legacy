@@ -66,6 +66,7 @@ router
 
     router.get('/pokedex', [GameController, 'pokedex'])
     router.get('/leaderboard', [LeaderboardController, 'index'])
+    router.get('/banner', [AdminController, 'getBanner'])
 
     router
       .group(() => {
@@ -80,6 +81,8 @@ router
         router.delete('/users/:id/penalty', [AdminController, 'removePenalty'])
         router.delete('/users/:id/avatar', [AdminController, 'resetAvatar'])
         router.get('/users/:id/pokemons', [AdminController, 'listUserPokemons'])
+        router.post('/banner', [AdminController, 'setBanner'])
+        router.delete('/banner', [AdminController, 'clearBanner'])
       })
       .prefix('/admin')
       .use(middleware.auth())
