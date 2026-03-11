@@ -1655,6 +1655,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Lépidonille', nameEn: 'Scatterbug', slug: 'scatterbug', type: 'bug', baseHp: 50, baseAtk: 10 },
           { nameFr: 'Pérégrain', nameEn: 'Spewpa', slug: 'spewpa', type: 'bug', baseHp: 54, baseAtk: 11 },
           { nameFr: 'Passerouge', nameEn: 'Fletchling', slug: 'fletchling', type: 'normal', baseHp: 52, baseAtk: 10 },
+          { nameFr: 'Sapereau', nameEn: 'Bunnelby', slug: 'bunnelby', type: 'normal', baseHp: 48, baseAtk: 9 },
+          { nameFr: 'Hélionceau', nameEn: 'Litleo', slug: 'litleo', type: 'fire', baseHp: 50, baseAtk: 10 },
         ],
         boss: {
           nameFr: 'Violette',
@@ -1677,6 +1679,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Opermine', nameEn: 'Binacle', slug: 'binacle', type: 'rock', baseHp: 56, baseAtk: 12 },
           { nameFr: 'Ptyranidur', nameEn: 'Tyrunt', slug: 'tyrunt', type: 'rock', baseHp: 60, baseAtk: 13 },
           { nameFr: 'Amagara', nameEn: 'Amaura', slug: 'amaura', type: 'rock', baseHp: 58, baseAtk: 12 },
+          { nameFr: 'Couafarel', nameEn: 'Furfrou', slug: 'furfrou', type: 'normal', baseHp: 54, baseAtk: 11 },
+          { nameFr: 'Monorpale', nameEn: 'Honedge', slug: 'honedge', type: 'steel', baseHp: 56, baseAtk: 12 },
         ],
         boss: {
           nameFr: 'Lino',
@@ -1699,6 +1703,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Pandespiègle', nameEn: 'Pancham', slug: 'pancham', type: 'fighting', baseHp: 60, baseAtk: 13 },
           { nameFr: 'Brutalibré', nameEn: 'Hawlucha', slug: 'hawlucha', type: 'fighting', baseHp: 64, baseAtk: 14 },
           { nameFr: 'Sapereau', nameEn: 'Bunnelby', slug: 'bunnelby', type: 'normal', baseHp: 56, baseAtk: 11 },
+          { nameFr: 'Hélionceau', nameEn: 'Litleo', slug: 'litleo', type: 'fire', baseHp: 58, baseAtk: 12 },
+          { nameFr: 'Couafarel', nameEn: 'Furfrou', slug: 'furfrou', type: 'normal', baseHp: 60, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Cornélia',
@@ -1721,6 +1727,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Cabriolaine', nameEn: 'Skiddo', slug: 'skiddo', type: 'grass', baseHp: 62, baseAtk: 13 },
           { nameFr: 'Flabébé', nameEn: 'Flabébé', slug: 'flabebe', type: 'fairy', baseHp: 56, baseAtk: 11 },
           { nameFr: 'Brocélôme', nameEn: 'Phantump', slug: 'phantump', type: 'ghost', baseHp: 58, baseAtk: 12 },
+          { nameFr: 'Psystigri', nameEn: 'Espurr', slug: 'espurr', type: 'psychic', baseHp: 56, baseAtk: 11 },
+          { nameFr: 'Dedenne', nameEn: 'Dedenne', slug: 'dedenne', type: 'electric', baseHp: 60, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Amaro',
@@ -1743,6 +1751,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Galvaran', nameEn: 'Helioptile', slug: 'helioptile', type: 'electric', baseHp: 60, baseAtk: 13 },
           { nameFr: 'Dedenne', nameEn: 'Dedenne', slug: 'dedenne', type: 'electric', baseHp: 62, baseAtk: 14 },
           { nameFr: 'Hélionceau', nameEn: 'Litleo', slug: 'litleo', type: 'fire', baseHp: 58, baseAtk: 12 },
+          { nameFr: 'Sepiatop', nameEn: 'Inkay', slug: 'inkay', type: 'dark', baseHp: 60, baseAtk: 13 },
+          { nameFr: 'Cabriolaine', nameEn: 'Skiddo', slug: 'skiddo', type: 'grass', baseHp: 56, baseAtk: 12 },
         ],
         boss: {
           nameFr: 'Lem',
@@ -1765,6 +1775,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Fluvetin', nameEn: 'Spritzee', slug: 'spritzee', type: 'fairy', baseHp: 62, baseAtk: 13 },
           { nameFr: 'Sucroquin', nameEn: 'Swirlix', slug: 'swirlix', type: 'fairy', baseHp: 60, baseAtk: 12 },
           { nameFr: 'Trousselin', nameEn: 'Klefki', slug: 'klefki', type: 'steel', baseHp: 64, baseAtk: 14 },
+          { nameFr: 'Flabébé', nameEn: 'Flabébé', slug: 'flabebe', type: 'fairy', baseHp: 58, baseAtk: 12 },
+          { nameFr: 'Psystigri', nameEn: 'Espurr', slug: 'espurr', type: 'psychic', baseHp: 60, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Valériane',
@@ -1787,6 +1799,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Psystigri', nameEn: 'Espurr', slug: 'espurr', type: 'psychic', baseHp: 64, baseAtk: 14 },
           { nameFr: 'Sepiatop', nameEn: 'Inkay', slug: 'inkay', type: 'dark', baseHp: 60, baseAtk: 13 },
           { nameFr: 'Strassie', nameEn: 'Carbink', slug: 'carbink', type: 'rock', baseHp: 66, baseAtk: 15 },
+          { nameFr: 'Monorpale', nameEn: 'Honedge', slug: 'honedge', type: 'steel', baseHp: 62, baseAtk: 14 },
+          { nameFr: 'Brocélôme', nameEn: 'Phantump', slug: 'phantump', type: 'ghost', baseHp: 64, baseAtk: 14 },
         ],
         boss: {
           nameFr: 'Astera',
@@ -1809,6 +1823,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Grelaçon', nameEn: 'Bergmite', slug: 'bergmite', type: 'ice', baseHp: 66, baseAtk: 15 },
           { nameFr: 'Pitrouille', nameEn: 'Pumpkaboo', slug: 'pumpkaboo', type: 'ghost', baseHp: 64, baseAtk: 14 },
           { nameFr: 'Sonistrelle', nameEn: 'Noibat', slug: 'noibat', type: 'flying', baseHp: 62, baseAtk: 13 },
+          { nameFr: 'Venalgue', nameEn: 'Skrelp', slug: 'skrelp', type: 'poison', baseHp: 64, baseAtk: 14 },
+          { nameFr: 'Flingouste', nameEn: 'Clauncher', slug: 'clauncher', type: 'water', baseHp: 60, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Urup',
@@ -1831,6 +1847,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Braisillon', nameEn: 'Fletchinder', slug: 'fletchinder', type: 'fire', baseHp: 68, baseAtk: 15 },
           { nameFr: 'Hélionceau', nameEn: 'Litleo', slug: 'litleo', type: 'fire', baseHp: 66, baseAtk: 14 },
           { nameFr: 'Venalgue', nameEn: 'Skrelp', slug: 'skrelp', type: 'poison', baseHp: 64, baseAtk: 14 },
+          { nameFr: 'Pandespiègle', nameEn: 'Pancham', slug: 'pancham', type: 'fighting', baseHp: 66, baseAtk: 15 },
+          { nameFr: 'Dedenne', nameEn: 'Dedenne', slug: 'dedenne', type: 'electric', baseHp: 64, baseAtk: 14 },
         ],
         boss: {
           nameFr: 'Malva',
@@ -1855,6 +1873,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Flingouste', nameEn: 'Clauncher', slug: 'clauncher', type: 'water', baseHp: 68, baseAtk: 15 },
           { nameFr: 'Opermine', nameEn: 'Binacle', slug: 'binacle', type: 'rock', baseHp: 66, baseAtk: 14 },
           { nameFr: 'Venalgue', nameEn: 'Skrelp', slug: 'skrelp', type: 'poison', baseHp: 70, baseAtk: 16 },
+          { nameFr: 'Mucuscule', nameEn: 'Goomy', slug: 'goomy', type: 'dragon', baseHp: 66, baseAtk: 15 },
+          { nameFr: 'Sepiatop', nameEn: 'Inkay', slug: 'inkay', type: 'dark', baseHp: 68, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Narcisse',
@@ -1879,6 +1899,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Monorpale', nameEn: 'Honedge', slug: 'honedge', type: 'steel', baseHp: 68, baseAtk: 15 },
           { nameFr: 'Trousselin', nameEn: 'Klefki', slug: 'klefki', type: 'steel', baseHp: 70, baseAtk: 16 },
           { nameFr: 'Dimoclès', nameEn: 'Doublade', slug: 'doublade', type: 'steel', baseHp: 72, baseAtk: 16 },
+          { nameFr: 'Grelaçon', nameEn: 'Bergmite', slug: 'bergmite', type: 'ice', baseHp: 68, baseAtk: 15 },
+          { nameFr: 'Strassie', nameEn: 'Carbink', slug: 'carbink', type: 'rock', baseHp: 70, baseAtk: 16 },
         ],
         boss: {
           nameFr: 'Thyméo',
@@ -1903,6 +1925,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Mucuscule', nameEn: 'Goomy', slug: 'goomy', type: 'dragon', baseHp: 70, baseAtk: 16 },
           { nameFr: 'Colimucus', nameEn: 'Sliggoo', slug: 'sliggoo', type: 'dragon', baseHp: 72, baseAtk: 16 },
           { nameFr: 'Sonistrelle', nameEn: 'Noibat', slug: 'noibat', type: 'flying', baseHp: 68, baseAtk: 15 },
+          { nameFr: 'Flingouste', nameEn: 'Clauncher', slug: 'clauncher', type: 'water', baseHp: 70, baseAtk: 16 },
+          { nameFr: 'Grelaçon', nameEn: 'Bergmite', slug: 'bergmite', type: 'ice', baseHp: 66, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Dracéna',
@@ -1927,6 +1951,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Colimucus', nameEn: 'Sliggoo', slug: 'sliggoo', type: 'dragon', baseHp: 74, baseAtk: 17 },
           { nameFr: 'Dimoclès', nameEn: 'Doublade', slug: 'doublade', type: 'steel', baseHp: 72, baseAtk: 16 },
           { nameFr: 'Couafarel', nameEn: 'Furfrou', slug: 'furfrou', type: 'normal', baseHp: 70, baseAtk: 16 },
+          { nameFr: 'Sonistrelle', nameEn: 'Noibat', slug: 'noibat', type: 'flying', baseHp: 72, baseAtk: 16 },
+          { nameFr: 'Flabébé', nameEn: 'Flabébé', slug: 'flabebe', type: 'fairy', baseHp: 68, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Dianthéa',
@@ -1964,6 +1990,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Manglouton', nameEn: 'Yungoos', slug: 'yungoos', type: 'normal', baseHp: 50, baseAtk: 10 },
           { nameFr: 'Rattata (Alola)', nameEn: 'Rattata (Alola)', slug: 'rattata-alola', type: 'dark', baseHp: 48, baseAtk: 10 },
           { nameFr: 'Picassaut', nameEn: 'Pikipek', slug: 'pikipek', type: 'normal', baseHp: 52, baseAtk: 11 },
+          { nameFr: 'Brindibou', nameEn: 'Rowlet', slug: 'rowlet', type: 'grass', baseHp: 50, baseAtk: 10 },
+          { nameFr: 'Flamiaou', nameEn: 'Litten', slug: 'litten', type: 'fire', baseHp: 48, baseAtk: 10 },
         ],
         boss: {
           nameFr: 'Althéo',
@@ -1986,6 +2014,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Crabagarre', nameEn: 'Crabrawler', slug: 'crabrawler', type: 'fighting', baseHp: 54, baseAtk: 11 },
           { nameFr: 'Manglouton', nameEn: 'Yungoos', slug: 'yungoos', type: 'normal', baseHp: 50, baseAtk: 10 },
           { nameFr: 'Nounourson', nameEn: 'Stufful', slug: 'stufful', type: 'normal', baseHp: 52, baseAtk: 11 },
+          { nameFr: 'Otaquin', nameEn: 'Popplio', slug: 'popplio', type: 'water', baseHp: 50, baseAtk: 10 },
+          { nameFr: 'Dodoala', nameEn: 'Komala', slug: 'komala', type: 'normal', baseHp: 54, baseAtk: 11 },
         ],
         boss: {
           nameFr: 'Pectorius',
@@ -2008,6 +2038,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Froussardine', nameEn: 'Wishiwashi', slug: 'wishiwashi', type: 'water', baseHp: 56, baseAtk: 12 },
           { nameFr: 'Vorastérie', nameEn: 'Mareanie', slug: 'mareanie', type: 'poison', baseHp: 54, baseAtk: 11 },
           { nameFr: 'Araqua', nameEn: 'Dewpider', slug: 'dewpider', type: 'water', baseHp: 52, baseAtk: 11 },
+          { nameFr: 'Concombaffe', nameEn: 'Pyukumuku', slug: 'pyukumuku', type: 'water', baseHp: 54, baseAtk: 11 },
+          { nameFr: 'Otaquin', nameEn: 'Popplio', slug: 'popplio', type: 'water', baseHp: 50, baseAtk: 10 },
         ],
         boss: {
           nameFr: 'Néphie',
@@ -2030,6 +2062,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Tritox', nameEn: 'Salandit', slug: 'salandit', type: 'poison', baseHp: 56, baseAtk: 12 },
           { nameFr: 'Ossatueur (Alola)', nameEn: 'Marowak (Alola)', slug: 'marowak-alola', type: 'fire', baseHp: 58, baseAtk: 13 },
           { nameFr: 'Boumata', nameEn: 'Turtonator', slug: 'turtonator', type: 'fire', baseHp: 60, baseAtk: 13 },
+          { nameFr: 'Flamiaou', nameEn: 'Litten', slug: 'litten', type: 'fire', baseHp: 54, baseAtk: 12 },
+          { nameFr: 'Plumeline', nameEn: 'Oricorio', slug: 'oricorio', type: 'fire', baseHp: 58, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Kiawe',
@@ -2052,6 +2086,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Mimantis', nameEn: 'Fomantis', slug: 'fomantis', type: 'grass', baseHp: 58, baseAtk: 13 },
           { nameFr: 'Spododo', nameEn: 'Morelull', slug: 'morelull', type: 'grass', baseHp: 56, baseAtk: 12 },
           { nameFr: 'Croquine', nameEn: 'Bounsweet', slug: 'bounsweet', type: 'grass', baseHp: 54, baseAtk: 12 },
+          { nameFr: 'Brindibou', nameEn: 'Rowlet', slug: 'rowlet', type: 'grass', baseHp: 56, baseAtk: 12 },
+          { nameFr: 'Guérilande', nameEn: 'Comfey', slug: 'comfey', type: 'fairy', baseHp: 58, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Barbara',
@@ -2074,6 +2110,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Rocabot', nameEn: 'Rockruff', slug: 'rockruff', type: 'rock', baseHp: 60, baseAtk: 13 },
           { nameFr: 'Météno', nameEn: 'Minior', slug: 'minior', type: 'rock', baseHp: 62, baseAtk: 14 },
           { nameFr: 'Racaillou (Alola)', nameEn: 'Geodude (Alola)', slug: 'geodude-alola', type: 'rock', baseHp: 58, baseAtk: 13 },
+          { nameFr: 'Tiboudet', nameEn: 'Mudbray', slug: 'mudbray', type: 'ground', baseHp: 60, baseAtk: 13 },
+          { nameFr: 'Nounourson', nameEn: 'Stufful', slug: 'stufful', type: 'normal', baseHp: 56, baseAtk: 12 },
         ],
         boss: {
           nameFr: 'Alyxia',
@@ -2096,6 +2134,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Larvibule', nameEn: 'Grubbin', slug: 'grubbin', type: 'bug', baseHp: 60, baseAtk: 13 },
           { nameFr: 'Chrysapile', nameEn: 'Charjabug', slug: 'charjabug', type: 'bug', baseHp: 62, baseAtk: 14 },
           { nameFr: 'Togedemaru', nameEn: 'Togedemaru', slug: 'togedemaru', type: 'electric', baseHp: 64, baseAtk: 14 },
+          { nameFr: 'Plumeline', nameEn: 'Oricorio', slug: 'oricorio', type: 'fire', baseHp: 62, baseAtk: 14 },
+          { nameFr: 'Picassaut', nameEn: 'Pikipek', slug: 'pikipek', type: 'normal', baseHp: 60, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Chrys',
@@ -2118,6 +2158,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Bacabouh', nameEn: 'Sandygast', slug: 'sandygast', type: 'ghost', baseHp: 62, baseAtk: 14 },
           { nameFr: 'Mimiqui', nameEn: 'Mimikyu', slug: 'mimikyu', type: 'ghost', baseHp: 66, baseAtk: 15 },
           { nameFr: 'Sinistrail', nameEn: 'Dhelmise', slug: 'dhelmise', type: 'ghost', baseHp: 64, baseAtk: 14 },
+          { nameFr: 'Bombydou', nameEn: 'Cutiefly', slug: 'cutiefly', type: 'bug', baseHp: 62, baseAtk: 14 },
+          { nameFr: 'Denticrisse', nameEn: 'Bruxish', slug: 'bruxish', type: 'water', baseHp: 66, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Margie',
@@ -2140,6 +2182,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Miaouss (Alola)', nameEn: 'Meowth (Alola)', slug: 'meowth-alola', type: 'dark', baseHp: 62, baseAtk: 14 },
           { nameFr: 'Tadmorv (Alola)', nameEn: 'Grimer (Alola)', slug: 'grimer-alola', type: 'poison', baseHp: 64, baseAtk: 15 },
           { nameFr: 'Sovkipou', nameEn: 'Wimpod', slug: 'wimpod', type: 'bug', baseHp: 60, baseAtk: 14 },
+          { nameFr: 'Tritox', nameEn: 'Salandit', slug: 'salandit', type: 'poison', baseHp: 62, baseAtk: 14 },
+          { nameFr: 'Tiboudet', nameEn: 'Mudbray', slug: 'mudbray', type: 'ground', baseHp: 64, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Danh',
@@ -2162,6 +2206,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Bombydou', nameEn: 'Cutiefly', slug: 'cutiefly', type: 'bug', baseHp: 64, baseAtk: 15 },
           { nameFr: 'Guérilande', nameEn: 'Comfey', slug: 'comfey', type: 'fairy', baseHp: 66, baseAtk: 15 },
           { nameFr: 'Plumeline', nameEn: 'Oricorio', slug: 'oricorio', type: 'fire', baseHp: 64, baseAtk: 15 },
+          { nameFr: 'Spododo', nameEn: 'Morelull', slug: 'morelull', type: 'grass', baseHp: 62, baseAtk: 14 },
+          { nameFr: 'Nounourson', nameEn: 'Stufful', slug: 'stufful', type: 'normal', baseHp: 66, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Oléa',
@@ -2184,6 +2230,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Tiboudet', nameEn: 'Mudbray', slug: 'mudbray', type: 'ground', baseHp: 66, baseAtk: 15 },
           { nameFr: 'Taupiqueur (Alola)', nameEn: 'Diglett (Alola)', slug: 'diglett-alola', type: 'ground', baseHp: 64, baseAtk: 15 },
           { nameFr: 'Trépassable', nameEn: 'Palossand', slug: 'palossand', type: 'ghost', baseHp: 68, baseAtk: 16 },
+          { nameFr: 'Rocabot', nameEn: 'Rockruff', slug: 'rockruff', type: 'rock', baseHp: 64, baseAtk: 15 },
+          { nameFr: 'Bacabouh', nameEn: 'Sandygast', slug: 'sandygast', type: 'ghost', baseHp: 66, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Paulie',
@@ -2206,6 +2254,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Draïeul', nameEn: 'Drampa', slug: 'drampa', type: 'normal', baseHp: 70, baseAtk: 16 },
           { nameFr: 'Denticrisse', nameEn: 'Bruxish', slug: 'bruxish', type: 'water', baseHp: 68, baseAtk: 16 },
           { nameFr: 'Bébécaille', nameEn: 'Jangmo-o', slug: 'jangmoo', type: 'dragon', baseHp: 66, baseAtk: 15 },
+          { nameFr: 'Quartermac', nameEn: 'Passimian', slug: 'passimian', type: 'fighting', baseHp: 68, baseAtk: 16 },
+          { nameFr: 'Gouroutan', nameEn: 'Oranguru', slug: 'oranguru', type: 'normal', baseHp: 70, baseAtk: 16 },
         ],
         boss: {
           nameFr: 'Kahili',
@@ -2229,6 +2279,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Écaïd', nameEn: 'Hakamo-o', slug: 'hakamoo', type: 'dragon', baseHp: 74, baseAtk: 17 },
           { nameFr: 'Gouroutan', nameEn: 'Oranguru', slug: 'oranguru', type: 'normal', baseHp: 72, baseAtk: 16 },
           { nameFr: 'Concombaffe', nameEn: 'Pyukumuku', slug: 'pyukumuku', type: 'water', baseHp: 70, baseAtk: 16 },
+          { nameFr: 'Dodoala', nameEn: 'Komala', slug: 'komala', type: 'normal', baseHp: 72, baseAtk: 16 },
+          { nameFr: 'Mimiqui', nameEn: 'Mimikyu', slug: 'mimikyu', type: 'ghost', baseHp: 74, baseAtk: 17 },
         ],
         boss: {
           nameFr: 'Euphorbe',
@@ -2266,6 +2318,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Tournicoton', nameEn: 'Gossifleur', slug: 'gossifleur', type: 'grass', baseHp: 54, baseAtk: 11 },
           { nameFr: 'Moumouton', nameEn: 'Wooloo', slug: 'wooloo', type: 'normal', baseHp: 52, baseAtk: 10 },
           { nameFr: 'Rongourmand', nameEn: 'Skwovet', slug: 'skwovet', type: 'normal', baseHp: 50, baseAtk: 10 },
+          { nameFr: 'Minisange', nameEn: 'Rookidee', slug: 'rookidee', type: 'flying', baseHp: 48, baseAtk: 9 },
+          { nameFr: 'Voltoutou', nameEn: 'Yamper', slug: 'yamper', type: 'electric', baseHp: 52, baseAtk: 10 },
         ],
         boss: {
           nameFr: 'Percy',
@@ -2288,6 +2342,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Khélocrok', nameEn: 'Chewtle', slug: 'chewtle', type: 'water', baseHp: 54, baseAtk: 11 },
           { nameFr: 'Embrochet', nameEn: 'Arrokuda', slug: 'arrokuda', type: 'water', baseHp: 56, baseAtk: 11 },
           { nameFr: 'Minisange', nameEn: 'Rookidee', slug: 'rookidee', type: 'flying', baseHp: 52, baseAtk: 10 },
+          { nameFr: 'Tournicoton', nameEn: 'Gossifleur', slug: 'gossifleur', type: 'grass', baseHp: 50, baseAtk: 10 },
+          { nameFr: 'Voltoutou', nameEn: 'Yamper', slug: 'yamper', type: 'electric', baseHp: 54, baseAtk: 11 },
         ],
         boss: {
           nameFr: 'Donna',
@@ -2310,6 +2366,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Grillepattes', nameEn: 'Sizzlipede', slug: 'sizzlipede', type: 'fire', baseHp: 56, baseAtk: 12 },
           { nameFr: 'Charbi', nameEn: 'Rolycoly', slug: 'rolycoly', type: 'rock', baseHp: 54, baseAtk: 11 },
           { nameFr: 'Larvadar', nameEn: 'Blipbug', slug: 'blipbug', type: 'bug', baseHp: 52, baseAtk: 11 },
+          { nameFr: 'Moumouton', nameEn: 'Wooloo', slug: 'wooloo', type: 'normal', baseHp: 54, baseAtk: 11 },
+          { nameFr: 'Voltoutou', nameEn: 'Yamper', slug: 'yamper', type: 'electric', baseHp: 56, baseAtk: 12 },
         ],
         boss: {
           nameFr: 'Kabu',
@@ -2332,6 +2390,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Poulpaf', nameEn: 'Clobbopus', slug: 'clobbopus', type: 'fighting', baseHp: 58, baseAtk: 12 },
           { nameFr: 'Hexadron', nameEn: 'Falinks', slug: 'falinks', type: 'fighting', baseHp: 60, baseAtk: 13 },
           { nameFr: 'Dunaja', nameEn: 'Silicobra', slug: 'silicobra', type: 'ground', baseHp: 56, baseAtk: 12 },
+          { nameFr: 'Toxizap', nameEn: 'Toxel', slug: 'toxel', type: 'electric', baseHp: 58, baseAtk: 12 },
+          { nameFr: 'Grimalin', nameEn: 'Impidimp', slug: 'impidimp', type: 'dark', baseHp: 56, baseAtk: 12 },
         ],
         boss: {
           nameFr: 'Faïza',
@@ -2354,6 +2414,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Bibichut', nameEn: 'Hatenna', slug: 'hatenna', type: 'psychic', baseHp: 58, baseAtk: 12 },
           { nameFr: 'Grimalin', nameEn: 'Impidimp', slug: 'impidimp', type: 'dark', baseHp: 60, baseAtk: 13 },
           { nameFr: 'Crèmy', nameEn: 'Milcery', slug: 'milcery', type: 'fairy', baseHp: 56, baseAtk: 12 },
+          { nameFr: 'Théffroi', nameEn: 'Sinistea', slug: 'sinistea', type: 'ghost', baseHp: 58, baseAtk: 12 },
+          { nameFr: 'Frissonille', nameEn: 'Snom', slug: 'snom', type: 'ice', baseHp: 54, baseAtk: 11 },
         ],
         boss: {
           nameFr: 'Sally',
@@ -2376,6 +2438,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Dolman', nameEn: 'Stonjourner', slug: 'stonjourner', type: 'rock', baseHp: 62, baseAtk: 13 },
           { nameFr: 'Charbi', nameEn: 'Rolycoly', slug: 'rolycoly', type: 'rock', baseHp: 60, baseAtk: 13 },
           { nameFr: 'Dunaja', nameEn: 'Silicobra', slug: 'silicobra', type: 'ground', baseHp: 58, baseAtk: 12 },
+          { nameFr: 'Charibari', nameEn: 'Cufant', slug: 'cufant', type: 'steel', baseHp: 62, baseAtk: 13 },
+          { nameFr: 'Hexadron', nameEn: 'Falinks', slug: 'falinks', type: 'fighting', baseHp: 60, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Chaz',
@@ -2398,6 +2462,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Goupilou', nameEn: 'Nickit', slug: 'nickit', type: 'dark', baseHp: 62, baseAtk: 13 },
           { nameFr: 'Morpeko', nameEn: 'Morpeko', slug: 'morpeko', type: 'electric', baseHp: 64, baseAtk: 14 },
           { nameFr: 'Zigzaton (Galar)', nameEn: 'Zigzagoon (Galar)', slug: 'zigzagoon-galar', type: 'dark', baseHp: 60, baseAtk: 13 },
+          { nameFr: 'Grimalin', nameEn: 'Impidimp', slug: 'impidimp', type: 'dark', baseHp: 62, baseAtk: 13 },
+          { nameFr: 'Toxizap', nameEn: 'Toxel', slug: 'toxel', type: 'electric', baseHp: 60, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Peterson',
@@ -2420,6 +2486,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Fantyrm', nameEn: 'Dreepy', slug: 'dreepy', type: 'dragon', baseHp: 64, baseAtk: 14 },
           { nameFr: 'Verpom', nameEn: 'Applin', slug: 'applin', type: 'grass', baseHp: 62, baseAtk: 14 },
           { nameFr: 'Duralugon', nameEn: 'Duraludon', slug: 'duraludon', type: 'steel', baseHp: 66, baseAtk: 14 },
+          { nameFr: 'Frissonille', nameEn: 'Snom', slug: 'snom', type: 'ice', baseHp: 62, baseAtk: 13 },
+          { nameFr: 'Bibichut', nameEn: 'Hatenna', slug: 'hatenna', type: 'psychic', baseHp: 64, baseAtk: 14 },
         ],
         boss: {
           nameFr: 'Roy',
@@ -2443,6 +2511,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Toxizap', nameEn: 'Toxel', slug: 'toxel', type: 'electric', baseHp: 66, baseAtk: 14 },
           { nameFr: 'Frissonille', nameEn: 'Snom', slug: 'snom', type: 'ice', baseHp: 64, baseAtk: 14 },
           { nameFr: 'Wimessir', nameEn: 'Indeedee', slug: 'indeedee', type: 'psychic', baseHp: 68, baseAtk: 15 },
+          { nameFr: 'Morpeko', nameEn: 'Morpeko', slug: 'morpeko', type: 'electric', baseHp: 66, baseAtk: 15 },
+          { nameFr: 'Bekaglaçon', nameEn: 'Eiscue', slug: 'eiscue', type: 'ice', baseHp: 64, baseAtk: 14 },
         ],
         boss: {
           nameFr: 'Rosemary',
@@ -2465,6 +2535,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Ponyta (Galar)', nameEn: 'Ponyta (Galar)', slug: 'ponyta-galar', type: 'psychic', baseHp: 66, baseAtk: 15 },
           { nameFr: 'Théffroi', nameEn: 'Sinistea', slug: 'sinistea', type: 'ghost', baseHp: 68, baseAtk: 15 },
           { nameFr: 'Bekaglaçon', nameEn: 'Eiscue', slug: 'eiscue', type: 'ice', baseHp: 70, baseAtk: 15 },
+          { nameFr: 'Bibichut', nameEn: 'Hatenna', slug: 'hatenna', type: 'psychic', baseHp: 66, baseAtk: 15 },
+          { nameFr: 'Crèmy', nameEn: 'Milcery', slug: 'milcery', type: 'fairy', baseHp: 68, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Travis',
@@ -2487,6 +2559,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Charibari', nameEn: 'Cufant', slug: 'cufant', type: 'steel', baseHp: 70, baseAtk: 15 },
           { nameFr: 'Voltoutou', nameEn: 'Yamper', slug: 'yamper', type: 'electric', baseHp: 68, baseAtk: 15 },
           { nameFr: 'Canarticho (Galar)', nameEn: "Farfetch'd (Galar)", slug: 'farfetchd-galar', type: 'fighting', baseHp: 66, baseAtk: 15 },
+          { nameFr: 'Moumouton', nameEn: 'Wooloo', slug: 'wooloo', type: 'normal', baseHp: 68, baseAtk: 15 },
+          { nameFr: 'Minisange', nameEn: 'Rookidee', slug: 'rookidee', type: 'flying', baseHp: 70, baseAtk: 16 },
         ],
         boss: {
           nameFr: 'Nabil',
@@ -2510,6 +2584,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Wattapik', nameEn: 'Pincurchin', slug: 'pincurchin', type: 'electric', baseHp: 72, baseAtk: 16 },
           { nameFr: 'Corayon (Galar)', nameEn: 'Corsola (Galar)', slug: 'corsola-galar', type: 'ghost', baseHp: 70, baseAtk: 16 },
           { nameFr: 'Darumarond (Galar)', nameEn: 'Darumaka (Galar)', slug: 'darumaka-galar', type: 'ice', baseHp: 68, baseAtk: 15 },
+          { nameFr: 'Fantyrm', nameEn: 'Dreepy', slug: 'dreepy', type: 'dragon', baseHp: 70, baseAtk: 16 },
+          { nameFr: 'Dolman', nameEn: 'Stonjourner', slug: 'stonjourner', type: 'rock', baseHp: 72, baseAtk: 16 },
         ],
         boss: {
           nameFr: 'Shehroz',
@@ -2533,6 +2609,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Dispareptil', nameEn: 'Drakloak', slug: 'drakloak', type: 'dragon', baseHp: 76, baseAtk: 17 },
           { nameFr: 'Galvagon', nameEn: 'Dracozolt', slug: 'dracozolt', type: 'electric', baseHp: 74, baseAtk: 17 },
           { nameFr: 'Hydragon', nameEn: 'Dracovish', slug: 'dracovish', type: 'water', baseHp: 72, baseAtk: 16 },
+          { nameFr: 'Frissonille', nameEn: 'Snom', slug: 'snom', type: 'ice', baseHp: 74, baseAtk: 17 },
+          { nameFr: 'Verpom', nameEn: 'Applin', slug: 'applin', type: 'grass', baseHp: 70, baseAtk: 16 },
         ],
         boss: {
           nameFr: 'Tarak',
@@ -2570,6 +2648,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Tissenboule', nameEn: 'Tarountula', slug: 'tarountula', type: 'bug', baseHp: 56, baseAtk: 11 },
           { nameFr: 'Lilliterelle', nameEn: 'Nymble', slug: 'nymble', type: 'bug', baseHp: 54, baseAtk: 11 },
           { nameFr: 'Gourmelet', nameEn: 'Lechonk', slug: 'lechonk', type: 'normal', baseHp: 52, baseAtk: 10 },
+          { nameFr: 'Pohm', nameEn: 'Pawmi', slug: 'pawmi', type: 'electric', baseHp: 50, baseAtk: 10 },
+          { nameFr: 'Pâtachiot', nameEn: 'Fidough', slug: 'fidough', type: 'fairy', baseHp: 54, baseAtk: 11 },
         ],
         boss: {
           nameFr: 'Éra',
@@ -2592,6 +2672,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Olivini', nameEn: 'Smoliv', slug: 'smoliv', type: 'grass', baseHp: 56, baseAtk: 11 },
           { nameFr: 'Pimito', nameEn: 'Capsakid', slug: 'capsakid', type: 'grass', baseHp: 54, baseAtk: 11 },
           { nameFr: 'Pohm', nameEn: 'Pawmi', slug: 'pawmi', type: 'electric', baseHp: 52, baseAtk: 11 },
+          { nameFr: 'Gourmelet', nameEn: 'Lechonk', slug: 'lechonk', type: 'normal', baseHp: 54, baseAtk: 11 },
+          { nameFr: 'Lilliterelle', nameEn: 'Nymble', slug: 'nymble', type: 'bug', baseHp: 50, baseAtk: 10 },
         ],
         boss: {
           nameFr: 'Colza',
@@ -2614,6 +2696,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Têtampoule', nameEn: 'Tadbulb', slug: 'tadbulb', type: 'electric', baseHp: 58, baseAtk: 12 },
           { nameFr: 'Zapétrel', nameEn: 'Wattrel', slug: 'wattrel', type: 'electric', baseHp: 56, baseAtk: 12 },
           { nameFr: 'Compagnol', nameEn: 'Tandemaus', slug: 'tandemaus', type: 'normal', baseHp: 54, baseAtk: 11 },
+          { nameFr: 'Pohm', nameEn: 'Pawmi', slug: 'pawmi', type: 'electric', baseHp: 56, baseAtk: 12 },
+          { nameFr: 'Gribouraigne', nameEn: 'Shroodle', slug: 'shroodle', type: 'poison', baseHp: 52, baseAtk: 11 },
         ],
         boss: {
           nameFr: 'Mashynn',
@@ -2636,6 +2720,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Taupikeau', nameEn: 'Wiglett', slug: 'wiglett', type: 'water', baseHp: 58, baseAtk: 12 },
           { nameFr: 'Dofin', nameEn: 'Finizen', slug: 'finizen', type: 'water', baseHp: 60, baseAtk: 12 },
           { nameFr: 'Virovent', nameEn: 'Bramblin', slug: 'bramblin', type: 'ghost', baseHp: 56, baseAtk: 12 },
+          { nameFr: 'Selutin', nameEn: 'Nacli', slug: 'nacli', type: 'rock', baseHp: 58, baseAtk: 12 },
+          { nameFr: 'Grondogue', nameEn: 'Maschiff', slug: 'maschiff', type: 'dark', baseHp: 60, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Kombu',
@@ -2658,6 +2744,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Pâtachiot', nameEn: 'Fidough', slug: 'fidough', type: 'fairy', baseHp: 60, baseAtk: 12 },
           { nameFr: 'Grondogue', nameEn: 'Maschiff', slug: 'maschiff', type: 'dark', baseHp: 62, baseAtk: 13 },
           { nameFr: 'Gribouraigne', nameEn: 'Shroodle', slug: 'shroodle', type: 'poison', baseHp: 58, baseAtk: 12 },
+          { nameFr: 'Compagnol', nameEn: 'Tandemaus', slug: 'tandemaus', type: 'normal', baseHp: 60, baseAtk: 13 },
+          { nameFr: 'Flotillon', nameEn: 'Flittle', slug: 'flittle', type: 'psychic', baseHp: 56, baseAtk: 12 },
         ],
         boss: {
           nameFr: 'Okuba',
@@ -2680,6 +2768,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Toutombe', nameEn: 'Greavard', slug: 'greavard', type: 'ghost', baseHp: 62, baseAtk: 13 },
           { nameFr: 'Terracool', nameEn: 'Toedscool', slug: 'toedscool', type: 'ground', baseHp: 60, baseAtk: 13 },
           { nameFr: 'Germéclat', nameEn: 'Glimmet', slug: 'glimmet', type: 'rock', baseHp: 64, baseAtk: 13 },
+          { nameFr: 'Virovent', nameEn: 'Bramblin', slug: 'bramblin', type: 'ghost', baseHp: 60, baseAtk: 13 },
+          { nameFr: 'Charbambin', nameEn: 'Charcadet', slug: 'charcadet', type: 'fire', baseHp: 62, baseAtk: 13 },
         ],
         boss: {
           nameFr: 'Laïm',
@@ -2702,6 +2792,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Flotillon', nameEn: 'Flittle', slug: 'flittle', type: 'psychic', baseHp: 64, baseAtk: 14 },
           { nameFr: 'Léboulérou', nameEn: 'Rellor', slug: 'rellor', type: 'bug', baseHp: 62, baseAtk: 13 },
           { nameFr: 'Charbambin', nameEn: 'Charcadet', slug: 'charcadet', type: 'fire', baseHp: 60, baseAtk: 13 },
+          { nameFr: 'Selutin', nameEn: 'Nacli', slug: 'nacli', type: 'rock', baseHp: 62, baseAtk: 13 },
+          { nameFr: 'Forgerette', nameEn: 'Tinkatink', slug: 'tinkatink', type: 'fairy', baseHp: 64, baseAtk: 14 },
         ],
         boss: {
           nameFr: 'Tully',
@@ -2724,6 +2816,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Piétacé', nameEn: 'Cetoddle', slug: 'cetoddle', type: 'ice', baseHp: 66, baseAtk: 14 },
           { nameFr: 'Frigodo', nameEn: 'Frigibax', slug: 'frigibax', type: 'dragon', baseHp: 64, baseAtk: 14 },
           { nameFr: 'Selutin', nameEn: 'Nacli', slug: 'nacli', type: 'rock', baseHp: 62, baseAtk: 13 },
+          { nameFr: 'Flotillon', nameEn: 'Flittle', slug: 'flittle', type: 'psychic', baseHp: 64, baseAtk: 14 },
+          { nameFr: 'Vrombi', nameEn: 'Varoom', slug: 'varoom', type: 'steel', baseHp: 66, baseAtk: 14 },
         ],
         boss: {
           nameFr: 'Grusha',
@@ -2747,6 +2841,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Vrombi', nameEn: 'Varoom', slug: 'varoom', type: 'steel', baseHp: 68, baseAtk: 15 },
           { nameFr: 'Forgerette', nameEn: 'Tinkatink', slug: 'tinkatink', type: 'fairy', baseHp: 66, baseAtk: 14 },
           { nameFr: 'Mordudor', nameEn: 'Gimmighoul', slug: 'gimmighoul', type: 'ghost', baseHp: 64, baseAtk: 14 },
+          { nameFr: 'Craparoi', nameEn: 'Klawf', slug: 'klawf', type: 'rock', baseHp: 66, baseAtk: 15 },
+          { nameFr: 'Selutin', nameEn: 'Nacli', slug: 'nacli', type: 'rock', baseHp: 68, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Cayenn',
@@ -2769,6 +2865,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Axoloto (Paldea)', nameEn: 'Wooper (Paldea)', slug: 'wooper-paldea', type: 'poison', baseHp: 68, baseAtk: 15 },
           { nameFr: 'Tauros (Paldea)', nameEn: 'Tauros (Paldea)', slug: 'tauros-paldea', type: 'fighting', baseHp: 70, baseAtk: 15 },
           { nameFr: 'Craparoi', nameEn: 'Klawf', slug: 'klawf', type: 'rock', baseHp: 66, baseAtk: 14 },
+          { nameFr: 'Forgerette', nameEn: 'Tinkatink', slug: 'tinkatink', type: 'fairy', baseHp: 68, baseAtk: 15 },
+          { nameFr: 'Vrombi', nameEn: 'Varoom', slug: 'varoom', type: 'steel', baseHp: 70, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Popi',
@@ -2791,6 +2889,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Lestombaile', nameEn: 'Bombirdier', slug: 'bombirdier', type: 'flying', baseHp: 70, baseAtk: 15 },
           { nameFr: 'Flamenroule', nameEn: 'Flamigo', slug: 'flamigo', type: 'flying', baseHp: 72, baseAtk: 16 },
           { nameFr: 'Tapatoès', nameEn: 'Squawkabilly', slug: 'squawkabilly', type: 'normal', baseHp: 68, baseAtk: 15 },
+          { nameFr: 'Motorizard', nameEn: 'Cyclizar', slug: 'cyclizar', type: 'dragon', baseHp: 70, baseAtk: 16 },
+          { nameFr: 'Zapétrel', nameEn: 'Wattrel', slug: 'wattrel', type: 'electric', baseHp: 66, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Okuba',
@@ -2814,6 +2914,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Motorizard', nameEn: 'Cyclizar', slug: 'cyclizar', type: 'dragon', baseHp: 72, baseAtk: 16 },
           { nameFr: 'Nigirigon', nameEn: 'Tatsugiri', slug: 'tatsugiri', type: 'dragon', baseHp: 74, baseAtk: 16 },
           { nameFr: 'Délestin', nameEn: 'Veluza', slug: 'veluza', type: 'water', baseHp: 70, baseAtk: 15 },
+          { nameFr: 'Frigodo', nameEn: 'Frigibax', slug: 'frigibax', type: 'dragon', baseHp: 72, baseAtk: 16 },
+          { nameFr: 'Virovent', nameEn: 'Bramblin', slug: 'bramblin', type: 'ghost', baseHp: 68, baseAtk: 15 },
         ],
         boss: {
           nameFr: 'Hassa',
@@ -2837,6 +2939,8 @@ export const GENERATIONS: Generation[] = [
           { nameFr: 'Vrombotor', nameEn: 'Revavroom', slug: 'revavroom', type: 'steel', baseHp: 76, baseAtk: 17 },
           { nameFr: 'Dogrino', nameEn: 'Mabosstiff', slug: 'mabosstiff', type: 'dark', baseHp: 74, baseAtk: 17 },
           { nameFr: 'Tag-Tag', nameEn: 'Grafaiai', slug: 'grafaiai', type: 'poison', baseHp: 72, baseAtk: 16 },
+          { nameFr: 'Motorizard', nameEn: 'Cyclizar', slug: 'cyclizar', type: 'dragon', baseHp: 74, baseAtk: 17 },
+          { nameFr: 'Mordudor', nameEn: 'Gimmighoul', slug: 'gimmighoul', type: 'ghost', baseHp: 70, baseAtk: 16 },
         ],
         boss: {
           nameFr: 'Alisma',

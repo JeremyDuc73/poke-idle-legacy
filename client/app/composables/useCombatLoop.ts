@@ -102,7 +102,7 @@ export function useCombatLoop() {
     const poke = randomWild()
     const isShiny = Math.random() < getShinyRate(player.shinyCharms, player.pokedexMaster)
     // HP scales with local difficulty (resets per gen) × gentle gen multiplier
-    const hp = Math.round(poke.baseHp * (1 + localDiff * 0.6) * genDiffMult * 1.2)
+    const hp = Math.round(poke.baseHp * (1 + localDiff * 0.6) * genDiffMult * 2)
     // Gold scales with banner cost: ~5 pulls/100 kills at start, ~10 at end
     // Gen 1 uses lower base (25) to match cheap Kanto banner (500g)
     const diffScale = 1 + localDiff * 0.008
@@ -130,7 +130,7 @@ export function useCombatLoop() {
   function spawnBoss(boss: BossTrainer, localDiff: number, genDiffMult: number, gen: number) {
     // Boss HP: team base × local scaling × gentle gen multiplier
     const teamBase = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0)
-    const totalHp = Math.round(teamBase * (1.5 + localDiff * 0.05) * genDiffMult * 1.2)
+    const totalHp = Math.round(teamBase * (1.5 + localDiff * 0.05) * genDiffMult * 2)
     // Boss rewards ≈ 10× wild rewards
     const diffScale = 1 + localDiff * 0.008
     const goldBase = gen === 1 ? 250 : 4000 * gen * gen
