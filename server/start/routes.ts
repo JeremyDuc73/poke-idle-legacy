@@ -81,6 +81,7 @@ router
         router.delete('/users/:id/penalty', [AdminController, 'removePenalty'])
         router.delete('/users/:id/avatar', [AdminController, 'resetAvatar'])
         router.get('/users/:id/pokemons', [AdminController, 'listUserPokemons'])
+        router.post('/self/set-progression', [AdminController, 'setProgression'])
         router.post('/banner', [AdminController, 'setBanner'])
         router.delete('/banner', [AdminController, 'clearBanner'])
       })

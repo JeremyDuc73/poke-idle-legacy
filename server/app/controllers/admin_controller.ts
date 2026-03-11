@@ -281,6 +281,45 @@ export default class AdminController {
   }
 
   /**
+   * Set progression for the authenticated admin (badges, generation, zone, etc.)
+   */
+  async setProgression({ request, response, auth }: HttpContext) {
+    const user = auth.use('web').user
+    if (!user) return response.unauthorized({ message: 'Not authenticated' })
+
+    const { badges, currentGeneration, currentZone, currentStage, defeatedBosses } = request.only([
+      'badges',
+      'currentGeneration',
+      'currentZone',
+      'currentStage',
+      'defeatedBosses',
+    ])
+
+    if (typeof badges !== 'number' || badges < 0) {
+      return response.badRequest({ message: 'Nombre de badges invalide' })
+    }
+    if (typeof currentGeneration !== 'number' || currentGeneration < 1) {
+      return response.badRequest({ message: 'Génération invalide' })
+    }
+
+    user.badges = badges
+    user.currentGeneration = currentGeneration
+    user.currentZone = currentZone ?? 1
+    user.currentStage = currentStage ?? 1
+    user.defeatedBosses = defeatedBosses ?? []
+    user.adminVersion = (user.adminVersion ?? 0) + 1
+    await user.save()
+
+    return response.ok({
+      message: `Progression mise à jour : ${badges} badges, Gen ${currentGeneration}`,
+      badges: user.badges,
+      currentGeneration: user.currentGeneration,
+      currentZone: user.currentZone,
+      currentStage: user.currentStage,
+    })
+  }
+
+  /**
    * Get current banner message
    */
   async getBanner({ response }: HttpContext) {

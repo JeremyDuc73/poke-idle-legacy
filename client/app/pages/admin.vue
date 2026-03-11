@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon, Eye, Pencil, Gift, RotateCcw, Trash2, Ban, ImageOff, Megaphone } from 'lucide-vue-next'
+import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon, Eye, Pencil, Gift, RotateCcw, Trash2, Ban, ImageOff, Megaphone, Swords } from 'lucide-vue-next'
+import { GENERATIONS } from '~/data/zones'
 
 definePageMeta({ layout: 'game' })
 
@@ -110,6 +111,8 @@ const refreshing = ref(false)
 const bannerMessage = ref('')
 const currentBanner = ref<string | null>(null)
 const bannerLoading = ref(false)
+const progressionGen = ref(1)
+const progressionLoading = ref(false)
 
 const filteredUsers = computed(() => {
   let filtered = users.value.filter(u => {
@@ -406,6 +409,54 @@ async function clearBanner() {
   }
 }
 
+const progressionOptions = computed(() => {
+  return GENERATIONS.map((gen) => {
+    const totalBosses = GENERATIONS
+      .filter((g) => g.id < gen.id)
+      .reduce((sum, g) => sum + g.zones.length, 0)
+    return {
+      genId: gen.id,
+      label: `Gen ${gen.id} — ${gen.regionFr} (${totalBosses} badges)`,
+      badges: totalBosses,
+      defeatedBosses: GENERATIONS
+        .filter((g) => g.id < gen.id)
+        .flatMap((g) => g.zones.map((z) => z.boss.slug)),
+    }
+  })
+})
+
+async function setProgression() {
+  const opt = progressionOptions.value.find((o) => o.genId === progressionGen.value)
+  if (!opt) return
+  if (!confirm(`Passer à Gen ${opt.genId} (${opt.badges} badges) ?`)) return
+  progressionLoading.value = true
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/self/set-progression`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        badges: opt.badges,
+        currentGeneration: opt.genId,
+        currentZone: 1,
+        currentStage: 1,
+        defeatedBosses: opt.defeatedBosses,
+      }),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      alert(data.message)
+    } else {
+      const err = await res.json().catch(() => null)
+      alert(`Erreur: ${err?.message || res.statusText}`)
+    }
+  } catch (e) {
+    alert(`Erreur réseau: ${e}`)
+  } finally {
+    progressionLoading.value = false
+  }
+}
+
 async function refreshAll() {
   refreshing.value = true
   await Promise.all([loadDashboard(), loadUsers(), loadBanner()])
@@ -471,6 +522,40 @@ onMounted(async () => {
             @click="clearBanner"
           >
             Retirer
+          </button>
+        </div>
+      </section>
+
+      <!-- Admin Progression -->
+      <section class="mb-6 rounded-xl border border-purple-500/30 bg-purple-500/5 p-4 sm:mb-8">
+        <h2 class="mb-3 flex items-center gap-2 text-sm font-bold text-purple-400">
+          <Swords class="h-4 w-4" /> Ma progression (admin)
+        </h2>
+        <p class="mb-3 text-xs text-slate-400">
+          Débloquer une génération et obtenir tous les badges des générations précédentes.
+        </p>
+        <div class="flex flex-wrap items-end gap-2">
+          <div class="flex-1">
+            <label class="mb-1 block text-[10px] font-medium text-slate-400">Débloquer jusqu'à</label>
+            <select
+              v-model.number="progressionGen"
+              class="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-sm text-white focus:border-purple-500 focus:outline-none"
+            >
+              <option
+                v-for="opt in progressionOptions"
+                :key="opt.genId"
+                :value="opt.genId"
+              >
+                {{ opt.label }}
+              </option>
+            </select>
+          </div>
+          <button
+            class="rounded-lg bg-purple-600 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-purple-500 disabled:opacity-50"
+            :disabled="progressionLoading"
+            @click="setProgression"
+          >
+            Appliquer
           </button>
         </div>
       </section>
