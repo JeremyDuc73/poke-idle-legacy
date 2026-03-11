@@ -6,10 +6,12 @@ import { fileURLToPath } from 'node:url'
 export default class FixSpeciesTypesData extends BaseSchema {
   async up() {
     // Read from the single source of truth: shared/pokemon-types.json
-    const __filename = fileURLToPath(import.meta.url)
-    const __dirname = dirname(__filename)
-    const jsonPath = resolve(__dirname, '../../../shared/pokemon-types.json')
-    const raw: Record<string, string | [string, string]> = JSON.parse(readFileSync(jsonPath, 'utf-8'))
+    const currentFile = fileURLToPath(import.meta.url)
+    const currentDir = dirname(currentFile)
+    const jsonPath = resolve(currentDir, '../../../shared/pokemon-types.json')
+    const raw: Record<string, string | [string, string]> = JSON.parse(
+      readFileSync(jsonPath, 'utf-8')
+    )
 
     // Capitalize first letter to match DB convention (e.g. 'fire' → 'Fire')
     const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
