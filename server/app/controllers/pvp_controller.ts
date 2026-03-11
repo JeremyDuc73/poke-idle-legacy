@@ -64,7 +64,7 @@ export default class PvpController {
     const { challengedId, betAmount, team } = request.body() as {
       challengedId: number
       betAmount: number
-      team: number[]
+      team: string[]
     }
 
     if (!challengedId || !betAmount || !team || team.length !== 6) {
@@ -178,7 +178,7 @@ export default class PvpController {
 
   /**
    * POST /api/game/pvp/challenge/:id/accept — accepter un défi
-   * body: { team: number[] (6 pokemon IDs) }
+   * body: { team: string[] (6 pokemon slugs) }
    */
   async acceptChallenge({ params, request, response, auth }: HttpContext) {
     const user = auth.use('web').user
@@ -198,7 +198,7 @@ export default class PvpController {
       return response.badRequest({ message: 'Ce défi a expiré' })
     }
 
-    const { team } = request.body() as { team: number[] }
+    const { team } = request.body() as { team: string[] }
     if (!team || team.length !== 6) {
       return response.badRequest({ message: 'Vous devez sélectionner 6 pokémon' })
     }

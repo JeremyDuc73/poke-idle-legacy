@@ -328,28 +328,44 @@ export async function pickBoss(commonGenerations: number[]): Promise<Species | n
 export async function resolveMatch(
   player1Id: number,
   player2Id: number,
-  player1PokemonIds: number[],
-  player2PokemonIds: number[],
+  player1Slugs: string[],
+  player2Slugs: string[],
   commonGenerations: number[]
 ): Promise<PvpResolution | null> {
-  // Load pokemon with species
+  // Load pokemon by slug via species relation
   console.log(
-    `[PVP] resolveMatch: p1=${player1Id} ids=${JSON.stringify(player1PokemonIds)}, p2=${player2Id} ids=${JSON.stringify(player2PokemonIds)}, gens=${JSON.stringify(commonGenerations)}`
+    `[PVP] resolveMatch: p1=${player1Id} slugs=${JSON.stringify(player1Slugs)}, p2=${player2Id} slugs=${JSON.stringify(player2Slugs)}, gens=${JSON.stringify(commonGenerations)}`
   )
 
   const p1Pokemon = await UserPokemon.query()
-    .whereIn('id', player1PokemonIds)
     .where('userId', player1Id)
     .preload('species')
+    .whereHas('species', (sq) => sq.whereIn('slug', player1Slugs))
+    .orderBy('level', 'desc')
   const p2Pokemon = await UserPokemon.query()
-    .whereIn('id', player2PokemonIds)
     .where('userId', player2Id)
     .preload('species')
+    .whereHas('species', (sq) => sq.whereIn('slug', player2Slugs))
+    .orderBy('level', 'desc')
 
-  console.log(`[PVP] p1Pokemon loaded: ${p1Pokemon.length}, p2Pokemon loaded: ${p2Pokemon.length}`)
+  // Keep only the best pokemon per slug (highest level) matching the requested slugs
+  function pickBestPerSlug(pokemons: typeof p1Pokemon, slugs: string[]): typeof p1Pokemon {
+    const picked: typeof p1Pokemon = []
+    const remaining = [...slugs]
+    for (const slug of remaining) {
+      const match = pokemons.find((p) => p.species?.slug === slug && !picked.includes(p))
+      if (match) picked.push(match)
+    }
+    return picked
+  }
 
-  if (p1Pokemon.length === 0 || p2Pokemon.length === 0) {
-    console.error(`[PVP] FAIL: empty team — p1=${p1Pokemon.length} p2=${p2Pokemon.length}`)
+  const p1Team = pickBestPerSlug(p1Pokemon, player1Slugs)
+  const p2Team = pickBestPerSlug(p2Pokemon, player2Slugs)
+
+  console.log(`[PVP] p1Team picked: ${p1Team.length}, p2Team picked: ${p2Team.length}`)
+
+  if (p1Team.length === 0 || p2Team.length === 0) {
+    console.error(`[PVP] FAIL: empty team — p1=${p1Team.length} p2=${p2Team.length}`)
     return null
   }
 
@@ -407,8 +423,8 @@ export async function resolveMatch(
     return { snapshot, totalDamage }
   }
 
-  const p1Result = buildSnapshot(p1Pokemon)
-  const p2Result = buildSnapshot(p2Pokemon)
+  const p1Result = buildSnapshot(p1Team)
+  const p2Result = buildSnapshot(p2Team)
 
   let winnerId: number | null = null
   if (p1Result.totalDamage > p2Result.totalDamage) winnerId = player1Id

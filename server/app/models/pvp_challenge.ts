@@ -21,18 +21,18 @@ export default class PvpChallenge extends BaseModel {
   declare betAmount: number
 
   @column({
-    prepare: (value: number[] | null) => (value ? JSON.stringify(value) : null),
-    consume: (value: string | number[] | null) =>
+    prepare: (value: string[] | null) => (value ? JSON.stringify(value) : null),
+    consume: (value: string | string[] | null) =>
       typeof value === 'string' ? JSON.parse(value) : value,
   })
-  declare challengerTeam: number[] | null
+  declare challengerTeam: string[] | null
 
   @column({
-    prepare: (value: number[] | null) => (value ? JSON.stringify(value) : null),
-    consume: (value: string | number[] | null) =>
+    prepare: (value: string[] | null) => (value ? JSON.stringify(value) : null),
+    consume: (value: string | string[] | null) =>
       typeof value === 'string' ? JSON.parse(value) : value,
   })
-  declare challengedTeam: number[] | null
+  declare challengedTeam: string[] | null
 
   @column()
   declare status: PvpChallengeStatus

@@ -108,11 +108,11 @@ async function loadAll() {
 }
 
 // ── Helpers ──
-function toServerIds(clientIds: number[]): number[] {
+function toSlugs(clientIds: number[]): string[] {
   return clientIds.map(cid => {
     const p = inventory.collection.find(pk => pk.id === cid)
-    return p?.serverId ?? cid
-  })
+    return p?.slug ?? ''
+  }).filter(s => s !== '')
 }
 
 // ── Challenge Flow ──
@@ -139,7 +139,7 @@ async function sendChallenge() {
       body: JSON.stringify({
         challengedId: challengeTarget.value.id,
         betAmount: betAmount.value,
-        team: toServerIds(selectedTeam.value),
+        team: toSlugs(selectedTeam.value),
       }),
     })
     const data = await res.json()
@@ -168,7 +168,7 @@ async function acceptChallenge() {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ team: toServerIds(selectedTeam.value) }),
+      body: JSON.stringify({ team: toSlugs(selectedTeam.value) }),
     })
     const data = await res.json()
     if (res.ok) {
