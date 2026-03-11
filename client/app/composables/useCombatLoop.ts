@@ -130,7 +130,7 @@ export function useCombatLoop() {
   function spawnBoss(boss: BossTrainer, localDiff: number, genDiffMult: number, gen: number) {
     // Boss HP: team base × local scaling × gentle gen multiplier
     const teamBase = boss.team.reduce((sum, p) => sum + Math.round(p.level * p.level), 0)
-    const totalHp = Math.round(teamBase * (1.5 + localDiff * 0.05) * genDiffMult * 2.5)
+    const totalHp = Math.round(teamBase * (1.5 + localDiff * 0.05) * genDiffMult * 2.3)
     // Boss rewards ≈ 10× wild rewards
     const diffScale = 1 + localDiff * 0.02
     const goldBase = gen === 1 ? 250 : 4000 * gen * gen
