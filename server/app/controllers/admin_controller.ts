@@ -204,24 +204,25 @@ export default class AdminController {
     await UserPokemon.query().delete()
 
     // Reset all users (keep accounts, role, email, password)
-    await User.query().update({
+    // Use db.from() (Knex) instead of User.query() so db.raw() works correctly
+    await db.from('users').update({
       gold: 0,
       gems: 0,
-      currentGeneration: 1,
-      currentZone: 1,
-      currentStage: 1,
-      clickDamage: 1,
-      clickDamageBonus: 0,
-      teamDpsBonus: 0,
+      current_generation: 1,
+      current_zone: 1,
+      current_stage: 1,
+      click_damage: 1,
+      click_damage_bonus: 0,
+      team_dps_bonus: 0,
       xp: 0,
       level: 1,
       badges: 0,
       candies: JSON.stringify({}),
       daycare: JSON.stringify([]),
-      defeatedBosses: JSON.stringify([]),
-      penaltyType: null,
-      penaltyPercent: 0,
-      adminVersion: db.raw('COALESCE(admin_version, 0) + 1'),
+      defeated_bosses: JSON.stringify([]),
+      penalty_type: null,
+      penalty_percent: 0,
+      admin_version: db.raw('COALESCE(admin_version, 0) + 1'),
     })
 
     const totalUsers = await User.query().count('* as total')
