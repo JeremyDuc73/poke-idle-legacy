@@ -21,9 +21,9 @@ export interface Banner {
 
 const RARITY_WEIGHTS: Record<Rarity, number> = {
   common: 70,
-  rare: 24,
-  epic: 5.6,
-  legendary: 0.4,
+  rare: 25,
+  epic: 4.8,
+  legendary: 0.2,
 }
 
 // === Gen 1 Kanto Pool ===
