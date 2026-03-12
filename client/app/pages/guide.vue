@@ -853,7 +853,7 @@ function toggleGen(id: number) {
           <div>
             <h4 class="mb-2 text-sm font-semibold text-amber-400">⚔️ {{ t('Équilibrage', 'Balancing') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
-              <li>{{ t('Taux de drop ajustés : Légendaire 0.2%, Épique 4.8%, Rare 25%, Commun 70%', 'Drop rates adjusted: Legendary 0.2%, Epic 4.8%, Rare 25%, Common 70%') }}</li>
+              <li>{{ t('Taux de drop ajustés : Légendaire 0.4%, Épique 5.6%, Rare 24%, Commun 70%', 'Drop rates adjusted: Legendary 0.4%, Epic 5.6%, Rare 24%, Common 70%') }}</li>
               <li>{{ t('Améliorations de dégâts clics verrouillées par génération (Johto requis pour boosts Johto, etc.)', 'Click damage upgrades locked by generation (Johto required for Johto boosts, etc.)') }}</li>
               <li>{{ t('Les admins sont exclus des classements', 'Admins are excluded from leaderboards') }}</li>
               <li>{{ t('Classement général : les catégories à 0 ne pénalisent plus le score moyen', 'Overall ranking: categories with 0 no longer penalize average score') }}</li>

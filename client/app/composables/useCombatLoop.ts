@@ -91,7 +91,9 @@ export function useCombatLoop() {
 
     // Adaptive gen scaling: gen9 champion ≈ 8K DPS, gen1 champion ≈ 4.3K DPS
     // A maxed legendary 5★ team of 6 ≈ 7200 DPS (14K with type effectiveness)
-    const genDiffMult = 1 + (gen - 1) * (0.095 + 1.5 / localDifficulty)
+    let genDiffMult = 1 + (gen - 1) * (0.095 + 1.5 / localDifficulty)
+    // Gen 6 (Kalos) has a very small pool — reduce difficulty so it's beatable
+    if (gen === 6) genDiffMult *= 0.75
 
     if (player.isBossStage) {
       const boss = currentZone()?.boss
@@ -174,7 +176,9 @@ export function useCombatLoop() {
 
       const team = inventory.team
       if (team.length > 0) {
-        const xpPerPokemon = Math.max(1, Math.floor(xpReward / team.length))
+        // Gentle XP split: divisor 1.0→3.0 for 1→6 pokémons (not raw /teamSize)
+        const xpDivisor = 1 + (team.length - 1) * 0.4
+        const xpPerPokemon = Math.max(1, Math.floor(xpReward / xpDivisor))
         for (const poke of team) {
           inventory.addPokemonXp(poke.id, xpPerPokemon, player.currentGeneration)
         }
