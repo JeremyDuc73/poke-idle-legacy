@@ -251,7 +251,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Lippoutou', nameEn: 'Jynx', slug: 'jynx', level: 54 },
             { nameFr: 'Lokhlass', nameEn: 'Lapras', slug: 'lapras', level: 54 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -276,7 +276,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Onix', nameEn: 'Onix', slug: 'onix', level: 54 },
             { nameFr: 'Mackogneur', nameEn: 'Machamp', slug: 'machamp', level: 56 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -301,7 +301,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Arbok', nameEn: 'Arbok', slug: 'arbok', level: 56 },
             { nameFr: 'Ectoplasma', nameEn: 'Gengar', slug: 'gengar', level: 58 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -326,7 +326,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Ptéra', nameEn: 'Aerodactyl', slug: 'aerodactyl', level: 58 },
             { nameFr: 'Dracolosse', nameEn: 'Dragonite', slug: 'dragonite', level: 62 },
           ],
-          timerSeconds: 45,
+          timerSeconds: 40,
         },
       },
       {
@@ -352,7 +352,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Léviator', nameEn: 'Gyarados', slug: 'gyarados', level: 61 },
             { nameFr: 'Dracaufeu', nameEn: 'Charizard', slug: 'charizard', level: 65 },
           ],
-          timerSeconds: 45,
+          timerSeconds: 50,
         },
       },
     ],
@@ -569,7 +569,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Flagadoss', nameEn: 'Slowbro', slug: 'slowbro', level: 41 },
             { nameFr: 'Xatu', nameEn: 'Xatu', slug: 'xatu', level: 42 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -594,7 +594,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Grotadmorv', nameEn: 'Muk', slug: 'muk', level: 43 },
             { nameFr: 'Abo', nameEn: 'Ekans', slug: 'ekans', level: 44 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -619,7 +619,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Onix', nameEn: 'Onix', slug: 'onix', level: 44 },
             { nameFr: 'Mackogneur', nameEn: 'Machamp', slug: 'machamp', level: 46 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -644,7 +644,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Ténéfix', nameEn: 'Murkrow', slug: 'murkrow', level: 44 },
             { nameFr: 'Léviator', nameEn: 'Gyarados', slug: 'gyarados', level: 46 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -670,7 +670,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Dracaufeu', nameEn: 'Charizard', slug: 'charizard', level: 48 },
             { nameFr: 'Dracolosse', nameEn: 'Dragonite', slug: 'dragonite', level: 50 },
           ],
-          timerSeconds: 45,
+          timerSeconds: 50,
         },
       },
     ],
@@ -892,7 +892,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Migalos', nameEn: 'Shiftry', slug: 'shiftry', level: 48 },
             { nameFr: 'Absol', nameEn: 'Absol', slug: 'absol', level: 49 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -917,7 +917,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Téraclope', nameEn: 'Dusclops', slug: 'dusclops', level: 51 },
             { nameFr: 'Ténéfix', nameEn: 'Sableye', slug: 'sableye', level: 50 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -942,7 +942,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Oniglali', nameEn: 'Glalie', slug: 'glalie', level: 52 },
             { nameFr: 'Oniglali', nameEn: 'Glalie', slug: 'glalie', level: 52 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -967,7 +967,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Libégon', nameEn: 'Flygon', slug: 'flygon', level: 53 },
             { nameFr: 'Drattak', nameEn: 'Salamence', slug: 'salamence', level: 55 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -993,7 +993,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Branette', nameEn: 'Claydol', slug: 'claydol', level: 55 },
             { nameFr: 'Métalosse', nameEn: 'Metagross', slug: 'metagross', level: 58 },
           ],
-          timerSeconds: 45,
+          timerSeconds: 50,
         },
       },
     ],
@@ -1048,7 +1048,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Tortera', nameEn: 'Torterra', slug: 'torterra', level: 18 },
             { nameFr: 'Roserade', nameEn: 'Roserade', slug: 'roserade', level: 17 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -1071,7 +1071,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Lucario', nameEn: 'Lucario', slug: 'lucario', level: 22 },
             { nameFr: 'Mackogneur', nameEn: 'Machamp', slug: 'machamp', level: 21 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -1094,7 +1094,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Mustéflott', nameEn: 'Floatzel', slug: 'floatzel', level: 26 },
             { nameFr: 'Tritosor', nameEn: 'Gastrodon', slug: 'gastrodon', level: 25 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -1117,7 +1117,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Magirêve', nameEn: 'Mismagius', slug: 'mismagius', level: 30 },
             { nameFr: 'Ectoplasma', nameEn: 'Gengar', slug: 'gengar', level: 29 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -1140,7 +1140,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Bastiodon', nameEn: 'Bastiodon', slug: 'bastiodon', level: 33 },
             { nameFr: 'Steelix', nameEn: 'Steelix', slug: 'steelix', level: 34 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -1163,7 +1163,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Momartik', nameEn: 'Froslass', slug: 'froslass', level: 37 },
             { nameFr: 'Lokhlass', nameEn: 'Lapras', slug: 'lapras', level: 38 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -1211,7 +1211,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Yanméga', nameEn: 'Yanmega', slug: 'yanmega', level: 47 },
             { nameFr: 'Scarhino', nameEn: 'Heracross', slug: 'heracross', level: 48 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1236,7 +1236,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Nidoqueen', nameEn: 'Nidoqueen', slug: 'nidoqueen', level: 47 },
             { nameFr: 'Scorvol', nameEn: 'Gliscor', slug: 'gliscor', level: 50 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1261,7 +1261,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Arcanin', nameEn: 'Arcanine', slug: 'arcanine', level: 49 },
             { nameFr: 'Dracaufeu', nameEn: 'Charizard', slug: 'charizard', level: 50 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1286,7 +1286,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Gallame', nameEn: 'Gallade', slug: 'gallade', level: 51 },
             { nameFr: 'Archéodong', nameEn: 'Bronzong', slug: 'bronzong', level: 49 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1312,7 +1312,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Tritosor', nameEn: 'Gastrodon', slug: 'gastrodon', level: 58 },
             { nameFr: 'Carchacrok', nameEn: 'Garchomp', slug: 'garchomp', level: 62 },
           ],
-          timerSeconds: 45,
+          timerSeconds: 50,
         },
       },
     ],
@@ -1367,7 +1367,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Miradar', nameEn: 'Watchog', slug: 'watchog', level: 18 },
             { nameFr: 'Pashmilla', nameEn: 'Cinccino', slug: 'cinccino', level: 19 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -1390,7 +1390,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Lançargot', nameEn: 'Escavalier', slug: 'escavalier', level: 21 },
             { nameFr: 'Crabaraque', nameEn: 'Crustle', slug: 'crustle', level: 22 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -1413,7 +1413,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Emolga', nameEn: 'Emolga', slug: 'emolga', level: 25 },
             { nameFr: 'Mygavolt', nameEn: 'Galvantula', slug: 'galvantula', level: 26 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -1436,7 +1436,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Minotaupe', nameEn: 'Excadrill', slug: 'excadrill', level: 29 },
             { nameFr: 'Crapustule', nameEn: 'Seismitoad', slug: 'seismitoad', level: 30 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -1459,7 +1459,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Rhinolove', nameEn: 'Swoobat', slug: 'swoobat', level: 33 },
             { nameFr: 'Lakmécygne', nameEn: 'Swanna', slug: 'swanna', level: 34 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -1482,7 +1482,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Sorbouboul', nameEn: 'Vanilluxe', slug: 'vanilluxe', level: 37 },
             { nameFr: 'Hexagel', nameEn: 'Cryogonal', slug: 'cryogonal', level: 38 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -1530,7 +1530,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Lugulabre', nameEn: 'Chandelure', slug: 'chandelure', level: 51 },
             { nameFr: 'Mélancolux', nameEn: 'Lampent', slug: 'lampent', level: 48 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1555,7 +1555,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Shaofouine', nameEn: 'Mienshao', slug: 'mienshao', level: 51 },
             { nameFr: 'Baggaïd', nameEn: 'Scrafty', slug: 'scrafty', level: 52 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1580,7 +1580,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Neitram', nameEn: 'Beheeyem', slug: 'beheeyem', level: 51 },
             { nameFr: 'Cryptéro', nameEn: 'Sigilyph', slug: 'sigilyph', level: 53 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1605,7 +1605,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Scalproie', nameEn: 'Bisharp', slug: 'bisharp', level: 53 },
             { nameFr: 'Vaututrice', nameEn: 'Mandibuzz', slug: 'mandibuzz', level: 54 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1631,7 +1631,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Frison', nameEn: 'Bouffalant', slug: 'bouffalant', level: 57 },
             { nameFr: 'Pyrax', nameEn: 'Volcarona', slug: 'volcarona', level: 60 },
           ],
-          timerSeconds: 45,
+          timerSeconds: 50,
         },
       },
     ],
@@ -1715,7 +1715,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Brutalibré', nameEn: 'Hawlucha', slug: 'hawlucha', level: 21 },
             { nameFr: 'Blindépique', nameEn: 'Chesnaught', slug: 'chesnaught', level: 22 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -1739,7 +1739,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Desséliande', nameEn: 'Trevenant', slug: 'trevenant', level: 26 },
             { nameFr: 'Florges', nameEn: 'Florges', slug: 'florges', level: 27 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -1763,7 +1763,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Dedenne', nameEn: 'Dedenne', slug: 'dedenne', level: 30 },
             { nameFr: 'Némélios', nameEn: 'Pyroar', slug: 'pyroar', level: 31 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -1787,7 +1787,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Cupcanaille', nameEn: 'Slurpuff', slug: 'slurpuff', level: 34 },
             { nameFr: 'Trousselin', nameEn: 'Klefki', slug: 'klefki', level: 35 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -1811,7 +1811,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Sepiatroce', nameEn: 'Malamar', slug: 'malamar', level: 38 },
             { nameFr: 'Strassie', nameEn: 'Carbink', slug: 'carbink', level: 39 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -1861,7 +1861,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Kravarech', nameEn: 'Dragalge', slug: 'dragalge', level: 49 },
             { nameFr: 'Braisillon', nameEn: 'Fletchinder', slug: 'fletchinder', level: 46 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1887,7 +1887,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Amphinobi', nameEn: 'Greninja', slug: 'greninja', level: 51 },
             { nameFr: 'Gamblast', nameEn: 'Clawitzer', slug: 'clawitzer', level: 48 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1913,7 +1913,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Blindépique', nameEn: 'Chesnaught', slug: 'chesnaught', level: 52 },
             { nameFr: 'Exagide', nameEn: 'Aegislash', slug: 'aegislash', level: 50 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1939,7 +1939,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Kravarech', nameEn: 'Dragalge', slug: 'dragalge', level: 53 },
             { nameFr: 'Rexillius', nameEn: 'Tyrantrum', slug: 'tyrantrum', level: 54 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -1966,7 +1966,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Amphinobi', nameEn: 'Greninja', slug: 'greninja', level: 58 },
             { nameFr: 'Méga-Diancie', nameEn: 'Mega Diancie', slug: 'diancie-mega', level: 60 },
           ],
-          timerSeconds: 45,
+          timerSeconds: 50,
         },
       },
     ],
@@ -2050,7 +2050,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Tarenbulle', nameEn: 'Araquanid', slug: 'araquanid', level: 21 },
             { nameFr: 'Froussardine', nameEn: 'Wishiwashi', slug: 'wishiwashi', level: 22 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -2074,7 +2074,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Ossatueur (Alola)', nameEn: 'Marowak (Alola)', slug: 'marowak-alola', level: 25 },
             { nameFr: 'Boumata', nameEn: 'Turtonator', slug: 'turtonator', level: 26 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -2098,7 +2098,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Lampignon', nameEn: 'Shiinotic', slug: 'shiinotic', level: 29 },
             { nameFr: 'Sucreine', nameEn: 'Tsareena', slug: 'tsareena', level: 30 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -2122,7 +2122,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Grolem (Alola)', nameEn: 'Golem (Alola)', slug: 'golem-alola', level: 32 },
             { nameFr: 'Météno', nameEn: 'Minior', slug: 'minior', level: 33 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -2146,7 +2146,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Togedemaru', nameEn: 'Togedemaru', slug: 'togedemaru', level: 35 },
             { nameFr: 'Chrysapile', nameEn: 'Charjabug', slug: 'charjabug', level: 36 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -2170,7 +2170,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Mimiqui', nameEn: 'Mimikyu', slug: 'mimikyu', level: 38 },
             { nameFr: 'Sinistrail', nameEn: 'Dhelmise', slug: 'dhelmise', level: 39 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -2194,7 +2194,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Grotadmorv (Alola)', nameEn: 'Muk (Alola)', slug: 'muk-alola', level: 41 },
             { nameFr: 'Sarmuraï', nameEn: 'Golisopod', slug: 'golisopod', level: 42 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -2218,7 +2218,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Guérilande', nameEn: 'Comfey', slug: 'comfey', level: 44 },
             { nameFr: 'Feunard (Alola)', nameEn: 'Ninetales (Alola)', slug: 'ninetales-alola', level: 45 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -2242,7 +2242,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Triopikeur (Alola)', nameEn: 'Dugtrio (Alola)', slug: 'dugtrio-alola', level: 48 },
             { nameFr: 'Trépassable', nameEn: 'Palossand', slug: 'palossand', level: 49 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -2267,7 +2267,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Sarmuraï', nameEn: 'Golisopod', slug: 'golisopod', level: 53 },
             { nameFr: 'Prédastérie', nameEn: 'Toxapex', slug: 'toxapex', level: 54 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -2294,7 +2294,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Archéduc', nameEn: 'Decidueye', slug: 'decidueye', level: 58 },
             { nameFr: 'Solgaleo', nameEn: 'Solgaleo', slug: 'solgaleo', level: 60 },
           ],
-          timerSeconds: 45,
+          timerSeconds: 50,
         },
       },
     ],
@@ -2378,7 +2378,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Wagomine', nameEn: 'Carkol', slug: 'carkol', level: 21 },
             { nameFr: 'Monthracite', nameEn: 'Coalossal', slug: 'coalossal', level: 22 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -2402,7 +2402,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Hexadron', nameEn: 'Falinks', slug: 'falinks', level: 25 },
             { nameFr: 'Dunaconda', nameEn: 'Sandaconda', slug: 'sandaconda', level: 26 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -2426,7 +2426,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Charmilly', nameEn: 'Alcremie', slug: 'alcremie', level: 29 },
             { nameFr: 'Angoliath', nameEn: 'Grimmsnarl', slug: 'grimmsnarl', level: 30 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -2450,7 +2450,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Dolman', nameEn: 'Stonjourner', slug: 'stonjourner', level: 33 },
             { nameFr: 'Dunaconda', nameEn: 'Sandaconda', slug: 'sandaconda', level: 34 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -2474,7 +2474,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Ixon', nameEn: 'Obstagoon', slug: 'obstagoon', level: 37 },
             { nameFr: 'Morpeko', nameEn: 'Morpeko', slug: 'morpeko', level: 38 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -2499,7 +2499,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Dispareptil', nameEn: 'Drakloak', slug: 'drakloak', level: 41 },
             { nameFr: 'Dunaconda', nameEn: 'Sandaconda', slug: 'sandaconda', level: 42 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -2523,7 +2523,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Salarsen', nameEn: 'Toxtricity', slug: 'toxtricity', level: 44 },
             { nameFr: 'Angoliath', nameEn: 'Grimmsnarl', slug: 'grimmsnarl', level: 45 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -2547,7 +2547,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Galopa (Galar)', nameEn: 'Rapidash (Galar)', slug: 'rapidash-galar', level: 47 },
             { nameFr: 'Polthégeist', nameEn: 'Polteageist', slug: 'polteageist', level: 48 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -2572,7 +2572,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Palarticho', nameEn: "Sirfetch'd", slug: 'sirfetchd', level: 51 },
             { nameFr: 'Fulgudog', nameEn: 'Boltund', slug: 'boltund', level: 52 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -2597,7 +2597,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Berserkatt', nameEn: 'Perrserker', slug: 'perrserker', level: 55 },
             { nameFr: 'Smogogo (Galar)', nameEn: 'Weezing (Galar)', slug: 'weezing-galar', level: 56 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -2624,7 +2624,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Lézargus', nameEn: 'Inteleon', slug: 'inteleon', level: 59 },
             { nameFr: 'Zacian', nameEn: 'Zacian', slug: 'zacian', level: 60 },
           ],
-          timerSeconds: 45,
+          timerSeconds: 50,
         },
       },
     ],
@@ -2708,7 +2708,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Fulgulairo', nameEn: 'Kilowattrel', slug: 'kilowattrel', level: 21 },
             { nameFr: 'Pohmotte', nameEn: 'Pawmo', slug: 'pawmo', level: 22 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -2732,7 +2732,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Superdofin', nameEn: 'Palafin', slug: 'palafin', level: 25 },
             { nameFr: 'Oyacata', nameEn: 'Dondozo', slug: 'dondozo', level: 26 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -2756,7 +2756,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Briochien', nameEn: 'Dachsbun', slug: 'dachsbun', level: 29 },
             { nameFr: 'Famignol', nameEn: 'Maushold', slug: 'maushold', level: 30 },
           ],
-          timerSeconds: 35,
+          timerSeconds: 30,
         },
       },
       {
@@ -2780,7 +2780,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Virevorreur', nameEn: 'Brambleghast', slug: 'brambleghast', level: 33 },
             { nameFr: 'Floréclat', nameEn: 'Glimmora', slug: 'glimmora', level: 34 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -2804,7 +2804,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Bérasca', nameEn: 'Rabsca', slug: 'rabsca', level: 37 },
             { nameFr: 'Carmadura', nameEn: 'Armarouge', slug: 'armarouge', level: 38 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -2829,7 +2829,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Gigansel', nameEn: 'Garganacl', slug: 'garganacl', level: 41 },
             { nameFr: 'Glaivodo', nameEn: 'Baxcalibur', slug: 'baxcalibur', level: 42 },
           ],
-          timerSeconds: 40,
+          timerSeconds: 30,
         },
       },
       {
@@ -2853,7 +2853,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Dunaconda', nameEn: 'Sandaconda', slug: 'sandaconda', level: 44 },
             { nameFr: 'Terracruel', nameEn: 'Toedscruel', slug: 'toedscruel', level: 45 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -2877,7 +2877,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Pachyradjah', nameEn: 'Copperajah', slug: 'copperajah', level: 47 },
             { nameFr: 'Ferdeter', nameEn: 'Orthworm', slug: 'orthworm', level: 48 },
           ],
-          timerSeconds: 30,
+          timerSeconds: 40,
         },
       },
       {
@@ -2902,7 +2902,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Lestombaile', nameEn: 'Bombirdier', slug: 'bombirdier', level: 51 },
             { nameFr: 'Tapatoès', nameEn: 'Squawkabilly', slug: 'squawkabilly', level: 52 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -2927,7 +2927,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Nigirigon', nameEn: 'Tatsugiri', slug: 'tatsugiri', level: 55 },
             { nameFr: 'Lanssorien', nameEn: 'Dragapult', slug: 'dragapult', level: 56 },
           ],
-          timerSeconds: 50,
+          timerSeconds: 40,
         },
       },
       {
@@ -2954,7 +2954,7 @@ export const GENERATIONS: Generation[] = [
             { nameFr: 'Glaivodo', nameEn: 'Baxcalibur', slug: 'baxcalibur', level: 59 },
             { nameFr: 'Koraidon', nameEn: 'Koraidon', slug: 'koraidon', level: 60 },
           ],
-          timerSeconds: 45,
+          timerSeconds: 50,
         },
       },
     ],
