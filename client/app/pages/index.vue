@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Swords, Zap, Timer, Skull, MapPin, ChevronDown, RotateCcw, X } from 'lucide-vue-next'
+import { Swords, Zap, Timer, Skull, MapPin, ChevronDown, RotateCcw, X, LogOut } from 'lucide-vue-next'
 import { getSpriteUrl, getShinySpriteUrl } from '~/utils/showdown'
 import { useCombatStore } from '~/stores/useCombatStore'
 import { usePlayerStore } from '~/stores/usePlayerStore'
@@ -65,6 +65,14 @@ function goBackToFrontier() {
   showRouteSelector.value = false
   combat.clearTimers()
   setTimeout(() => spawnEnemy(), 200)
+}
+
+function fleeBoss() {
+  bossGateActive.value = false
+  combat.bossFailed()
+  player.retreatStage()
+  showRouteSelector.value = false
+  setTimeout(() => spawnEnemy(), 400)
 }
 
 
@@ -253,6 +261,7 @@ function removeFromTeam(pokeId: number) {
         <MapPin class="h-3.5 w-3.5" />
         <span>{{ zoneName }}</span>
         <button
+          v-if="!player.isBossStage && !bossGateActive && !combat.isBossFight"
           class="rounded p-0.5 text-slate-500 transition-colors hover:bg-slate-700/50 hover:text-white"
           :title="t('Changer de route', 'Change route')"
           @click="showRouteSelector = !showRouteSelector"
@@ -323,13 +332,22 @@ function removeFromTeam(pokeId: number) {
       </div>
     </div>
 
-    <!-- Boss Timer -->
+    <!-- Boss Timer + Flee -->
     <div
       v-if="combat.isBossFight && combat.bossTimeRemaining !== null"
-      class="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-5 py-2"
+      class="flex items-center gap-3"
     >
-      <Timer class="h-5 w-5 text-red-400" />
-      <span class="font-pixel text-base text-red-400">{{ combat.bossTimeRemaining }}s</span>
+      <div class="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-5 py-2">
+        <Timer class="h-5 w-5 text-red-400" />
+        <span class="font-pixel text-base text-red-400">{{ combat.bossTimeRemaining }}s</span>
+      </div>
+      <button
+        class="flex items-center gap-1.5 rounded-xl border border-slate-600 bg-slate-700/80 px-4 py-2 text-xs font-bold text-slate-300 transition-all hover:bg-slate-600 active:scale-95"
+        @click="fleeBoss()"
+      >
+        <LogOut class="h-3.5 w-3.5" />
+        {{ t('Fuir', 'Flee') }}
+      </button>
     </div>
 
     <!-- Boss Team Preview (ligne au-dessus de la carte) -->
@@ -370,12 +388,21 @@ function removeFromTeam(pokeId: number) {
       <p class="text-sm text-slate-400">
         {{ t('Préparez votre équipe avant de combattre.', 'Prepare your team before fighting.') }}
       </p>
-      <button
-        class="mt-2 rounded-xl bg-red-600 px-8 py-3 text-lg font-bold text-white shadow-lg transition-all hover:bg-red-500 hover:shadow-red-500/30 active:scale-95"
-        @click="confirmBossFight()"
-      >
-        {{ t('Combattre', 'Fight') }}
-      </button>
+      <div class="mt-2 flex gap-3">
+        <button
+          class="rounded-xl bg-red-600 px-8 py-3 text-lg font-bold text-white shadow-lg transition-all hover:bg-red-500 hover:shadow-red-500/30 active:scale-95"
+          @click="confirmBossFight()"
+        >
+          {{ t('Combattre', 'Fight') }}
+        </button>
+        <button
+          class="flex items-center gap-2 rounded-xl bg-slate-700 px-6 py-3 text-sm font-bold text-slate-300 shadow-lg transition-all hover:bg-slate-600 active:scale-95"
+          @click="fleeBoss()"
+        >
+          <LogOut class="h-4 w-4" />
+          {{ t('Fuir', 'Flee') }}
+        </button>
+      </div>
     </div>
 
     <!-- Enemy Display -->

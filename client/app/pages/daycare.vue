@@ -163,8 +163,8 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
       </h2>
       <p class="mt-1 text-sm text-gray-400 max-w-md">
         {{ t(
-          'Dépose un Pokémon niv.100 (non-shiny). Il éclot après un certain nombre de dégâts en combat. Les 5★ ont 1/750 de chance shiny !',
-          'Leave a Lv.100 Pokémon (non-shiny). It hatches after dealing enough combat damage. 5★ have 1/750 shiny chance!'
+          'Dépose un Pokémon niv.100 (non-shiny). Il éclot après un certain nombre de dégâts en combat. Les 5★ ont 1/150 de chance shiny !',
+          'Leave a Lv.100 Pokémon (non-shiny). It hatches after dealing enough combat damage. 5★ have 1/150 shiny chance!'
         ) }}
       </p>
       <p class="mt-1 text-xs text-gray-500">

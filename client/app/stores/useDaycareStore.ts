@@ -25,8 +25,8 @@ export const HATCH_DAMAGE: Record<number, number> = {
   5: 1_000_000,
 }
 
-// 5-star pokemon have a 1/750 chance to hatch shiny
-export const FIVE_STAR_SHINY_CHANCE = 1 / 750
+// 5-star pokemon have a 1/150 chance to hatch shiny
+export const FIVE_STAR_SHINY_CHANCE = 1 / 150
 
 export const useDaycareStore = defineStore('daycare', {
   state: () => ({
