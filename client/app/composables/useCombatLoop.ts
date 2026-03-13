@@ -115,7 +115,7 @@ export function useCombatLoop() {
     const hp = Math.round(poke.baseHp * (1 + localDiff * 0.6) * genDiffMult * 2)
     // Gold scales with banner cost; XP is flat across all gens
     const diffScale = 1 + localDiff * 0.02
-    const goldBase = gen === 1 ? 75 : 600 * gen * gen
+    const goldBase = gen === 1 ? 50 : 400 * gen * gen
     const xpBase = 50
     const goldReward = Math.round(goldBase * diffScale * (isShiny ? 5 : 1))
     const xpReward = Math.round(xpBase * diffScale * (isShiny ? 3 : 1))
@@ -145,7 +145,7 @@ export function useCombatLoop() {
     const totalHp = Math.round(smoothTeam * 140 * Math.pow(localDiff, 1.15) * genDiffMult * championMult)
     // Boss rewards: gold scales with gen², XP flat across all gens
     const diffScale = 1 + localDiff * 0.02
-    const goldBase = gen === 1 ? 750 : 6000 * gen * gen
+    const goldBase = gen === 1 ? 500 : 4000 * gen * gen
     const xpBase = 500
     const bossTypes = getPokemonTypes(boss.team[0]?.slug ?? 'normal')
     combat.setEnemy({
