@@ -113,11 +113,10 @@ export function useCombatLoop() {
     const isShiny = Math.random() < getShinyRate(player.shinyCharms, player.pokedexMaster)
     // HP scales with local difficulty (resets per gen) × gentle gen multiplier
     const hp = Math.round(poke.baseHp * (1 + localDiff * 0.6) * genDiffMult * 2)
-    // Gold scales with banner cost: ~5 pulls/100 kills at start, ~10 at end
-    // Gen 1 uses lower base (25) to match cheap Kanto banner (500g)
+    // Gold scales with banner cost; XP is flat across all gens
     const diffScale = 1 + localDiff * 0.02
-    const goldBase = gen === 1 ? 50 : 400 * gen * gen
-    const xpBase = gen === 1 ? 50 : 200 * gen * gen
+    const goldBase = gen === 1 ? 75 : 600 * gen * gen
+    const xpBase = 50
     const goldReward = Math.round(goldBase * diffScale * (isShiny ? 5 : 1))
     const xpReward = Math.round(xpBase * diffScale * (isShiny ? 3 : 1))
     combat.setEnemy({
@@ -144,10 +143,10 @@ export function useCombatLoop() {
     // Champion (z13) gets ×1.2 HP to stay hardest despite longer timer
     const championMult = zoneIdx === 12 ? 1.2 : 1.0
     const totalHp = Math.round(smoothTeam * 140 * Math.pow(localDiff, 1.15) * genDiffMult * championMult)
-    // Boss rewards ≈ 10× wild rewards
+    // Boss rewards: gold scales with gen², XP flat across all gens
     const diffScale = 1 + localDiff * 0.02
-    const goldBase = gen === 1 ? 500 : 4000 * gen * gen
-    const xpBase = gen === 1 ? 500 : 2000 * gen * gen
+    const goldBase = gen === 1 ? 750 : 6000 * gen * gen
+    const xpBase = 500
     const bossTypes = getPokemonTypes(boss.team[0]?.slug ?? 'normal')
     combat.setEnemy({
       nameFr: `Boss : ${boss.nameFr}`,
