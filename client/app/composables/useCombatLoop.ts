@@ -176,9 +176,11 @@ export function useCombatLoop() {
 
       const team = inventory.team
       if (team.length > 0) {
+        // Wild Pokémon give ×4 XP to team Pokémon (not bosses, not player XP)
+        const pokemonXpReward = wasBoss ? xpReward : xpReward * 4
         // Gentle XP split: divisor 1.0→3.0 for 1→6 pokémons (not raw /teamSize)
         const xpDivisor = 1 + (team.length - 1) * 0.4
-        const xpPerPokemon = Math.max(1, Math.floor(xpReward / xpDivisor))
+        const xpPerPokemon = Math.max(1, Math.floor(pokemonXpReward / xpDivisor))
         for (const poke of team) {
           inventory.addPokemonXp(poke.id, xpPerPokemon, player.currentGeneration)
         }
