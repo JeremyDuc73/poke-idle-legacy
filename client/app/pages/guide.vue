@@ -390,8 +390,8 @@ function toggleGen(id: number) {
             'The hatched Pokémon is a duplicate (increases stars). A Pokémon in daycare can\'t fight.'
           ) }}</p>
           <p>{{ t(
-            'Un même Pokémon ne peut être déposé qu\'une seule fois. Les 5★ ont 1/50 de chance de faire éclore un shiny !',
-            'Each Pokémon can only be deposited once. 5★ have a 1/50 chance to hatch a shiny!'
+            `Un même Pokémon ne peut être déposé qu'une seule fois. Les 5★ ont 1/${Math.round(1 / FIVE_STAR_SHINY_CHANCE)} de chance de faire éclore un shiny !`,
+            `Each Pokémon can only be deposited once. 5★ have a 1/${Math.round(1 / FIVE_STAR_SHINY_CHANCE)} chance to hatch a shiny!`
           ) }}</p>
         </div>
         <h3 class="mt-3 mb-1 text-xs font-semibold text-gray-400 uppercase">{{ t('Dégâts requis', 'Damage required') }}</h3>
@@ -1339,7 +1339,7 @@ function toggleGen(id: number) {
               <li>{{ t('5 slots de pension simultanés', '5 simultaneous daycare slots') }}</li>
               <li>{{ t('Éclosion basée sur les dégâts infligés en combat', 'Hatching based on combat damage dealt') }}</li>
               <li>{{ t('Seuils évolutifs : 1★ (10k), 2★ (50k), 3★ (250k), 4★ (500k), 5★ (1M dégâts)', 'Scaling thresholds: 1★ (10k), 2★ (50k), 3★ (250k), 4★ (500k), 5★ (1M damage)') }}</li>
-              <li>{{ t('Pokémon 5★ en pension : 1/50 chance de shiny', '5★ Pokémon in daycare: 1/50 shiny chance') }}</li>
+              <li>{{ t(`Pokémon 5★ en pension : 1/${Math.round(1 / FIVE_STAR_SHINY_CHANCE)} chance de shiny`, `5★ Pokémon in daycare: 1/${Math.round(1 / FIVE_STAR_SHINY_CHANCE)} shiny chance`) }}</li>
               <li>{{ t('Pokémon en pension retirés de l\'équipe automatiquement', 'Pokémon in daycare automatically removed from team') }}</li>
             </ul>
           </div>
