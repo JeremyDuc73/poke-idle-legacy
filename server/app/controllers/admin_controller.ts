@@ -11,6 +11,11 @@ import PvpMatch from '#models/pvp_match'
 
 const BANNER_FILE = () => join(app.makePath('storage'), 'banner.json')
 
+function xpForLevel(level: number): number {
+  if (level <= 1) return 0
+  return Math.floor(120 * Math.pow(level, 2.0))
+}
+
 export default class AdminController {
   /**
    * Get dashboard stats
@@ -111,24 +116,34 @@ export default class AdminController {
    */
   async giveItems({ params, request, response }: HttpContext) {
     const user = await User.findOrFail(params.id)
-    const { gold, gems } = request.only(['gold', 'gems'])
+    const { gold, gems, xp } = request.only(['gold', 'gems', 'xp'])
 
     const goldAmount = Number(gold) || 0
     const gemsAmount = Number(gems) || 0
+    const xpAmount = Number(xp) || 0
 
     if (goldAmount > 0) user.gold += goldAmount
     if (gemsAmount > 0) user.gems += gemsAmount
+    if (xpAmount > 0) {
+      user.xp += xpAmount
+      // Level up if XP threshold reached
+      while (user.xp >= xpForLevel(user.level + 1)) {
+        user.level++
+      }
+    }
     user.adminVersion = (user.adminVersion ?? 0) + 1
 
     await user.save()
 
     return response.ok({
-      message: `Donné ${goldAmount} gold, ${gemsAmount} gems à ${user.username}`,
+      message: `Donné ${goldAmount} gold, ${gemsAmount} gems, ${xpAmount} XP à ${user.username} (niveau ${user.level})`,
       user: {
         id: user.id,
         username: user.username,
         gold: user.gold,
         gems: user.gems,
+        xp: user.xp,
+        level: user.level,
       },
     })
   }

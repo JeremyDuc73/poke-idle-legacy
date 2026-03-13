@@ -102,6 +102,7 @@ const penaltyType = ref<'dps' | 'gold'>('dps')
 const penaltyPercent = ref<5 | 10 | 25 | 50>(10)
 const goldToGive = ref(0)
 const gemsToGive = ref(0)
+const xpToGive = ref(0)
 const levelToSet = ref(0)
 const searchQuery = ref('')
 const roleFilter = ref<'all' | 'user' | 'admin'>('all')
@@ -216,7 +217,7 @@ async function deleteUser(userId: number) {
 
 async function giveItems() {
   if (!selectedUser.value) return
-  if (goldToGive.value <= 0 && gemsToGive.value <= 0) return
+  if (goldToGive.value <= 0 && gemsToGive.value <= 0 && xpToGive.value <= 0) return
 
   try {
     const response = await fetch(`${API_BASE}/api/admin/users/${selectedUser.value.id}/give-items`, {
@@ -226,6 +227,7 @@ async function giveItems() {
       body: JSON.stringify({
         gold: Number(goldToGive.value),
         gems: Number(gemsToGive.value),
+        xp: Number(xpToGive.value),
       }),
     })
     if (response.ok) {
@@ -234,6 +236,7 @@ async function giveItems() {
       showGiveItemsModal.value = false
       goldToGive.value = 0
       gemsToGive.value = 0
+      xpToGive.value = 0
       await loadUsers()
     } else {
       const err = await response.json().catch(() => null)
@@ -313,6 +316,7 @@ function openGiveItemsModal(user: User) {
   selectedUser.value = user
   goldToGive.value = 0
   gemsToGive.value = 0
+  xpToGive.value = 0
   showGiveItemsModal.value = true
 }
 
@@ -1102,6 +1106,18 @@ onMounted(async () => {
               />
               <div class="mt-1 flex gap-1">
                 <button v-for="amt in [1000, 5000, 10000, 50000]" :key="amt" class="rounded bg-slate-700 px-2 py-0.5 text-[10px] text-yellow-400 hover:bg-slate-600" @click="goldToGive = amt">{{ amt.toLocaleString() }}</button>
+              </div>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm text-gray-400">✨ XP Joueur</label>
+              <input
+                v-model.number="xpToGive"
+                type="number"
+                min="0"
+                class="w-full rounded border border-gray-600 bg-gray-700 px-3 py-2 text-white"
+              />
+              <div class="mt-1 flex gap-1">
+                <button v-for="amt in [1000, 10000, 50000, 500000]" :key="amt" class="rounded bg-slate-700 px-2 py-0.5 text-[10px] text-cyan-400 hover:bg-slate-600" @click="xpToGive = amt">{{ amt.toLocaleString() }}</button>
               </div>
             </div>
             <div class="flex gap-2">
