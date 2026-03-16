@@ -479,7 +479,7 @@ async function setProgression() {
 }
 
 async function resetAllPlayers() {
-  if (!confirm('⚠️ RESET GLOBAL — Tous les joueurs seront réinitialisés (progression, pokémon, PvP, classements). Cette action est IRRÉVERSIBLE. Continuer ?')) return
+  if (!confirm('⚠️ RESET GLOBAL — Tous les joueurs seront réinitialisés (progression, pokémon, classements). Cette action est IRRÉVERSIBLE. Continuer ?')) return
   if (!confirm('Dernière confirmation : TOUT sera supprimé. Êtes-vous absolument sûr ?')) return
   try {
     const res = await fetch(`${API_BASE}/api/admin/reset-all`, {
@@ -574,7 +574,7 @@ onMounted(async () => {
           <RotateCcw class="h-4 w-4" /> Reset global
         </h2>
         <p class="mb-3 text-xs text-slate-400">
-          Réinitialiser TOUS les joueurs : progression, pokémon, classements classiques et PvP. Les comptes (email, mot de passe) sont conservés.
+          Réinitialiser TOUS les joueurs : progression, pokémon, classements. Les comptes (email, mot de passe) sont conservés.
         </p>
         <button
           class="rounded-lg bg-red-600 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-red-500"
