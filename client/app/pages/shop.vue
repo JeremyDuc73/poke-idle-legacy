@@ -86,8 +86,8 @@ function confirmEvolve(pokemon: OwnedPokemon) {
   const cost = getEvoItemCost()
   if (!player.spendGold(cost)) return
 
-  const count = inventory.evolveAllWithItem(pokemon.slug, itemId, player.currentGeneration)
-  if (count > 0) {
+  const success = inventory.evolveWithItem(pokemon.id, itemId, player.currentGeneration)
+  if (success) {
     flash(`evo-${itemId}`)
     evoMessage.value = t(
       `${pokemon.nameFr} a évolué !`,

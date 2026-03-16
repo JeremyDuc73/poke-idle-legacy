@@ -37,12 +37,31 @@ function useCandy(poke: OwnedPokemon, size: CandySize) {
   auth.saveGameState()
 }
 
-const sortBy = ref<'stars' | 'level' | 'name' | 'dps' | 'pokedex' | 'rarity'>('stars')
-const search = ref('')
-const filterType = ref<PokemonType | null>(null)
-const filterShiny = ref<boolean | null>(null)
-const filterTeam = ref<boolean | null>(null)
-const filterGen = ref<number | null>(null)
+// Use store-persisted filters so they survive page navigation
+const sortBy = computed({
+  get: () => inventory.filterSortBy,
+  set: (v) => { inventory.filterSortBy = v },
+})
+const search = computed({
+  get: () => inventory.filterSearch,
+  set: (v) => { inventory.filterSearch = v },
+})
+const filterType = computed({
+  get: () => inventory.filterType as PokemonType | null,
+  set: (v) => { inventory.filterType = v },
+})
+const filterShiny = computed({
+  get: () => inventory.filterShiny,
+  set: (v) => { inventory.filterShiny = v },
+})
+const filterTeam = computed({
+  get: () => inventory.filterTeam,
+  set: (v) => { inventory.filterTeam = v },
+})
+const filterGen = computed({
+  get: () => inventory.filterGen,
+  set: (v) => { inventory.filterGen = v },
+})
 
 const sortOptions = computed(() => [
   { value: 'stars', label: `⭐ ${t('Étoiles', 'Stars')}` },

@@ -23,6 +23,7 @@ const { t } = useLocale()
 // ── State ──
 const showPicker = ref(false)
 const pickerSearch = ref('')
+const selectedIds = ref<Set<number>>(new Set())
 const pickerSort = ref<'stars' | 'name' | 'rarity'>('stars')
 const pickerRarity = ref<string | null>(null)
 const hatchResults = ref<{ slug: string; nameFr: string; nameEn: string; isShiny: boolean; isNew: boolean; stars: number; rarity: Rarity }[]>([])
@@ -94,23 +95,43 @@ function slotReady(slot: DaycareSlot): boolean {
 
 const auth = useAuthStore()
 
-function depositPokemon(poke: OwnedPokemon) {
-  if (daycare.isFull) return
-  if (daycare.hasSlug(poke.slug, poke.isShiny)) return
-  if (!player.spendGold(DAYCARE_COST)) return
-  // Remove from team before depositing
-  if (poke.teamSlot !== null) {
-    inventory.removeFromTeam(poke.id)
+function toggleSelect(poke: OwnedPokemon) {
+  const set = new Set(selectedIds.value)
+  if (set.has(poke.id)) {
+    set.delete(poke.id)
+  } else {
+    // Can't select more than free slots
+    if (set.size >= daycare.freeSlots) return
+    set.add(poke.id)
   }
-  daycare.deposit({
-    slug: poke.slug,
-    nameFr: poke.nameFr,
-    nameEn: poke.nameEn,
-    stars: poke.stars,
-    rarity: poke.rarity,
-  })
+  selectedIds.value = set
+}
+
+function depositSelected() {
+  const toDeposit = eligiblePokemon.value.filter(p => selectedIds.value.has(p.id))
+  if (toDeposit.length === 0) return
+  const totalCost = toDeposit.length * DAYCARE_COST
+  if (!player.spendGold(totalCost)) return
+  for (const poke of toDeposit) {
+    if (daycare.isFull) break
+    if (daycare.hasSlug(poke.slug, poke.isShiny)) continue
+    if (poke.teamSlot !== null) inventory.removeFromTeam(poke.id)
+    daycare.deposit({
+      slug: poke.slug,
+      nameFr: poke.nameFr,
+      nameEn: poke.nameEn,
+      stars: poke.stars,
+      rarity: poke.rarity,
+    })
+  }
+  selectedIds.value = new Set()
   showPicker.value = false
   auth.saveGameState()
+}
+
+function openPicker() {
+  selectedIds.value = new Set()
+  showPicker.value = true
 }
 
 function removeSlot(index: number) {
@@ -237,10 +258,10 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
         :key="'empty-' + n"
         class="flex h-20 items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm text-gray-500 transition-all hover:border-green-500/40 hover:bg-gray-800/60 hover:text-green-400"
         :disabled="player.gold < DAYCARE_COST"
-        @click="showPicker = true"
+        @click="openPicker"
       >
         <Plus class="h-5 w-5" />
-        {{ t('Déposer un Pokémon', 'Deposit a Pokémon') }}
+        {{ t('Déposer des Pokémon', 'Deposit Pokémon') }}
         <span class="flex items-center gap-1 text-yellow-500/70">
           <Coins class="h-3.5 w-3.5" /> {{ DAYCARE_COST }}
         </span>
@@ -342,10 +363,11 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
             <X class="h-5 w-5" />
           </button>
           <h3 class="mb-1 text-lg font-bold text-white">
-            {{ t('Déposer un Pokémon', 'Deposit a Pokémon') }}
+            {{ t('Déposer des Pokémon', 'Deposit Pokémon') }}
           </h3>
           <p class="mb-3 text-xs text-gray-500">
             {{ t('Niv.100 requis · Pas de shiny', 'Lv.100 required · No shinies') }}
+            · {{ t(`${selectedIds.size}/${daycare.freeSlots} sélectionné(s)`, `${selectedIds.size}/${daycare.freeSlots} selected`) }}
           </p>
 
           <!-- Search + filters -->
@@ -381,8 +403,9 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
             <button
               v-for="poke in eligiblePokemon"
               :key="poke.id"
-              class="flex flex-col items-center gap-1 rounded-xl border border-gray-700 bg-gray-800 p-2 transition-all hover:border-green-500/50 hover:bg-gray-750 active:scale-95"
-              @click="depositPokemon(poke)"
+              class="flex flex-col items-center gap-1 rounded-xl border p-2 transition-all active:scale-95"
+              :class="selectedIds.has(poke.id) ? 'border-green-500 bg-green-500/20 ring-1 ring-green-500/50' : 'border-gray-700 bg-gray-800 hover:border-green-500/50 hover:bg-gray-750'"
+              @click="toggleSelect(poke)"
             >
               <PokemonSprite
                 :slug="poke.slug"
@@ -403,6 +426,19 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
           <p v-if="eligiblePokemon.length === 0" class="py-8 text-center text-sm text-gray-500">
             {{ t('Aucun Pokémon éligible (niv.100, non-shiny)', 'No eligible Pokémon (lv.100, non-shiny)') }}
           </p>
+
+          <!-- Deposit selected button -->
+          <button
+            v-if="selectedIds.size > 0"
+            class="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-green-600 py-2.5 text-sm font-bold text-white transition-all hover:bg-green-500 active:scale-95"
+            @click="depositSelected"
+          >
+            <Egg class="h-4 w-4" />
+            {{ t(`Déposer ${selectedIds.size} Pokémon`, `Deposit ${selectedIds.size} Pokémon`) }}
+            <span class="flex items-center gap-1 text-yellow-300 text-xs">
+              <Coins class="h-3 w-3" /> {{ selectedIds.size * DAYCARE_COST }}
+            </span>
+          </button>
         </div>
       </div>
     </Teleport>

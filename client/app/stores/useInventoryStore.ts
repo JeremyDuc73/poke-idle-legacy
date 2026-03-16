@@ -39,6 +39,13 @@ interface InventoryState {
   nextId: number
   savedTeams: SavedTeam[]
   evolutionLog: EvolutionEvent[]
+  // UI filter state (persists across page navigations, not saved to server)
+  filterSortBy: 'stars' | 'level' | 'name' | 'dps' | 'pokedex' | 'rarity'
+  filterSearch: string
+  filterType: string | null
+  filterShiny: boolean | null
+  filterTeam: boolean | null
+  filterGen: number | null
 }
 
 export const MAX_STARS = 5
@@ -50,6 +57,12 @@ export const useInventoryStore = defineStore('inventory', {
     nextId: 1,
     savedTeams: [],
     evolutionLog: [],
+    filterSortBy: 'stars',
+    filterSearch: '',
+    filterType: null,
+    filterShiny: null,
+    filterTeam: null,
+    filterGen: null,
   }),
 
   getters: {
