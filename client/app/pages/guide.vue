@@ -624,6 +624,49 @@ function toggleGen(id: number) {
     <!-- ═══════════════ PATCH NOTES TAB ═══════════════ -->
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
 
+      <!-- v2.2.0 -->
+      <article class="rounded-xl border-2 border-green-500/60 bg-gradient-to-br from-green-900/30 to-emerald-900/20 p-5">
+        <div class="mb-1 flex items-center gap-2">
+          <span class="rounded bg-green-500 px-2 py-0.5 text-xs font-black text-black">QoL</span>
+        </div>
+        <h3 class="mb-3 text-xl font-black text-green-300">v2.2.0 — Qualité de vie & Corrections — 16 Mars 2026</h3>
+
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Améliorations de confort, corrections de bugs et nettoyage général !', 'Quality of life improvements, bug fixes and general cleanup!') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-green-400">✨ {{ t('Nouveautés', 'New Features') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Pension : sélection multiple de Pokémon — déposez plusieurs Pokémon d\'un coup', 'Daycare: multi-select — deposit multiple Pokémon at once') }}</li>
+              <li>{{ t('Inventaire : les filtres (génération, type, shiny, etc.) sont conservés quand on change d\'onglet', 'Inventory: filters (generation, type, shiny, etc.) persist across tab changes') }}</li>
+              <li>{{ t('Boutique : seuls les objets d\'évolution utilisables sont affichés', 'Shop: only usable evolution items are displayed') }}</li>
+              <li>{{ t('Clic droit sur le menu Inventaire pour activer/désactiver les notifications d\'évolution par item', 'Right-click the Inventory menu to toggle evolution item notifications') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-green-400">🐛 {{ t('Corrections', 'Bug Fixes') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Correction : utiliser une pierre d\'évolution sur un Pokémon shiny n\'évolue plus les variantes normales en même temps', 'Fix: using an evolution stone on a shiny Pokémon no longer evolves normal variants at the same time') }}</li>
+              <li>{{ t('Correction du sprite de Lovis (champion Eau de Sinnoh)', 'Fixed Wake (Sinnoh Water gym leader) trainer sprite') }}</li>
+              <li>{{ t('Correction du nom français de Malosse (était affiché "Corniaud")', 'Fixed French name of Houndour (was displayed incorrectly)') }}</li>
+              <li>{{ t('Réduction renforcée de la difficulté de Kalos (Gen 6)', 'Strengthened Kalos (Gen 6) difficulty reduction') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-green-400">🗑️ {{ t('Retraits & Nettoyage', 'Removals & Cleanup') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Suppression complète du système PvP (non fonctionnel)', 'Complete removal of PvP system (non-functional)') }}</li>
+              <li>{{ t('Les bonbons XP ne sont plus utilisables depuis l\'onglet Combat — uniquement depuis l\'inventaire', 'XP candies can no longer be used from the Combat tab — inventory only') }}</li>
+              <li>{{ t('Page admin : sections admin déplacées sous le tableau des utilisateurs', 'Admin page: admin sections moved below the users table') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
       <!-- v2.1.0 -->
       <article class="rounded-xl border-2 border-amber-500/60 bg-gradient-to-br from-amber-900/30 to-yellow-900/20 p-5">
         <div class="mb-1 flex items-center gap-2">

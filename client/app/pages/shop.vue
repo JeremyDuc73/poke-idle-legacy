@@ -128,6 +128,11 @@ const ITEM_SPRITES: Record<string, string> = {
   'reaper-cloth': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/reaper-cloth.png',
 }
 
+// Only show evo items that have at least one eligible Pokémon
+const usableEvoItems = computed(() => {
+  return EVO_ITEMS.filter(item => getEvoCandidates(item.id).length > 0)
+})
+
 const candySizes: CandySize[] = ['S', 'M', 'L', 'XL']
 const CANDY_COLORS: Record<CandySize, string> = { S: '#4ade80', M: '#60a5fa', L: '#c084fc', XL: '#fbbf24' }
 const CANDY_UNLOCK_LEVEL: Record<CandySize, number> = { S: 5, M: 15, L: 30, XL: 50 }
@@ -225,9 +230,9 @@ function buyCandy(size: CandySize) {
       <div v-if="evoMessage" class="mb-3 rounded-lg bg-green-500/10 px-4 py-2 text-center text-sm font-bold text-green-400">
         {{ evoMessage }}
       </div>
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div v-if="usableEvoItems.length > 0" class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <button
-          v-for="item in EVO_ITEMS"
+          v-for="item in usableEvoItems"
           :key="item.id"
           class="flex flex-col gap-2 rounded-xl border border-gray-700 bg-gray-800 p-4 text-left transition-all hover:border-green-500/30 active:scale-[0.98] disabled:opacity-40"
           :class="{ 'ring-2 ring-green-500/50': purchaseFlash === `evo-${item.id}` }"
@@ -258,6 +263,12 @@ function buyCandy(size: CandySize) {
             </span>
           </div>
         </button>
+      </div>
+      <div v-else class="rounded-xl border border-dashed border-gray-700 bg-gray-800/30 px-6 py-8 text-center">
+        <FlaskConical class="mx-auto mb-2 h-8 w-8 text-gray-600" />
+        <p class="text-sm text-gray-500">
+          {{ t('Aucun objet d\'évolution utilisable pour le moment. Capturez plus de Pokémon !', 'No usable evolution items right now. Catch more Pokémon!') }}
+        </p>
       </div>
     </section>
 
