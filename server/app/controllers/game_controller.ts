@@ -45,6 +45,8 @@ export default class GameController {
         penaltyType: user.penaltyType ?? null,
         penaltyPercent: user.penaltyPercent ?? 0,
         avatarUrl: user.avatarUrl ?? null,
+        betaAccess: user.betaAccess ?? false,
+        role: user.role ?? 'user',
       },
       pokemons: user.pokemons.map((p) => ({
         id: p.id,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Swords, Package, User, Sparkles, Store, Globe, Trophy, LogOut, LogIn, BookOpen, Medal, Egg, HelpCircle, Bug, Shield, X, MoreHorizontal, Megaphone } from 'lucide-vue-next'
+import { Swords, Package, User, Sparkles, Store, Globe, Trophy, LogOut, LogIn, BookOpen, Medal, Egg, HelpCircle, Bug, Shield, X, MoreHorizontal, Megaphone, Flame } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
@@ -183,6 +183,9 @@ const navItems = computed(() => {
     { label: t('Invocation', 'Gacha'), icon: Sparkles, to: '/gacha', badge: 0 },
     { label: t('Pension', 'Daycare'), icon: Egg, to: '/daycare', badge: readyEggs.value },
     { label: t('Badges', 'Badges'), icon: Medal, to: '/badges', badge: 0 },
+    ...(auth.user?.role === 'admin' || auth.user?.betaAccess
+      ? [{ label: t('Raid', 'Raid'), icon: Flame, to: '/raid', badge: 0 }]
+      : []),
     { label: t('Boutique', 'Shop'), icon: Store, to: '/shop', badge: 0 },
     { label: t('Profil', 'Profile'), icon: User, to: '/profile', badge: 0 },
     { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide', badge: 0 },

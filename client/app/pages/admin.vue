@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon, Eye, Pencil, Gift, RotateCcw, Trash2, Ban, ImageOff, Megaphone, Swords } from 'lucide-vue-next'
+import { Search, TrendingUp, Users, Sparkles, Award, MapPin, ChevronDown, ChevronUp, X, RefreshCw, Crown, Zap, Shield as ShieldIcon, Eye, Pencil, Gift, RotateCcw, Trash2, Ban, ImageOff, Megaphone, Swords, FlaskConical } from 'lucide-vue-next'
 import { GENERATIONS } from '~/data/zones'
 
 definePageMeta({ layout: 'game' })
@@ -36,6 +36,8 @@ interface UserRaw {
   badges: number
   current_generation?: number
   currentGeneration?: number
+  beta_access?: boolean
+  betaAccess?: boolean
   created_at?: string
   createdAt?: string
   last_login_at?: string | null
@@ -51,6 +53,7 @@ interface User {
   level: number
   badges: number
   current_generation: number
+  beta_access: boolean
   last_login_at: string | null
 }
 
@@ -64,6 +67,7 @@ function normalizeUser(raw: UserRaw): User {
     level: raw.level,
     badges: raw.badges,
     current_generation: raw.current_generation ?? raw.currentGeneration ?? 1,
+    beta_access: raw.beta_access ?? raw.betaAccess ?? false,
     last_login_at: raw.last_login_at ?? raw.lastLoginAt ?? null,
   }
 }
@@ -244,6 +248,24 @@ async function giveItems() {
     }
   } catch (error) {
     alert(`Erreur réseau: ${error}`)
+  }
+}
+
+async function toggleBetaAccess(userId: number) {
+  try {
+    const response = await fetch(`${API_BASE}/api/admin/users/${userId}/beta-access`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    if (response.ok) {
+      const data = await response.json()
+      // Update local user state
+      const user = users.value.find(u => u.id === userId)
+      if (user) user.beta_access = data.betaAccess
+      alert(data.message)
+    }
+  } catch (error) {
+    console.error('Failed to toggle beta access:', error)
   }
 }
 
@@ -730,16 +752,24 @@ onMounted(async () => {
                 <td class="px-4 py-3 font-medium text-white">{{ user.username }}</td>
                 <td class="px-4 py-3">{{ user.email }}</td>
                 <td class="px-4 py-3">
-                  <span
-                    :class="
-                      user.role === 'admin'
-                        ? 'bg-red-500/20 text-red-400'
-                        : 'bg-blue-500/20 text-blue-400'
-                    "
-                    class="rounded px-2 py-1 text-xs font-bold"
-                  >
-                    {{ user.role }}
-                  </span>
+                  <div class="flex flex-wrap items-center gap-1">
+                    <span
+                      :class="
+                        user.role === 'admin'
+                          ? 'bg-red-500/20 text-red-400'
+                          : 'bg-blue-500/20 text-blue-400'
+                      "
+                      class="rounded px-2 py-1 text-xs font-bold"
+                    >
+                      {{ user.role }}
+                    </span>
+                    <span
+                      v-if="user.beta_access"
+                      class="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-400"
+                    >
+                      BETA
+                    </span>
+                  </div>
                 </td>
                 <td class="px-4 py-3">{{ user.gold.toLocaleString() }}</td>
                 <td class="px-4 py-3">{{ user.level }}</td>
@@ -779,6 +809,16 @@ onMounted(async () => {
                       title="Donner items"
                     >
                       <Gift class="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      class="rounded-lg p-2 transition-all"
+                      :class="user.beta_access
+                        ? 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30'
+                        : 'bg-slate-600/20 text-slate-500 hover:bg-slate-600/30'"
+                      @click="toggleBetaAccess(user.id)"
+                      :title="user.beta_access ? 'Retirer accès bêta' : 'Donner accès bêta'"
+                    >
+                      <FlaskConical class="h-3.5 w-3.5" />
                     </button>
                     <button
                       class="rounded-lg bg-orange-600/20 p-2 text-orange-400 transition-all hover:bg-orange-600/30"

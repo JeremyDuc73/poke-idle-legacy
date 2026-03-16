@@ -65,6 +65,7 @@ router
         router.post('/users/:id/penalty', [AdminController, 'setPenalty'])
         router.delete('/users/:id/penalty', [AdminController, 'removePenalty'])
         router.delete('/users/:id/avatar', [AdminController, 'resetAvatar'])
+        router.post('/users/:id/beta-access', [AdminController, 'toggleBetaAccess'])
         router.get('/users/:id/pokemons', [AdminController, 'listUserPokemons'])
         router.post('/reset-all', [AdminController, 'resetAllPlayers'])
         router.post('/self/set-progression', [AdminController, 'setProgression'])

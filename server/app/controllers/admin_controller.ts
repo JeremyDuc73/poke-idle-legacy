@@ -76,6 +76,7 @@ export default class AdminController {
         'level',
         'badges',
         'current_generation',
+        'beta_access',
         'created_at',
         'last_login_at'
       )
@@ -266,6 +267,7 @@ export default class AdminController {
       })),
       penaltyType: user.penaltyType,
       penaltyPercent: user.penaltyPercent,
+      betaAccess: user.betaAccess ?? false,
       avatarUrl: user.avatarUrl ?? null,
       created_at: user.createdAt,
       last_login_at: user.lastLoginAt,
@@ -335,6 +337,21 @@ export default class AdminController {
     await user.save()
 
     return response.ok({ message: `Avatar de ${user.username} réinitialisé` })
+  }
+
+  /**
+   * Toggle beta access for a user
+   */
+  async toggleBetaAccess({ params, response }: HttpContext) {
+    const user = await User.findOrFail(params.id)
+    user.betaAccess = !user.betaAccess
+    user.adminVersion = (user.adminVersion ?? 0) + 1
+    await user.save()
+
+    return response.ok({
+      message: `Accès bêta ${user.betaAccess ? 'activé' : 'désactivé'} pour ${user.username}`,
+      betaAccess: user.betaAccess,
+    })
   }
 
   /**

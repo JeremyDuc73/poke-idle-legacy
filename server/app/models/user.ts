@@ -96,6 +96,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare avatarUrl: string | null
 
+  @column()
+  declare betaAccess: boolean
+
   @column.dateTime()
   declare lastLoginAt: DateTime | null
 

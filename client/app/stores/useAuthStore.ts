@@ -17,6 +17,7 @@ interface AuthState {
     username: string
     email: string
     role: 'user' | 'admin'
+    betaAccess: boolean
   } | null
 }
 
@@ -25,6 +26,7 @@ interface LoginResponse {
   username: string
   email: string
   role: 'user' | 'admin'
+  betaAccess?: boolean
 }
 
 interface LoadGameResponse {
@@ -76,7 +78,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const api = useApi()
         const response = await api.post<LoginResponse>('/api/auth/register', { username, email, password })
-        this.user = response
+        this.user = { ...response, betaAccess: response.betaAccess ?? false }
         this.isAuthenticated = true
         await this.loadGameState()
       } catch (e: any) {
@@ -93,7 +95,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const api = useApi()
         const response = await api.post<LoginResponse>('/api/auth/login', { email, password })
-        this.user = response
+        this.user = { ...response, betaAccess: response.betaAccess ?? false }
         this.isAuthenticated = true
         await this.loadGameState()
       } catch (e: any) {
@@ -123,7 +125,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const api = useApi()
         const response = await api.get<LoginResponse>('/api/auth/me')
-        this.user = response
+        this.user = { ...response, betaAccess: response.betaAccess ?? false }
         this.isAuthenticated = true
         await this.loadGameState()
       } catch {
@@ -164,6 +166,12 @@ export const useAuthStore = defineStore('auth', {
           avatarUrl: (data.player as any).avatarUrl ?? null,
           isLoggedIn: true,
         })
+
+        // Update auth user with betaAccess from server
+        if (this.user) {
+          this.user.betaAccess = (data.player as any).betaAccess ?? false
+          if ((data.player as any).role) this.user.role = (data.player as any).role
+        }
 
         // Overwrite localStorage bonuses with server data
         player.saveBonuses()

@@ -29,6 +29,10 @@ const IMPORTER = (filePath: string) => {
   return import(filePath)
 }
 
+import { createServer, type Server } from 'node:http'
+
+let capturedHttpServer: Server | null = null
+
 new Ignitor(APP_ROOT, { importer: IMPORTER })
   .tap((app) => {
     app.booting(async () => {
@@ -38,7 +42,18 @@ new Ignitor(APP_ROOT, { importer: IMPORTER })
     app.listenIf(app.managedByPm2, 'SIGINT', () => app.terminate())
   })
   .httpServer()
-  .start()
+  .start((handler) => {
+    const server = createServer(handler)
+    capturedHttpServer = server
+    return server
+  })
+  .then(async () => {
+    if (capturedHttpServer) {
+      const { initSocketIO } = await import('../start/ws.js')
+      const origin = process.env.FRONTEND_URL || true
+      initSocketIO(capturedHttpServer, origin)
+    }
+  })
   .catch((error) => {
     process.exitCode = 1
     prettyPrintError(error)

@@ -1,0 +1,63 @@
+{
+  "1": [
+    "articuno", "zapdos", "moltres", "mewtwo", "mew",
+    "venusaur-mega", "charizard-megax", "charizard-megay", "blastoise-mega",
+    "beedrill-mega", "pidgeot-mega", "alakazam-mega", "slowbro-mega",
+    "gengar-mega", "kangaskhan-mega", "pinsir-mega", "gyarados-mega",
+    "aerodactyl-mega", "mewtwo-megax", "mewtwo-megay"
+  ],
+  "2": [
+    "raikou", "entei", "suicune", "lugia", "hooh", "celebi",
+    "ampharos-mega", "steelix-mega", "scizor-mega",
+    "heracross-mega", "houndoom-mega", "tyranitar-mega"
+  ],
+  "3": [
+    "regirock", "regice", "registeel", "latias", "latios",
+    "kyogre", "groudon", "rayquaza", "jirachi", "deoxys",
+    "sceptile-mega", "blaziken-mega", "swampert-mega", "gardevoir-mega",
+    "sableye-mega", "mawile-mega", "aggron-mega", "medicham-mega",
+    "manectric-mega", "sharpedo-mega", "camerupt-mega", "altaria-mega",
+    "banette-mega", "absol-mega", "glalie-mega", "salamence-mega",
+    "metagross-mega", "latias-mega", "latios-mega", "rayquaza-mega"
+  ],
+  "4": [
+    "uxie", "mesprit", "azelf", "dialga", "palkia",
+    "heatran", "regigigas", "giratina", "cresselia",
+    "phione", "manaphy", "darkrai", "shaymin", "arceus",
+    "lucario-mega", "garchomp-mega", "lopunny-mega",
+    "abomasnow-mega", "gallade-mega"
+  ],
+  "5": [
+    "victini", "cobalion", "terrakion", "virizion",
+    "tornadus", "thundurus", "reshiram", "zekrom",
+    "landorus", "kyurem", "keldeo", "meloetta", "genesect",
+    "audino-mega"
+  ],
+  "6": [
+    "xerneas", "yveltal", "zygarde",
+    "diancie", "hoopa", "volcanion", "diancie-mega"
+  ],
+  "7": [
+    "tapukoko", "tapulele", "tapubulu", "tapufini",
+    "cosmog", "solgaleo", "lunala", "necrozma",
+    "magearna", "marshadow", "zeraora",
+    "nihilego", "buzzwole", "pheromosa", "xurkitree",
+    "celesteela", "kartana", "guzzlord",
+    "poipole", "stakataka", "blacephalon", "meltan"
+  ],
+  "8": [
+    "zacian", "zamazenta", "eternatus", "kubfu", "zarude",
+    "regieleki", "regidrago", "glastrier", "spectrier", "calyrex",
+    "enamorus", "articuno-galar", "zapdos-galar", "moltres-galar"
+  ],
+  "9": [
+    "wochien", "chienpao", "tinglu", "chiyu",
+    "greattusk", "screamtail", "brutebonnet", "fluttermane",
+    "slitherwing", "sandyshocks", "irontreads", "ironbundle",
+    "ironhands", "ironjugulis", "ironmoth", "ironthorns",
+    "roaringmoon", "ironvaliant", "koraidon", "miraidon",
+    "walkingwake", "ironleaves", "okidogi", "munkidori",
+    "fezandipiti", "ogerpon", "gougingfire", "ragingbolt",
+    "ironboulder", "ironcrown", "terapagos", "pecharunt"
+  ]
+}
