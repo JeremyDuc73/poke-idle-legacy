@@ -198,6 +198,23 @@ function bossRegion(slug: string): string {
   return t(info.regionFr, info.regionEn)
 }
 
+const allDefeatedBosses = computed(() => {
+  if (!playerDetail.value) return []
+  const explicit = new Set(playerDetail.value.defeatedBosses)
+  const allBosses = getAllBosses()
+  const curGen = playerDetail.value.currentGeneration
+  const curZone = playerDetail.value.currentZone
+
+  for (const b of allBosses) {
+    if (b.genId < curGen) {
+      explicit.add(b.boss.slug)
+    } else if (b.genId === curGen && b.zoneId < curZone) {
+      explicit.add(b.boss.slug)
+    }
+  }
+  return [...explicit]
+})
+
 function toggleSort(field: typeof sortBy.value) {
   if (sortBy.value === field) {
     sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
@@ -711,24 +728,24 @@ onMounted(loadPlayers)
             </div>
 
             <!-- Boss vaincus -->
-            <div v-if="playerDetail.defeatedBosses.length > 0" class="rounded-xl border border-slate-700 bg-slate-800/50 p-4">
+            <div v-if="allDefeatedBosses.length > 0" class="rounded-xl border border-slate-700 bg-slate-800/50 p-4">
               <h4 class="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
                 <Trophy class="h-4 w-4 text-yellow-400" />
-                {{ t('Boss vaincus', 'Defeated bosses') }} ({{ playerDetail.defeatedBosses.length }})
+                {{ t('Boss vaincus', 'Defeated bosses') }} ({{ allDefeatedBosses.length }})
               </h4>
               <div class="space-y-2">
                 <div
                   v-for="gen in 9"
                   :key="gen"
                 >
-                  <template v-if="playerDetail.defeatedBosses.filter(b => bossRegion(b) === genName(gen)).length > 0">
+                  <template v-if="allDefeatedBosses.filter(b => bossRegion(b) === genName(gen)).length > 0">
                     <div class="mb-1.5 flex items-center gap-2">
                       <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">{{ genName(gen) }}</span>
                       <div class="h-px flex-1 bg-slate-700/50" />
                     </div>
                     <div class="flex flex-wrap gap-1.5">
                       <span
-                        v-for="boss in playerDetail.defeatedBosses.filter(b => bossRegion(b) === genName(gen))"
+                        v-for="boss in allDefeatedBosses.filter(b => bossRegion(b) === genName(gen))"
                         :key="boss"
                         class="rounded-lg border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-[11px] font-semibold text-red-400"
                       >
