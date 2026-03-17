@@ -15,6 +15,7 @@ const GoogleAuthController = () => import('#controllers/google_auth_controller')
 const GameController = () => import('#controllers/game_controller')
 const AdminController = () => import('#controllers/admin_controller')
 const LeaderboardController = () => import('#controllers/leaderboard_controller')
+const PlayersController = () => import('#controllers/players_controller')
 
 router.get('/', async () => {
   return { status: 'ok', name: 'Poke-Idle Legacy API' }
@@ -50,6 +51,8 @@ router
 
     router.get('/pokedex', [GameController, 'pokedex'])
     router.get('/leaderboard', [LeaderboardController, 'index'])
+    router.get('/players', [PlayersController, 'index'])
+    router.get('/players/:id', [PlayersController, 'show'])
     router.get('/banner', [AdminController, 'getBanner'])
 
     router
