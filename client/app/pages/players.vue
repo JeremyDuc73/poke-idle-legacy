@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { Search, Users, Trophy, Award, Crown, Sparkles, ChevronDown, ChevronUp, X, MapPin, Swords, Clock, Star, TrendingUp, Eye } from 'lucide-vue-next'
+import { Search, UsersRound, Trophy, Award, Crown, Sparkles, ChevronDown, ChevronUp, X, MapPin, Swords, Clock, Star, TrendingUp, Eye } from 'lucide-vue-next'
 import { useLocale } from '~/composables/useLocale'
 import { getSpriteUrl, getShinySpriteUrl } from '~/utils/showdown'
 import { GENERATIONS } from '~/data/zones'
@@ -213,7 +213,7 @@ onMounted(loadPlayers)
     <!-- Header -->
     <div class="mb-6">
       <h1 class="flex items-center gap-3 text-2xl font-bold text-white sm:text-3xl">
-        <Users class="h-7 w-7 text-blue-400" />
+        <UsersRound class="h-7 w-7 text-blue-400" />
         {{ t('Joueurs', 'Players') }}
       </h1>
       <p class="mt-1 text-sm text-slate-400">
@@ -283,7 +283,7 @@ onMounted(loadPlayers)
           <!-- Avatar -->
           <div class="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-700 sm:h-12 sm:w-12">
             <img v-if="player.avatar_url" :src="getAvatarUrl(player.avatar_url)!" alt="" class="h-full w-full object-cover" />
-            <Users v-else class="h-5 w-5 text-slate-500" />
+            <UsersRound v-else class="h-5 w-5 text-slate-500" />
             <div
               v-if="isOnline(player.last_login_at)"
               class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-800 bg-green-500"
@@ -354,7 +354,7 @@ onMounted(loadPlayers)
             <div class="flex items-center gap-3">
               <div class="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-slate-700">
                 <img v-if="selectedPlayer.avatar_url" :src="getAvatarUrl(selectedPlayer.avatar_url)!" alt="" class="h-full w-full object-cover" />
-                <Users v-else class="h-6 w-6 text-slate-400" />
+                <UsersRound v-else class="h-6 w-6 text-slate-400" />
               </div>
               <div>
                 <h3 class="text-xl font-bold text-white">{{ selectedPlayer.username }}</h3>

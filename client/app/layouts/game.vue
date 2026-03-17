@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Swords, Package, User, Sparkles, Store, Globe, Trophy, LogOut, LogIn, BookOpen, Medal, Egg, HelpCircle, Bug, Shield, X, MoreHorizontal, Megaphone, Flame, Users } from 'lucide-vue-next'
+import { Swords, Package, User, Sparkles, Store, Globe, Trophy, LogOut, LogIn, BookOpen, Medal, Egg, HelpCircle, Bug, Shield, X, MoreHorizontal, Megaphone, Flame, UsersRound } from 'lucide-vue-next'
 import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useAuthStore } from '~/stores/useAuthStore'
 import { useInventoryStore } from '~/stores/useInventoryStore'
@@ -174,7 +174,6 @@ const navItems = computed(() => {
       { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide', badge: 0 },
       { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex', badge: 0 },
       { label: t('Classement', 'Leaderboard'), icon: Trophy, to: '/leaderboard', badge: 0 },
-    { label: t('Joueurs', 'Players'), icon: Users, to: '/players', badge: 0 },
     ]
   }
 
@@ -191,7 +190,7 @@ const navItems = computed(() => {
     { label: t('Profil', 'Profile'), icon: User, to: '/profile', badge: 0 },
     { label: t('Guide', 'Guide'), icon: HelpCircle, to: '/guide', badge: 0 },
     { label: t('Pokédex', 'Pokédex'), icon: BookOpen, to: '/pokedex', badge: 0 },
-    { label: t('Joueurs', 'Players'), icon: Users, to: '/players', badge: 0 },
+    { label: t('Joueurs', 'Players'), icon: UsersRound, to: '/players', badge: 0 },
     { label: t('Classement', 'Leaderboard'), icon: Trophy, to: '/leaderboard', badge: 0 },
   ]
   
