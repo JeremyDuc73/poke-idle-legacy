@@ -74,6 +74,8 @@ interface PlayerDetail {
   epicCount: number
   rarityCounts: Record<string, number>
   genCounts: Record<string, number>
+  uniqueGenCounts: Record<string, number>
+  totalPerGen: Record<string, number>
   teamPokemons: Array<{
     slug: string
     nameFr: string
@@ -534,12 +536,26 @@ onMounted(loadPlayers)
                 <div
                   v-for="gen in 9"
                   :key="gen"
-                  class="flex flex-col items-center rounded-lg border border-slate-700 bg-slate-900/50 px-3 py-2"
-                  :class="{ 'opacity-30': !((playerDetail?.genCounts[gen] ?? 0) > 0) }"
+                  class="flex flex-col items-center rounded-lg border px-3 py-2"
+                  :class="(playerDetail?.uniqueGenCounts[gen] ?? 0) >= (playerDetail?.totalPerGen[gen] ?? Infinity)
+                    ? 'border-green-500/40 bg-green-500/10'
+                    : (playerDetail?.genCounts[gen] ?? 0) > 0
+                      ? 'border-slate-700 bg-slate-900/50'
+                      : 'border-slate-700 bg-slate-900/50 opacity-30'"
                 >
                   <span class="text-[10px] font-bold text-slate-500">Gen {{ gen }}</span>
                   <span class="text-sm font-bold text-white">{{ playerDetail.genCounts[gen] ?? 0 }}</span>
                   <span class="text-[9px] text-slate-600">{{ genName(gen) }}</span>
+                  <span
+                    v-if="playerDetail.totalPerGen[gen]"
+                    class="mt-0.5 text-[8px] font-bold"
+                    :class="(playerDetail.uniqueGenCounts[gen] ?? 0) >= playerDetail.totalPerGen[gen]
+                      ? 'text-green-400'
+                      : 'text-slate-600'"
+                  >
+                    {{ playerDetail.uniqueGenCounts[gen] ?? 0 }}/{{ playerDetail.totalPerGen[gen] }}
+                    <span v-if="(playerDetail.uniqueGenCounts[gen] ?? 0) >= playerDetail.totalPerGen[gen]"> ✅</span>
+                  </span>
                 </div>
               </div>
             </div>

@@ -136,6 +136,31 @@ export default class PlayersController {
       genCounts[entry.gen] = (genCounts[entry.gen] ?? 0) + 1
     }
 
+    // Unique species per generation (for pokedex completion)
+    const uniquePerGen: Record<number, Set<string>> = {}
+    for (const entry of allWithDps) {
+      const slug = entry.p.species?.slug ?? ''
+      if (!slug) continue
+      if (!uniquePerGen[entry.gen]) uniquePerGen[entry.gen] = new Set()
+      uniquePerGen[entry.gen].add(slug)
+    }
+    const uniqueGenCounts: Record<number, number> = {}
+    for (const [gen, slugs] of Object.entries(uniquePerGen)) {
+      uniqueGenCounts[Number(gen)] = slugs.size
+    }
+
+    // Total species per generation from Species table
+    const speciesPerGen = await db.rawQuery(`
+      SELECT generation, COUNT(*)::int AS total
+      FROM species
+      WHERE generation BETWEEN 1 AND 9
+      GROUP BY generation
+    `)
+    const totalPerGen: Record<number, number> = {}
+    for (const row of speciesPerGen.rows) {
+      totalPerGen[row.generation] = row.total
+    }
+
     // Rarity distribution
     const rarityCounts: Record<string, number> = {}
     for (const p of pokemons) {
@@ -164,6 +189,8 @@ export default class PlayersController {
       epicCount,
       rarityCounts,
       genCounts,
+      uniqueGenCounts,
+      totalPerGen,
       teamPokemons: teamPokemons.map((p) => {
         const evoStage = evoStageFromFamily(
           p.species?.slug ?? '',

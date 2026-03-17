@@ -624,6 +624,67 @@ function toggleGen(id: number) {
     <!-- ═══════════════ PATCH NOTES TAB ═══════════════ -->
     <div v-if="activeTab === 'patchnotes'" class="flex flex-col gap-4">
 
+      <!-- v2.3.0 -->
+      <article class="rounded-xl border-2 border-blue-500/60 bg-gradient-to-br from-blue-900/30 to-indigo-900/20 p-5">
+        <div class="mb-1 flex items-center gap-2">
+          <span class="rounded bg-blue-500 px-2 py-0.5 text-xs font-black text-black">SOCIAL</span>
+        </div>
+        <h3 class="mb-3 text-xl font-black text-blue-300">v2.3.0 — Page Joueurs & Profils détaillés — 17 Mars 2026</h3>
+
+        <p class="mb-4 text-sm text-gray-300 italic">
+          {{ t('Suivez la progression de tous les dresseurs ! Nouvelle page Joueurs avec profils détaillés, stats, shinys et classement DPS.', 'Track every trainer\'s progress! New Players page with detailed profiles, stats, shinies and DPS rankings.') }}
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-blue-400">👥 {{ t('Page Joueurs', 'Players Page') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Nouvel onglet "Joueurs" dans la navigation (connectés uniquement)', 'New "Players" tab in navigation (logged-in users only)') }}</li>
+              <li>{{ t('Liste de tous les dresseurs avec tri par Badges, Niveau, Or, Pokémon ou Shinys', 'List of all trainers sortable by Badges, Level, Gold, Pokémon or Shinies') }}</li>
+              <li>{{ t('Recherche par nom de joueur', 'Search by player name') }}</li>
+              <li>{{ t('Indicateur en ligne (point vert) pour les joueurs actifs', 'Online indicator (green dot) for active players') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-blue-400">📊 {{ t('Profil détaillé', 'Detailed Profile') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Cliquez sur un joueur pour voir son profil complet', 'Click a player to see their full profile') }}</li>
+              <li>{{ t('Stats rapides : Or, Niveau, Badges, nombre de Pokémon', 'Quick stats: Gold, Level, Badges, Pokémon count') }}</li>
+              <li>{{ t('Barre de progression globale avec zone et stage actuels', 'Global progression bar with current zone and stage') }}</li>
+              <li>{{ t('Distribution des raretés (Commun, Rare, Épique, Légendaire)', 'Rarity distribution (Common, Rare, Epic, Legendary)') }}</li>
+              <li>{{ t('Pokémon par génération avec indicateur de complétion du Pokédex (✅ quand complété)', 'Pokémon per generation with Pokédex completion indicator (✅ when complete)') }}</li>
+              <li>{{ t('Équipe actuelle avec DPS de chaque Pokémon', 'Current team with each Pokémon\'s DPS') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-blue-400">⚔️ {{ t('Meilleurs Pokémon par DPS', 'Top Pokémon by DPS') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Section "Meilleurs Pokémon" triée par DPS réel (niveau × rareté × étoiles × shiny × évolution)', 'Top Pokémon section sorted by real DPS (level × rarity × stars × shiny × evolution)') }}</li>
+              <li>{{ t('Filtre par région (Kanto, Johto, Hoenn…) pour comparer par génération', 'Filter by region (Kanto, Johto, Hoenn…) to compare per generation') }}</li>
+              <li>{{ t('Les méga-évolutions sont correctement assignées à la génération de leur forme de base', 'Mega evolutions are correctly assigned to their base form\'s generation') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-blue-400">✨ {{ t('Collection Shiny', 'Shiny Collection') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Nouvelle section "Shinys" affichant tous les shinys groupés par génération', 'New "Shinies" section showing all shinies grouped by generation') }}</li>
+              <li>{{ t('Chaque shiny affiche son sprite, niveau, étoiles, rareté et DPS', 'Each shiny shows its sprite, level, stars, rarity and DPS') }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-2 text-sm font-semibold text-blue-400">🐛 {{ t('Corrections', 'Bug Fixes') }}</h4>
+            <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
+              <li>{{ t('Correction de la validation d\'équipe en raid (match par slug au lieu de serverId)', 'Fixed raid team validation (match by slug instead of serverId)') }}</li>
+              <li>{{ t('Réduction supplémentaire de la difficulté de Kalos (Gen 6)', 'Further Kalos (Gen 6) difficulty reduction') }}</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
       <!-- v2.2.0 -->
       <article class="rounded-xl border-2 border-green-500/60 bg-gradient-to-br from-green-900/30 to-emerald-900/20 p-5">
         <div class="mb-1 flex items-center gap-2">
