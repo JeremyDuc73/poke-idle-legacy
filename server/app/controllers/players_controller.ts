@@ -71,6 +71,7 @@ export default class PlayersController {
         COUNT(CASE WHEN up.rarity = 'legendary' THEN 1 END)::int AS legendary_count
       FROM users u
       LEFT JOIN user_pokemons up ON up.user_id = u.id
+      WHERE u.role != 'admin'
       GROUP BY u.id, u.username, u.level, u.badges, u.gold, u.current_generation,
                u.avatar_url, u.last_login_at, u.created_at
       ORDER BY u.badges DESC, u.level DESC
