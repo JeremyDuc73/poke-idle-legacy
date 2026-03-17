@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { Search, UsersRound, Trophy, Award, Crown, Sparkles, ChevronDown, ChevronUp, X, MapPin, Swords, Clock, Star, TrendingUp, Eye } from 'lucide-vue-next'
 import { useLocale } from '~/composables/useLocale'
 import { getStaticSpriteUrl, getStaticShinySpriteUrl } from '~/utils/showdown'
-import { GENERATIONS } from '~/data/zones'
+import { GENERATIONS, getAllBosses } from '~/data/zones'
 
 definePageMeta({ layout: 'game' })
 
@@ -175,8 +175,27 @@ function relativeTime(dateStr: string | null): string {
 }
 
 function genName(gen: number): string {
-  const g = GENERATION_NAMES[gen]
-  return g ? t(g.fr, g.en) : `Gen ${gen}`
+  return t(GENERATION_NAMES[gen]?.fr ?? `Gen ${gen}`, GENERATION_NAMES[gen]?.en ?? `Gen ${gen}`)
+}
+
+const bossMap = computed(() => {
+  const map = new Map<string, { nameFr: string; nameEn: string; regionFr: string; regionEn: string }>()
+  for (const b of getAllBosses()) {
+    map.set(b.boss.slug, { nameFr: b.boss.nameFr, nameEn: b.boss.nameEn, regionFr: b.regionFr, regionEn: b.regionEn })
+  }
+  return map
+})
+
+function bossDisplayName(slug: string): string {
+  const info = bossMap.value.get(slug)
+  if (!info) return slug
+  return t(info.nameFr, info.nameEn)
+}
+
+function bossRegion(slug: string): string {
+  const info = bossMap.value.get(slug)
+  if (!info) return ''
+  return t(info.regionFr, info.regionEn)
 }
 
 function toggleSort(field: typeof sortBy.value) {
@@ -323,12 +342,14 @@ onMounted(loadPlayers)
           </div>
 
           <!-- Avatar -->
-          <div class="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-700 sm:h-12 sm:w-12">
-            <img v-if="player.avatar_url" :src="getAvatarUrl(player.avatar_url)!" alt="" class="h-full w-full object-cover" />
-            <UsersRound v-else class="h-5 w-5 text-slate-500" />
+          <div class="relative h-10 w-10 shrink-0 sm:h-12 sm:w-12">
+            <div class="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-slate-700">
+              <img v-if="player.avatar_url" :src="getAvatarUrl(player.avatar_url)!" alt="" class="h-full w-full object-cover" />
+              <UsersRound v-else class="h-5 w-5 text-slate-500" />
+            </div>
             <div
               v-if="isOnline(player.last_login_at)"
-              class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-800 bg-green-500"
+              class="absolute bottom-0 right-0 z-10 h-3 w-3 rounded-full border-2 border-slate-800 bg-green-500"
             />
           </div>
 
@@ -695,14 +716,27 @@ onMounted(loadPlayers)
                 <Trophy class="h-4 w-4 text-yellow-400" />
                 {{ t('Boss vaincus', 'Defeated bosses') }} ({{ playerDetail.defeatedBosses.length }})
               </h4>
-              <div class="flex flex-wrap gap-1">
-                <span
-                  v-for="boss in playerDetail.defeatedBosses"
-                  :key="boss"
-                  class="rounded-lg bg-red-500/10 px-2 py-1 text-[10px] font-medium text-red-400"
+              <div class="space-y-2">
+                <div
+                  v-for="gen in 9"
+                  :key="gen"
                 >
-                  {{ boss }}
-                </span>
+                  <template v-if="playerDetail.defeatedBosses.filter(b => bossRegion(b) === genName(gen)).length > 0">
+                    <div class="mb-1.5 flex items-center gap-2">
+                      <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">{{ genName(gen) }}</span>
+                      <div class="h-px flex-1 bg-slate-700/50" />
+                    </div>
+                    <div class="flex flex-wrap gap-1.5">
+                      <span
+                        v-for="boss in playerDetail.defeatedBosses.filter(b => bossRegion(b) === genName(gen))"
+                        :key="boss"
+                        class="rounded-lg border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-[11px] font-semibold text-red-400"
+                      >
+                        {{ bossDisplayName(boss) }}
+                      </span>
+                    </div>
+                  </template>
+                </div>
               </div>
             </div>
 
