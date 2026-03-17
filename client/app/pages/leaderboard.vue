@@ -17,7 +17,7 @@ function getAvatarUrl(path: string | null | undefined): string | null {
 }
 
 const GENERATION_NAMES: Record<number, string> = {
-  1: 'Kanto', 2: 'Johto', 3: 'Hoenn', 4: 'Sinnoh', 5: 'Unova',
+  1: 'Kanto', 2: 'Johto', 3: 'Hoenn', 4: 'Sinnoh', 5: 'Unys',
   6: 'Kalos', 7: 'Alola', 8: 'Galar', 9: 'Paldea',
 }
 

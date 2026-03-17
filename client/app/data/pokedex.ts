@@ -1159,7 +1159,7 @@ export const GEN_NAMES: Record<number, { en: string; fr: string }> = {
   2: { en: 'Johto', fr: 'Johto' },
   3: { en: 'Hoenn', fr: 'Hoenn' },
   4: { en: 'Sinnoh', fr: 'Sinnoh' },
-  5: { en: 'Unova', fr: 'Unova' },
+  5: { en: 'Unova', fr: 'Unys' },
   6: { en: 'Kalos', fr: 'Kalos' },
   7: { en: 'Alola', fr: 'Alola' },
   8: { en: 'Galar', fr: 'Galar' },

@@ -22,7 +22,7 @@ const GENERATION_NAMES: Record<number, string> = {
   2: 'Johto',
   3: 'Hoenn',
   4: 'Sinnoh',
-  5: 'Unova',
+  5: 'Unys',
   6: 'Kalos',
   7: 'Alola',
   8: 'Galar',
