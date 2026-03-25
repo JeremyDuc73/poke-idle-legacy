@@ -54,6 +54,27 @@ function toggleGen(id: number) {
 
 <template>
   <div class="mx-auto max-w-3xl pb-12">
+    <!-- Developer Info -->
+    <div class="mb-6 rounded-xl border border-indigo-500/30 bg-indigo-500/5 p-4 text-center">
+      <p class="text-sm text-slate-300">
+        {{ t('Développé par', 'Developed by') }}
+        <a
+          href="https://jeremyduc.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-bold text-indigo-400 underline hover:text-indigo-300"
+        >Jérémy Duc</a>
+      </p>
+      <p class="mt-1 text-xs text-slate-400">
+        {{
+          t(
+            'Ceci est mon premier projet de cette envergure. Certains bugs peuvent survenir, merci de votre compréhension\u00A0!',
+            'This is my first project of this scale. Some bugs may occur, thank you for your understanding!'
+          )
+        }}
+      </p>
+    </div>
+
     <!-- Title -->
     <div class="mb-6 text-center">
       <h1 class="text-3xl font-bold text-amber-400">
