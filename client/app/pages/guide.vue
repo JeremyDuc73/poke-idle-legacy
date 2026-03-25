@@ -646,7 +646,7 @@ function toggleGen(id: number) {
           <div>
             <h4 class="mb-2 text-sm font-semibold text-emerald-400">🥚 {{ t('Pension', 'Daycare') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
-              <li>{{ t('Nouveau tri par Région dans le sélecteur de Pokémon de la pension', 'New Region sort option in the daycare Pokémon picker') }}</li>
+              <li>{{ t('Nouveau filtre par Région dans le sélecteur de Pokémon de la pension', 'New Region filter in the daycare Pokémon picker') }}</li>
             </ul>
           </div>
 

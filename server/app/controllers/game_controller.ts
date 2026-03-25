@@ -239,7 +239,11 @@ export default class GameController {
     }
 
     // Check uniqueness (case-insensitive)
-    const existing = await db.from('users').where('username', trimmed).whereNot('id', user.id).first()
+    const existing = await db
+      .from('users')
+      .where('username', trimmed)
+      .whereNot('id', user.id)
+      .first()
     if (existing) {
       return response.conflict({ message: 'Username already taken' })
     }

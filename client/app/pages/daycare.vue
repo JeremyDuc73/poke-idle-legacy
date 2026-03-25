@@ -7,6 +7,7 @@ import { useDaycareStore, MAX_DAYCARE_SLOTS, DAYCARE_COST, HATCH_DAMAGE, FIVE_ST
 import type { DaycareSlot } from '~/stores/useDaycareStore'
 import { useLocale } from '~/composables/useLocale'
 import { RARITY_COLORS, RARITY_LABELS_FR, RARITY_LABELS_EN, getSlugGeneration } from '~/data/gacha'
+import { GENERATIONS } from '~/data/zones'
 import type { Rarity } from '~/data/gacha'
 import type { OwnedPokemon } from '~/stores/useInventoryStore'
 import { useAuthStore } from '~/stores/useAuthStore'
@@ -24,7 +25,8 @@ const { t } = useLocale()
 const showPicker = ref(false)
 const pickerSearch = ref('')
 const selectedIds = ref<Set<number>>(new Set())
-const pickerSort = ref<'stars' | 'name' | 'rarity' | 'region'>('stars')
+const pickerSort = ref<'stars' | 'name' | 'rarity'>('stars')
+const pickerRegion = ref<number | null>(null)
 const pickerRarity = ref<string | null>(null)
 const hatchResults = ref<{ slug: string; nameFr: string; nameEn: string; isShiny: boolean; isNew: boolean; stars: number; rarity: Rarity }[]>([])
 
@@ -49,6 +51,10 @@ const eligiblePokemon = computed(() => {
     list = list.filter((p) => p.rarity === pickerRarity.value)
   }
 
+  if (pickerRegion.value !== null) {
+    list = list.filter((p) => getSlugGeneration(p.slug) === pickerRegion.value)
+  }
+
   switch (pickerSort.value) {
     case 'stars':
       list.sort((a, b) => b.stars - a.stars || a.slug.localeCompare(b.slug))
@@ -61,9 +67,6 @@ const eligiblePokemon = computed(() => {
       list.sort((a, b) => (order[a.rarity] ?? 5) - (order[b.rarity] ?? 5))
       break
     }
-    case 'region':
-      list.sort((a, b) => getSlugGeneration(a.slug) - getSlugGeneration(b.slug) || a.nameFr.localeCompare(b.nameFr))
-      break
   }
 
   return list
@@ -391,7 +394,15 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
               <option value="stars">{{ t('Étoiles', 'Stars') }}</option>
               <option value="name">{{ t('Nom', 'Name') }}</option>
               <option value="rarity">{{ t('Rareté', 'Rarity') }}</option>
-              <option value="region">{{ t('Région', 'Region') }}</option>
+            </select>
+            <select
+              v-model="pickerRegion"
+              class="rounded-lg border border-gray-700 bg-gray-800 px-2 py-1.5 text-xs text-white focus:border-green-500 focus:outline-none"
+            >
+              <option :value="null">{{ t('Toutes régions', 'All regions') }}</option>
+              <option v-for="gen in GENERATIONS" :key="gen.id" :value="gen.id">
+                {{ t(gen.regionFr, gen.regionEn) }}
+              </option>
             </select>
             <select
               v-model="pickerRarity"
@@ -403,7 +414,7 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
             </select>
           </div>
 
-          <div class="grid max-h-80 grid-cols-4 gap-2 overflow-y-auto pr-1 sm:grid-cols-5">
+          <div class="grid max-h-[28rem] grid-cols-4 gap-2 overflow-y-auto pr-1 sm:grid-cols-6">
             <button
               v-for="poke in eligiblePokemon"
               :key="poke.id"
