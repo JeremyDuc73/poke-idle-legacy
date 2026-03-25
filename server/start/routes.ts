@@ -75,6 +75,7 @@ router
         router.post('/self/set-progression', [AdminController, 'setProgression'])
         router.post('/banner', [AdminController, 'setBanner'])
         router.delete('/banner', [AdminController, 'clearBanner'])
+        router.post('/purge-inactive', [AdminController, 'purgeInactive'])
       })
       .prefix('/admin')
       .use(middleware.auth())

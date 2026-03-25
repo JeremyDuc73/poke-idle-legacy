@@ -22,7 +22,14 @@ const error = ref('')
 
 // Check OAuth callback
 onMounted(async () => {
-  if (route.query.oauth_success === 'true') {
+  if (route.query.error === 'server_full') {
+    error.value = t(
+      'Le serveur est complet (150 joueurs max). R\u00e9essayez plus tard !',
+      'Server is full (150 players max). Try again later!'
+    )
+  } else if (route.query.error === 'google_denied') {
+    error.value = t('Connexion Google annul\u00e9e', 'Google sign-in cancelled')
+  } else if (route.query.oauth_success === 'true') {
     try {
       await auth.checkAuth()
       if (auth.isAuthenticated) {
@@ -44,7 +51,15 @@ async function handleSubmit() {
     }
     await router.push('/')
   } catch (e: any) {
-    error.value = e.message || t('Une erreur est survenue', 'An error occurred')
+    const msg = e?.data?.message || e?.message || ''
+    if (e?.status === 403 || msg.includes('150')) {
+      error.value = t(
+        'Le serveur est complet (150 joueurs max). R\u00e9essayez plus tard !',
+        'Server is full (150 players max). Try again later!'
+      )
+    } else {
+      error.value = msg || t('Une erreur est survenue', 'An error occurred')
+    }
   }
 }
 </script>

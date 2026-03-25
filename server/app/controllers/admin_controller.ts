@@ -6,6 +6,7 @@ import db from '@adonisjs/lucid/services/db'
 import app from '@adonisjs/core/services/app'
 import User from '#models/user'
 import UserPokemon from '#models/user_pokemon'
+import { purgeInactiveUsers } from '../services/cleanup_service.js'
 
 const BANNER_FILE = () => join(app.makePath('storage'), 'banner.json')
 
@@ -437,5 +438,16 @@ export default class AdminController {
       /* file may not exist */
     }
     return response.ok({ message: null })
+  }
+
+  /**
+   * Manually purge inactive accounts (30+ days)
+   */
+  async purgeInactive({ response }: HttpContext) {
+    const count = await purgeInactiveUsers()
+    return response.ok({
+      message: `${count} compte(s) inactif(s) supprimé(s)`,
+      purged: count,
+    })
   }
 }

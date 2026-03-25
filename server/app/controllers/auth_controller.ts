@@ -3,8 +3,18 @@ import { DateTime } from 'luxon'
 import User from '#models/user'
 import { registerValidator, loginValidator } from '#validators/auth'
 
+const MAX_USERS = 150
+
 export default class AuthController {
   async register({ request, response, auth }: HttpContext) {
+    const totalUsers = await User.query().count('* as total')
+    const count = Number(totalUsers[0].$extras.total)
+    if (count >= MAX_USERS) {
+      return response.forbidden({
+        message: `Le serveur est limité à ${MAX_USERS} joueurs. Réessayez plus tard !`,
+      })
+    }
+
     const data = await request.validateUsing(registerValidator)
     const user = await User.create({ ...data, role: 'user' })
     await auth.use('web').login(user)

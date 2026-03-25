@@ -534,6 +534,26 @@ async function resetAllPlayers() {
   }
 }
 
+async function purgeInactive() {
+  if (!confirm('Supprimer les comptes inactifs depuis 30+ jours ? (les admins ne sont jamais supprimés)')) return
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/purge-inactive`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    if (res.ok) {
+      const data = await res.json()
+      alert(data.message)
+      await refreshAll()
+    } else {
+      const err = await res.json().catch(() => null)
+      alert(`Erreur: ${err?.message || res.statusText}`)
+    }
+  } catch (e) {
+    alert(`Erreur réseau: ${e}`)
+  }
+}
+
 async function refreshAll() {
   refreshing.value = true
   await Promise.all([loadDashboard(), loadUsers(), loadBanner()])
@@ -953,6 +973,22 @@ onMounted(async () => {
             Appliquer
           </button>
         </div>
+      </section>
+
+      <!-- Purge Inactive -->
+      <section class="mt-6 rounded-xl border border-orange-500/30 bg-orange-500/5 p-4 sm:mt-8">
+        <h2 class="mb-3 flex items-center gap-2 text-sm font-bold text-orange-400">
+          <Trash2 class="h-4 w-4" /> Purger les comptes inactifs
+        </h2>
+        <p class="mb-3 text-xs text-slate-400">
+          Supprimer les comptes qui ne se sont pas connectés depuis 30+ jours. Les admins ne sont jamais supprimés. La purge s'exécute aussi automatiquement toutes les 24h.
+        </p>
+        <button
+          class="rounded-lg bg-orange-600 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-orange-500"
+          @click="purgeInactive"
+        >
+          Purger maintenant
+        </button>
       </section>
 
       <!-- Global Reset -->

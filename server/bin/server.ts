@@ -53,6 +53,10 @@ new Ignitor(APP_ROOT, { importer: IMPORTER })
       const origin = process.env.FRONTEND_URL || true
       initSocketIO(capturedHttpServer, origin)
     }
+
+    // Start inactive account cleanup scheduler (purges accounts inactive 30+ days)
+    const { startCleanupScheduler } = await import('../app/services/cleanup_service.js')
+    startCleanupScheduler()
   })
   .catch((error) => {
     process.exitCode = 1

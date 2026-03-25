@@ -91,6 +91,14 @@ export default class GoogleAuthController {
         user.googleId = googleUser.id
         await user.save()
       } else {
+        // Check user limit before creating new account
+        const MAX_USERS = 150
+        const totalUsers = await User.query().count('* as total')
+        const count = Number(totalUsers[0].$extras.total)
+        if (count >= MAX_USERS) {
+          return response.redirect(`${frontendUrl}/login?error=server_full`)
+        }
+
         // Create new user with a random password (they'll use Google to login)
         const randomPassword =
           Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
