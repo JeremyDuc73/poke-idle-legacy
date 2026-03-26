@@ -33,3 +33,6 @@ postgres_data/
 # Temp
 tmp/
 temp/
+
+# Seeders with credentials
+server/database/seeders/admin_user_seeder.ts
