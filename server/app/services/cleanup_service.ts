@@ -45,7 +45,11 @@ export async function purgeInactiveUsers(): Promise<number> {
 
 const DEDUP_INTERVAL_MS = 10 * 60 * 1000 // 10 minutes
 
-export async function dedupAllPokemons(): Promise<{ duplicatesRemoved: number; teamsFixed: number; affectedUsernames: string[] }> {
+export async function dedupAllPokemons(): Promise<{
+  duplicatesRemoved: number
+  teamsFixed: number
+  affectedUsernames: string[]
+}> {
   const allPokemons = await UserPokemon.query().orderBy('userId').orderBy('speciesId')
 
   const groups = new Map<string, UserPokemon[]>()
@@ -113,8 +117,7 @@ export async function dedupAllPokemons(): Promise<{ duplicatesRemoved: number; t
   }
 
   if (toDelete.length > 0 || teamsFixed > 0) {
-    const names =
-      affectedUsernames.length > 0 ? ` — ${affectedUsernames.join(', ')}` : ''
+    const names = affectedUsernames.length > 0 ? ` — ${affectedUsernames.join(', ')}` : ''
     console.log(
       `[Dedup] ${toDelete.length} doublon(s) supprimé(s), ${teamsFixed} équipe(s) corrigée(s)${names}`
     )
