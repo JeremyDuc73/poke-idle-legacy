@@ -69,6 +69,7 @@ export default class GameController {
         defeatedBosses: (user as any).defeatedBosses ?? [],
         candies: user.candies ?? { S: 0, M: 0, L: 0, XL: 0 },
         daycare: user.daycare ?? [],
+        savedTeams: user.savedTeams ?? [],
         adminVersion: user.adminVersion ?? 0,
         penaltyType: user.penaltyType ?? null,
         penaltyPercent: user.penaltyPercent ?? 0,
@@ -114,6 +115,9 @@ export default class GameController {
     }
     if ((request.body() as any).daycare !== undefined) {
       user.daycare = (request.body() as any).daycare
+    }
+    if ((request.body() as any).savedTeams !== undefined) {
+      user.savedTeams = (request.body() as any).savedTeams
     }
     if ((request.body() as any).clickDamageBonus !== undefined) {
       ;(user as any).clickDamageBonus = (request.body() as any).clickDamageBonus

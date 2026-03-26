@@ -78,6 +78,13 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare daycare: any[]
 
   @column({
+    prepare: (value: any[]) => JSON.stringify(value),
+    consume: (value: string | any[]) =>
+      typeof value === 'string' ? JSON.parse(value) : (value ?? []),
+  })
+  declare savedTeams: any[]
+
+  @column({
     prepare: (value: string[]) => JSON.stringify(value),
     consume: (value: string | string[]) =>
       typeof value === 'string' ? JSON.parse(value) : (value ?? []),

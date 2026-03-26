@@ -207,6 +207,24 @@ export const useAuthStore = defineStore('auth', {
           daycareStore.slots = daycareData.map((s: any) => ({ ...s, isShiny: s.isShiny ?? false }))
         }
 
+        // Restore saved teams (convert slug-based format back to local IDs)
+        const savedTeamsData = (data.player as any).savedTeams
+        if (Array.isArray(savedTeamsData)) {
+          inventory.savedTeams = savedTeamsData
+            .map((t: any) => ({
+              name: t.name,
+              pokemonIds: (t.pokemons || [])
+                .map((p: any) => {
+                  const found = inventory.collection.find(
+                    (pk) => pk.slug === p.slug && pk.isShiny === (p.isShiny ?? false)
+                  )
+                  return found?.id ?? -1
+                })
+                .filter((id: number) => id !== -1),
+            }))
+            .filter((t: any) => t.pokemonIds.length > 0)
+        }
+
         return null
       } catch (e) {
         console.error('Failed to load game state:', e)
@@ -247,6 +265,15 @@ export const useAuthStore = defineStore('auth', {
           candies: player.candies,
           defeatedBosses: player.defeatedBosses,
           daycare: useDaycareStore().slots,
+          savedTeams: inventory.savedTeams.map((t) => ({
+            name: t.name,
+            pokemons: t.pokemonIds
+              .map((id) => {
+                const p = inventory.collection.find((pk) => pk.id === id)
+                return p ? { slug: p.slug, isShiny: p.isShiny } : null
+              })
+              .filter(Boolean),
+          })),
           adminVersion: player.adminVersion,
           shinyCharms: player.shinyCharms,
           completedPokedexGens: player.completedPokedexGens,

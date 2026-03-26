@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import User from '#models/user'
 import { registerValidator, loginValidator } from '#validators/auth'
 
-const MAX_USERS = 150
+const MAX_USERS = 200
 
 export default class AuthController {
   async register({ request, response, auth }: HttpContext) {
