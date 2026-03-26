@@ -460,9 +460,10 @@ export default class AdminController {
   async dedupPokemons({ response }: HttpContext) {
     const result = await dedupAllPokemons()
 
-    const usersMsg = result.affectedUsernames.length > 0
-      ? ` — Joueurs concernés : ${result.affectedUsernames.join(', ')}`
-      : ''
+    const usersMsg =
+      result.affectedUsernames.length > 0
+        ? ` — Joueurs concernés : ${result.affectedUsernames.join(', ')}`
+        : ''
 
     return response.ok({
       message: `${result.duplicatesRemoved} doublon(s) supprimé(s), ${result.teamsFixed} équipe(s) corrigée(s)${usersMsg}`,

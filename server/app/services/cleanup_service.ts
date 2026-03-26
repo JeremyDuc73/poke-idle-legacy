@@ -84,9 +84,12 @@ export async function dedupAllPokemons(): Promise<{ duplicatesRemoved: number; t
     await UserPokemon.query().whereIn('id', toDelete).delete()
   }
 
-  const affectedUsers = affectedUserIds.size > 0
-    ? await User.query().whereIn('id', [...affectedUserIds]).select('username')
-    : []
+  const affectedUsers =
+    affectedUserIds.size > 0
+      ? await User.query()
+          .whereIn('id', [...affectedUserIds])
+          .select('username')
+      : []
   const affectedUsernames = affectedUsers.map((u) => u.username)
 
   // Fix teams with >6 members per user
@@ -110,8 +113,10 @@ export async function dedupAllPokemons(): Promise<{ duplicatesRemoved: number; t
   }
 
   if (toDelete.length > 0 || teamsFixed > 0) {
+    const names =
+      affectedUsernames.length > 0 ? ` — ${affectedUsernames.join(', ')}` : ''
     console.log(
-      `[Dedup] ${toDelete.length} doublon(s) supprimé(s), ${teamsFixed} équipe(s) corrigée(s)${affectedUsernames.length > 0 ? ` — ${affectedUsernames.join(', ')}` : ''}`
+      `[Dedup] ${toDelete.length} doublon(s) supprimé(s), ${teamsFixed} équipe(s) corrigée(s)${names}`
     )
   }
 
