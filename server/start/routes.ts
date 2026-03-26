@@ -76,6 +76,7 @@ router
         router.post('/banner', [AdminController, 'setBanner'])
         router.delete('/banner', [AdminController, 'clearBanner'])
         router.post('/purge-inactive', [AdminController, 'purgeInactive'])
+        router.post('/dedup-pokemons', [AdminController, 'dedupPokemons'])
       })
       .prefix('/admin')
       .use(middleware.auth())

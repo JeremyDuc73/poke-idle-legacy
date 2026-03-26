@@ -148,13 +148,23 @@ export const useInventoryStore = defineStore('inventory', {
         }
       }
 
+      // Find first available team slot (1-6), or null if team is full
+      const usedSlots = new Set(this.team.map((p) => p.teamSlot))
+      let freeSlot: number | null = null
+      for (let s = 1; s <= 6; s++) {
+        if (!usedSlots.has(s)) {
+          freeSlot = s
+          break
+        }
+      }
+
       const newPokemon: OwnedPokemon = {
         ...pokemon,
         id: this.nextId++,
         serverId: null,
         level: 1,
         xp: 0,
-        teamSlot: this.team.length < 6 ? this.team.length + 1 : null,
+        teamSlot: freeSlot,
       }
       this.collection.push(newPokemon)
       return { isNew: true, isMaxed: false, wasAlreadyMaxed: false, pokemon: newPokemon }
@@ -178,6 +188,11 @@ export const useInventoryStore = defineStore('inventory', {
       if (!pokemon) return
 
       if (slot !== null) {
+        // Block if team already has 6 members and this pokemon isn't already in team
+        if (pokemon.teamSlot === null && this.team.length >= 6) return
+        // Ensure slot is within 1-6
+        if (slot < 1 || slot > 6) return
+
         const occupant = this.collection.find((p) => p.teamSlot === slot)
         if (occupant) {
           occupant.teamSlot = pokemon.teamSlot

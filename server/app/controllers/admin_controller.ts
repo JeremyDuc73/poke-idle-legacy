@@ -450,4 +450,82 @@ export default class AdminController {
       purged: count,
     })
   }
+
+  /**
+   * Deduplicate pokemons for all users.
+   * A duplicate = same (userId, speciesId, isShiny).
+   * Keep the one with highest level (then highest stars, then highest xp).
+   * Also fix teams with >6 members by removing excess slots.
+   */
+  async dedupPokemons({ response }: HttpContext) {
+    // Find all duplicates grouped by (userId, speciesId, isShiny)
+    const allPokemons = await UserPokemon.query().orderBy('userId').orderBy('speciesId')
+
+    // Group by composite key
+    const groups = new Map<string, UserPokemon[]>()
+    for (const p of allPokemons) {
+      const key = `${p.userId}:${p.speciesId}:${p.isShiny}`
+      const arr = groups.get(key) ?? []
+      arr.push(p)
+      groups.set(key, arr)
+    }
+
+    const toDelete: number[] = []
+
+    for (const [, pokemons] of groups) {
+      if (pokemons.length <= 1) continue
+
+      // Sort: highest level first, then stars, then xp
+      pokemons.sort((a, b) => {
+        if (b.level !== a.level) return b.level - a.level
+        if (b.stars !== a.stars) return b.stars - a.stars
+        return b.xp - a.xp
+      })
+
+      // Keep the first (best), merge stars from dupes (cap at 5)
+      const keeper = pokemons[0]
+      for (let i = 1; i < pokemons.length; i++) {
+        toDelete.push(pokemons[i].id)
+        // Transfer team slot if keeper doesn't have one
+        if (keeper.teamSlot === null && pokemons[i].teamSlot !== null) {
+          keeper.teamSlot = pokemons[i].teamSlot
+        }
+      }
+      // Cap stars at 5
+      keeper.stars = Math.min(keeper.stars, 5)
+      await keeper.save()
+    }
+
+    // Delete duplicates
+    if (toDelete.length > 0) {
+      await UserPokemon.query().whereIn('id', toDelete).delete()
+    }
+
+    // Fix teams with >6 members per user
+    const userTeams = new Map<number, UserPokemon[]>()
+    const teamPokemons = await UserPokemon.query().whereNotNull('teamSlot').orderBy('userId')
+    for (const p of teamPokemons) {
+      const arr = userTeams.get(p.userId) ?? []
+      arr.push(p)
+      userTeams.set(p.userId, arr)
+    }
+
+    let teamsFixed = 0
+    for (const [, team] of userTeams) {
+      if (team.length <= 6) continue
+      // Sort by teamSlot, keep first 6, null the rest
+      team.sort((a, b) => (a.teamSlot ?? 99) - (b.teamSlot ?? 99))
+      for (let i = 6; i < team.length; i++) {
+        team[i].teamSlot = null
+        await team[i].save()
+      }
+      teamsFixed++
+    }
+
+    return response.ok({
+      message: `${toDelete.length} doublon(s) supprimé(s), ${teamsFixed} équipe(s) corrigée(s)`,
+      duplicatesRemoved: toDelete.length,
+      teamsFixed,
+    })
+  }
 }

@@ -534,6 +534,25 @@ async function resetAllPlayers() {
   }
 }
 
+async function dedupPokemons() {
+  if (!confirm('Dédupliquer les pokémon de tous les joueurs et corriger les équipes > 6 ?')) return
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/dedup-pokemons`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    if (res.ok) {
+      const data = await res.json()
+      alert(data.message)
+    } else {
+      const err = await res.json().catch(() => null)
+      alert(`Erreur: ${err?.message || res.statusText}`)
+    }
+  } catch (e) {
+    alert(`Erreur réseau: ${e}`)
+  }
+}
+
 async function purgeInactive() {
   if (!confirm('Supprimer les comptes inactifs depuis 30+ jours ? (les admins ne sont jamais supprimés)')) return
   try {
@@ -973,6 +992,22 @@ onMounted(async () => {
             Appliquer
           </button>
         </div>
+      </section>
+
+      <!-- Dedup Pokémon -->
+      <section class="mt-6 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4 sm:mt-8">
+        <h2 class="mb-3 flex items-center gap-2 text-sm font-bold text-cyan-400">
+          <Sparkles class="h-4 w-4" /> Dédupliquer les Pokémon
+        </h2>
+        <p class="mb-3 text-xs text-slate-400">
+          Supprime les doublons (même espèce + même shiny) pour tous les joueurs. Garde le pokémon de plus haut niveau/étoiles. Corrige aussi les équipes qui dépassent 6 membres.
+        </p>
+        <button
+          class="rounded-lg bg-cyan-600 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-cyan-500"
+          @click="dedupPokemons"
+        >
+          Dédupliquer maintenant
+        </button>
       </section>
 
       <!-- Purge Inactive -->
