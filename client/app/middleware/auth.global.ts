@@ -4,7 +4,7 @@ import { useSpeciesCache } from '~/composables/useSpeciesCache'
 let initialized = false
 
 // Pages accessible without authentication
-const PUBLIC_PAGES = ['/login', '/guide', '/pokedex', '/leaderboard']
+const PUBLIC_PAGES = ['/login', '/guide', '/pokedex', '/leaderboard', '/maintenance', '/players']
 
 // Pages restricted to admin role only
 const ADMIN_PAGES = ['/admin', '/debug']
@@ -21,6 +21,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
     await loadSpecies()
     await auth.checkAuth()
     initialized = true
+  }
+
+  // Maintenance mode detected by checkAuth — redirect to /maintenance synchronously
+  if (auth.maintenanceActive && to.path !== '/maintenance') {
+    return navigateTo('/maintenance')
   }
 
   // Public pages are always accessible

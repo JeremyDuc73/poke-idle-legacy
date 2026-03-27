@@ -20,6 +20,7 @@ interface AuthState {
     betaAccess: boolean
   } | null
   sessionToken: string | null
+  maintenanceActive: boolean
 }
 
 interface LoginResponse {
@@ -79,6 +80,7 @@ export const useAuthStore = defineStore('auth', {
     user: null,
     // Load sessionToken from localStorage if available (survives page refresh)
     sessionToken: typeof localStorage !== 'undefined' ? localStorage.getItem(SESSION_TOKEN_KEY) : null,
+    maintenanceActive: false,
   }),
 
   actions: {
@@ -160,15 +162,14 @@ export const useAuthStore = defineStore('auth', {
               if (typeof sessionStorage !== 'undefined') {
                 sessionStorage.setItem('maintenance_message', maintenance.message || 'Maintenance en cours')
               }
-              if (typeof window !== 'undefined') {
-                window.location.href = '/maintenance'
-                return
-              }
+              this.maintenanceActive = true
+              return
             }
           } catch {
             // If maintenance check fails, continue normally
           }
         }
+        this.maintenanceActive = false
 
         this.isAuthenticated = true
         await this.loadGameState()
@@ -337,11 +338,14 @@ export const useAuthStore = defineStore('auth', {
         } as Record<string, unknown>
 
         // Save player data
+        let playerSaveOk = false
         try {
           if (keepalive) {
             api.post('/api/game/save', playerPayload, fetchOpts)
+            playerSaveOk = true
           } else {
             const saveResult = await api.post<{ reload?: boolean }>('/api/game/save', playerPayload)
+            playerSaveOk = true
             if (saveResult?.reload) {
               console.log('[SAVE] Admin override detected — reloading game state')
               useCombatStore().reset()
@@ -356,15 +360,11 @@ export const useAuthStore = defineStore('auth', {
             this.logout()
             return
           }
-          _saveFailCount++
-          console.error('[SAVE] Player save failed:', e)
-          if (_saveFailCount >= 3) {
-            alert('⚠️ Sauvegarde échouée plusieurs fois. Vérifiez votre connexion et rechargez la page.')
-            _saveFailCount = 0
-          }
+          console.error(`[SAVE] Player save failed (status=${e?.status ?? '?'}):`, e?.message ?? e)
         }
 
         // Save pokemons separately so player save failure doesn't block it
+        let pokemonSaveOk = false
         try {
           const pokedexMap = new Map(POKEDEX.map((p) => [p.slug, p]))
 
@@ -393,8 +393,10 @@ export const useAuthStore = defineStore('auth', {
             } as Record<string, unknown>
             if (keepalive) {
               api.post('/api/game/save-pokemons', pokemonsPayload, fetchOpts)
+              pokemonSaveOk = true
             } else {
               const pokRes = await api.post<{ ids?: (number | null)[] }>('/api/game/save-pokemons', pokemonsPayload)
+              pokemonSaveOk = true
               if (pokRes?.ids) {
                 const newIds = pokRes.ids
                 for (let i = 0; i < inventory.collection.length; i++) {
@@ -403,6 +405,8 @@ export const useAuthStore = defineStore('auth', {
                 }
               }
             }
+          } else {
+            pokemonSaveOk = true
           }
         } catch (e: any) {
           if (e?.status === 409) {
@@ -410,8 +414,14 @@ export const useAuthStore = defineStore('auth', {
             this.logout()
             return
           }
+          console.error(`[SAVE] Pokémon save failed (status=${e?.status ?? '?'}):`, e?.message ?? e)
+        }
+
+        // Track consecutive full-save failures (both must fail to count)
+        if (playerSaveOk || pokemonSaveOk) {
+          _saveFailCount = 0
+        } else {
           _saveFailCount++
-          console.error('[SAVE] Pokémon save failed:', e)
           if (_saveFailCount >= 3) {
             alert('⚠️ Sauvegarde échouée plusieurs fois. Vérifiez votre connexion et rechargez la page.')
             _saveFailCount = 0

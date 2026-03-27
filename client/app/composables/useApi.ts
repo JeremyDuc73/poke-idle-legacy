@@ -4,6 +4,15 @@ interface ApiOptions {
   keepalive?: boolean
 }
 
+class ApiError extends Error {
+  status: number
+  constructor(message: string, status: number) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
+  }
+}
+
 async function api<T = unknown>(path: string, options: ApiOptions = {}): Promise<T> {
   const { method = 'GET', body, keepalive } = options
   const config = useRuntimeConfig()
@@ -28,12 +37,12 @@ async function api<T = unknown>(path: string, options: ApiOptions = {}): Promise
       if (typeof sessionStorage !== 'undefined') {
         sessionStorage.setItem('maintenance_message', err.message || 'Maintenance en cours')
       }
-      if (typeof window !== 'undefined') {
+      if (typeof window !== 'undefined' && window.location.pathname !== '/maintenance') {
         window.location.href = '/maintenance'
       }
     }
     
-    throw new Error(err.message || err.errors?.[0]?.message || `API error ${res.status}`)
+    throw new ApiError(err.message || err.errors?.[0]?.message || `API error ${res.status}`, res.status)
   }
 
   return res.json() as Promise<T>
