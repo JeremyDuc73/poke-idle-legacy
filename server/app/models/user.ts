@@ -92,6 +92,16 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare defeatedBosses: string[]
 
   @column()
+  declare shinyCharms: number
+
+  @column({
+    prepare: (value: number[]) => JSON.stringify(value),
+    consume: (value: string | number[]) =>
+      typeof value === 'string' ? JSON.parse(value) : (value ?? []),
+  })
+  declare completedPokedexGens: number[]
+
+  @column()
   declare adminVersion: number
 
   @column()

@@ -72,6 +72,8 @@ export default class GameController {
         daycare: user.daycare ?? [],
         savedTeams: user.savedTeams ?? [],
         adminVersion: user.adminVersion ?? 0,
+        shinyCharms: user.shinyCharms ?? 0,
+        completedPokedexGens: user.completedPokedexGens ?? [],
         penaltyType: user.penaltyType ?? null,
         penaltyPercent: user.penaltyPercent ?? 0,
         avatarUrl: user.avatarUrl ?? null,
@@ -128,6 +130,15 @@ export default class GameController {
     }
     if ((request.body() as any).defeatedBosses !== undefined) {
       ;(user as any).defeatedBosses = (request.body() as any).defeatedBosses
+    }
+    // Persist shiny charms & completed pokedex gens (validated: max 9 gens)
+    if ((request.body() as any).completedPokedexGens !== undefined) {
+      const gens = (request.body() as any).completedPokedexGens
+      if (Array.isArray(gens)) {
+        const validGens = [...new Set(gens.filter((g: number) => g >= 1 && g <= 9))] as number[]
+        user.completedPokedexGens = validGens
+        user.shinyCharms = validGens.length
+      }
     }
     // Check if admin modified this user since last client load
     const clientAdminVersion = Number((request.body() as any).adminVersion ?? 0)
@@ -188,12 +199,64 @@ export default class GameController {
       return response.ok({ message: 'Pokémon saved' })
     }
 
+    // ── Anti-cheat: hard caps ──
+    const MAX_POKEMON_COUNT = 1500
+    const MAX_LEVEL = 100
+    const MAX_STARS = 5
+    const MAX_XP = 50_000_000
+
+    if (pokemons.length > MAX_POKEMON_COUNT) {
+      return response.badRequest({ message: 'Too many Pokémon' })
+    }
+
+    // ── Anti-cheat: deduplicate slug+isShiny (keep best) ──
+    const seenKeys = new Map<string, number>()
+    for (let i = 0; i < pokemons.length; i++) {
+      const key = `${pokemons[i].slug}-${pokemons[i].isShiny}`
+      if (!seenKeys.has(key)) {
+        seenKeys.set(key, i)
+      } else {
+        const prev = seenKeys.get(key)!
+        const prevP = pokemons[prev]
+        const currP = pokemons[i]
+        // Keep the one with better stats
+        if (
+          currP.stars > prevP.stars ||
+          (currP.stars === prevP.stars && currP.level > prevP.level)
+        ) {
+          pokemons[prev] = { ...currP, teamSlot: prevP.teamSlot ?? currP.teamSlot }
+        }
+        pokemons[i] = null as any // mark for removal
+      }
+    }
+    const dedupedPokemons = pokemons.filter(Boolean)
+
+    // ── Anti-cheat: validate & clamp team slots ──
+    const usedSlots = new Set<number>()
+    for (const p of dedupedPokemons) {
+      // Clamp values
+      p.level = Math.max(1, Math.min(MAX_LEVEL, Math.floor(p.level ?? 1)))
+      p.xp = Math.max(0, Math.min(MAX_XP, Math.floor(p.xp ?? 0)))
+      p.stars = Math.max(1, Math.min(MAX_STARS, Math.floor(p.stars ?? 1)))
+
+      // Validate team slots: must be 1-6, unique, max 6
+      if (p.teamSlot !== null && p.teamSlot !== undefined) {
+        const slot = Math.floor(p.teamSlot)
+        if (slot >= 1 && slot <= 6 && !usedSlots.has(slot)) {
+          p.teamSlot = slot
+          usedSlots.add(slot)
+        } else {
+          p.teamSlot = null
+        }
+      }
+    }
+
     // Build slug → speciesId mapping from cached species
     const slugToId = new Map(await getSpeciesCache())
 
     // Auto-create missing species from client data
-    const missingSlugs = pokemons.filter((p) => p.slug && !slugToId.has(p.slug))
-    const uniqueMissing = new Map<string, (typeof pokemons)[0]>()
+    const missingSlugs = dedupedPokemons.filter((p) => p.slug && !slugToId.has(p.slug))
+    const uniqueMissing = new Map<string, (typeof dedupedPokemons)[0]>()
     for (const p of missingSlugs) {
       if (!uniqueMissing.has(p.slug)) uniqueMissing.set(p.slug, p)
     }
@@ -223,7 +286,7 @@ export default class GameController {
     }
 
     // Now save all pokemons in a transaction to prevent duplication on concurrent saves
-    const mapped = pokemons.map((p, idx) => ({
+    const mapped = dedupedPokemons.map((p, idx) => ({
       idx,
       data: {
         userId: user.id,
