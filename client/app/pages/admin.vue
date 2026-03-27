@@ -122,6 +122,11 @@ const totalPages = ref(1)
 const totalUserCount = ref(0)
 const perPage = ref(50)
 
+// Maintenance mode
+const maintenanceEnabled = ref(false)
+const maintenanceMessage = ref('')
+const maintenanceLoading = ref(false)
+
 const filteredUsers = computed(() => {
   let filtered = users.value.filter(u => {
     const matchesSearch = u.username.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
@@ -579,7 +584,54 @@ onMounted(async () => {
   await loadDashboard()
   await loadUsers()
   await loadBanner()
+  await loadMaintenanceStatus()
 })
+
+// Load maintenance status
+async function loadMaintenanceStatus() {
+  try {
+    const res = await fetch(`${API_BASE}/api/maintenance`, { credentials: 'include' })
+    if (res.ok) {
+      const data = await res.json()
+      maintenanceEnabled.value = data.enabled
+      if (data.message) maintenanceMessage.value = data.message
+    }
+  } catch { /* ignore */ }
+}
+
+// Toggle maintenance mode
+async function toggleMaintenance() {
+  const confirmMsg = maintenanceEnabled.value
+    ? 'Désactiver le mode maintenance ? Les joueurs pourront de nouveau accéder au jeu.'
+    : `Activer le mode maintenance ? Les joueurs verront: "${maintenanceMessage.value || 'Maintenance en cours'}"`
+  
+  if (!confirm(confirmMsg)) return
+  
+  maintenanceLoading.value = true
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/maintenance`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        enabled: !maintenanceEnabled.value,
+        message: maintenanceMessage.value || 'Maintenance en cours',
+      }),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      maintenanceEnabled.value = data.enabled
+      alert(data.enabled ? 'Maintenance activée' : 'Maintenance désactivée')
+    } else {
+      const err = await res.json().catch(() => null)
+      alert(`Erreur: ${err?.message || res.statusText}`)
+    }
+  } catch (e) {
+    alert(`Erreur réseau: ${e}`)
+  } finally {
+    maintenanceLoading.value = false
+  }
+}
 </script>
 
 <template>
@@ -634,6 +686,40 @@ onMounted(async () => {
             @click="clearBanner"
           >
             Retirer
+          </button>
+        </div>
+      </section>
+
+      <!-- Maintenance Mode -->
+      <section class="mb-6 rounded-xl border border-red-500/30 bg-red-500/5 p-4 sm:mb-8" :class="{ 'animate-pulse': maintenanceEnabled }">
+        <h2 class="mb-3 flex items-center gap-2 text-sm font-bold text-red-400">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Mode Maintenance {{ maintenanceEnabled ? '(ACTIF)' : '(inactif)' }}
+        </h2>
+        <div v-if="maintenanceEnabled" class="mb-3 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm text-red-200">
+          <span class="font-bold">Message actuel :</span> {{ maintenanceMessage || 'Maintenance en cours' }}
+        </div>
+        <div v-else class="mb-3 text-xs text-slate-500">Le mode maintenance bloque l'accès aux joueurs non-admin.</div>
+        <div class="flex flex-wrap items-end gap-2">
+          <div class="flex-1">
+            <label class="mb-1 block text-[10px] font-medium text-slate-400">Message de maintenance</label>
+            <input
+              v-model="maintenanceMessage"
+              type="text"
+              maxlength="255"
+              placeholder="Ex: Maintenance 30min pour mise à jour..."
+              class="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-red-500 focus:outline-none"
+            />
+          </div>
+          <button
+            class="rounded-lg px-4 py-2 text-xs font-bold text-white transition-colors disabled:opacity-50"
+            :class="maintenanceEnabled ? 'bg-green-600 hover:bg-green-500' : 'bg-red-600 hover:bg-red-500'"
+            :disabled="maintenanceLoading"
+            @click="toggleMaintenance"
+          >
+            {{ maintenanceEnabled ? 'Désactiver' : 'Activer' }}
           </button>
         </div>
       </section>

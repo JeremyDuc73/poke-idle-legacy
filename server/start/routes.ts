@@ -48,6 +48,7 @@ router
       .prefix('/game')
       .use(middleware.auth())
       .use(middleware.sessionToken())
+      .use(middleware.maintenance())
 
     router.get('/avatars/:filename', [GameController, 'serveAvatar'])
 
@@ -56,6 +57,7 @@ router
     router.get('/players', [PlayersController, 'index'])
     router.get('/players/:id', [PlayersController, 'show'])
     router.get('/banner', [AdminController, 'getBanner'])
+    router.get('/maintenance', [AdminController, 'getMaintenanceStatus'])
 
     router
       .group(() => {
@@ -78,6 +80,7 @@ router
         router.delete('/banner', [AdminController, 'clearBanner'])
         router.post('/purge-inactive', [AdminController, 'purgeInactive'])
         router.post('/dedup-pokemons', [AdminController, 'dedupPokemons'])
+        router.post('/maintenance', [AdminController, 'toggleMaintenance'])
       })
       .prefix('/admin')
       .use(middleware.auth())

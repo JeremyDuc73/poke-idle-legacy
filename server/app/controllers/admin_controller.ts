@@ -463,4 +463,44 @@ export default class AdminController {
       ...result,
     })
   }
+
+  /**
+   * Get maintenance mode status
+   */
+  async getMaintenanceStatus({ response }: HttpContext) {
+    const maintenanceUser = await User.query()
+      .where('maintenanceMode', true)
+      .first()
+
+    return response.ok({
+      enabled: !!maintenanceUser,
+      message: maintenanceUser?.maintenanceMessage || null,
+    })
+  }
+
+  /**
+   * Toggle maintenance mode (admin only)
+   */
+  async toggleMaintenance({ request, response, auth }: HttpContext) {
+    const user = auth.use('web').user
+    if (!user || user.role !== 'admin') {
+      return response.forbidden({ message: 'Admin only' })
+    }
+
+    const { enabled, message } = request.body() as {
+      enabled?: boolean
+      message?: string
+    }
+
+    // Update all users' maintenance status (global flag stored per user for flexibility)
+    await User.query().update({
+      maintenanceMode: enabled ?? false,
+      maintenanceMessage: message || null,
+    })
+
+    return response.ok({
+      enabled: enabled ?? false,
+      message: message || 'Maintenance en cours',
+    })
+  }
 }

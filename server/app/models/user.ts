@@ -119,6 +119,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare sessionToken: string | null
 
+  @column()
+  declare maintenanceMode: boolean
+
+  @column()
+  declare maintenanceMessage: string | null
+
   @column.dateTime()
   declare lastLoginAt: DateTime | null
 

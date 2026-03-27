@@ -24,8 +24,8 @@ const error = ref('')
 onMounted(async () => {
   if (route.query.error === 'server_full') {
     error.value = t(
-      'Le serveur est complet (150 joueurs max). Réessayez plus tard !',
-      'Server is full (150 players max). Try again later!'
+      'Le serveur est complet (500 joueurs max). Réessayez plus tard !',
+      'Server is full (500 players max). Try again later!'
     )
   } else if (route.query.error === 'google_denied') {
     error.value = t('Connexion Google annulée', 'Google sign-in cancelled')
@@ -34,6 +34,10 @@ onMounted(async () => {
     const sessionToken = route.query.session_token as string | undefined
     if (sessionToken) {
       auth.sessionToken = sessionToken
+      // Persist to localStorage for page refresh survival
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('poke-idle-session-token', sessionToken)
+      }
     }
     try {
       await auth.checkAuth()

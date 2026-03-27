@@ -22,6 +22,18 @@ async function api<T = unknown>(path: string, options: ApiOptions = {}): Promise
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ message: res.statusText }))
+    
+    // Handle maintenance mode (503)
+    if (res.status === 503 && err.maintenance) {
+      // Store maintenance message and redirect
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem('maintenance_message', err.message || 'Maintenance en cours')
+      }
+      if (typeof navigateTo !== 'undefined') {
+        navigateTo('/maintenance')
+      }
+    }
+    
     throw new Error(err.message || err.errors?.[0]?.message || `API error ${res.status}`)
   }
 

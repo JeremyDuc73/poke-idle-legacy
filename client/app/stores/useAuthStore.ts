@@ -64,13 +64,17 @@ interface LoadGameResponse {
 let _saveLock = false
 let _savePending = false
 
+// Session token storage key for persistence across page refreshes
+const SESSION_TOKEN_KEY = 'poke-idle-session-token'
+
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     isAuthenticated: false,
     isLoading: false,
     error: null,
     user: null,
-    sessionToken: null,
+    // Load sessionToken from localStorage if available (survives page refresh)
+    sessionToken: typeof localStorage !== 'undefined' ? localStorage.getItem(SESSION_TOKEN_KEY) : null,
   }),
 
   actions: {
@@ -82,6 +86,10 @@ export const useAuthStore = defineStore('auth', {
         const response = await api.post<LoginResponse>('/api/auth/register', { username, email, password })
         this.user = { ...response, betaAccess: response.betaAccess ?? false }
         this.sessionToken = response.sessionToken ?? null
+        // Persist sessionToken to localStorage for page refresh survival
+        if (response.sessionToken && typeof localStorage !== 'undefined') {
+          localStorage.setItem(SESSION_TOKEN_KEY, response.sessionToken)
+        }
         this.isAuthenticated = true
         await this.loadGameState()
       } catch (e: any) {
@@ -100,6 +108,10 @@ export const useAuthStore = defineStore('auth', {
         const response = await api.post<LoginResponse>('/api/auth/login', { email, password })
         this.user = { ...response, betaAccess: response.betaAccess ?? false }
         this.sessionToken = response.sessionToken ?? null
+        // Persist sessionToken to localStorage for page refresh survival
+        if (response.sessionToken && typeof localStorage !== 'undefined') {
+          localStorage.setItem(SESSION_TOKEN_KEY, response.sessionToken)
+        }
         this.isAuthenticated = true
         await this.loadGameState()
       } catch (e: any) {
@@ -120,6 +132,11 @@ export const useAuthStore = defineStore('auth', {
       }
       this.isAuthenticated = false
       this.user = null
+      this.sessionToken = null
+      // Clear sessionToken from localStorage on logout
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(SESSION_TOKEN_KEY)
+      }
       const player = usePlayerStore()
       player.reset()
       navigateTo('/guide')
