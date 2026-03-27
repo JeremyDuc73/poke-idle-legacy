@@ -61,10 +61,10 @@ async function handleSubmit() {
     await router.push('/')
   } catch (e: any) {
     const msg = e?.data?.message || e?.message || ''
-    if (e?.status === 403 || msg.includes('150')) {
+    if (e?.status === 403 || msg.includes('500')) {
       error.value = t(
-        'Le serveur est complet (150 joueurs max). R\u00e9essayez plus tard !',
-        'Server is full (150 players max). Try again later!'
+        'Le serveur est complet (500 joueurs max). R\u00e9essayez plus tard !',
+        'Server is full (500 players max). Try again later!'
       )
     } else {
       error.value = msg || t('Une erreur est survenue', 'An error occurred')

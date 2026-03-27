@@ -129,6 +129,14 @@ async function doPull() {
   pullResults.value = []
   pullError.value = ''
 
+  // Sync client state to DB before invoking (prevents gold desync)
+  const auth = useAuthStore()
+  try {
+    await auth.saveGameState()
+  } catch {
+    // Save failed — continue anyway, server will use DB gold as source of truth
+  }
+
   // Start animation immediately (shake while waiting for server)
   animPhase.value = 'shake'
   const shakeTime = count === 1 ? 1400 : count >= 50 ? 400 : 1000
@@ -227,7 +235,6 @@ async function doPull() {
   isPulling.value = false
 
   // Save immediately after pull to prevent data loss on F5
-  const auth = useAuthStore()
   auth.saveGameState()
 }
 

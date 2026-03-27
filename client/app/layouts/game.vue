@@ -127,6 +127,11 @@ watch(
   { deep: true },
 )
 
+// Immediate save on generation change (not debounced — prevents regression on reload/deploy)
+watch(() => player.currentGeneration, () => {
+  auth.saveGameState()
+})
+
 // Check evolutions on every page change
 const route = useRoute()
 watch(() => route.path, () => {
