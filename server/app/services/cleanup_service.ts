@@ -5,6 +5,7 @@
  */
 
 import { DateTime } from 'luxon'
+import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import UserPokemon from '#models/user_pokemon'
 
@@ -126,8 +127,20 @@ export async function dedupAllPokemons(): Promise<{
   return { duplicatesRemoved: toDelete.length, teamsFixed, affectedUsernames }
 }
 
+const VACUUM_INTERVAL_MS = 60 * 60 * 1000 // 1 hour
+
+export async function vacuumPokemons(): Promise<void> {
+  try {
+    await db.rawQuery('VACUUM ANALYZE user_pokemons;')
+    console.log('[Vacuum] VACUUM ANALYZE user_pokemons completed')
+  } catch (err) {
+    console.error('[Vacuum] Failed:', err)
+  }
+}
+
 let cleanupInterval: ReturnType<typeof setInterval> | null = null
 let dedupInterval: ReturnType<typeof setInterval> | null = null
+let vacuumInterval: ReturnType<typeof setInterval> | null = null
 
 export function startCleanupScheduler() {
   // Run immediately on startup
@@ -158,6 +171,15 @@ export function startCleanupScheduler() {
   }, DEDUP_INTERVAL_MS)
 
   console.log('[Dedup] Scheduler started — deduplicating every 10 min')
+
+  // Vacuum: run on startup then every hour (non-blocking, no table lock)
+  vacuumPokemons()
+
+  vacuumInterval = setInterval(() => {
+    vacuumPokemons()
+  }, VACUUM_INTERVAL_MS)
+
+  console.log('[Vacuum] Scheduler started — VACUUM ANALYZE every 1h')
 }
 
 export function stopCleanupScheduler() {
@@ -168,5 +190,9 @@ export function stopCleanupScheduler() {
   if (dedupInterval) {
     clearInterval(dedupInterval)
     dedupInterval = null
+  }
+  if (vacuumInterval) {
+    clearInterval(vacuumInterval)
+    vacuumInterval = null
   }
 }
