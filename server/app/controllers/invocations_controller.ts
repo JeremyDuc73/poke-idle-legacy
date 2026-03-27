@@ -3,7 +3,7 @@ import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import Species from '#models/species'
 import UserPokemon from '#models/user_pokemon'
-import { getBannerById, pullFromBanner } from '../services/gacha_service.js'
+import { getBannerById, pullFromBanner, type PullResult } from '../services/gacha_service.js'
 
 // ── Species slug→id cache (shared lightweight cache) ──
 let speciesCache: Map<string, number> | null = null
@@ -75,7 +75,7 @@ export default class InvocationsController {
     const pokedexMaster = completedGens.length >= 9
 
     // Perform pulls (server-side RNG — before transaction to minimise lock time)
-    const pulls = []
+    const pulls: PullResult[] = []
     for (let i = 0; i < count; i++) {
       pulls.push(pullFromBanner(banner, shinyCharms, pokedexMaster))
     }
