@@ -340,16 +340,22 @@ watch(() => inventory.collectionCount, () => {
     _initialLoadDone = true
     // Silently mark already-complete gens (fixes old saves missing completedPokedexGens)
     const owned = new Set(inventory.collection.map(p => p.slug))
+    let backfilled = false
     for (let gen = 1; gen <= player.currentGeneration; gen++) {
       if (player.completedPokedexGens.includes(gen)) continue
       const genPokemon = getPokedexByGen(gen)
       if (genPokemon.length > 0 && genPokemon.every(p => owned.has(p.slug))) {
         player.completedPokedexGens.push(gen)
         player.shinyCharms++
+        backfilled = true
       }
     }
     // Also check master for old saves
     checkPokedexMaster()
+    // Persist backfilled charms to server immediately
+    if (backfilled) {
+      auth.saveGameState()
+    }
     return
   }
   checkGenCompletions()
