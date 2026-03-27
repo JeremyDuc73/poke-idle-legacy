@@ -34,7 +34,6 @@ interface LoadGameResponse {
     id: number
     username: string
     gold: number
-    gems: number
     xp: number
     level: number
     currentGeneration: number
@@ -146,7 +145,6 @@ export const useAuthStore = defineStore('auth', {
         player.setPlayer({
           username: data.player.username,
           gold: data.player.gold,
-          gems: data.player.gems,
           xp: data.player.xp,
           level: data.player.level,
           currentGeneration: data.player.currentGeneration,
@@ -254,7 +252,6 @@ export const useAuthStore = defineStore('auth', {
 
         const playerPayload = {
           gold: player.gold,
-          gems: player.gems,
           xp: player.xp,
           level: player.level,
           currentGeneration: player.currentGeneration,

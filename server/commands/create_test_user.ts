@@ -4,7 +4,7 @@ import User from '#models/user'
 
 export default class CreateTestUser extends BaseCommand {
   static commandName = 'user:create'
-  static description = 'Create a test user with configurable gold/gems'
+  static description = 'Create a test user with configurable gold'
   static options: CommandOptions = {
     startApp: true,
   }
@@ -26,9 +26,8 @@ export default class CreateTestUser extends BaseCommand {
     const existing = await User.findBy('email', email)
     if (existing) {
       existing.gold = 999999
-      existing.gems = 9999
       await existing.save()
-      this.logger.success(`User "${username}" already exists — reset to 999999 gold, 9999 gems.`)
+      this.logger.success(`User "${username}" already exists — reset to 999999 gold.`)
       return
     }
 
@@ -37,7 +36,6 @@ export default class CreateTestUser extends BaseCommand {
       email,
       password,
       gold: 999999,
-      gems: 9999,
       xp: 0,
       level: 1,
       currentGeneration: 1,
@@ -48,6 +46,6 @@ export default class CreateTestUser extends BaseCommand {
       candies: { S: 0, M: 0, L: 0, XL: 0 },
     })
 
-    this.logger.success(`User "${username}" created with 999999 gold, 9999 gems.`)
+    this.logger.success(`User "${username}" created with 999999 gold.`)
   }
 }

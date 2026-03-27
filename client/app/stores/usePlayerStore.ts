@@ -58,7 +58,6 @@ export const CANDY_COST: Record<CandySize, number> = CANDY_COST_BASE
 interface PlayerState {
   username: string
   gold: number
-  gems: number
   xp: number
   level: number
   currentGeneration: number
@@ -90,7 +89,6 @@ export const usePlayerStore = defineStore('player', {
     return {
       username: '',
       gold: 0,
-      gems: 0,
       xp: 0,
       level: 1,
       currentGeneration: 1,
@@ -120,9 +118,6 @@ export const usePlayerStore = defineStore('player', {
   getters: {
     formattedGold: (state): string => {
       return state.gold.toLocaleString()
-    },
-    formattedGems: (state): string => {
-      return state.gems.toLocaleString()
     },
     regionName: (state): string => {
       return GENERATION_NAMES[state.currentGeneration] ?? 'Unknown'
@@ -187,15 +182,6 @@ export const usePlayerStore = defineStore('player', {
       return true
     },
 
-    addGems(amount: number) {
-      this.gems += amount
-    },
-
-    spendGems(amount: number): boolean {
-      if (this.gems < amount) return false
-      this.gems -= amount
-      return true
-    },
 
     recalcClickDamage() {
       // Clics: √(level) + badges — forts sur les wilds, réduits ×0.25 contre les boss

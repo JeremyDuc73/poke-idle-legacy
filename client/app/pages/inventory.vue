@@ -40,31 +40,31 @@ function useCandy(poke: OwnedPokemon, size: CandySize) {
 // Use store-persisted filters so they survive page navigation
 const sortBy = computed({
   get: () => inventory.filterSortBy,
-  set: (v) => { inventory.filterSortBy = v },
+  set: (v) => { inventory.filterSortBy = v; inventory.persistFilters() },
 })
 const search = computed({
   get: () => inventory.filterSearch,
-  set: (v) => { inventory.filterSearch = v },
+  set: (v) => { inventory.filterSearch = v; inventory.persistFilters() },
 })
 const filterType = computed({
   get: () => inventory.filterType as PokemonType | null,
-  set: (v) => { inventory.filterType = v },
+  set: (v) => { inventory.filterType = v; inventory.persistFilters() },
 })
 const filterShiny = computed({
   get: () => inventory.filterShiny,
-  set: (v) => { inventory.filterShiny = v },
+  set: (v) => { inventory.filterShiny = v; inventory.persistFilters() },
 })
 const filterTeam = computed({
   get: () => inventory.filterTeam,
-  set: (v) => { inventory.filterTeam = v },
+  set: (v) => { inventory.filterTeam = v; inventory.persistFilters() },
 })
 const filterEvoStage = computed({
   get: () => inventory.filterEvoStage,
-  set: (v: number | null) => { inventory.filterEvoStage = v },
+  set: (v: number | null) => { inventory.filterEvoStage = v; inventory.persistFilters() },
 })
 const filterGen = computed({
   get: () => inventory.filterGen,
-  set: (v) => { inventory.filterGen = v },
+  set: (v) => { inventory.filterGen = v; inventory.persistFilters() },
 })
 
 const sortOptions = computed(() => [

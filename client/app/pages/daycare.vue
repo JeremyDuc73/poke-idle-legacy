@@ -21,13 +21,35 @@ const inventory = useInventoryStore()
 const daycare = useDaycareStore()
 const { t } = useLocale()
 
+// ── Daycare filter persistence ──
+const DAYCARE_FILTERS_KEY = 'poke-idle-daycare-filters'
+function loadDaycareFilters() {
+  try {
+    const raw = localStorage.getItem(DAYCARE_FILTERS_KEY)
+    if (raw) return JSON.parse(raw)
+  } catch { /* ignore */ }
+  return {}
+}
+function saveDaycareFilters() {
+  try {
+    localStorage.setItem(DAYCARE_FILTERS_KEY, JSON.stringify({
+      pickerSort: pickerSort.value,
+      pickerRegion: pickerRegion.value,
+      pickerRarity: pickerRarity.value,
+    }))
+  } catch { /* ignore */ }
+}
+const _savedDaycare = typeof localStorage !== 'undefined' ? loadDaycareFilters() : {}
+
 // ── State ──
 const showPicker = ref(false)
 const pickerSearch = ref('')
 const selectedIds = ref<Set<number>>(new Set())
-const pickerSort = ref<'stars' | 'name' | 'rarity'>('stars')
-const pickerRegion = ref<number | null>(null)
-const pickerRarity = ref<string | null>(null)
+const pickerSort = ref<'stars' | 'name' | 'rarity'>(_savedDaycare.pickerSort ?? 'stars')
+const pickerRegion = ref<number | null>(_savedDaycare.pickerRegion ?? null)
+const pickerRarity = ref<string | null>(_savedDaycare.pickerRarity ?? null)
+
+watch([pickerSort, pickerRegion, pickerRarity], saveDaycareFilters)
 const hatchResults = ref<{ slug: string; nameFr: string; nameEn: string; isShiny: boolean; isNew: boolean; stars: number; rarity: Rarity }[]>([])
 
 // Eligible pokemon: level 100, not shiny, not already in daycare, deduplicated by slug

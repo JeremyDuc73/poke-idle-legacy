@@ -6,6 +6,22 @@ import type { Rarity } from '~/data/gacha'
 import { getGenForSlug, POKEDEX } from '~/data/pokedex'
 import { useDaycareStore } from '~/stores/useDaycareStore'
 
+const FILTERS_KEY = 'poke-idle-inventory-filters'
+
+function loadFiltersFromStorage() {
+  try {
+    const raw = localStorage.getItem(FILTERS_KEY)
+    if (raw) return JSON.parse(raw)
+  } catch { /* ignore */ }
+  return {}
+}
+
+function saveFiltersToStorage(filters: Record<string, unknown>) {
+  try {
+    localStorage.setItem(FILTERS_KEY, JSON.stringify(filters))
+  } catch { /* ignore */ }
+}
+
 export interface OwnedPokemon {
   id: number
   serverId: number | null
@@ -55,20 +71,23 @@ export const MAX_STARS = 5
 export const MAX_LEVEL = 100
 
 export const useInventoryStore = defineStore('inventory', {
-  state: (): InventoryState => ({
-    collection: [],
-    nextId: 1,
-    savedTeams: [],
-    evolutionLog: [],
-    filterSortBy: 'stars',
-    filterSearch: '',
-    filterType: null,
-    filterShiny: null,
-    filterTeam: null,
-    filterEvoStage: null,
-    filterGen: null,
-    showEvoNotifs: true,
-  }),
+  state: (): InventoryState => {
+    const saved = typeof localStorage !== 'undefined' ? loadFiltersFromStorage() : {}
+    return {
+      collection: [],
+      nextId: 1,
+      savedTeams: [],
+      evolutionLog: [],
+      filterSortBy: saved.filterSortBy ?? 'stars',
+      filterSearch: saved.filterSearch ?? '',
+      filterType: saved.filterType ?? null,
+      filterShiny: saved.filterShiny ?? null,
+      filterTeam: saved.filterTeam ?? null,
+      filterEvoStage: saved.filterEvoStage ?? null,
+      filterGen: saved.filterGen ?? null,
+      showEvoNotifs: true,
+    }
+  },
 
   getters: {
     team: (state): OwnedPokemon[] => {
@@ -104,6 +123,18 @@ export const useInventoryStore = defineStore('inventory', {
   },
 
   actions: {
+    persistFilters() {
+      saveFiltersToStorage({
+        filterSortBy: this.filterSortBy,
+        filterSearch: this.filterSearch,
+        filterType: this.filterType,
+        filterShiny: this.filterShiny,
+        filterTeam: this.filterTeam,
+        filterEvoStage: this.filterEvoStage,
+        filterGen: this.filterGen,
+      })
+    },
+
     // Migration: update rarity of existing Pokemon to match current gacha data
     migrateRarities() {
       for (const pokemon of this.collection) {

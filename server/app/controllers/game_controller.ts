@@ -57,7 +57,6 @@ export default class GameController {
         id: user.id,
         username: user.username,
         gold: user.gold,
-        gems: user.gems,
         xp: user.xp,
         level: user.level,
         currentGeneration: user.currentGeneration,
@@ -110,11 +109,9 @@ export default class GameController {
       return response.unauthorized({ message: 'User not found' })
     }
     const MAX_GOLD_INCREASE = 50_000_000
-    const MAX_GEMS_INCREASE = 500
 
-    // Cap gold/gems increase per save cycle (decrease is always allowed — spending)
+    // Cap gold increase per save cycle (decrease is always allowed — spending)
     user.gold = Math.min(data.gold, freshUser.gold + MAX_GOLD_INCREASE)
-    user.gems = Math.min(data.gems, freshUser.gems + MAX_GEMS_INCREASE)
     user.xp = data.xp
     user.level = data.level
     user.currentGeneration = data.currentGeneration

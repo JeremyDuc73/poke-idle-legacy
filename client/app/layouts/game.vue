@@ -113,7 +113,6 @@ onMounted(() => {
 watch(
   () => [
     player.gold,
-    player.gems,
     player.candies,
     player.currentGeneration,
     player.currentZone,

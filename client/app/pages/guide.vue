@@ -1229,7 +1229,7 @@ function toggleGen(id: number) {
           <div>
             <h4 class="mb-2 text-sm font-semibold text-emerald-400">💰 {{ t('Système Gacha Amélioré', 'Improved Gacha System') }}</h4>
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
-              <li>{{ t('RETIRÉ: Gemmes complètement supprimées du système d\'invocation', 'REMOVED: Gems completely removed from summoning system') }}</li>
+              <li>{{ t('Invocations uniquement avec de l\'or', 'Summons use gold only') }}</li>
               <li>{{ t('NOUVEAU: Remboursement 50% par invocation si Pokémon déjà 5★ (avant: blocage)', 'NEW: 50% refund per summon if Pokémon already 5★ (before: blocked)') }}</li>
               <li>{{ t('Affichage visuel remboursement sur cartes gacha (badge -50%)', 'Visual refund display on gacha cards (-50% badge)') }}</li>
               <li>{{ t('Taux ajustés : Legendary 1%→0.5%, Epic 8%→6.5%, Rare 21%→23%', 'Rates adjusted: Legendary 1%→0.5%, Epic 8%→6.5%, Rare 21%→23%') }}</li>
@@ -1455,7 +1455,7 @@ function toggleGen(id: number) {
             <ul class="space-y-1 text-sm text-gray-300 list-disc list-inside pl-2">
               <li>{{ t('Améliorations permanentes : Click Damage (+10/20/30%) et Team DPS (+15/30/50%)', 'Permanent upgrades: Click Damage (+10/20/30%) and Team DPS (+15/30/50%)') }}</li>
               <li>{{ t('Bonbons XP : S (100 XP), M (500), L (2k), XL (10k)', 'XP Candies: S (100 XP), M (500), L (2k), XL (10k)') }}</li>
-              <li>{{ t('Pierres d\'évolution achetables avec gemmes', 'Evolution stones purchasable with gems') }}</li>
+              <li>{{ t('Pierres d\'évolution achetables avec de l\'or', 'Evolution stones purchasable with gold') }}</li>
               <li>{{ t('Objets spéciaux rares disponibles', 'Rare special items available') }}</li>
             </ul>
           </div>

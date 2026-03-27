@@ -105,7 +105,6 @@ const showPenaltyModal = ref(false)
 const penaltyType = ref<'dps' | 'gold'>('dps')
 const penaltyPercent = ref<5 | 10 | 25 | 50>(10)
 const goldToGive = ref(0)
-const gemsToGive = ref(0)
 const xpToGive = ref(0)
 const levelToSet = ref(0)
 const searchQuery = ref('')
@@ -234,7 +233,7 @@ async function deleteUser(userId: number) {
 
 async function giveItems() {
   if (!selectedUser.value) return
-  if (goldToGive.value <= 0 && gemsToGive.value <= 0 && xpToGive.value <= 0) return
+  if (goldToGive.value <= 0 && xpToGive.value <= 0) return
 
   try {
     const response = await fetch(`${API_BASE}/api/admin/users/${selectedUser.value.id}/give-items`, {
@@ -243,7 +242,6 @@ async function giveItems() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         gold: Number(goldToGive.value),
-        gems: Number(gemsToGive.value),
         xp: Number(xpToGive.value),
       }),
     })
@@ -252,7 +250,6 @@ async function giveItems() {
       alert(data.message || 'Items donnés !')
       showGiveItemsModal.value = false
       goldToGive.value = 0
-      gemsToGive.value = 0
       xpToGive.value = 0
       await loadUsers()
     } else {
@@ -367,7 +364,6 @@ function toggleSort(field: 'username' | 'level' | 'gold' | 'badges') {
 function openGiveItemsModal(user: User) {
   selectedUser.value = user
   goldToGive.value = 0
-  gemsToGive.value = 0
   xpToGive.value = 0
   showGiveItemsModal.value = true
 }

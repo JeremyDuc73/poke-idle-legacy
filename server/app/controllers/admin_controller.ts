@@ -73,7 +73,6 @@ export default class AdminController {
         'email',
         'role',
         'gold',
-        'gems',
         'level',
         'badges',
         'current_generation',
@@ -92,7 +91,7 @@ export default class AdminController {
    */
   async updateUser({ params, request, response }: HttpContext) {
     const user = await User.findOrFail(params.id)
-    const data = request.only(['username', 'email', 'role', 'gold', 'gems', 'level', 'badges'])
+    const data = request.only(['username', 'email', 'role', 'gold', 'level', 'badges'])
 
     user.merge(data)
     user.adminVersion = (user.adminVersion ?? 0) + 1
@@ -116,14 +115,12 @@ export default class AdminController {
    */
   async giveItems({ params, request, response }: HttpContext) {
     const user = await User.findOrFail(params.id)
-    const { gold, gems, xp } = request.only(['gold', 'gems', 'xp'])
+    const { gold, xp } = request.only(['gold', 'xp'])
 
     const goldAmount = Number(gold) || 0
-    const gemsAmount = Number(gems) || 0
     const xpAmount = Number(xp) || 0
 
     if (goldAmount > 0) user.gold += goldAmount
-    if (gemsAmount > 0) user.gems += gemsAmount
     if (xpAmount > 0) {
       user.xp += xpAmount
       // Level up if XP threshold reached
@@ -136,12 +133,11 @@ export default class AdminController {
     await user.save()
 
     return response.ok({
-      message: `Donné ${goldAmount} gold, ${gemsAmount} gems, ${xpAmount} XP à ${user.username} (niveau ${user.level})`,
+      message: `Donné ${goldAmount} gold, ${xpAmount} XP à ${user.username} (niveau ${user.level})`,
       user: {
         id: user.id,
         username: user.username,
         gold: user.gold,
-        gems: user.gems,
         xp: user.xp,
         level: user.level,
       },
@@ -171,7 +167,6 @@ export default class AdminController {
     const user = await User.findOrFail(params.id)
 
     user.gold = 0
-    user.gems = 0
     user.currentGeneration = 1
     user.currentZone = 1
     user.currentStage = 1
@@ -204,7 +199,6 @@ export default class AdminController {
     // Reset all users (keep accounts, role, email, password)
     await db.from('users').update({
       gold: 0,
-      gems: 0,
       current_generation: 1,
       current_zone: 1,
       current_stage: 1,
@@ -247,7 +241,6 @@ export default class AdminController {
       email: user.email,
       role: user.role,
       gold: user.gold,
-      gems: user.gems,
       level: user.level,
       badges: user.badges,
       currentGeneration: user.currentGeneration,
