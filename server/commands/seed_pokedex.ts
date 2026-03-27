@@ -62,7 +62,7 @@ export default class SeedPokedex extends BaseCommand {
     this.logger.info(`Seeding Pokédex for generation ${gen}...`)
 
     try {
-      const response = await fetch(`https://tyradex.vercel.app/api/v1/gen/${gen}`)
+      const response = await fetch(`https://tyradex.app/api/v1/gen/${gen}`)
 
       if (!response.ok) {
         this.logger.error(`Failed to fetch gen ${gen}: HTTP ${response.status}`)
