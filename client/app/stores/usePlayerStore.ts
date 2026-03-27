@@ -46,8 +46,10 @@ export const CANDY_XP: Record<CandySize, number> = { S: 100, M: 500, L: 2000, XL
 const CANDY_COST_BASE: Record<CandySize, number> = { S: 100, M: 500, L: 2000, XL: 10000 }
 
 // Candy cost scales with player generation (like evolution items)
+// Gen 2+ gets an extra ×2 multiplier to balance gold inflation
 export function getCandyCost(size: CandySize, generation: number): number {
-  return Math.round(CANDY_COST_BASE[size] * Math.pow(2, generation - 1))
+  const genMult = generation >= 2 ? 2 : 1
+  return Math.round(CANDY_COST_BASE[size] * Math.pow(2, generation - 1) * genMult)
 }
 
 // Legacy export for compatibility (uses gen 1 prices)

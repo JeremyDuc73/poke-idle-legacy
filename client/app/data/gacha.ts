@@ -924,10 +924,10 @@ export function getRarityDpsMult(slug: string): number {
 // Base shiny rate: 1/8192 (like the original games)
 export const BASE_SHINY_RATE = 1 / 8192
 
-// Each shiny charm adds +1/8192 to the shiny chance
+// Each shiny charm adds +0.5× base rate (nerfed from +1×)
 // Pokédex Master bonus: ×3 shiny rate on top
 export function getShinyRate(shinyCharms: number, pokedexMaster: boolean = false): number {
-  const base = BASE_SHINY_RATE * (1 + shinyCharms)
+  const base = BASE_SHINY_RATE * (1 + shinyCharms * 0.5)
   return pokedexMaster ? base * 3 : base
 }
 
