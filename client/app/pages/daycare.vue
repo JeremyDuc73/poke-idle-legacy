@@ -199,6 +199,11 @@ function dismissResults() {
   hatchResults.value = []
 }
 
+function dismissAndRefill() {
+  hatchResults.value = []
+  refillLastDeposited()
+}
+
 // ── Refill last deposited Pokémon ──
 const canRefill = computed(() => {
   if (daycare.lastDeposited.length === 0 || daycare.freeSlots === 0) return false
@@ -414,12 +419,27 @@ const readyCount = computed(() => daycare.slots.filter(slotReady).length)
               </div>
             </div>
           </div>
-          <button
-            class="mt-4 w-full rounded-lg bg-gray-700 py-2 text-sm font-medium transition-colors hover:bg-gray-600"
-            @click="dismissResults"
-          >
-            OK
-          </button>
+          <div class="mt-4 flex gap-3">
+            <button
+              class="flex-1 rounded-lg bg-gray-700 py-2 text-sm font-medium transition-colors hover:bg-gray-600"
+              @click="dismissResults"
+            >
+              OK
+            </button>
+            <button
+              v-if="canRefill"
+              class="flex flex-1 items-center justify-center gap-2 rounded-lg bg-indigo-600 py-2 text-sm font-bold text-white transition-colors hover:bg-indigo-500"
+              :disabled="player.gold < daycare.lastDeposited.length * DAYCARE_COST"
+              :class="{ 'opacity-40': player.gold < daycare.lastDeposited.length * DAYCARE_COST }"
+              @click="dismissAndRefill"
+            >
+              <RotateCcw class="h-4 w-4" />
+              {{ t('Redéposer', 'Re-deposit') }}
+              <span class="flex items-center gap-1 text-yellow-300 text-xs">
+                <Coins class="h-3 w-3" /> {{ daycare.lastDeposited.length * DAYCARE_COST }}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </Teleport>

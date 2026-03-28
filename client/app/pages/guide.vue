@@ -87,7 +87,8 @@ function toggleGen(id: number) {
           target="_blank"
           rel="noopener noreferrer"
           class="font-bold text-indigo-400 underline hover:text-indigo-300"
-        >Revolut</a> merci beaucoup !
+        >Revolut</a>
+        {{ t('(aucun bonus en jeu, c\'est purement pour soutenir le projet) merci beaucoup !', '(no in-game bonus, purely to support the project) thank you so much!') }}
       </p>
     </div>
 
@@ -1076,7 +1077,7 @@ function toggleGen(id: number) {
               <li>{{ t('Taux de shiny au gacha passé de 1/1000 à 1/8192 (comme les vrais jeux)', 'Gacha shiny rate changed from 1/1000 to 1/8192 (like the real games)') }}</li>
               <li>{{ t('Charme Chroma : obtenu en complétant le Pokédex d\'une région, augmente les chances de shiny', 'Shiny Charm: obtained by completing a region\'s Pokédex, increases shiny odds') }}</li>
               <li>{{ t('Chaque Charme Chroma ajoute +1/8192 aux chances (2 charmes = 3/8192 ≈ 1/2731)', 'Each Shiny Charm adds +1/8192 to odds (2 charms = 3/8192 ≈ 1/2731)') }}</li>
-              <li>{{ t('Pokémon sauvages shinys en combat ! (×5 or, ×3 XP) avec notification toast', 'Wild shiny Pokémon in combat! (×5 gold, ×3 XP) with toast notification') }}</li>
+              <li>{{ t('Pokémon sauvages shinys en combat ! (×100 or & XP) avec notification toast', 'Wild shiny Pokémon in combat! (×100 gold & XP) with toast notification') }}</li>
             </ul>
           </div>
 

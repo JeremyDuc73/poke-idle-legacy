@@ -259,8 +259,8 @@ watch(() => combat.enemy, (enemy) => {
   if (enemy?.isShiny) {
     addToast(
       t(
-        `Un ${enemy.nameFr.replace('✨ ', '').replace(' ✨', '')} shiny apparaît ! (×5 or, ×3 XP)`,
-        `A shiny ${enemy.nameEn.replace('✨ ', '').replace(' ✨', '')} appeared! (×5 gold, ×3 XP)`
+        `Un ${enemy.nameFr.replace('✨ ', '').replace(' ✨', '')} shiny apparaît ! (×100 or & XP)`,
+        `A shiny ${enemy.nameEn.replace('✨ ', '').replace(' ✨', '')} appeared! (×100 gold & XP)`
       ),
       '✨',
       'warning',
