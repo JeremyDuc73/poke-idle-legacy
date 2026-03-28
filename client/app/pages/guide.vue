@@ -73,6 +73,22 @@ function toggleGen(id: number) {
           )
         }}
       </p>
+      <p class="mt-3 text-xs text-slate-400">
+        {{ t('Si vous souhaitez soutenir le projet, vous pouvez faire un petit don via', 'If you wish to support the project, you can make a small donation via') }}
+        <a
+          href="https://paypal.me/jeremyduc73"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-bold text-indigo-400 underline hover:text-indigo-300"
+        >PayPal</a>
+        {{ t('ou', 'or') }}
+        <a
+          href="https://revolut.me/jeremyduc"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-bold text-indigo-400 underline hover:text-indigo-300"
+        >Revolut</a> merci beaucoup !
+      </p>
     </div>
 
     <!-- Title -->
