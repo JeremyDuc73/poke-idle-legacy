@@ -13,7 +13,7 @@ export default class LeaderboardController {
         u.current_generation,
         u.avatar_url,
         COUNT(up.id)::int AS total_pokemon,
-        COUNT(DISTINCT up.species_id)::int AS unique_pokemon,
+        COUNT(DISTINCT CASE WHEN up.is_shiny = false THEN up.species_id END)::int AS unique_pokemon,
         COUNT(CASE WHEN up.is_shiny = true THEN 1 END)::int AS shiny_count,
         COUNT(CASE WHEN up.rarity = 'legendary' THEN 1 END)::int AS legendary_count,
         COUNT(CASE WHEN up.rarity = 'legendary' AND up.is_shiny = true THEN 1 END)::int AS shiny_legendary_count

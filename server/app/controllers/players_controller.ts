@@ -66,7 +66,7 @@ export default class PlayersController {
         u.last_login_at,
         u.created_at,
         COUNT(up.id)::int AS total_pokemon,
-        COUNT(DISTINCT up.species_id)::int AS unique_pokemon,
+        COUNT(DISTINCT CASE WHEN up.is_shiny = false THEN up.species_id END)::int AS unique_pokemon,
         COUNT(CASE WHEN up.is_shiny = true THEN 1 END)::int AS shiny_count,
         COUNT(CASE WHEN up.rarity = 'legendary' THEN 1 END)::int AS legendary_count
       FROM users u
