@@ -97,7 +97,7 @@ export default class GoogleAuthController {
         await user.save()
       } else {
         // Check user limit before creating new account
-        const MAX_USERS = 500
+        const MAX_USERS = 600
         const totalUsers = await User.query().count('* as total')
         const count = Number(totalUsers[0].$extras.total)
         if (count >= MAX_USERS) {
