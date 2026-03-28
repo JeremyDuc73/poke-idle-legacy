@@ -282,7 +282,56 @@ function dismiss() {
       </p>
     </div>
 
-    <!-- ═══ Pokeball Animation Area (hidden during multi/summary to keep button position stable) ═══ -->
+    <!-- ═══ OK / Pull Buttons (above results so position never shifts) ═══ -->
+    <div v-if="!isPulling" class="flex flex-col items-center gap-3">
+      <!-- Pull count selector (hidden during result) -->
+      <div v-if="!showResult" class="flex items-center gap-1.5 rounded-xl bg-slate-800 p-1">
+        <button
+          v-for="n in ([1, 5, 10, 50] as const)"
+          :key="n"
+          class="rounded-lg px-4 py-1.5 text-sm font-bold transition-all"
+          :class="pullCount === n
+            ? 'bg-yellow-500 text-black shadow-lg'
+            : 'text-slate-400 hover:text-white'"
+          @click="pullCount = n"
+        >
+          x{{ n }}
+        </button>
+        <button
+          v-if="canPull100"
+          class="rounded-lg px-4 py-1.5 text-sm font-bold transition-all"
+          :class="pullCount === 100
+            ? 'bg-yellow-500 text-black shadow-lg'
+            : 'text-amber-400 hover:text-amber-300'"
+          @click="pullCount = 100"
+        >
+          x100
+        </button>
+      </div>
+
+      <!-- Action button: OK (dismiss) or Invoquer (pull) at the exact same position -->
+      <button
+        v-if="showResult"
+        class="flex items-center gap-2 rounded-xl bg-yellow-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-yellow-500 active:scale-95"
+        @click="dismiss"
+      >
+        OK
+      </button>
+      <button
+        v-else
+        class="flex items-center gap-2 rounded-xl bg-yellow-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-yellow-500 active:scale-95 disabled:opacity-40"
+        :disabled="player.gold < totalCostGold(pullCount)"
+        @click="doPull()"
+      >
+        <Coins class="h-5 w-5" />
+        {{ totalCostGold(pullCount) }} {{ t('PokéDollar', 'PokéDollar') }}
+      </button>
+      <p v-if="!showResult" class="text-xs text-slate-500">
+        {{ availablePool.length }} / {{ activeBanner.pool.length }} {{ t('disponibles', 'available') }}
+      </p>
+    </div>
+
+    <!-- ═══ Pokeball Animation Area (hidden during multi/summary) ═══ -->
     <div v-if="!showResult || singleResult" class="relative flex h-64 w-64 items-center justify-center">
       <!-- Pokeball (idle / shake / color) -->
       <div
@@ -401,10 +450,10 @@ function dismiss() {
       </div>
     </div>
 
-    <!-- ═══ x50 SUMMARY Result (fixed h-64 to match pokeball area) ═══ -->
+    <!-- ═══ x50 SUMMARY Result ═══ -->
     <div
       v-if="showResult && pullSummary"
-      class="flex h-64 w-full max-w-lg flex-col items-center gap-4 overflow-y-auto"
+      class="flex w-full max-w-lg flex-col items-center gap-4"
     >
       <h3 class="text-lg font-bold text-yellow-400">{{ t(`Résumé ${pullSummary.label}`, `${pullSummary.label} Summary`) }}</h3>
 
@@ -474,10 +523,10 @@ function dismiss() {
 
     </div>
 
-    <!-- ═══ MULTI Result Reveal (x5, x10 — fixed h-64 to match pokeball area) ═══ -->
+    <!-- ═══ MULTI Result Reveal (x5, x10) ═══ -->
     <div
       v-if="showResult && pullResults.length > 1 && !pullSummary"
-      class="flex h-64 w-full max-w-2xl flex-col items-center gap-4 overflow-y-auto"
+      class="flex w-full max-w-2xl flex-col items-center gap-4"
     >
       <div class="grid w-full gap-2 sm:gap-3" :class="pullResults.length <= 5 ? 'grid-cols-3 sm:grid-cols-5' : 'grid-cols-3 sm:grid-cols-5'">
         <div
@@ -559,56 +608,6 @@ function dismiss() {
       {{ pullError }}
     </p>
 
-    <!-- ═══ OK / Pull Buttons (same position so chaining is comfortable) ═══ -->
-    <div v-if="!isPulling" class="flex flex-col items-center gap-4">
-      <!-- Pull count selector (visible but disabled during result) -->
-      <div class="flex items-center gap-1.5 rounded-xl bg-slate-800 p-1" :class="{ 'opacity-40 pointer-events-none': showResult }">
-        <button
-          v-for="n in ([1, 5, 10, 50] as const)"
-          :key="n"
-          class="rounded-lg px-4 py-1.5 text-sm font-bold transition-all"
-          :class="pullCount === n
-            ? 'bg-yellow-500 text-black shadow-lg'
-            : 'text-slate-400 hover:text-white'"
-          :disabled="showResult"
-          @click="pullCount = n"
-        >
-          x{{ n }}
-        </button>
-        <button
-          v-if="canPull100"
-          class="rounded-lg px-4 py-1.5 text-sm font-bold transition-all"
-          :class="pullCount === 100
-            ? 'bg-yellow-500 text-black shadow-lg'
-            : 'text-amber-400 hover:text-amber-300'"
-          :disabled="showResult"
-          @click="pullCount = 100"
-        >
-          x100
-        </button>
-      </div>
-
-      <!-- Action button: OK (dismiss) or Invoquer (pull) at the exact same position -->
-      <button
-        v-if="showResult"
-        class="flex items-center gap-2 rounded-xl bg-yellow-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-yellow-500 active:scale-95"
-        @click="dismiss"
-      >
-        OK
-      </button>
-      <button
-        v-else
-        class="flex items-center gap-2 rounded-xl bg-yellow-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-yellow-500 active:scale-95 disabled:opacity-40"
-        :disabled="player.gold < totalCostGold(pullCount)"
-        @click="doPull()"
-      >
-        <Coins class="h-5 w-5" />
-        {{ totalCostGold(pullCount) }} {{ t('PokéDollar', 'PokéDollar') }}
-      </button>
-      <p v-if="!showResult" class="text-xs text-slate-500">
-        {{ availablePool.length }} / {{ activeBanner.pool.length }} {{ t('disponibles', 'available') }}
-      </p>
-    </div>
 
     <!-- ═══ Pool Preview ═══ -->
     <div class="w-full max-w-2xl">
