@@ -19,7 +19,6 @@ const dbConfig = defineConfig({
         acquireTimeoutMillis: 30_000,
         idleTimeoutMillis: 30_000,
       },
-      healthCheck: true,
       migrations: {
         naturalSort: true,
         paths: ['database/migrations'],
