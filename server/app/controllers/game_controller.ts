@@ -377,7 +377,7 @@ export default class GameController {
         const now = new Date().toISOString()
         const row = '(?, ?, ?, ?, ?, ?, ?, ?, ?)'
         const placeholders = valid.map(() => row).join(', ')
-        const bindings: (string | number | boolean | null)[] = []
+        const bindings: any[] = []
         for (const m of valid) {
           bindings.push(
             m.data.userId,
