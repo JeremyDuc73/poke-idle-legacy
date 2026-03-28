@@ -377,7 +377,7 @@ export default class GameController {
         const now = new Date().toISOString()
         const row = '(?, ?, ?, ?, ?, ?, ?, ?, ?)'
         const placeholders = valid.map(() => row).join(', ')
-        const bindings: unknown[] = []
+        const bindings: (string | number | boolean | null)[] = []
         for (const m of valid) {
           bindings.push(
             m.data.userId,
@@ -388,7 +388,7 @@ export default class GameController {
             m.data.stars,
             m.data.rarity,
             m.data.teamSlot,
-            now,
+            now
           )
         }
         const result = await trx.rawQuery(
