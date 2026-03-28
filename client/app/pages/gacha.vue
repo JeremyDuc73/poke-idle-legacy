@@ -398,12 +398,6 @@ function dismiss() {
           ★ {{ singleResult.stars }} / {{ MAX_STARS }}
         </p>
 
-        <button
-          class="mt-2 rounded-lg bg-gray-700 px-6 py-2 text-sm font-medium transition-colors hover:bg-gray-600"
-          @click="dismiss"
-        >
-          OK
-        </button>
       </div>
     </div>
 
@@ -478,12 +472,6 @@ function dismiss() {
         </div>
       </div>
 
-      <button
-        class="rounded-lg bg-gray-700 px-8 py-2.5 text-sm font-medium transition-colors hover:bg-gray-600"
-        @click="dismiss"
-      >
-        OK
-      </button>
     </div>
 
     <!-- ═══ MULTI Result Reveal (x5, x10) ═══ -->
@@ -564,12 +552,6 @@ function dismiss() {
         </div>
       </div>
 
-      <button
-        class="rounded-lg bg-gray-700 px-8 py-2.5 text-sm font-medium transition-colors hover:bg-gray-600"
-        @click="dismiss"
-      >
-        OK
-      </button>
     </div>
 
     <!-- ═══ Error Message ═══ -->
@@ -577,10 +559,10 @@ function dismiss() {
       {{ pullError }}
     </p>
 
-    <!-- ═══ Pull Buttons ═══ -->
-    <div v-if="!isPulling && !showResult" class="flex flex-col items-center gap-4">
-      <!-- Pull count selector -->
-      <div class="flex items-center gap-1.5 rounded-xl bg-slate-800 p-1">
+    <!-- ═══ OK / Pull Buttons (same position so chaining is comfortable) ═══ -->
+    <div v-if="!isPulling" class="flex flex-col items-center gap-4">
+      <!-- Pull count selector (visible but disabled during result) -->
+      <div class="flex items-center gap-1.5 rounded-xl bg-slate-800 p-1" :class="{ 'opacity-40 pointer-events-none': showResult }">
         <button
           v-for="n in ([1, 5, 10, 50] as const)"
           :key="n"
@@ -588,6 +570,7 @@ function dismiss() {
           :class="pullCount === n
             ? 'bg-yellow-500 text-black shadow-lg'
             : 'text-slate-400 hover:text-white'"
+          :disabled="showResult"
           @click="pullCount = n"
         >
           x{{ n }}
@@ -598,14 +581,23 @@ function dismiss() {
           :class="pullCount === 100
             ? 'bg-yellow-500 text-black shadow-lg'
             : 'text-amber-400 hover:text-amber-300'"
+          :disabled="showResult"
           @click="pullCount = 100"
         >
           x100
         </button>
       </div>
 
-      <!-- Gold button -->
+      <!-- Action button: OK (dismiss) or Invoquer (pull) at the exact same position -->
       <button
+        v-if="showResult"
+        class="flex items-center gap-2 rounded-xl bg-yellow-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-yellow-500 active:scale-95"
+        @click="dismiss"
+      >
+        OK
+      </button>
+      <button
+        v-else
         class="flex items-center gap-2 rounded-xl bg-yellow-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-yellow-500 active:scale-95 disabled:opacity-40"
         :disabled="player.gold < totalCostGold(pullCount)"
         @click="doPull()"
@@ -613,7 +605,7 @@ function dismiss() {
         <Coins class="h-5 w-5" />
         {{ totalCostGold(pullCount) }} {{ t('PokéDollar', 'PokéDollar') }}
       </button>
-      <p class="text-xs text-slate-500">
+      <p v-if="!showResult" class="text-xs text-slate-500">
         {{ availablePool.length }} / {{ activeBanner.pool.length }} {{ t('disponibles', 'available') }}
       </p>
     </div>
