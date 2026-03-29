@@ -667,7 +667,7 @@ async function toggleMaintenance() {
             <input
               v-model="bannerMessage"
               type="text"
-              maxlength="200"
+              
               placeholder="Ex: Maintenance prévue à 22h..."
               class="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none"
             />

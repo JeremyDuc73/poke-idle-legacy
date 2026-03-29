@@ -19,14 +19,12 @@ const username = ref('')
 const email = ref('')
 const password = ref('')
 const error = ref('')
+const serverFull = ref(false)
 
 // Check OAuth callback
 onMounted(async () => {
   if (route.query.error === 'server_full') {
-    error.value = t(
-      'Le serveur est complet (600 joueurs max). Réessayez plus tard !',
-      'Server is full (600 players max). Try again later!'
-    )
+    serverFull.value = true
   } else if (route.query.error === 'google_denied') {
     error.value = t('Connexion Google annulée', 'Google sign-in cancelled')
   } else if (route.query.oauth_success === 'true') {
@@ -62,10 +60,7 @@ async function handleSubmit() {
   } catch (e: any) {
     const msg = e?.data?.message || e?.message || ''
     if (e?.status === 403 || msg.includes('600')) {
-      error.value = t(
-        'Le serveur est complet (600 joueurs max). R\u00e9essayez plus tard !',
-        'Server is full (600 players max). Try again later!'
-      )
+      serverFull.value = true
     } else {
       error.value = msg || t('Une erreur est survenue', 'An error occurred')
     }
@@ -129,6 +124,14 @@ async function handleSubmit() {
         <p v-if="error" class="rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-400">
           {{ error }}
         </p>
+        <div v-if="serverFull" class="rounded-lg bg-red-500/10 px-3 py-2.5 text-xs text-red-400">
+          <p>{{ t('Le serveur est complet (600 joueurs max).', 'Server is full (600 players max).') }}</p>
+          <p class="mt-1">
+            {{ t('Rejoignez le', 'Join the') }}
+            <a href="https://discord.gg/Z45MNEcvRk" target="_blank" class="font-bold text-indigo-400 underline hover:text-indigo-300">Discord</a>
+            {{ t('et prenez le rôle "en attente" pour être notifié dès qu\'une place se libère !', 'and take the "waiting" role to be notified when a spot opens up!') }}
+          </p>
+        </div>
 
         <!-- Submit -->
         <button

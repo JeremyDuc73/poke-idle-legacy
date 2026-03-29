@@ -482,7 +482,7 @@ watch(() => inventory.collectionCount, () => {
       <!-- Admin Banner -->
       <div v-if="adminBanner" class="flex items-center gap-2 border-b border-amber-500/30 bg-amber-500/10 px-4 py-2 text-center">
         <Megaphone class="h-4 w-4 shrink-0 text-amber-400" />
-        <p class="flex-1 text-sm font-medium text-amber-200">{{ adminBanner }}</p>
+        <p class="flex-1 text-sm font-medium text-amber-200 [&_a]:text-amber-400 [&_a]:underline [&_a]:font-bold hover:[&_a]:text-amber-300" v-html="adminBanner"></p>
       </div>
 
       <!-- Login Banner (visitors) -->
