@@ -153,7 +153,7 @@ function toggleLocale() {
 // Notification badges
 const readyEggs = computed(() => daycare.slots.filter(s => s.damageDealt >= s.damageRequired).length)
 
-const evolvableWithItem = computed(() => {
+const evolvable = computed(() => {
   const ownedKeys = new Set(inventory.collection.map(p => `${p.slug}-${p.isShiny}`))
   const seen = new Set<string>()
   let count = 0
@@ -161,13 +161,12 @@ const evolvableWithItem = computed(() => {
     const key = `${p.slug}-${p.isShiny}`
     if (seen.has(key)) continue
     const evos = EVOLUTIONS.filter(e => e.fromSlug === p.slug)
-    const hasItemEvo = evos.some(e => {
-      if (!(e.method === 'stone' || e.method === 'trade' || e.method === 'happiness') || !e.itemRequired) return false
+    const hasEvo = evos.some(e => {
       if (ownedKeys.has(`${e.toSlug}-${p.isShiny}`)) return false
       if (getGenForSlug(e.toSlug) > player.currentGeneration) return false
       return true
     })
-    if (hasItemEvo) { count++; seen.add(key) }
+    if (hasEvo) { count++; seen.add(key) }
   }
   return count
 })
@@ -183,7 +182,7 @@ const navItems = computed(() => {
 
   const items = [
     { label: t('Combat', 'Combat'), icon: Swords, to: '/', badge: 0 },
-    { label: t('Inventaire', 'Inventory'), icon: Package, to: '/inventory', badge: inventory.showEvoNotifs ? evolvableWithItem.value : 0 },
+    { label: t('Inventaire', 'Inventory'), icon: Package, to: '/inventory', badge: inventory.showEvoNotifs ? evolvable.value : 0 },
     { label: t('Invocation', 'Gacha'), icon: Sparkles, to: '/gacha', badge: 0 },
     { label: t('Pension', 'Daycare'), icon: Egg, to: '/daycare', badge: readyEggs.value },
     { label: t('Badges', 'Badges'), icon: Medal, to: '/badges', badge: 0 },

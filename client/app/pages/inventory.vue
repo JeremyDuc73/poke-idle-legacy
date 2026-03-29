@@ -218,24 +218,38 @@ function isInDaycare(pokemon: OwnedPokemon): boolean {
   return daycare.hasSlug(pokemon.slug, pokemon.isShiny)
 }
 
-// Check if a pokemon can evolve with an item (stone/trade/happiness)
-const evoItemSlugs = computed(() => {
+// Check if a pokemon can evolve with the specified methods
+function evoSlugs(methods: Set<string>): Set<string> {
   const ownedKeys = new Set(inventory.collection.map(p => `${p.slug}-${p.isShiny}`))
   const result = new Set<string>()
   for (const p of inventory.collection) {
     const key = `${p.slug}-${p.isShiny}`
     if (result.has(key)) continue
     const evos = EVOLUTIONS.filter(e => e.fromSlug === p.slug)
-    const hasItemEvo = evos.some(e => {
-      if (!(e.method === 'stone' || e.method === 'trade' || e.method === 'happiness') || !e.itemRequired) return false
+    const hasEvo = evos.some(e => {
+      if (!(methods.has(e.method))) return false
       if (ownedKeys.has(`${e.toSlug}-${p.isShiny}`)) return false
       if (getGenForSlug(e.toSlug) > player.currentGeneration) return false
       return true
     })
-    if (hasItemEvo) result.add(key)
+    if (hasEvo) result.add(key)
   }
   return result
+}
+
+// Check if a pokemon can evolve with a level up
+const evoLevelSlugs = computed(() => {
+  return evoSlugs(new Set(['level']))
 })
+
+// Check if a pokemon can evolve with an item (stone/trade/happiness)
+const evoItemSlugs = computed(() => {
+  return evoSlugs(new Set(['stone', 'trade', 'happiness']))
+})
+
+function canEvolveWithLevel(poke: OwnedPokemon): boolean {
+  return evoLevelSlugs.value.has(`${poke.slug}-${poke.isShiny}`)
+}
 
 function canEvolveWithItem(poke: OwnedPokemon): boolean {
   return evoItemSlugs.value.has(`${poke.slug}-${poke.isShiny}`)
@@ -584,10 +598,16 @@ function getDetailStats(poke: OwnedPokemon) {
         >
           {{ pokemon.teamSlot }}
         </span>
+        <!-- Evo level indicator -->
+        <span
+          v-if="canEvolveWithLevel(pokemon)"
+          class="absolute -left-1 bottom-0 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/90 text-[10px] shadow-lg"
+          :title="t('Peut évoluer en montant de niveau !', 'Can evolve with leveling!')"
+        >⬆</span>
         <!-- Evo item indicator -->
         <span
           v-if="canEvolveWithItem(pokemon)"
-          class="absolute -left-1 bottom-0 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/90 text-[10px] shadow-lg"
+          class="absolute -left-1 bottom-5 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/90 text-[10px] shadow-lg"
           :title="t('Peut évoluer avec un item !', 'Can evolve with an item!')"
         >🔮</span>
         <!-- Rarity indicator -->
